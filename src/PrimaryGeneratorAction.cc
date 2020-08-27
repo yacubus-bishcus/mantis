@@ -50,7 +50,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         random=G4UniformRand()*N[N.size()-1];
 
         // first order interpolation
-        for(int i=0; i<N.size(); i++)
+        for(unsigned int i=0; i<N.size(); i++)
                 if(N[i]>random && i>0) {
                         float f = (random - N[i-1]) / (N[i] - N[i-1]);
                         energy= f*e[i] + (1-f)*e[i-1];

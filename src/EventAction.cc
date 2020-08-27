@@ -37,7 +37,7 @@ EventAction::~EventAction()
 void EventAction::BeginOfEventAction(const G4Event* anEvent)
 {
 
-    G4int EventID = anEvent->GetEventID();
+    anEvent->GetEventID();
     ResetEverything(); //reset all the class variables
 
     fHitCount = 0;

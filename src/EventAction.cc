@@ -108,6 +108,5 @@ void EventAction::ResetEverything(){
 
     stepA_local->Ev.clear();
 
-    stepA_local->detector_hit.clear();
 
 }

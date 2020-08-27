@@ -22,7 +22,6 @@ public: // for now set to public until I can figure out how to work with protect
 
         std::vector<double> Ev;
 
-        std::vector<bool> detector_hit;
 
 private:
     bool TrackMustDie(const G4Step*);

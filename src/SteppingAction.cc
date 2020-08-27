@@ -106,9 +106,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         Ev.push_back( secondaries->at(i)->GetKineticEnergy()/(MeV));// records for histogram
 
 
-                        detector_hit.push_back(true);
-
-
                     }
                 }
             }

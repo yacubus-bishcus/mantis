@@ -40,6 +40,7 @@ private:
     G4ParticleGun* particle_gun_local;
     RunAction* run;
     G4OpBoundaryProcessStatus fExpectedNextStatus;
+    G4String procCount;
 
 };
 

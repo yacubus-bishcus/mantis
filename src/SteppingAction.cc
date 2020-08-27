@@ -150,7 +150,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
             for (G4int i=0; i<MAXofPostStepLoops; ++i) {
                 G4VProcess* currentProcess = (*postStepDoItVector)[i];
-                G4String procCount;
+                
                 G4OpBoundaryProcess* opProc = dynamic_cast<G4OpBoundaryProcess*>(currentProcess);
 
                 if(opProc){
@@ -158,22 +158,22 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
                     if(theStatus == Transmission){
                         //run->AddTransmission();
-                        procCount = "Transmission";
+                        procCount = "Trans";
                         // G4cout << "transmission"<< G4endl;
                     }
                     else if(theStatus == FresnelRefraction){
                         //run->AddFresnelRefraction();
-                        procCount = "Refraction";
+                        procCount = "Refr";
                         //G4cout << "fres refraction"<< G4endl;
                     }
                     else if (theStatus == TotalInternalReflection) {
                       //run->AddTotalInternalReflection();
-                        procCount = "Internal_Reflection";
+                        procCount = "Int_Refl";
                         //G4cout << "totalinternal" << G4endl;
                     }
                     else if (theStatus == LambertianReflection) {
                       //run->AddLambertianReflection();
-                        procCount = "Lambertian";
+                        procCount = "Lamb";
                     }
                     else if (theStatus == LobeReflection) {
                       //run->AddLobeReflection();
@@ -185,15 +185,15 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                     }
                     else if (theStatus == BackScattering) {
                       //run->AddBackScattering();
-                        procCount = "BackScatter";
+                        procCount = "BackS";
                     }
                     else if (theStatus == Absorption) {
                       //run->AddAbsorption();
-                        procCount = "Absorption";
+                        procCount = "Abs";
                     }
                     else if (theStatus == Detection) {
                       //run->AddDetection();
-                        procCount = "Detection";
+                        procCount = "Det";
                         //G4cout << "Detection" << G4endl;
                     }
                     else if (theStatus == NotAtBoundary) {

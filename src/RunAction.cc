@@ -1,0 +1,130 @@
+#include "G4Timer.hh"
+#include "RunAction.hh"
+#include "G4Run.hh"
+#include "HistoManager.hh"
+#include "PrimaryGeneratorAction.hh"
+#include "G4RunManager.hh"
+#include "EventAction.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4UnitsTable.hh"
+
+extern G4String output_name;
+
+RunAction::RunAction(HistoManager* histoAnalysis)
+        : G4UserRunAction(),fTimer(nullptr), fHistoManager(histoAnalysis)
+{
+
+        fTimer = new G4Timer;
+}
+
+RunAction::~RunAction()
+{
+        delete fTimer;
+}
+
+void RunAction::WriteResults(){
+        std::string data_file_name;
+
+        if(output_name.compare(0,4,"none")!=0) {
+                data_file_name = output_name;
+                // open text file and clears prior data there
+                data_file.open(data_file_name.c_str(),
+                               std::ofstream::out | std::ofstream::trunc);
+                data_file << "E_beam(MeV)\tE_deposited(MeV)\tx_incident\ty_incident\tz_incident\ttheta\tTime\tEventID\tParticleName\tCreatorProcessName" << std::endl;
+                data_file.close(); // not sure if i should do this here
+        }
+
+}
+void RunAction::BeginOfRunAction(const G4Run* aRun)
+{
+
+        // Data file
+        WriteResults();
+        fHistoManager->Book();
+        G4cout << "Writing Results to analysis file" << G4endl;
+        aRun->GetNumberOfEvent(); // not necessary but gets rid of warning
+
+        fTimer->Start();
+}
+
+void RunAction::EndOfRunAction(const G4Run* aRun)
+{
+        fTimer->Stop();
+        // save histograms
+        G4cout << G4endl << "RunAction::EndOfRunAction: Histogram Saved." << G4endl;
+
+        //G4cout << "Made to end of run" << G4endl;
+        G4int TotNbofEvents = aRun->GetNumberOfEvent();
+        std::ios::fmtflags mode = G4cout.flags();
+        G4int prec = G4cout.precision(2);
+        //G4double hits = G4double(fHitCount)/TotNbofEvents;
+        //G4double hitsAbove = G4double(fPMTsAboveThreshold)/TotNbofEvents;
+        G4cout << G4endl << "Run Summary" << G4endl;
+        G4cout <<   "---------------------------------" << G4endl;
+        G4cout << "Total Number of Events: " << TotNbofEvents << G4endl;
+        G4cout << "Total number of Surface Events: " << fTotalSurface << G4endl;
+        //G4cout << "Number of Hits per Event: " << hits << G4endl;
+        //G4cout << "Number of Hits per event above threshold: " << hitsAbove << G4endl;
+        G4cout <<
+                "Average total energy of Cerenkov photons created in the Water per event: " << (fCerenkovEnergy/eV)/TotNbofEvents << " eV." << G4endl;
+        G4cout << "Average number of Cerenkov photons created in the Water per event: " << fCerenkovCount/TotNbofEvents << G4endl;
+
+        if (fCerenkovCount > 0) {
+                G4cout << " Average Cherenkov Photon energy emitted in Water: " << (fCerenkovEnergy/eV)/fCerenkovCount << " eV." << G4endl;
+        }
+
+        G4cout <<
+                "Average total energy of scintillation photons created per event in the Water: " << (fScintEnergy/eV)/TotNbofEvents << " eV." << G4endl;
+        G4cout <<
+                "Average number of scintillation photons created per event in the Water: " << fScintCount/TotNbofEvents << G4endl;
+
+        if (fScintCount > 0) {
+                G4cout << " Average Scintillation Photon energy emitted in the Water: " << (fScintEnergy/eV)/fScintCount << " eV." << G4endl;
+        }
+
+        G4cout << "Average number of OpRayleigh per event:   " << fRayleighCount/TotNbofEvents << G4endl;
+        G4cout << "Average number of OpAbsorption per event: " << fOpAbsorption/TotNbofEvents << G4endl;
+
+        //G4double bdry = G4double(fBoundaryAbsorptionCount)/TotNbofEvents;
+        //G4cout << "Number of photons absorbed at boundary per event: " << bdry << G4endl;
+
+        G4cout <<   "---------------------------------" << G4endl;
+
+        G4cout.setf(mode, std::ios::floatfield);
+
+        G4cout.precision(prec);
+        // Also print to screen and not just to log file
+        std::cout << std::endl << "Run Summary" << std::endl;
+        std::cout <<   "---------------------------------" << std::endl;
+        std::cout << "Total Number of Events: " << TotNbofEvents << std::endl;
+        std::cout << "Total number of Surface Events: " << fTotalSurface << std::endl;
+        //std::cout  << "Number of Hits per Event: " << hits << std::endl;
+        //std::cout  << "Number of Hits per event above threshold: " << hitsAbove << std::endl;
+        std::cout <<
+                "Average total energy of Cerenkov photons created in the Water per event: " << (fCerenkovEnergy/eV)/TotNbofEvents << " eV." << std::endl;
+        std::cout << "Average number of Cerenkov photons created in the Water per event: " << fCerenkovCount/TotNbofEvents << std::endl;
+
+        if (fCerenkovCount > 0) {
+                std::cout << " Average Cherenkov Photon energy emitted in Water: " << (fCerenkovEnergy/eV)/fCerenkovCount << " eV." << std::endl;
+        }
+
+        std::cout <<
+                "Average total energy of scintillation photons created per event in the Water: " << (fScintEnergy/eV)/TotNbofEvents << " eV." << std::endl;
+        std::cout <<
+                "Average number of scintillation photons created per event in the Water: " << fScintCount/TotNbofEvents << std::endl;
+
+        if (fScintCount > 0) {
+                std::cout << " Average Scintillation Photon energy emitted in the Water: " << (fScintEnergy/eV)/fScintCount << " eV." << std::endl;
+        }
+
+        std::cout << "Average number of OpRayleigh per event:   " << fRayleighCount/TotNbofEvents << std::endl;
+        std::cout << "Average number of OpAbsorption per event: " << fOpAbsorption/TotNbofEvents << std::endl;
+
+        //G4double bdry = G4double(fBoundaryAbsorptionCount)/TotNbofEvents;
+        //std::cout  << "Number of photons absorbed at boundary per event: " << bdry << std::endl;
+
+        std::cout <<   "---------------------------------" << std::endl;
+
+        fHistoManager->finish();
+
+}

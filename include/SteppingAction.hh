@@ -20,14 +20,9 @@ class SteppingAction : public G4UserSteppingAction
 
 public: // for now set to public until I can figure out how to work with protected
 
-        std::vector<double> Ev,Edepv,xv,yv,zv,thetav;
-        std::vector<int> IDv,TrackIDv,ProcIDv;
-        std::vector<std::string> ParticleNamev,ProcessNamev;
-        std::vector<float> Timev;
-        std::vector<bool> IsSurfaceHit;
+        std::vector<double> Ev;
+
         std::vector<bool> detector_hit;
-        std::vector<int> EventIDv;
-        G4int npart;
 
 private:
     bool TrackMustDie(const G4Step*);

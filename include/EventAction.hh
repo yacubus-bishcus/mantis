@@ -42,7 +42,7 @@ class EventAction : public G4UserEventAction
     G4int GetPMTSAboveThreshold(){return fPMTsAboveThreshold;}
 
 private:
-    std::ofstream data_file;
+    
     void ResetEverything();
     //void Weighting(const G4Event* anEvent);
 
@@ -64,22 +64,6 @@ private:
 
     G4int fPMTsAboveThreshold;
 
-    // for Water analysis
-
-    G4double E,E_beam;
-    G4double x;
-    G4double y;
-    G4double z;
-    G4double theta;
-    G4float Time;
-    G4int ID;
-    G4int TrackID;
-    G4int EventID;
-    G4int ProcID;
-    std::string ParticleName,CreatorProcessName;
-    bool IsSurfaceHitTrack;
-    bool SaveTrackInfo = true;
-    bool briefoutput = false;
 
 };
 

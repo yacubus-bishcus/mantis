@@ -37,7 +37,7 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
-    G4double E_beam=particle_gun_local->GetParticleEnergy();
+
     G4String particleName = aStep->GetTrack()->GetDynamicParticle()
     ->GetParticleDefinition()->GetParticleName();
     G4AnalysisManager* manager = G4AnalysisManager::Instance();

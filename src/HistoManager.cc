@@ -2,6 +2,7 @@
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 
+extern G4String gOutName;
 HistoManager::HistoManager():fFactoryOn(false)
 {}
 
@@ -15,10 +16,10 @@ void HistoManager::Book()
   manager->SetNtupleMerging(true);
 
   // Create Directories
-  manager->SetNtupleDirectoryName("ntuple");
+  manager->SetNtupleDirectoryName("CherenkovData");
 
   // open output file
-  G4bool fileOpen = manager->OpenFile("cherenkov");
+  G4bool fileOpen = manager->OpenFile(gOutName);
 
   if(! fileOpen){
     G4cerr << "HistoManager::Book(): Cannot Open " <<manager->GetFileName()<<G4endl;

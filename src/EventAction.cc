@@ -36,8 +36,8 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event* anEvent)
 {
-    E_beam=particle_gun_local->GetParticleEnergy(); // We get the energy of the particle at the onset of the event
-    EventID = anEvent->GetEventID();
+
+    G4int EventID = anEvent->GetEventID();
     ResetEverything(); //reset all the class variables
 
     fHitCount = 0;
@@ -55,7 +55,7 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
 {
 
     G4AnalysisManager* manager = G4AnalysisManager::Instance();
-
+    G4double E_beam=particle_gun_local->GetParticleEnergy();
     manager->FillNtupleDColumn(3,0,E_beam);
     manager->FillNtupleDColumn(3,1,stepA_local->Ev.size());
     manager->AddNtupleRow(3);
@@ -104,47 +104,10 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
 }
 
 
-/*
- void EventAction::Weighting(const G4Event *anEvent){
-    // should allow messenger to set this
-    G4bool ApplyQEWeight = false;
-    if(ApplyQEWeight){
-        // Apply Weight to particles based on quantum efficiency
-        // should allow messenger to set this
-        std::vector<G4double> QE = {8.2667, 17.7143, 27.90, 34.4444, 39.68, 39.4545, 37.20, 28.6154, 5.3143}; // default for GaAsP(Cs) PMT
-        // set Wavelength Threshold (nm)
-        std::vector<G4double> wavelengths = {300,350,400,450,500,550,600,650,700};
-    }
-}
-*/
-
 void EventAction::ResetEverything(){
 
-    E=-1;
-    x=-1e5;
-    y=-1e5;
-    z=-1e5;
-    theta=-1e5;
-    ID=-100000;
-    TrackID=-10;
-    ProcID=-1;
-    Time=-1;
-    IsSurfaceHitTrack=false;
     stepA_local->Ev.clear();
-    stepA_local->Edepv.clear();
-    stepA_local->xv.clear();
-    stepA_local->yv.clear();
-    stepA_local->zv.clear();
-    stepA_local->thetav.clear();
-    stepA_local->IDv.clear();
-    stepA_local->ParticleNamev.clear();
-    ParticleName="n/a";
-    stepA_local->ProcessNamev.clear();
-    CreatorProcessName="n/a";
-    stepA_local->TrackIDv.clear();
-    stepA_local->EventIDv.clear();
-    stepA_local->ProcIDv.clear();
-    stepA_local->Timev.clear();
+
     stepA_local->detector_hit.clear();
-    stepA_local->IsSurfaceHit.clear();
+
 }

@@ -28,8 +28,7 @@
 
 G4String macro;
 G4long seed;
-G4String output_name;
-G4int maxNumber;
+G4String root_output_name;
 G4String gOutName;
 
 namespace
@@ -37,7 +36,7 @@ namespace
 void PrintUsage()
 {
         std::cerr << "Usage: " << std::endl;
-        std::cerr << "mantis [-m macro] [-s seed] [-r output_name] [-c maxNumber] [-l logFile_name]" << std::endl;
+        std::cerr << "mantis [-m macro] [-s seed] [-o output_name]" << std::endl;
 }
 }
 
@@ -54,11 +53,10 @@ int main(int argc,char **argv)
         // Default inputs
         macro = "mantis.in";
         seed = 1;
-        output_name = "none";
-        maxNumber = 500;
-        gOutName = "MyLogFile.out";
+        G4int maxNumber = 500;
+
         // Evaluate Arguments
-        if ( argc > 11 )
+        if ( argc > 7 )
         {
                 PrintUsage();
                 return 1;
@@ -67,15 +65,20 @@ int main(int argc,char **argv)
         for (G4int i=1; i<argc; i=i+2) {
                 if (G4String(argv[i]) == "-m") macro = argv[i+1];
                 else if (G4String(argv[i]) == "-s") seed = atoi(argv[i+1]);
-                else if (G4String(argv[i]) == "-r") output_name = argv[i+1];
-                else if (G4String(argv[i]) == "-c") maxNumber = atoi(argv[i+1]);
-                else if (G4String(argv[i]) == "-l") gOutName = argv[i+1];
+                else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];
+
                 else
                 {
                         PrintUsage();
                         return 1;
                 }
         }
+
+        std::string RootOutputFile = (std::string)root_output_name;
+        if(RootOutputFile.find(".root")<RootOutputFile.length()) {
+                gOutName=(std::string)RootOutputFile.substr(0, RootOutputFile.find(".root"));
+        }
+        else gOutName=(std::string)root_output_name;
 
         G4UImanager* UI = G4UImanager::GetUIpointer();
         MySession* LoggedSession = new MySession;

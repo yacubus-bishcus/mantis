@@ -23,7 +23,6 @@
 #include "globals.hh"
 #include "G4SystemOfUnits.hh"
 
-extern G4String output_name;
 
 SteppingAction::SteppingAction(G4ParticleGun* particle_gun, RunAction* localrun)
 : G4UserSteppingAction()
@@ -106,25 +105,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
                         Ev.push_back( secondaries->at(i)->GetKineticEnergy()/(MeV));// records for histogram
 
-                        // if user wants data file output
 
-                        if(output_name.compare(0,4,"none")!=0){
-
-                            xv.push_back(X.x()/(mm));
-                            yv.push_back(X.y()/(mm));
-                            zv.push_back(X.z()/(mm));
-
-                            thetav.push_back(asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag())); //the angle of the particle relative to the Z axis
-
-                            Timev.push_back( secondaries->at(i)->GetGlobalTime()); //save the time
-
-                            IDv.push_back( secondaries->at(i)->GetTrackID());
-
-                            ParticleNamev.push_back( secondaries->at(i)->GetDefinition()->GetParticleName());
-
-                            ProcessNamev.push_back( secondaries->at(i)->GetCreatorProcess()->GetProcessName());
-
-                        }
                         detector_hit.push_back(true);
 
 

@@ -18,7 +18,6 @@
 #include "G4ParticleGun.hh"
 #include <iostream>
 
-extern G4String output_name;
 
 EventAction::EventAction(G4ParticleGun* particle_gun, SteppingAction* stepA,
   const DetectorConstruction* det)
@@ -54,70 +53,12 @@ void EventAction::BeginOfEventAction(const G4Event* anEvent)
 
 void EventAction::EndOfEventAction(const G4Event* anEvent)
 {
-    std::string data_file_name;
+
     G4AnalysisManager* manager = G4AnalysisManager::Instance();
 
     manager->FillNtupleDColumn(3,0,E_beam);
     manager->FillNtupleDColumn(3,1,stepA_local->Ev.size());
     manager->AddNtupleRow(3);
-    // For Data file
-
-    if(output_name.compare(0,4,"none")!=0){
-        data_file_name = output_name;
-        data_file.open(data_file_name.c_str(),std::ios_base::app);
-
-        for(int i=0;i<int(stepA_local->Ev.size());++i){ //looping over all the tracks in the water
-
-            if(stepA_local->detector_hit.at(i)){
-                E=stepA_local->Ev.at(i);    //fill the incident energy variable ONLY for incident hit entries
-                //Edep=stepA_local->Edepv.at(i);
-                x=stepA_local->xv.at(i);
-                y=stepA_local->yv.at(i);
-                z=stepA_local->zv.at(i);
-                theta=stepA_local->thetav.at(i);
-                ID=stepA_local->IDv.at(i);
-                //TrackID=stepA_local->TrackIDv.at(i);
-                CreatorProcessName=stepA_local->ProcessNamev.at(i); //copy over the name to the placeholder
-                ParticleName=stepA_local->ParticleNamev.at(i); //same here
-                Time=stepA_local->Timev.at(i);
-                //IsSurfaceHitTrack=stepA_local->IsSurfaceHit.at(i);
-
-            } // added by jake
-
-            if(stepA_local->detector_hit.at(i) && SaveTrackInfo){
-                if(output_name.compare(0,4,"none")!=0){
-                    if(briefoutput){
-                            data_file << std::setprecision(5);
-                            data_file << E_beam
-                            << "\t" << E
-                            << "\t" << EventID
-                            << "\t" << ParticleName.c_str()
-                            << "\t" << CreatorProcessName.c_str()
-                            << "\t" << Time
-                            <<std::endl;
-
-                    } // if briefoutput
-                        else{ // if not briefoutput
-                          data_file << std::setprecision(5);
-                          data_file << E_beam
-                                << "\t" << E
-                                << "\t" << x
-                                << "\t" << y
-                                << "\t" << z
-                                << "\t" << theta
-                                << "\t" << Time
-                                << "\t" << EventID
-                                << "\t" << ParticleName.c_str()
-                                << "\t" << CreatorProcessName.c_str()
-                                <<std::endl;
-
-                        } // else statement
-                }// output name compare if statment
-
-            }
-        } // for loop
-        data_file.close();
-    }// if statement
 
 
     // End of Event PMT analysis

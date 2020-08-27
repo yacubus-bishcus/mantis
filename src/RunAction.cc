@@ -8,7 +8,6 @@
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
 
-extern G4String output_name;
 
 RunAction::RunAction(HistoManager* histoAnalysis)
         : G4UserRunAction(),fTimer(nullptr), fHistoManager(histoAnalysis)
@@ -22,24 +21,11 @@ RunAction::~RunAction()
         delete fTimer;
 }
 
-void RunAction::WriteResults(){
-        std::string data_file_name;
 
-        if(output_name.compare(0,4,"none")!=0) {
-                data_file_name = output_name;
-                // open text file and clears prior data there
-                data_file.open(data_file_name.c_str(),
-                               std::ofstream::out | std::ofstream::trunc);
-                data_file << "E_beam(MeV)\tE_deposited(MeV)\tx_incident\ty_incident\tz_incident\ttheta\tTime\tEventID\tParticleName\tCreatorProcessName" << std::endl;
-                data_file.close(); // not sure if i should do this here
-        }
-
-}
 void RunAction::BeginOfRunAction(const G4Run* aRun)
 {
 
-        // Data file
-        WriteResults();
+
         fHistoManager->Book();
         G4cout << "Writing Results to analysis file" << G4endl;
         aRun->GetNumberOfEvent(); // not necessary but gets rid of warning

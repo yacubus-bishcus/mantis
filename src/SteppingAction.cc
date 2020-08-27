@@ -94,13 +94,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         // root file
                         X= secondaries->at(i)->GetPosition(); //take the position from the post step position
                         p = secondaries->at(i)->GetMomentum();
-                        manager->FillNtupleDColumn(0,0, E_beam);
-                        manager->FillNtupleDColumn(0,1, secondaries->at(i)->GetKineticEnergy()/(MeV));
-                        manager->FillNtupleDColumn(0,2, X.x()/(mm));
-                        manager->FillNtupleDColumn(0,3, X.y()/(mm));
-                        manager->FillNtupleDColumn(0,4, X.z()/(mm));
-                        manager->FillNtupleDColumn(0,5, asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()));
-                        manager->FillNtupleDColumn(0,6, secondaries->at(i)->GetGlobalTime());
+
+                        manager->FillNtupleDColumn(0,0, secondaries->at(i)->GetKineticEnergy()/(MeV));
+                        manager->FillNtupleDColumn(0,1, X.x()/(cm));
+                        manager->FillNtupleDColumn(0,2, X.y()/(cm));
+                        manager->FillNtupleDColumn(0,3, X.z()/(cm));
+                        manager->FillNtupleDColumn(0,4, asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()));
+                        manager->FillNtupleDColumn(0,5, secondaries->at(i)->GetGlobalTime());
                         manager->AddNtupleRow(0);
 
                         Ev.push_back( secondaries->at(i)->GetKineticEnergy()/(MeV));// records for histogram
@@ -143,14 +143,14 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             //incX = theParticle->GetPosition();
             manager->FillNtupleDColumn(1,0,theParticle->GetKineticEnergy()/(MeV));
             Xdet = endPoint->GetPosition();
-            manager->FillNtupleDColumn(1,1,Xdet.x()/(mm));
-            manager->FillNtupleDColumn(1,2,Xdet.y()/(mm));
-            manager->FillNtupleDColumn(1,3,Xdet.z()/(mm));
+            manager->FillNtupleDColumn(1,1,Xdet.x()/(cm));
+            manager->FillNtupleDColumn(1,2,Xdet.y()/(cm));
+            manager->FillNtupleDColumn(1,3,Xdet.z()/(cm));
             manager->AddNtupleRow(1);
 
             for (G4int i=0; i<MAXofPostStepLoops; ++i) {
                 G4VProcess* currentProcess = (*postStepDoItVector)[i];
-                
+
                 G4OpBoundaryProcess* opProc = dynamic_cast<G4OpBoundaryProcess*>(currentProcess);
 
                 if(opProc){

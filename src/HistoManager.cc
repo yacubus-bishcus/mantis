@@ -28,7 +28,6 @@ void HistoManager::Book()
   // Create Ntuple for water data
     manager->CreateNtuple("WaterData","WaterData");
 
-    manager->CreateNtupleDColumn("E_beam"); // column Id = 0
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleDColumn("x");
     manager->CreateNtupleDColumn("y");

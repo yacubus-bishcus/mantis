@@ -118,7 +118,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         // PMT Cylinder(Tube) face
 
         G4double PMT_rmin = 0*cm;
-        G4double PMT_rmax = 10*2.54*cm; // made it 10 times larger for now
+        G4double PMT_rmax = 100*cm; // made it 10 times larger for now
         G4double PMT_z = 6*2.54*cm;
         G4double PMT_start_phi = 0.*deg;
         G4double PMT_phi = 360.*deg;// may not work with pi

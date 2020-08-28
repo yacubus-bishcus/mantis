@@ -6,4 +6,6 @@
 # Initialize kernel
 /run/initialize
 /output/myoutput WaterData
+/output/myoutput IncidentData
+/output/myoutput DetData
 /run/beamOn 10

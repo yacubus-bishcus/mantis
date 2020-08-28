@@ -29,6 +29,13 @@ void RunAction::BeginOfRunAction(const G4Run* aRun)
         fHistoManager->Book();
         G4cout << "Writing Results to analysis file" << G4endl;
         aRun->GetNumberOfEvent(); // not necessary but gets rid of warning
+        fTotalSurface = 0;
+        fCerenkovCount = 0;
+        fScintCount = 0;
+        fRayleighCount = 0;
+        fOpAbsorption = 0;
+        fCerenkovEnergy = 0;
+        fScintEnergy = 0;
 
         fTimer->Start();
 }

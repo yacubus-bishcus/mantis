@@ -5,4 +5,5 @@
 /event/verbose 0
 # Initialize kernel
 /run/initialize
+/output/myoutput WaterData
 /run/beamOn 10

@@ -3,6 +3,7 @@
 #include "PMTSD.hh"
 #include "StackingAction.hh"
 #include "HistoManager.hh"
+#include "StepMessenger.hh"
 
 #include "G4SteppingManager.hh"
 #include "G4SDManager.hh"
@@ -25,15 +26,16 @@
 
 
 SteppingAction::SteppingAction(G4ParticleGun* particle_gun, RunAction* localrun)
-: G4UserSteppingAction()
+: G4UserSteppingAction(), drawWaterFlag(0), drawIncFlag(0), drawDetFlag(0), stepM(NULL)
 {
+    stepM = new StepMessenger(this);
     particle_gun_local = particle_gun;
     fExpectedNextStatus = Undefined;
     run = localrun;
 }
 
 SteppingAction::~SteppingAction()
-{ ; }
+{ delete stepM; }
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
@@ -94,14 +96,17 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         // root file
                         X= secondaries->at(i)->GetPosition(); //take the position from the post step position
                         p = secondaries->at(i)->GetMomentum();
+                        if(drawWaterFlag)
+                        {
+                          manager->FillNtupleDColumn(0,0, secondaries->at(i)->GetKineticEnergy()/(MeV));
+                          manager->FillNtupleDColumn(0,1, X.x()/(cm));
+                          manager->FillNtupleDColumn(0,2, X.y()/(cm));
+                          manager->FillNtupleDColumn(0,3, X.z()/(cm));
+                          manager->FillNtupleDColumn(0,4, asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()));
+                          manager->FillNtupleDColumn(0,5, secondaries->at(i)->GetGlobalTime());
+                          manager->AddNtupleRow(0);
 
-                        manager->FillNtupleDColumn(0,0, secondaries->at(i)->GetKineticEnergy()/(MeV));
-                        manager->FillNtupleDColumn(0,1, X.x()/(cm));
-                        manager->FillNtupleDColumn(0,2, X.y()/(cm));
-                        manager->FillNtupleDColumn(0,3, X.z()/(cm));
-                        manager->FillNtupleDColumn(0,4, asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()));
-                        manager->FillNtupleDColumn(0,5, secondaries->at(i)->GetGlobalTime());
-                        manager->AddNtupleRow(0);
+                        }
 
                         Ev.push_back( secondaries->at(i)->GetKineticEnergy()/(MeV));// records for histogram
 
@@ -137,13 +142,16 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
         if(endPoint->GetPhysicalVolume()->GetName().compare(0,2,"PC")==0 && startPoint->GetPhysicalVolume()->GetName().compare(0,2,"PC")!=0){ // first time in photocathode
             run->AddTotalSurface();
-            //incX = theParticle->GetPosition();
-            manager->FillNtupleDColumn(1,0,theParticle->GetKineticEnergy()/(MeV));
-            Xdet = endPoint->GetPosition();
-            manager->FillNtupleDColumn(1,1,Xdet.x()/(cm));
-            manager->FillNtupleDColumn(1,2,Xdet.y()/(cm));
-            manager->FillNtupleDColumn(1,3,Xdet.z()/(cm));
-            manager->AddNtupleRow(1);
+            if(drawIncFlag)
+            {
+              manager->FillNtupleDColumn(1,0,theParticle->GetKineticEnergy()/(MeV));
+              Xdet = endPoint->GetPosition();
+              manager->FillNtupleDColumn(1,1,Xdet.x()/(cm));
+              manager->FillNtupleDColumn(1,2,Xdet.y()/(cm));
+              manager->FillNtupleDColumn(1,3,Xdet.z()/(cm));
+              manager->AddNtupleRow(1);
+            }
+
 
             for (G4int i=0; i<MAXofPostStepLoops; ++i) {
                 G4VProcess* currentProcess = (*postStepDoItVector)[i];
@@ -216,8 +224,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         procCount = "noStatus";
                       }
                 } // for if opProc
-                manager->FillNtupleSColumn(2,0,procCount);
-                manager->AddNtupleRow(2);
+                if(drawDetFlag)
+                {
+                  manager->FillNtupleSColumn(2,0,procCount);
+                  manager->AddNtupleRow(2);
+                }
+
             } // for for loop
 
 

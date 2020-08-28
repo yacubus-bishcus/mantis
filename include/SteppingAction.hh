@@ -9,6 +9,8 @@
 #include "G4OpBoundaryProcess.hh"
 #include "RunAction.hh"
 
+class StepMessenger;
+
 class SteppingAction : public G4UserSteppingAction
 {
   public:
@@ -21,6 +23,9 @@ class SteppingAction : public G4UserSteppingAction
 public: // for now set to public until I can figure out how to work with protected
 
         std::vector<double> Ev;
+        void SetWaterDataFlag(G4int val){drawWaterFlag = val;};
+        void SetIncidentDataFlag(G4int val){drawIncFlag = val;};
+        void SetDetDataFlag(G4int val){drawDetFlag = val;};
 
 
 private:
@@ -35,6 +40,10 @@ private:
     RunAction* run;
     G4OpBoundaryProcessStatus fExpectedNextStatus;
     G4String procCount;
+    G4int drawWaterFlag;
+    G4int drawIncFlag;
+    G4int drawDetFlag;
+    StepMessenger* stepM;
 
 };
 

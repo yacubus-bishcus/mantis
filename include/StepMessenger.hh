@@ -4,6 +4,7 @@
 #include "globals.hh"
 #include "G4UImessenger.hh"
 #include "G4ApplicationState.hh"
+#include "G4UIcmdWithAString.hh"
 
 class SteppingAction;
 class G4UIcmdWithAString;

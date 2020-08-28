@@ -23,7 +23,7 @@ StepMessenger::~StepMessenger()
 
 
 void StepMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
-{
+{ // this function only works if named SetNewValue
   if(command == Cmd)
   {
     G4String theCommand = newValue;

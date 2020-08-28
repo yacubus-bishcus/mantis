@@ -4,7 +4,7 @@
 StepMessenger::StepMessenger(SteppingAction* stepAction)
 :stepA(stepAction)
 {
-  Cmd = new G4UIcommandWithAString("/stepping/output",this);
+  Cmd = new G4UIcmdWithAString("/stepping/output",this);
   Cmd->SetGuidance("Choose Desired Outputs");
   Cmd->SetGuidance("Choice: WaterData, IncidentData, DetData, none (default)");
   Cmd->SetParamterName("choice",true);

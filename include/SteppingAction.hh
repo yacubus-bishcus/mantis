@@ -43,6 +43,8 @@ private:
     G4int drawWaterFlag;
     G4int drawIncFlag;
     G4int drawDetFlag;
+    G4double E_beam;
+    G4double det_energy;
     StepMessenger* stepM;
 
 };

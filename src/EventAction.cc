@@ -56,9 +56,9 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
 
     G4AnalysisManager* manager = G4AnalysisManager::Instance();
     G4double E_beam=particle_gun_local->GetParticleEnergy();
-    manager->FillNtupleDColumn(3,0,E_beam);
-    manager->FillNtupleDColumn(3,1,stepA_local->Ev.size());
-    manager->AddNtupleRow(3);
+    manager->FillNtupleDColumn(4,0,E_beam);
+    manager->FillNtupleDColumn(4,1,stepA_local->Ev.size());
+    manager->AddNtupleRow(4);
 
 
     // End of Event PMT analysis

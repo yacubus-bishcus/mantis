@@ -160,6 +160,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
                 if(opProc){
                     theStatus = opProc->GetStatus();
+                    E_beam = particle_gun_local->GetParticleEnergy();
 
                     if(theStatus == Transmission){
                         //run->AddTransmission();
@@ -199,6 +200,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                     else if (theStatus == Detection) {
                       //run->AddDetection();
                         procCount = "Det";
+                        det_energy = theParticle->GetKineticEnergy()/(MeV);
+                        manager->FillNtupleDColumn(3,0,det_energy);
+                        manager->AddNtupleRow(3);
                         //G4cout << "Detection" << G4endl;
                     }
                     else if (theStatus == NotAtBoundary) {
@@ -226,8 +230,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 } // for if opProc
                 if(drawDetFlag)
                 {
+
                   manager->FillNtupleSColumn(2,0,procCount);
+                  manager->FillNtupleDColumn(2,1,E_beam);
                   manager->AddNtupleRow(2);
+
                 }
 
             } // for for loop

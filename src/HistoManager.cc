@@ -16,7 +16,7 @@ void HistoManager::Book()
   manager->SetNtupleMerging(true);
 
   // Create Directories
-  manager->SetNtupleDirectoryName("CherenkovData");
+  //manager->SetNtupleDirectoryName("CherenkovData");
 
   // open output file
   G4bool fileOpen = manager->OpenFile(gOutName);
@@ -52,6 +52,12 @@ void HistoManager::Book()
     manager->CreateNtuple("DetData","DetData");
 
     manager->CreateNtupleSColumn("Process");
+    manager->CreateNtupleDColumn("E_beam");
+    manager->FinishNtuple();
+
+    // Create Nutple for Energy if detected
+    manager->CreateNtuple("DetEnergy","DetEnergy");
+    manager->CreateNtupleDColumn("det_energy");
     manager->FinishNtuple();
 
     // Create Ntuple for Number of Photons Emitted in Water

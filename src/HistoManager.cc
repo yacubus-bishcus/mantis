@@ -58,6 +58,8 @@ void HistoManager::Book()
     // Create Nutple for Energy if detected
     manager->CreateNtuple("DetEnergy","DetEnergy");
     manager->CreateNtupleDColumn("det_energy");
+    manager->CreateNtupleDColumn("x");
+    manager->CreateNtupleDColumn("y");
     manager->FinishNtuple();
 
     // Create Ntuple for Number of Photons Emitted in Water

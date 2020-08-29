@@ -15,6 +15,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 class G4Event;
 class DetectorConstruction;
+class EventMessenger;
 
 class EventAction : public G4UserEventAction
 {
@@ -40,9 +41,10 @@ class EventAction : public G4UserEventAction
 
     void IncPMTSAboveThreshold(){fPMTsAboveThreshold++;}
     G4int GetPMTSAboveThreshold(){return fPMTsAboveThreshold;}
+    void SetNumPhotonsFlag(G4int val){drawNumPhotonsFlag = val;};
 
 private:
-    
+
     void ResetEverything();
     //void Weighting(const G4Event* anEvent);
 
@@ -54,15 +56,13 @@ private:
     G4int fPMTCollID;
 
     G4int fPMTThreshold;
-
     G4bool fForcedrawphotons;
     G4bool fForcenophotons;
-
     G4int fHitCount;
-
     G4ThreeVector fReconPos; //relies on hitCount>0
-
     G4int fPMTsAboveThreshold;
+    G4int drawNumPhotonsFlag;
+    EventMessenger* eventM;
 
 
 };

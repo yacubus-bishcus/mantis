@@ -4,6 +4,7 @@
 #include "StackingAction.hh"
 #include "SteppingAction.hh"
 #include "HistoManager.hh"
+#include "EventMessenger.hh"
 
 #include "G4EventManager.hh"
 #include "G4SDManager.hh"
@@ -22,8 +23,9 @@
 EventAction::EventAction(G4ParticleGun* particle_gun, SteppingAction* stepA,
   const DetectorConstruction* det)
 : fDetector(det),fPMTCollID(-1),fPMTThreshold(1),fForcedrawphotons(false),
-fForcenophotons(false)
+fForcenophotons(false), drawNumPhotonsFlag(0),eventM(NULL)
 {
+    eventM = new EventMessenger(this);
     particle_gun_local = particle_gun;
     stepA_local = stepA;
     fHitCount = 0;
@@ -31,7 +33,7 @@ fForcenophotons(false)
 }
 
 EventAction::~EventAction()
-{}
+{delete eventM;}
 
 
 void EventAction::BeginOfEventAction(const G4Event* anEvent)
@@ -55,10 +57,14 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
 {
 
     G4AnalysisManager* manager = G4AnalysisManager::Instance();
-    G4double E_beam=particle_gun_local->GetParticleEnergy();
-    manager->FillNtupleDColumn(4,0,E_beam);
-    manager->FillNtupleDColumn(4,1,stepA_local->Ev.size());
-    manager->AddNtupleRow(4);
+    if(drawNumPhotonsFlag)
+    {
+      G4double E_beam=particle_gun_local->GetParticleEnergy();
+      manager->FillNtupleDColumn(4,0,E_beam);
+      manager->FillNtupleDColumn(4,1,stepA_local->Ev.size());
+      manager->AddNtupleRow(4);
+    }
+
 
 
     // End of Event PMT analysis

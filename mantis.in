@@ -3,9 +3,11 @@
 /tracking/verbose 0
 /run/verbose 0
 /event/verbose 0
+# must be called prior to run initalized 
+/mydet/PCrad 2 
 # Initialize kernel
 /run/initialize
-/output/myoutput WaterData
+#/output/myoutput WaterData
 /output/myoutput IncidentData
-/output/myoutput DetData
-/run/beamOn 10
+#/output/myoutput DetData
+/run/beamOn 1000

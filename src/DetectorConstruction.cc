@@ -29,20 +29,22 @@
 #include "globals.hh"
 #include "G4UImanager.hh"
 #include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
 // for color attributes
 #include "G4Colour.hh"
 #include "G4VisAttributes.hh"
+#include "DetectorMessenger.hh"
 
 
 
 DetectorConstruction::DetectorConstruction()
-        : G4VUserDetectorConstruction()
+        : G4VUserDetectorConstruction(),PMT_rmax(100*cm), detectorM(NULL)
 {
+  detectorM = new DetectorMessenger(this);
 }
 
 DetectorConstruction::~DetectorConstruction()
 {
+  delete detectorM;
 }
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
@@ -118,7 +120,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         // PMT Cylinder(Tube) face
 
         G4double PMT_rmin = 0*cm;
-        G4double PMT_rmax = 100*cm; // made it 10 times larger for now
+        //PMT_rmax = 100*cm; // made it 10 times larger for now
+        std::cout << "The PC Radius was set to " << PMT_rmax/(cm) << " cm" << std::endl;
         G4double PMT_z = 6*2.54*cm;
         G4double PMT_start_phi = 0.*deg;
         G4double PMT_phi = 360.*deg;// may not work with pi

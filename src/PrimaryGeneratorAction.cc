@@ -1,16 +1,11 @@
 #include "PrimaryGeneratorAction.hh"
-
-#include "G4Event.hh"
-#include "G4ParticleGun.hh"
-#include "globals.hh"
-#include "Randomize.hh"
-#include "G4ParticleTable.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4SystemOfUnits.hh"
+#include "PrimaryGenActionMessenger.hh"
 
 
-PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction(),fParticleGun(0){
+PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction(), chosen_energy(-1),genM(NULL),fParticleGun(0)
+{
 
+        genM = new PrimaryGenActionMessenger(this);
         G4int n_particle = 1;
         fParticleGun = new G4ParticleGun(n_particle);
 
@@ -24,14 +19,15 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction
         fParticleGun->SetParticleTime(0.0*ns);
         // Determine particle Beam Energy
 
-
-        ReadInputSpectrumFile("input_spectrum.txt");
+        if(chosen_energy == -1){
+          ReadInputSpectrumFile("input_spectrum.txt");
+          }
 
         // Set Beam Position
         beam_offset_x = 0*cm;
         beam_offset_y = 0*cm;
         z0 = 0*cm;
-        beam_size = 5;
+        beam_size = 1;
         source_width=0; //by default the width along Z is zero
 
 }
@@ -39,6 +35,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
         delete fParticleGun;
+        delete genM;
 
 }
 
@@ -46,18 +43,22 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 
         // Set Particle Energy (Must be in generate primaries)
+        if(chosen_energy == -1)
+        {
+          random=G4UniformRand()*N[N.size()-1];
 
-        random=G4UniformRand()*N[N.size()-1];
+          // first order interpolation
+          for(unsigned int i=0; i<N.size(); i++)
+                  if(N[i]>random && i>0)
+                  {
+                      G4float f = (random - N[i-1]) / (N[i] - N[i-1]);
+                      energy= f*e[i] + (1-f)*e[i-1];
+                      break;
+                  }
+        }
+        else{energy = chosen_energy;}
 
-        // first order interpolation
-        for(unsigned int i=0; i<N.size(); i++)
-                if(N[i]>random && i>0) {
-                        float f = (random - N[i-1]) / (N[i] - N[i-1]);
-                        energy= f*e[i] + (1-f)*e[i-1];
-                        break;
-                }
-
-        fParticleGun->SetParticleEnergy(energy);
+        fParticleGun->SetParticleEnergy(energy*MeV);
 
 
         const float pi=acos(-1);

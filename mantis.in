@@ -4,10 +4,12 @@
 /run/verbose 0
 /event/verbose 0
 # must be called prior to run initalized 
-/mydet/PCrad 2 
+/mydet/PCrad 100 
+#/input/energy 1.73355
 # Initialize kernel
 /run/initialize
 #/output/myoutput WaterData
-/output/myoutput IncidentData
+#/output/myoutput IncidentData
 #/output/myoutput DetData
+#/event/output Yes
 /run/beamOn 1000

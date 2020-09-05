@@ -18,10 +18,13 @@ public:
   DetectorMessenger(DetectorConstruction*);
   ~DetectorMessenger();
 
-  void SetNewValue(G4UIcommand*, G4String); // must always be a string input 
+  void SetNewValue(G4UIcommand*, G4String); // must always be a string input
 private:
   DetectorConstruction* DetectorA;
   G4UIcmdWithADouble* Cmd;
+  G4UIcmdWithADouble* CmdX;
+  G4UIcmdWithADouble* CmdY;
+  G4UIcmdWithADouble* CmdZ;
   G4UIdirectory *myDir;
 };
 

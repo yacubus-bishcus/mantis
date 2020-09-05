@@ -30,6 +30,21 @@ public:
 
     virtual void ConstructSDandField();
     std::vector<G4ThreeVector> PmtPositions;
+    void SetWaterX(G4double val)
+    {
+      water_size_x = val;
+      water_size_x = water_size_x*cm;
+    }
+    void SetWaterY(G4double val)
+    {
+      water_size_y = val;
+      water_size_y = water_size_y*cm;
+    }
+    void SetWaterZ(G4double val)
+    {
+      water_size_z = val;
+      water_size_z = water_size_z*cm;
+    }
     void SetPC_radius(G4double val)
     {PMT_rmax = val;
       PMT_rmax = PMT_rmax*cm;
@@ -42,7 +57,7 @@ private:
     G4VPhysicalVolume* physPC;
     G4VPhysicalVolume* physPMT;
     G4VPhysicalVolume* physWater;
-    G4double PMT_rmax;
+    G4double water_size_x, water_size_y, water_size_z,PMT_rmax;
     DetectorMessenger* detectorM;
 };
 

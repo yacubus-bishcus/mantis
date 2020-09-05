@@ -2,11 +2,14 @@
 # in interactive session
 #
 # Set some default verbose
-/control/verbose 2
+/control/verbose 0
 /control/saveHistory
-/run/verbose 2
+/run/verbose 0
 # set PC radius here 
-/mydet/PCrad 2
+/mydet/PCrad 100
+/mydet/WaterX 50
+/mydet/WaterY 50
+/mydet/WaterZ 20
 #
 # Initialize kernel
 /run/initialize

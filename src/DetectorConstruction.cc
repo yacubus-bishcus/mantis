@@ -37,7 +37,7 @@
 
 
 DetectorConstruction::DetectorConstruction()
-        : G4VUserDetectorConstruction(),PMT_rmax(100*cm), detectorM(NULL)
+        : G4VUserDetectorConstruction(),water_size_x(100*cm),water_size_y(100*cm), water_size_z(50*cm),PMT_rmax(100*cm), detectorM(NULL)
 {
   detectorM = new DetectorMessenger(this);
 }
@@ -60,9 +60,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         // World
         //
         // Set World Dimensions
-        G4double world_size_x = 150*cm;
-        G4double world_size_y = 150*cm;
-        G4double world_size_z = 175*cm;
+        G4double world_size_x = 300*cm;
+        G4double world_size_y = 300*cm;
+        G4double world_size_z = 300*cm;
 
         // Make Solid World
 
@@ -87,10 +87,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                   false);    //overlaps checking
 
         // Tub of water
-
-        G4double water_size_x = 100*cm;
-        G4double water_size_y = 100*cm;
-        G4double water_size_z = 50*cm;
+        std::cout << "The Water Tank X was set to: " << water_size_x/(cm)<< " cm" << std::endl;
+        std::cout << "The Water Tank Y was set to: " << water_size_y/(cm)<< " cm" << std::endl;
+        std::cout << "The Water Tank Z was set to: " << water_size_z/(cm) << " cm" << std::endl;
 
         // Make Solid Water
 

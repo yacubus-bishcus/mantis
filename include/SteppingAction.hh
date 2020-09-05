@@ -34,7 +34,7 @@ private:
     float LowEnergyCutoff;
     G4ThreeVector p;
     G4ThreeVector X;
-    G4ThreeVector Xdet;
+    G4ThreeVector Xdet, Xdetected;
     G4ThreeVector incX;
     G4ParticleGun* particle_gun_local;
     RunAction* run;

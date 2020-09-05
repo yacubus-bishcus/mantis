@@ -201,9 +201,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                       //run->AddDetection();
                         procCount = "Det";
                         det_energy = theParticle->GetKineticEnergy()/(MeV);
+                        G4StepPoint* Xdetected_point = aStep->GetPostStepPoint();
+                        Xdetected = Xdetected_point->GetPosition();
                         manager->FillNtupleDColumn(3,0,det_energy);
-                        manager->FillNtupleDColumn(3,1,Xdet.x()/(cm));
-                        manager->FillNtupleDColumn(3,2,Xdet.y()/(cm));
+                        manager->FillNtupleDColumn(3,1,Xdetected.x()/(cm));
+                        manager->FillNtupleDColumn(3,2,Xdetected.y()/(cm));
                         manager->AddNtupleRow(3);
                         //G4cout << "Detection" << G4endl;
                     }

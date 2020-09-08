@@ -5,11 +5,13 @@
 #include "G4UImessenger.hh"
 #include "G4ApplicationState.hh"
 #include "G4UIcmdWithADouble.hh"
+#include "G4UIcmdWithAString.hh"
 #include "DetectorConstruction.hh"
 #include "G4UIdirectory.hh"
 
 class DetectorConstruction;
 class G4UIcmdWithADouble;
+class G4UIcmdWithAString;
 class G4UIdirectory;
 
 class DetectorMessenger: public G4UImessenger
@@ -25,7 +27,13 @@ private:
   G4UIcmdWithADouble* CmdX;
   G4UIcmdWithADouble* CmdY;
   G4UIcmdWithADouble* CmdZ;
+  G4UIcmdWithADouble* CmdtX;
+  G4UIcmdWithADouble* CmdtY;
+  G4UIcmdWithADouble* CmdtZ;
+  G4UIcmdWithADouble* Cmdtrad;
+  G4UIcmdWithAString* Cmdtsel;
   G4UIdirectory *myDir;
+  G4UIdirectory * myDir2;
 };
 
 #endif

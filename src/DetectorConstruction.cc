@@ -1,43 +1,10 @@
 #include "DetectorConstruction.hh"
-#include "PMTSD.hh"
-
-#include "G4SDManager.hh"
-#include "G4RunManager.hh"
-#include "G4NistManager.hh"
-
-#include "G4GeometryManager.hh"
-#include "G4SolidStore.hh"
-#include "G4LogicalVolumeStore.hh"
-#include "G4PhysicalVolumeStore.hh"
-#include "G4LogicalBorderSurface.hh"
-#include "G4LogicalSkinSurface.hh"
-
-#include "G4OpticalSurface.hh"
-#include "G4MaterialTable.hh"
-#include "G4VisAttributes.hh"
-#include "G4OpRayleigh.hh"
-
-#include "G4Box.hh" //for box
-//#include "G4Cons.hh" //for cone
-//#include "G4Orb.hh" //for orb
-//#include "G4Sphere.hh" //for sphere
-#include "G4Tubs.hh" // for tube/cylinder
-
-#include "G4LogicalVolume.hh"
-#include "G4ThreeVector.hh"
-#include "G4PVPlacement.hh"
-#include "globals.hh"
-#include "G4UImanager.hh"
-#include "G4PhysicalConstants.hh"
-// for color attributes
-#include "G4Colour.hh"
-#include "G4VisAttributes.hh"
-#include "DetectorMessenger.hh"
-
-
 
 DetectorConstruction::DetectorConstruction()
-        : G4VUserDetectorConstruction(),water_size_x(100*cm),water_size_y(100*cm), water_size_z(50*cm),PMT_rmax(100*cm), detectorM(NULL)
+        : G4VUserDetectorConstruction(), IntObj_x(10*cm), IntObj_y(10*cm), IntObj_z(1*cm),
+        radio_abundance(90*perCent), IntObj_Selection("Uranium"), intObjDensity(19.1),
+        water_size_x(50*cm),water_size_y(20*cm), water_size_z(10*cm),
+         PMT_rmax(5*cm), detectorM(NULL)
 {
   detectorM = new DetectorMessenger(this);
 }
@@ -60,9 +27,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         // World
         //
         // Set World Dimensions
-        G4double world_size_x = 300*cm;
-        G4double world_size_y = 300*cm;
-        G4double world_size_z = 300*cm;
+        G4double world_size_x = 600*cm;
+        G4double world_size_y = 600*cm;
+        G4double world_size_z = 600*cm;
 
         // Make Solid World
 
@@ -86,6 +53,70 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                   0,         //copy number
                                   false);    //overlaps checking
 
+        // Set up interogation object
+        // U-235 Plane
+        // Make solid interogation object
+        std::cout << "The Interogation Object X was set to: " << IntObj_x/(cm)<< " cm" << std::endl;
+        std::cout << "The Interogation Object Y was set to: " << IntObj_y/(cm)<< " cm" << std::endl;
+        std::cout << "The Interogation Object Z was set to: " << IntObj_z/(cm) << " cm" << std::endl;
+
+        G4Box* solidIntObj = new G4Box("InterogationObject", IntObj_x, IntObj_y, IntObj_z);
+        // eventually this will be selected by messenger
+        // Setting up weapons grade materials
+        G4Isotope* Uranium235 = new G4Isotope("Uranium235", 92, 143, 235.04393); // atomicnumber, number of nucleons, mass of mole
+        G4Isotope* Uranium238 = new G4Isotope("Uranium238", 92, 146, 238.02891);
+        G4Isotope* Plutonium239 = new G4Isotope("Plutonium239",94, 145, 239.0521634);
+        G4Isotope* Plutonium240 = new G4Isotope("Plutonium240", 94, 146, 240.05381);
+        G4Element* WGU = new G4Element("WGU", "U", 2); // name, element symbol, #isotopes
+        G4Element* WGPu = new G4Element("WGPu","Pu",2);
+        // eventually will add messenger ability to change isotope abundance
+        std::cout << "The Interogation Object Fission Radioisotope Abundance was set to: "
+                  << radio_abundance/(perCent) << " percent." << std::endl;
+        G4float U238_abundance = 100*perCent - radio_abundance;
+        WGU->AddIsotope(Uranium235, radio_abundance);
+        WGU->AddIsotope(Uranium238, U238_abundance);
+        G4float Pu240_abundance = 100*perCent - radio_abundance;
+        WGPu->AddIsotope(Plutonium239, radio_abundance);
+        WGPu->AddIsotope(Plutonium240, Pu240_abundance);
+        // need to correct still for enrichment effect on density
+        std::cout << "The User has chosen the following Interogation Object Material: "
+                  << IntObj_Selection << std::endl;
+        std::cout << "The Interogation Object Density was set to: " << intObjDensity << std::endl;
+        G4Material* intObjMat = new G4Material("IntObjMaterial", intObjDensity, 1);
+        if(IntObj_Selection == "Uranium")
+        {
+          intObjMat->AddElement(WGU,1);
+          std::cout << "Uranium Element Added!" << std::endl;
+        }
+        else if(IntObj_Selection == "Plutonium")
+        {
+          intObjMat->AddElement(WGPu,1);
+          std::cout << "Plutonium Element Added!" << std::endl;
+        }
+        else{std::cerr << "ERROR: Interogation Material not found."<<std::endl;}
+        // Make Logical Volume
+        G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObjLogicVolume");
+        // Make Physical Volume
+        G4double intObj_x_pos = 0*cm;
+        G4double intObj_y_pos = 0*cm;
+        G4double intObj_z_pos = 20*cm;
+
+        physIntObj = new G4PVPlacement(0, G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos),
+                                      logicIntObj, "IntObjPhysical", logicWorld, false,
+                                      0, checkOverlaps);
+
+        // Set Up NRF test detector
+
+        G4Box* testDet = new G4Box("testDetector", IntObj_x, IntObj_y, IntObj_z);
+        G4Material* testmat = nist->FindOrBuildMaterial("G4_Pb");
+        G4LogicalVolume* logicTestDet = new G4LogicalVolume(testDet, testmat, "testdetLogicVolume");
+        G4double testdet_x_pos = 0*cm;
+        G4double testdet_y_pos = 0*cm;
+        G4double testdet_z_pos = 25*cm;
+        phystestdet = new G4PVPlacement(0, G4ThreeVector(testdet_x_pos, testdet_y_pos, testdet_z_pos),
+                                        logicTestDet, "testdetphysical", logicWorld, false, 0, checkOverlaps);
+
+
         // Tub of water
         std::cout << "The Water Tank X was set to: " << water_size_x/(cm)<< " cm" << std::endl;
         std::cout << "The Water Tank Y was set to: " << water_size_y/(cm)<< " cm" << std::endl;
@@ -103,9 +134,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                     "Water"); //its name
 
         // Make Physical volume
-        G4double water_x_pos = 0*cm;
+        G4double water_x_pos = 100*cm;
         G4double water_y_pos =0*cm;
-        G4double water_z_pos =70*cm;
+        G4double water_z_pos =0*cm;
 
         physWater = new G4PVPlacement(0,                 //no rotation
                                       G4ThreeVector(water_x_pos,water_y_pos,water_z_pos),
@@ -139,13 +170,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
         // Make Physical PMT
 
-        G4double PMT_x_pos = 0*cm;
-        G4double PMT_y_pos = 0*cm;
-        G4double PMT_z_pos = (water_z_pos + water_size_z + PMT_z);
-        PmtPositions.push_back(G4ThreeVector(PMT_x_pos,PMT_y_pos,PMT_z_pos));
+        //G4double PMT_y_pos
+        G4double PMT_x_pos = (water_x_pos + water_size_x + PMT_z);
+        PmtPositions.push_back(G4ThreeVector(PMT_x_pos,water_y_pos,water_z_pos));
+        G4RotationMatrix *pmtRot = new G4RotationMatrix;
+        pmtRot->rotateY(90.*deg);
 
-        physPMT = new G4PVPlacement(0,
-                                    G4ThreeVector(PMT_x_pos,PMT_y_pos,PMT_z_pos),
+        physPMT = new G4PVPlacement(pmtRot,
+                                    G4ThreeVector(PMT_x_pos,water_y_pos,water_z_pos),
                                     logicPMT,
                                     "PMT",
                                     logicWorld,
@@ -160,10 +192,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
         //Make Logical Photocathode volume
         logicPC = new G4LogicalVolume(solidPhotoCathode, PC_mat, "PC");
-        G4double PMT_window_thickness = 1; // cm
+        G4double PMT_window_thickness = PC_z; // cm
         // Make physical volume
         physPC = new G4PVPlacement(0,
-                                   G4ThreeVector(0,0,(-PMT_z +PMT_window_thickness*cm)), // now position is relation to mother volume(PMT)
+                                   G4ThreeVector(0,0,PMT_z-PMT_window_thickness*2), // now position is relation to mother volume(PMT)
                                    logicPC,
                                    "PC",
                                    logicPMT, // daughter of PMT logical
@@ -200,11 +232,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         logicWater->SetVisAttributes(blue);
         logicPMT->SetVisAttributes(green);
         logicPC->SetVisAttributes(red);
-
+        logicIntObj->SetVisAttributes(lightGray);
+        logicTestDet->SetVisAttributes(yellow);
 
         //
         // ------------ Generate & Add Material Properties Table ------------
         //
+
         G4double photonEnergy[] =
         { 2.034*eV, 2.068*eV, 2.103*eV, 2.139*eV,
           2.177*eV, 2.216*eV, 2.256*eV, 2.298*eV,
@@ -307,7 +341,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
         const G4int numentries_water = sizeof(energy_water)/sizeof(G4double);
 
-        /*G4double energy_ray_water[] = {
+        G4double energy_ray_water[] = {
             1.56962*eV, 1.58974*eV, 1.61039*eV, 1.63157*eV,
             1.65333*eV, 1.67567*eV, 1.69863*eV, 1.72222*eV,
             1.74647*eV, 1.77142*eV, 1.7971 *eV, 1.82352*eV,
@@ -318,9 +352,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
             2.43137*eV, 2.47999*eV, 2.53061*eV, 2.58333*eV
            }; // 32 entries
 
-         */
 
-        //const G4int numentries_water_ray = sizeof(energy_ray_water)/sizeof(G4double);
+
+        const G4int numentries_water_ray = sizeof(energy_ray_water)/sizeof(G4double);
 
         G4double mie_water[] = {
                 167024.4*m, 158726.7*m, 150742  *m,
@@ -355,7 +389,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         myMPT1->AddConstProperty("MIEHG_BACKWARD",mie_water_const[1]);
         myMPT1->AddConstProperty("MIEHG_FORWARD_RATIO",mie_water_const[2]);
 
-        /*G4double rayleigh_water[] = {
+        G4double rayleigh_water[] = {
             2335.5*m, 2210.5*m, 2090.8*m, 1976.4*m, 1866.8*m, 1762.1*m,
             1662.1*m, 1566.6*m, 1475.4*m, 1388.5*m, 1305.6*m, 1224.6*m,
             1146.8*m, 1075.6*m, 1007.8*m, 941.23*m, 880.95*m, 821.12*m,
@@ -364,16 +398,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
             303.17*m, 277.43*m
 
            }; // 32 entries
-         */
+
 
         // Note to Self: Never have spline set to true if rayleigh water goes to zero. Creates seg fault
 
-        //assert(sizeof(rayleigh_water) == sizeof(energy_ray_water));
+        assert(sizeof(rayleigh_water) == sizeof(energy_ray_water));
 
-        //myMPT1->AddProperty("RAYLEIGH",energy_ray_water,rayleigh_water,numentries_water_ray)->SetSpline(true);
-
-        //G4cout << "Water G4MaterialPropertiesTable" << G4endl;
-        //myMPT1->DumpTable();
+        myMPT1->AddProperty("RAYLEIGH",energy_ray_water,rayleigh_water,numentries_water_ray)->SetSpline(true);
 
         Water->SetMaterialPropertiesTable(myMPT1);
 
@@ -446,13 +477,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4MaterialPropertiesTable* myMPT2 = new G4MaterialPropertiesTable();
         myMPT2->AddProperty("RINDEX", photonEnergy, refractiveIndex2, nEntries);
 
-        //G4cout << "Air G4MaterialPropertiesTable" << G4endl;
-        //myMPT2->DumpTable();
-
         air->SetMaterialPropertiesTable(myMPT2);
-
-        // Set the Surface Properties
-
 
         //
         //always return the physical World!!!
@@ -463,8 +488,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 /* ************************************************************************************ */
 
 void DetectorConstruction::ConstructSDandField() {
-
-
 // PMT SD
 
         //Created here so it exists as pmts are being placed

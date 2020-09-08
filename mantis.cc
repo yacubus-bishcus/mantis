@@ -9,6 +9,7 @@
 #include "FTFP_BERT.hh"
 #include "G4OpticalPhysics.hh"
 #include "G4EmStandardPhysics_option4.hh"
+#include "G4NRFPhysics.hh"
 // Typcially include
 #include "time.h"
 #include "Randomize.hh"
@@ -101,7 +102,7 @@ int main(int argc,char **argv)
         // Set up Physics List
         G4VModularPhysicsList* physicsList = new FTFP_BERT(0);
         physicsList->ReplacePhysics(new G4EmStandardPhysics_option4(0));
-
+        // Optical Physics
         G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(0);
         opticalPhysics->SetWLSTimeProfile("delta");
         opticalPhysics->SetScintillationYieldFactor(1.0);
@@ -112,6 +113,10 @@ int main(int argc,char **argv)
         opticalPhysics->SetTrackSecondariesFirst(kScintillation, true);
         physicsList->SetVerboseLevel(0);
         physicsList->RegisterPhysics(opticalPhysics);
+        //NRF Physics
+        G4NRFPhysics* nrfPhysics = new G4NRFPhysics("NRF", true, true, true); // use_xsec_tables, use_xsec_integration, force_isotropic
+        physicsList->RegisterPhysics(nrfPhysics);
+
         runManager->SetUserInitialization(physicsList);
 
         runManager->SetUserInitialization(new ActionInitialization(det));

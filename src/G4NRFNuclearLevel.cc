@@ -602,7 +602,6 @@ void G4NRFNuclearLevel::RefreshGammas() {
 
     // deal with the bizarre lines with +X in NNDC
     if (E_level <= -2.4e6) {
-      G4double E_init = E_level;
       E_level *= -1.0;
       E_level -= 2.4e6;
     }
@@ -660,10 +659,8 @@ void G4NRFNuclearLevel::RefreshGammas() {
   const    G4int MAX_MULT = 10;
   char     multipole_mode_arr[MAX_MULT];
   G4int    multipole_L_arr[MAX_MULT];
-
-  G4int    jgamma;
-
-  for (G4int jgamma = 0; jgamma < num_gammas; jgamma++) {
+  G4int jgamma;
+  for (jgamma = 0; jgamma < num_gammas; jgamma++) {
     GammaTableFile >> Egamma_arr[jgamma] >> num_multipole_arr[jgamma];
     Egamma_arr[jgamma] *= keV;
     if (num_multipole_arr[jgamma] > 0) {
@@ -856,7 +853,6 @@ void G4NRFNuclearLevel::RefreshWidth() {
 
     // deal with the bizarre lines with +X in NNDC
     if (E_level <= -2.4e6) {
-      G4double E_init = E_level;
       E_level *= -1.0;
       E_level -= 2.4e6;
     }

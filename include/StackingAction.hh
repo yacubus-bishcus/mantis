@@ -5,22 +5,26 @@
 
 #include "G4UserStackingAction.hh"
 #include "globals.hh"
-
-class EventAction;
+#include "G4Track.hh"
+#include "G4TrackStatus.hh"
+#include "G4ParticleTypes.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4VProcess.hh"
+#include "G4Event.hh"
+#include "G4EventManager.hh"
+#include "DetectorConstruction.hh"
+#include "G4Neutron.hh"
 
 class StackingAction : public G4UserStackingAction
 {
 public:
-StackingAction(EventAction*);
+StackingAction(const DetectorConstruction*);
 virtual ~StackingAction();
 
 public:
-//virtual G4ClassificationOfNewTrack ClassifyNewTrack(const G4Track* aTrack);
-void NewStage();
-void PrepareNewEvent();
-
+virtual G4ClassificationOfNewTrack ClassifyNewTrack(const G4Track* aTrack);
 private:
-EventAction *fEventAction;
+  const DetectorConstruction* local_det;
 };
 
 #endif

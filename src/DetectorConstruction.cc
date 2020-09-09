@@ -99,7 +99,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         // Make Physical Volume
         G4double intObj_x_pos = 0*cm;
         G4double intObj_y_pos = 0*cm;
-        G4double intObj_z_pos = 20*cm;
+        intObj_z_pos = 20*cm;
+        setEndIntObj(IntObj_z, intObj_z_pos);
 
         physIntObj = new G4PVPlacement(0, G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos),
                                       logicIntObj, "IntObjPhysical", logicWorld, false,
@@ -114,7 +115,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4double testdet_y_pos = 0*cm;
         G4double testdet_z_pos = 25*cm;
         phystestdet = new G4PVPlacement(0, G4ThreeVector(testdet_x_pos, testdet_y_pos, testdet_z_pos),
-                                        logicTestDet, "testdetphysical", logicWorld, false, 0, checkOverlaps);
+                                        logicTestDet, "testdetp", logicWorld, false, 0, checkOverlaps);
 
 
         // Tub of water

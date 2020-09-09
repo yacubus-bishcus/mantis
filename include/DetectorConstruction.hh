@@ -102,6 +102,7 @@ public:
       radio_abundance = val;
       radio_abundance = radio_abundance*perCent;
     }
+
     void SetIntObj(G4String val)
     {
       if(val == "Uranium")
@@ -117,7 +118,19 @@ public:
       else{std::cerr << "ERROR: IntObj not correctly chosen"<<std::endl;}
     }
 
+    void setEndIntObj(G4double z_Size, G4double z_pos)
+    {
+      EndIntObj = z_Size/2 + z_pos;
+    }
+
+    G4double getEndIntObj()const
+    {
+      return EndIntObj;
+    }
+
 private:
+    G4double intObj_z_pos;
+    G4double EndIntObj;
     G4double IntObj_x, IntObj_y, IntObj_z;
     G4double radio_abundance;
     G4String IntObj_Selection;

@@ -16,10 +16,6 @@ void Book();
 
 private:
 G4bool fFactoryOn;
-G4double fE_beam, fEnergy, fx, fy, fz, ftheta, ftime;
-G4double fincEnergy;
-G4String fProcess;
-G4double fE_Beam, fNumPhotons;
 
 };
 

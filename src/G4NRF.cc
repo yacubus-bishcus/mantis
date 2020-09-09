@@ -188,7 +188,7 @@ G4NRF::G4NRF(const G4String& processName, G4bool Verbose_in, G4bool use_xsec_tab
 
   // print gamma info to a datafile and disable some error checking in G4NRFNuclearLevelManager
   // user may change this manually to activate output
-  const bool standalone = true;
+  const bool standalone = false;
   if (standalone) {
     ofstream standaloneFile("standalone.dat");
     print_to_standalone(standaloneFile);
@@ -214,10 +214,11 @@ void G4NRF::PrintInfoDefinition() {
 // Calculates the mean free path for NRF excitation in GEANT4 internal units.
 // Note: If no nearby level for resonant gamma excitation, mean free path is
 // returned as DBL_MAX.
-G4double G4NRF::GetMeanFreePath(const G4Track& aTrack,
-        G4double previousStepSize,     // these two parameters
-        G4ForceCondition* condition) { // are not used
+G4double G4NRF::GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize, G4ForceCondition* condition)
+{
   G4Material* aMaterial = aTrack.GetMaterial();
+  G4double thePreviousStepSize = previousStepSize;
+  G4ForceCondition* theCondition = condition;
   G4double  GammaEnergy = aTrack.GetDynamicParticle()->GetKineticEnergy();
 
   const G4int NumberOfElements            = aMaterial->GetNumberOfElements();

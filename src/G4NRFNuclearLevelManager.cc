@@ -407,7 +407,7 @@ NearestLevel(const G4double energy, const G4double eDiffMax) {
     G4double eLast = 0.0;
     G4double eDiffLast = diff;
     unsigned int i = 0;
-    const int numLevels = _levels->size(); // this saves almost a full 1% CPU
+    const unsigned int numLevels = _levels->size(); // this saves almost a full 1% CPU
     for (i = 0; i < numLevels; ++i) {
       G4double e = _levels->operator[](i)->Energy();
 
@@ -468,7 +468,7 @@ const G4NRFNuclearLevel* G4NRFNuclearLevelManager::LowestLevel() const {
 
 
 G4bool G4NRFNuclearLevelManager::Read(std::ifstream& dataFile) {
-  const G4double minProbability = 0.001;
+  //const G4double minProbability = 0.001;
 
   G4bool result = true;
 
@@ -828,7 +828,7 @@ void G4NRFNuclearLevelManager::delete_bad_levels() {
   //G4cout << "Calling delete_bad_levels() on Z = " << _nucleusZ << ", A = " << _nucleusA << G4endl;
   //G4cout << "Initial # of levels = " << _levels->size() << G4endl;
   G4int badcounter = 0;
-  for (int i = 0; i < _levels->size(); i++) {
+  for (unsigned int i = 0; i < _levels->size(); i++) {
     G4NRFNuclearLevel *checkLevel = _levels->operator[](i);
     G4bool invalidLevel = checkLevel->GetInvalidLevel(); // check whether the level is invalid
     if (invalidLevel) {
@@ -877,7 +877,3 @@ void G4NRFNuclearLevelManager::SetTeff(G4double Teff) { _Teff = Teff; }
 
 
 G4double G4NRFNuclearLevelManager::GetTeff() { return _Teff; }
-
-
-
-

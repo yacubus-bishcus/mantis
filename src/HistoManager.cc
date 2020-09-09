@@ -64,9 +64,19 @@ void HistoManager::Book()
 
     // Create Ntuple for Number of Photons Emitted in Water
     manager->CreateNtuple("NumPhotons","NumPhotons");
-
     manager->CreateNtupleDColumn("E_Beam");
     manager->CreateNtupleDColumn("NumPhotons");
+    manager->FinishNtuple();
+
+    // Create Ntuple for Interogation Object
+    manager->CreateNtuple("IntObj","IntObj");
+    manager->CreateNtupleDColumn("E_incident");
+    manager->FinishNtuple();
+
+    // Create Ntuple for Test NRF Detector
+    manager->CreateNtuple("NRF","NRF");
+    manager->CreateNtupleDColumn("E_NRF");
+    manager->CreateNtupleDColumn("E_notNRF");
     manager->FinishNtuple();
 
     fFactoryOn = true;

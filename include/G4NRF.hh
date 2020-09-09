@@ -163,4 +163,3 @@ inline G4bool G4NRF::IsApplicable(const G4ParticleDefinition& particle) {
 }
 
 #endif
-

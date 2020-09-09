@@ -1,34 +1,11 @@
 #include "SteppingAction.hh"
-#include "EventAction.hh"
-#include "PMTSD.hh"
-#include "StackingAction.hh"
-#include "HistoManager.hh"
-#include "StepMessenger.hh"
-
-#include "G4SteppingManager.hh"
-#include "G4SDManager.hh"
-#include "G4EventManager.hh"
-#include "G4ProcessManager.hh"
-#include "G4Track.hh"
-#include "G4Step.hh"
-#include "G4Event.hh"
-#include "G4StepPoint.hh"
-#include "G4TrackStatus.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleTypes.hh"
-
-#include "G4RunManager.hh"
-#include "G4ParticleGun.hh"
-#include "vector"
-#include "globals.hh"
-#include "G4SystemOfUnits.hh"
 
 
-SteppingAction::SteppingAction(G4ParticleGun* particle_gun, RunAction* localrun)
+SteppingAction::SteppingAction(const DetectorConstruction* det, G4ParticleGun* particle_gun, RunAction* localrun)
 : G4UserSteppingAction(), drawWaterFlag(0), drawIncFlag(0), drawDetFlag(0), stepM(NULL)
 {
     stepM = new StepMessenger(this);
+    local_det = det;
     particle_gun_local = particle_gun;
     fExpectedNextStatus = Undefined;
     run = localrun;
@@ -52,7 +29,14 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     }
 
     G4Track* theTrack = aStep->GetTrack();
-
+    // kill photons past IntObj
+    G4double EndIntObj = local_det->getEndIntObj();
+    /*
+    if(theTrack->GetPosition().x()/(cm) > EndIntObj/(cm))
+    {
+      theTrack->SetTrackStatus(fStopAndKill);
+    }
+    */
     if (particleName == "opticalphoton") {
          const G4VProcess* pds = aStep->GetPostStepPoint()->
                                                       GetProcessDefinedStep();
@@ -63,6 +47,36 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
          else if (pds->GetProcessName() == "OpRayleigh") {
              run->AddRayleigh();
          }
+     }
+
+     // Testing NRF Analysis
+     // inside Interogation Object
+     if(aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14 ,"IntObjPhysical") == 0)
+     {
+       G4double energy_IntObj = theTrack->GetKineticEnergy()/(MeV);
+       manager->FillNtupleDColumn(5,0,energy_IntObj);
+       manager->AddNtupleRow(5);
+     }
+
+     // inside testing detector
+     if(aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0,8,"testdetp") == 0)
+     {
+       if(theTrack->GetCreatorProcess() !=0)
+       {
+         G4String CPName = theTrack->GetCreatorProcess()->GetProcessName();
+         if(CPName == "NRF")
+         {
+           // NRF Photon get energy
+           G4double energy_NRF = theTrack->GetKineticEnergy()/(MeV);
+           manager->FillNtupleDColumn(6,0,energy_NRF);
+         }
+         else
+         {
+           G4double energy_n_NRF = theTrack->GetKineticEnergy()/(MeV);
+           manager->FillNtupleDColumn(6,1,energy_n_NRF);
+         }
+         manager->AddNtupleRow(6);
+       }
      }
 
     // Water Analysis

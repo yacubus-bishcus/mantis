@@ -13,6 +13,7 @@ G4NRFPhysics::G4NRFPhysics(const G4String &name, G4bool use_xsec_tables_in,
     use_xsec_integration(use_xsec_integration_in),
     force_isotropic(force_isotropic_in) {
   G4LossTableManager::Instance();
+  const G4String theName = name;
   SetPhysicsType(0);
 }
 

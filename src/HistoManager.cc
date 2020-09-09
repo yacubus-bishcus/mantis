@@ -76,7 +76,11 @@ void HistoManager::Book()
     // Create Ntuple for Test NRF Detector
     manager->CreateNtuple("NRF","NRF");
     manager->CreateNtupleDColumn("E_NRF");
-    manager->CreateNtupleDColumn("E_notNRF");
+    manager->FinishNtuple();
+
+    // Create Ntuple for Test NRF Detector
+    manager->CreateNtuple("NotNRF","NotNRF");
+    manager->CreateNtupleDColumn("E_not_NRF");
     manager->FinishNtuple();
 
     fFactoryOn = true;

@@ -2,7 +2,7 @@
 
 
 SteppingAction::SteppingAction(const DetectorConstruction* det, G4ParticleGun* particle_gun, RunAction* localrun)
-: G4UserSteppingAction(), drawWaterFlag(0), drawIncFlag(0), drawDetFlag(0), stepM(NULL)
+: G4UserSteppingAction(), drawIntObjDataFlag(0), drawWaterFlag(0), drawIncFlag(0), drawDetFlag(0), stepM(NULL)
 {
     stepM = new StepMessenger(this);
     local_det = det;
@@ -51,11 +51,14 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
      // Testing NRF Analysis
      // inside Interogation Object
-     if(aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14 ,"IntObjPhysical") == 0)
+     if(drawIntObjDataFlag)
      {
-       G4double energy_IntObj = theTrack->GetKineticEnergy()/(MeV);
-       manager->FillNtupleDColumn(5,0,energy_IntObj);
-       manager->AddNtupleRow(5);
+       if(aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14 ,"IntObjPhysical") == 0)
+       {
+         G4double energy_IntObj = theTrack->GetKineticEnergy()/(MeV);
+         manager->FillNtupleDColumn(5,0,energy_IntObj);
+         manager->AddNtupleRow(5);
+       }
      }
 
      // inside testing detector
@@ -69,13 +72,14 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
            // NRF Photon get energy
            G4double energy_NRF = theTrack->GetKineticEnergy()/(MeV);
            manager->FillNtupleDColumn(6,0,energy_NRF);
+           manager->AddNtupleRow(6);
          }
          else
          {
            G4double energy_n_NRF = theTrack->GetKineticEnergy()/(MeV);
-           manager->FillNtupleDColumn(6,1,energy_n_NRF);
+           manager->FillNtupleDColumn(7,0,energy_n_NRF);
+           manager->AddNtupleRow(7);
          }
-         manager->AddNtupleRow(6);
        }
      }
 

@@ -147,19 +147,14 @@ if(ui || macro == "vis_save.mac")
   delete visManager;
 }
 
+  G4int stop_time = time(NULL);
+  G4cout << "The MC took:\t\t" << stop_time - start_time << "s" <<G4endl;
 
   delete LoggedSession;
   delete runManager;
 
+  std::cout<<" The MC took:\t\t" << stop_time - start_time <<"s"<< std::endl;
+  std::cout << std::endl << " Run completed!"<< std::endl;
 
-
-
-        //delete UI;
-
-        G4int stop_time = time(NULL);
-
-        std::cout<<" The MC took:\t\t" << stop_time - start_time <<"s"<< std::endl;
-        std::cout << std::endl << " Run completed!"<< std::endl;
-
-        return 0;
+  return 0;
 }

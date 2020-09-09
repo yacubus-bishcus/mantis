@@ -63,10 +63,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4Box* solidIntObj = new G4Box("InterogationObject", IntObj_x, IntObj_y, IntObj_z);
         // eventually this will be selected by messenger
         // Setting up weapons grade materials
-        G4Isotope* Uranium235 = new G4Isotope("Uranium235", 92, 143, 235.04393); // atomicnumber, number of nucleons, mass of mole
-        G4Isotope* Uranium238 = new G4Isotope("Uranium238", 92, 146, 238.02891);
-        G4Isotope* Plutonium239 = new G4Isotope("Plutonium239",94, 145, 239.0521634);
-        G4Isotope* Plutonium240 = new G4Isotope("Plutonium240", 94, 146, 240.05381);
+        G4Isotope* Uranium235 = new G4Isotope("Uranium235", 92, 235, 235.04393); // atomicnumber, number of nucleons, mass of mole
+        G4Isotope* Uranium238 = new G4Isotope("Uranium238", 92, 238, 238.02891);
+        G4Isotope* Plutonium239 = new G4Isotope("Plutonium239",94, 239, 239.0521634);
+        G4Isotope* Plutonium240 = new G4Isotope("Plutonium240", 94, 240, 240.05381);
         G4Element* WGU = new G4Element("WGU", "U", 2); // name, element symbol, #isotopes
         G4Element* WGPu = new G4Element("WGPu","Pu",2);
         // eventually will add messenger ability to change isotope abundance

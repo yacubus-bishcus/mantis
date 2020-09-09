@@ -188,7 +188,7 @@ G4NRF::G4NRF(const G4String& processName, G4bool Verbose_in, G4bool use_xsec_tab
 
   // print gamma info to a datafile and disable some error checking in G4NRFNuclearLevelManager
   // user may change this manually to activate output
-  const bool standalone = false;
+  const bool standalone = true;
   if (standalone) {
     ofstream standaloneFile("standalone.dat");
     print_to_standalone(standaloneFile);

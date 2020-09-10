@@ -136,13 +136,12 @@ private:
     G4String IntObj_Selection;
     G4double intObjDensity;
     G4VPhysicalVolume* physIntObj;
-    G4VPhysicalVolume* phystestdet;
     G4LogicalVolume* logicPC;
     G4LogicalVolume* logicPMT;
     G4VPhysicalVolume* physPC;
     G4VPhysicalVolume* physPMT;
     G4VPhysicalVolume* physWater;
-    G4double water_size_x, water_size_y, water_size_z,PMT_rmax;
+    G4double water_size_x, water_size_y, water_size_z, PMT_rmax;
     DetectorMessenger* detectorM;
 };
 

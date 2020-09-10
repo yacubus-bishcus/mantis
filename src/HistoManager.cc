@@ -1,9 +1,7 @@
 #include "HistoManager.hh"
-#include "G4UnitsTable.hh"
-#include "G4SystemOfUnits.hh"
 
 extern G4String gOutName;
-HistoManager::HistoManager():fFactoryOn(false)
+HistoManager::HistoManager():checkPrint(false), fFactoryOn(false), checkLast(false)
 {}
 
 HistoManager::~HistoManager()
@@ -73,16 +71,6 @@ void HistoManager::Book()
     manager->CreateNtupleDColumn("E_incident");
     manager->FinishNtuple();
 
-    // Create Ntuple for Test NRF Detector
-    manager->CreateNtuple("NRF","NRF");
-    manager->CreateNtupleDColumn("E_NRF");
-    manager->FinishNtuple();
-
-    // Create Ntuple for Test NRF Detector
-    manager->CreateNtuple("NotNRF","NotNRF");
-    manager->CreateNtupleDColumn("E_not_NRF");
-    manager->FinishNtuple();
-
     fFactoryOn = true;
     G4cout << "Data Book Created." << G4endl;
     G4cout << "Output file is open in " << manager->GetFileName()<<"."
@@ -103,4 +91,30 @@ void HistoManager::finish()
 
     delete manager;
     fFactoryOn = false;
+}
+
+G4bool HistoManager::OnceAWhileSave(time_t val)
+{
+  startTime = val;
+  //std::cout << "here" <<std::endl;
+  time_t Now = time(0);
+  G4int testVal = (Now - startTime)%60;
+  if(!checkLast && testVal > 1)
+  {
+    checkLast = true;
+  }
+  //std::cout << std::endl << testVal << std::endl;
+  if((checkLast && (testVal == 1 || testVal == 0))) // every 60 seconds
+  {
+    G4AnalysisManager* manager = G4AnalysisManager::Instance();
+    manager->Write();
+    checkLast = false;
+    checkPrint = true;
+    G4cout << "Data Saved on Event..." << G4endl;
+  }
+  else
+  {
+    checkPrint = false;
+  }
+  return checkPrint;
 }

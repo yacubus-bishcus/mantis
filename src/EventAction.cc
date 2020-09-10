@@ -1,33 +1,16 @@
 #include "EventAction.hh"
-#include "PMTHit.hh"
-#include "DetectorConstruction.hh"
-#include "StackingAction.hh"
-#include "SteppingAction.hh"
-#include "HistoManager.hh"
-#include "EventMessenger.hh"
-
-#include "G4EventManager.hh"
-#include "G4SDManager.hh"
-#include "G4RunManager.hh"
-#include "G4Event.hh"
-#include "G4VVisManager.hh"
-#include "G4ios.hh"
-#include "G4UImanager.hh"
-#include "G4SystemOfUnits.hh"
-
-#include <vector>
-#include "G4ParticleGun.hh"
-#include <iostream>
 
 
 EventAction::EventAction(G4ParticleGun* particle_gun, SteppingAction* stepA,
-  const DetectorConstruction* det)
+  const DetectorConstruction* det, HistoManager* histo, const RunAction* run)
 : fDetector(det),fPMTCollID(-1),fPMTThreshold(1),fForcedrawphotons(false),
 fForcenophotons(false), drawNumPhotonsFlag(0),eventM(NULL)
 {
     eventM = new EventMessenger(this);
     particle_gun_local = particle_gun;
+    local_histo = histo;
     stepA_local = stepA;
+    local_run = run;
     fHitCount = 0;
     fPMTsAboveThreshold = 0;
 }
@@ -101,9 +84,13 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
         }
 
 
-    // Update Run Statistics
-
-
+    // Update Run root file
+    time_t startTime = local_run->getStartTime();
+    G4bool printSaveCheck = local_histo->OnceAWhileSave(startTime);
+    if(printSaveCheck)
+    {
+      G4cout << anEvent->GetEventID() << G4endl;
+    }
     // show event number for user
 
     std::cout << "\r\tEvent and tracks:\t " << anEvent->GetEventID() << "\t" << stepA_local->Ev.size() <<std::flush;

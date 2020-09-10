@@ -106,17 +106,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                       logicIntObj, "IntObjPhysical", logicWorld, false,
                                       0, checkOverlaps);
 
-        // Set Up NRF test detector
-
-        G4Box* testDet = new G4Box("testDetector", IntObj_x, IntObj_y, IntObj_z);
-        G4Material* testmat = nist->FindOrBuildMaterial("G4_Pb");
-        G4LogicalVolume* logicTestDet = new G4LogicalVolume(testDet, testmat, "testdetLogicVolume");
-        G4double testdet_x_pos = 0*cm;
-        G4double testdet_y_pos = 0*cm;
-        G4double testdet_z_pos = 54*cm;
-        phystestdet = new G4PVPlacement(0, G4ThreeVector(testdet_x_pos, testdet_y_pos, testdet_z_pos),
-                                        logicTestDet, "testdetp", logicWorld, false, 0, checkOverlaps);
-
 
         // Tub of water
         std::cout << "The Water Tank X was set to: " << water_size_x/(cm)<< " cm" << std::endl;
@@ -166,8 +155,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
         logicPMT = new G4LogicalVolume(solidPMT, PMT_mat, "PMT");
         // Set as Sensitive detector
-
-
 
         // Make Physical PMT
 
@@ -234,7 +221,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         logicPMT->SetVisAttributes(green);
         logicPC->SetVisAttributes(red);
         logicIntObj->SetVisAttributes(lightGray);
-        logicTestDet->SetVisAttributes(yellow);
 
         //
         // ------------ Generate & Add Material Properties Table ------------

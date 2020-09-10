@@ -11,6 +11,21 @@
 #include "G4ParticleGun.hh"
 #include "SteppingAction.hh"
 #include "HistoManager.hh"
+#include "PMTHit.hh"
+#include "DetectorConstruction.hh"
+#include "StackingAction.hh"
+#include "SteppingAction.hh"
+#include "HistoManager.hh"
+#include "EventMessenger.hh"
+#include "G4EventManager.hh"
+#include "G4SDManager.hh"
+#include "G4RunManager.hh"
+#include "G4Event.hh"
+#include "G4VVisManager.hh"
+#include "G4ios.hh"
+#include "G4UImanager.hh"
+#include "G4SystemOfUnits.hh"
+#include <time.h>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 class G4Event;
@@ -20,7 +35,7 @@ class EventMessenger;
 class EventAction : public G4UserEventAction
 {
   public:
-    EventAction(G4ParticleGun*,SteppingAction*, const DetectorConstruction*);
+    EventAction(G4ParticleGun*,SteppingAction*, const DetectorConstruction*, HistoManager*, const RunAction*);
    ~EventAction();
 
   public:
@@ -51,6 +66,8 @@ private:
     G4ParticleGun* particle_gun_local;
     SteppingAction* stepA_local;
     const DetectorConstruction* fDetector;
+    HistoManager* local_histo;
+    const RunAction* local_run;
 
     // for PMT analysis
     G4int fPMTCollID;

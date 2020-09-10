@@ -31,12 +31,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     G4Track* theTrack = aStep->GetTrack();
     // kill photons past IntObj
     G4double EndIntObj = local_det->getEndIntObj();
-    /*
+
     if(theTrack->GetPosition().x()/(cm) > EndIntObj/(cm))
     {
       theTrack->SetTrackStatus(fStopAndKill);
     }
-    */
+
     if (particleName == "opticalphoton") {
          const G4VProcess* pds = aStep->GetPostStepPoint()->
                                                       GetProcessDefinedStep();
@@ -47,6 +47,15 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
          else if (pds->GetProcessName() == "OpRayleigh") {
              run->AddRayleigh();
          }
+     }
+
+     if(theTrack->GetCreatorProcess() !=0)
+     {
+       G4String CPName = theTrack->GetCreatorProcess()->GetProcessName();
+       if(CPName == "NRF")
+       {
+         run->AddNRF();
+       }
      }
 
      // Testing NRF Analysis
@@ -61,30 +70,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
        }
      }
 
-     // inside testing detector
-     if(aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0,8,"testdetp") == 0)
-     {
-       if(theTrack->GetCreatorProcess() !=0)
-       {
-         G4String CPName = theTrack->GetCreatorProcess()->GetProcessName();
-         if(CPName == "NRF")
-         {
-           // NRF Photon get energy
-           G4double energy_NRF = theTrack->GetKineticEnergy()/(MeV);
-           manager->FillNtupleDColumn(6,0,energy_NRF);
-           manager->AddNtupleRow(6);
-         }
-         else
-         {
-           G4double energy_n_NRF = theTrack->GetKineticEnergy()/(MeV);
-           manager->FillNtupleDColumn(7,0,energy_n_NRF);
-           manager->AddNtupleRow(7);
-         }
-       }
-     }
-
     // Water Analysis
-
 
     // Here I am inside the water
     if(aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0,5,"Water")==0){
@@ -225,24 +211,19 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         manager->FillNtupleDColumn(3,1,Xdetected.x()/(cm));
                         manager->FillNtupleDColumn(3,2,Xdetected.y()/(cm));
                         manager->AddNtupleRow(3);
-                        //G4cout << "Detection" << G4endl;
+
                     }
                     else if (theStatus == NotAtBoundary) {
-                      //run->AddNotAtBoundary();
                         procCount = "NotAtBoundary";
                     }
                     else if (theStatus == SameMaterial) {
-                      //run->AddSameMaterial();
                         procCount = "SameMaterial";
                     }
                     else if (theStatus == StepTooSmall) {
-                      //run->AddStepTooSmall();
                         procCount = "SteptooSmall";
                     }
                     else if (theStatus == NoRINDEX) {
-                      //run->AddNoRINDEX();
                         procCount = "NoRINDEX";
-                        //G4cout << "No Rindex" << G4endl;
                     }
                     else {
                         G4cout << "theStatus: " << theStatus

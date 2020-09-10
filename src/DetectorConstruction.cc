@@ -99,7 +99,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         // Make Physical Volume
         G4double intObj_x_pos = 0*cm;
         G4double intObj_y_pos = 0*cm;
-        intObj_z_pos = 20*cm;
+        intObj_z_pos = 50*cm;
         setEndIntObj(IntObj_z, intObj_z_pos);
 
         physIntObj = new G4PVPlacement(0, G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos),
@@ -113,7 +113,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4LogicalVolume* logicTestDet = new G4LogicalVolume(testDet, testmat, "testdetLogicVolume");
         G4double testdet_x_pos = 0*cm;
         G4double testdet_y_pos = 0*cm;
-        G4double testdet_z_pos = 25*cm;
+        G4double testdet_z_pos = 54*cm;
         phystestdet = new G4PVPlacement(0, G4ThreeVector(testdet_x_pos, testdet_y_pos, testdet_z_pos),
                                         logicTestDet, "testdetp", logicWorld, false, 0, checkOverlaps);
 
@@ -135,7 +135,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                     "Water"); //its name
 
         // Make Physical volume
-        G4double water_x_pos = 100*cm;
+        G4double water_x_pos = 50*cm;
         G4double water_y_pos =0*cm;
         G4double water_z_pos =0*cm;
 

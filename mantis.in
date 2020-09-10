@@ -4,12 +4,12 @@
 /event/verbose 0
 # must be called prior to run initalized
 #/mydet/PCrad 100
-#/mydet/WaterX 100
-#/mydet/WaterY 100
-#/mydet/WaterZ 50
-#/mytar/IntObjX 10
-#/mytar/IntObjY 10
-#/mytar/IntObjZ 1
+/mydet/WaterX 10
+/mydet/WaterY 30
+/mydet/WaterZ 30
+/mytar/IntObjX 10
+/mytar/IntObjY 10
+/mytar/IntObjZ 0.5
 #/mytar/fAbundance 90
 #/mytar/target Uranium
 # Caution the tank should not be set larger than world (600x600x600)
@@ -19,6 +19,6 @@
 #/output/myoutput WaterData
 #/output/myoutput IncidentData
 #/output/myoutput DetData
-#/output/myoutput IntObjData
+/output/myoutput IntObjData
 #/event/output Yes
-/run/beamOn 1000
+/run/beamOn 200

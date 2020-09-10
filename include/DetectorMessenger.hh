@@ -30,6 +30,9 @@ private:
   G4UIcmdWithADouble* CmdtX;
   G4UIcmdWithADouble* CmdtY;
   G4UIcmdWithADouble* CmdtZ;
+  G4UIcmdWithADouble* CmdtXpos;
+  G4UIcmdWithADouble* CmdtYpos;
+  G4UIcmdWithADouble* CmdtZpos;
   G4UIcmdWithADouble* Cmdtrad;
   G4UIcmdWithAString* Cmdtsel;
   G4UIdirectory *myDir;

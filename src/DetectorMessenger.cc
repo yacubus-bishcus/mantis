@@ -17,6 +17,9 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdtZ = new G4UIcmdWithADouble("/mytar/IntObjZ",this);
   Cmdtrad = new G4UIcmdWithADouble("/mytar/fAbundance",this);
   Cmdtsel = new G4UIcmdWithAString("/mytar/target",this);
+  CmdtXpos = new G4UIcmdWithADouble("/mytar/IntObjXPos",this);
+  CmdtYpos = new G4UIcmdWithADouble("/mytar/IntObjYPos",this);
+  CmdtZpos = new G4UIcmdWithADouble("/mytar/IntObjZPos",this);
 
 
   Cmd->SetGuidance("Choose Desired PhotoCathode Radius");
@@ -28,6 +31,9 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdtZ->SetGuidance("Choose Desired Z Size of Interogation Target");
   Cmdtrad->SetGuidance("Choose Desired fission isotope abundance(enrichment) of Interogation Target");
   Cmdtsel->SetGuidance("Choose Desired Weapons grade target");
+  CmdtXpos->SetGuidance("Choose Desired X Position of Interogation Target");
+  CmdtYpos->SetGuidance("Choose Desired Y Position of Interogation Target");
+  CmdtZpos->SetGuidance("Choose Desired Z Position of Interogation Target");
   Cmd->SetParameterName("radius",false);
   CmdX->SetParameterName("waterx",false);
   CmdY->SetParameterName("watery",false);
@@ -37,6 +43,9 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdtZ->SetParameterName("targetz",false);
   Cmdtrad->SetParameterName("targetrad",false);
   Cmdtsel->SetParameterName("targetsel",false);
+  CmdtXpos->SetParameterName("targetxpos",false);
+  CmdtYpos->SetParameterName("targetypos",false);
+  CmdtZpos->SetParameterName("targetzpos",false);
   Cmd->SetDefaultValue(-1);
   CmdX->SetDefaultValue(-1);
   CmdY->SetDefaultValue(-1);
@@ -47,6 +56,9 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   Cmdtrad->SetDefaultValue(-1);
   Cmdtsel->SetDefaultValue("Uranium");
   Cmdtsel->SetCandidates("Uranium Plutonium");
+  CmdtXpos->SetDefaultValue(-1);
+  CmdtYpos->SetDefaultValue(-1);
+  CmdtZpos->SetDefaultValue(-1);
 
   //Cmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle);
 
@@ -63,6 +75,9 @@ DetectorMessenger::~DetectorMessenger()
   delete CmdtZ;
   delete Cmdtrad;
   delete Cmdtsel;
+  delete CmdtXpos;
+  delete CmdtYpos;
+  delete CmdtZpos;
 }
 
 
@@ -179,6 +194,42 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
       DetectorA->SetIntObj(theCommandtsel);
     }
     else{std::cerr << "ERROR: DetectorMessenger: Target not selected."<<std::endl;}
+  }
+  else if(command == CmdtXpos)
+  {
+    G4double theCommandtXpos = CmdtXpos->GetNewDoubleValue(newValue);
+    if(theCommandtXpos == -1)
+    {
+      std::cout << "Using Default Target X position" <<std::endl;
+    }
+    else
+    {
+      DetectorA->SetIntObjX_pos(theCommandtXpos);
+    }
+  }
+  else if(command == CmdtYpos)
+  {
+    G4double theCommandtYpos = CmdtYpos->GetNewDoubleValue(newValue);
+    if(theCommandtYpos == -1)
+    {
+      std::cout << "Using Default Target Y position" <<std::endl;
+    }
+    else
+    {
+      DetectorA->SetIntObjY_pos(theCommandtYpos);
+    }
+  }
+  else if(command == CmdtZpos)
+  {
+    G4double theCommandtZpos = CmdtZpos->GetNewDoubleValue(newValue);
+    if(theCommandtZpos == -1)
+    {
+      std::cout << "Using Default Target Z position" <<std::endl;
+    }
+    else
+    {
+      DetectorA->SetIntObjZ_pos(theCommandtZpos);
+    }
   }
   else
   {

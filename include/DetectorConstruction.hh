@@ -97,6 +97,21 @@ public:
       IntObj_z = val;
       IntObj_z = IntObj_z*cm;
     }
+    void SetIntObjX_pos(G4double val)
+    {
+      intObj_x_pos = val;
+      intObj_x_pos = intObj_x_pos*cm;
+    }
+    void SetIntObjY_pos(G4double val)
+    {
+      intObj_y_pos = val;
+      intObj_y_pos = intObj_y_pos*cm;
+    }
+    void SetIntObjZ_pos(G4double val)
+    {
+      intObj_z_pos = val;
+      intObj_z_pos = intObj_z_pos*cm;
+    }
     void SetAbundance(G4double val)
     {
       radio_abundance = val;
@@ -120,7 +135,8 @@ public:
 
     void setEndIntObj(G4double z_Size, G4double z_pos)
     {
-      EndIntObj = z_Size/2 + z_pos;
+      EndIntObj = z_Size + z_pos + 1;
+      std::cout << "The Cut position is set to: " << EndIntObj/(cm) << " cm" << std::endl;
     }
 
     G4double getEndIntObj()const
@@ -129,18 +145,20 @@ public:
     }
 
 private:
-    G4double intObj_z_pos;
     G4double EndIntObj;
     G4double IntObj_x, IntObj_y, IntObj_z;
     G4double radio_abundance;
     G4String IntObj_Selection;
     G4double intObjDensity;
+    G4double intObj_x_pos, intObj_y_pos, intObj_z_pos;
     G4VPhysicalVolume* physIntObj;
     G4LogicalVolume* logicPC;
     G4LogicalVolume* logicPMT;
     G4VPhysicalVolume* physPC;
-    G4VPhysicalVolume* physPMT;
-    G4VPhysicalVolume* physWater;
+    G4VPhysicalVolume* physPMTLeft;
+    G4VPhysicalVolume* physPMTRight;
+    G4VPhysicalVolume* physWaterLeft;
+    G4VPhysicalVolume* physWaterRight;
     G4double water_size_x, water_size_y, water_size_z, PMT_rmax;
     DetectorMessenger* detectorM;
 };

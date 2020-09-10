@@ -42,9 +42,12 @@ void PrintUsage()
 int main(int argc,char **argv)
 {
   // Defaults
+  G4int start_time = time(0);
   G4bool use_xsec_tables = true;
   G4bool use_xsec_integration = true;
   G4bool force_isotropic = false;
+  macro = "mantis.in";
+  seed = 1;
 
   // Detect interactive mode (if no arguments) and define UI session
   //
@@ -53,11 +56,6 @@ int main(int argc,char **argv)
         if ( argc == 1 ) {
           ui = new G4UIExecutive(argc, argv);
         }
-
-        G4int start_time = time(NULL);
-        // Default inputs
-        macro = "mantis.in";
-        seed = 1;
 
         // Evaluate Arguments
         if ( argc > 7 )
@@ -95,7 +93,6 @@ int main(int argc,char **argv)
 
         // construct the default run manager
         G4RunManager* runManager = new G4RunManager;
-
         // set mandatory initialization classes
         DetectorConstruction* det = new DetectorConstruction();
         runManager->SetUserInitialization(det);
@@ -140,7 +137,7 @@ if(ui || macro == "vis_save.mac")
   delete visManager;
 }
 
-  G4int stop_time = time(NULL);
+  G4int stop_time = time(0);
   G4cout << "The MC took:\t\t" << stop_time - start_time << "s" <<G4endl;
 
   delete LoggedSession;

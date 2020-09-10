@@ -3,7 +3,8 @@
 DetectorConstruction::DetectorConstruction()
         : G4VUserDetectorConstruction(), IntObj_x(10*cm), IntObj_y(10*cm), IntObj_z(1*cm),
         radio_abundance(90*perCent), IntObj_Selection("Uranium"), intObjDensity(19.1),
-        water_size_x(50*cm),water_size_y(20*cm), water_size_z(10*cm),
+        intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(50*cm),
+        water_size_x(40*cm),water_size_y(20*cm), water_size_z(10*cm),
          PMT_rmax(5*cm), detectorM(NULL)
 {
   detectorM = new DetectorMessenger(this);
@@ -97,9 +98,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         // Make Logical Volume
         G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObjLogicVolume");
         // Make Physical Volume
-        G4double intObj_x_pos = 0*cm;
-        G4double intObj_y_pos = 0*cm;
-        intObj_z_pos = 50*cm;
+
+        std::cout << "The Interogation Object X Position was set to: " << intObj_x_pos/(cm) << std::endl;
+        std::cout << "The Interogation Object Y Position was set to: " << intObj_y_pos/(cm) << std::endl;
+        std::cout << "The Interogation Object Z Position was set to: " << intObj_z_pos/(cm) << std::endl;
         setEndIntObj(IntObj_z, intObj_z_pos);
 
         physIntObj = new G4PVPlacement(0, G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos),
@@ -127,15 +129,27 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4double water_x_pos = 50*cm;
         G4double water_y_pos =0*cm;
         G4double water_z_pos =0*cm;
+        G4RotationMatrix* waterRot = new G4RotationMatrix;
+        waterRot->rotateY(325.*deg);
+        G4RotationMatrix* waterRot2 = new G4RotationMatrix;
+        waterRot2->rotateY(35.*deg);
 
-        physWater = new G4PVPlacement(0,                 //no rotation
+        physWaterLeft = new G4PVPlacement(waterRot,                 //no rotation
                                       G4ThreeVector(water_x_pos,water_y_pos,water_z_pos),
                                       logicWater, //its logical volume
-                                      "Water", //its name
+                                      "WaterLeft", //its name
                                       logicWorld, //its mother logical volume
                                       false, //no boolean operation
                                       0,     //copy number
                                       checkOverlaps); //overlaps checking
+        physWaterRight = new G4PVPlacement(waterRot2,
+                                          G4ThreeVector(-1*water_x_pos, water_y_pos, water_z_pos),
+                                          logicWater,
+                                          "WaterRight",
+                                          logicWorld,
+                                          false,
+                                          0,
+                                          checkOverlaps);
 
         // PMT Cylinder(Tube) face
 
@@ -159,15 +173,27 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         // Make Physical PMT
 
         //G4double PMT_y_pos
-        G4double PMT_x_pos = (water_x_pos + water_size_x + PMT_z);
-        PmtPositions.push_back(G4ThreeVector(PMT_x_pos,water_y_pos,water_z_pos));
+        G4double angle = 55.0;
+        G4double PMT_x_pos = 11+water_x_pos + (water_size_x + PMT_z)*sin(angle*pi/180);
+        G4double PMT_z_pos = water_z_pos - (water_size_z/2+PMT_z/2)*cos(angle*pi/180);
+        PmtPositions.push_back(G4ThreeVector(PMT_x_pos,water_y_pos,PMT_z_pos));
         G4RotationMatrix *pmtRot = new G4RotationMatrix;
-        pmtRot->rotateY(90.*deg);
+        pmtRot->rotateY(angle*deg);
+        G4RotationMatrix *pmtRot2 = new G4RotationMatrix;
+        pmtRot2->rotateY((360.0 - angle)*deg);
 
-        physPMT = new G4PVPlacement(pmtRot,
-                                    G4ThreeVector(PMT_x_pos,water_y_pos,water_z_pos),
+        physPMTLeft = new G4PVPlacement(pmtRot,
+                                    G4ThreeVector(PMT_x_pos, water_y_pos, PMT_z_pos),
                                     logicPMT,
-                                    "PMT",
+                                    "PMTLeft",
+                                    logicWorld,
+                                    false,
+                                    0,
+                                    checkOverlaps);
+        physPMTRight = new G4PVPlacement(pmtRot2,
+                                    G4ThreeVector(-PMT_x_pos, water_y_pos, PMT_z_pos),
+                                    logicPMT,
+                                    "PMTRight",
                                     logicWorld,
                                     false,
                                     0,
@@ -409,8 +435,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         water_opsurf->SetFinish(polished);
         water_opsurf->SetPolish(1.0);
         water_opsurf->SetModel(glisur);
-        new G4LogicalBorderSurface("water_surf", physWater, physPMT, water_opsurf); // name, physical volume1, phsical volume2, G4optical surface
-
+        new G4LogicalBorderSurface("water_surf_left", physWaterLeft, physPMTLeft, water_opsurf); // name, physical volume1, phsical volume2, G4optical surface
+        new G4LogicalBorderSurface("water_surf_right", physWaterRight, physPMTRight, water_opsurf);
         // PMT
         G4double ephotonPMT[] = {1.7711*eV, 1.9074*eV, 2.0663*eV, 2.2542*eV, 2.4796*eV, 2.7551*eV, 3.0995*eV, 3.5423*eV, 4.133*eV};
         const G4int num = sizeof(ephotonPMT)/sizeof(G4double);

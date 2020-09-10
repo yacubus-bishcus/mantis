@@ -85,14 +85,16 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
 
 
     // Update Run root file
+    /*
     time_t startTime = local_run->getStartTime();
+
     G4bool printSaveCheck = local_histo->OnceAWhileSave(startTime);
     if(printSaveCheck)
     {
       G4cout << anEvent->GetEventID() << G4endl;
     }
     // show event number for user
-
+*/
     std::cout << "\r\tEvent and tracks:\t " << anEvent->GetEventID() << "\t" << stepA_local->Ev.size() <<std::flush;
 }
 

@@ -16,9 +16,9 @@
 #/input/energy 1.73355
 # Initialize kernel
 /run/initialize
-#/output/myoutput WaterData
-#/output/myoutput IncidentData
-#/output/myoutput DetData
+/output/myoutput WaterData
+/output/myoutput IncidentData
+/output/myoutput DetData
 /output/myoutput IntObjData
 #/event/output Yes
 /run/beamOn 200

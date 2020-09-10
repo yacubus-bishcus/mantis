@@ -35,6 +35,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if(theTrack->GetPosition().x()/(cm) > EndIntObj/(cm))
     {
       theTrack->SetTrackStatus(fStopAndKill);
+      run->AddStatusKilled();
     }
 
     if (particleName == "opticalphoton") {
@@ -59,10 +60,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
      }
 
      // Testing NRF Analysis
-     // inside Interogation Object
+     // inside Interogation Object for first time
      if(drawIntObjDataFlag)
      {
-       if(aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14 ,"IntObjPhysical") == 0)
+       if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14 ,"IntObjPhysical") == 0
+          && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14, "IntObjPhysical") != 0)
        {
          G4double energy_IntObj = theTrack->GetKineticEnergy()/(MeV);
          manager->FillNtupleDColumn(5,0,energy_IntObj);

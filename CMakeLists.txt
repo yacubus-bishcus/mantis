@@ -20,7 +20,7 @@ endif()
 include(${Geant4_USE_FILE})
 
 #----------------------------------------------------------------------------
-list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
+list(APPEND CMAKE_MODULE_PATH $ENV{ROOTCMAKEPATH})
 # Find ROOT (required package)
 find_package(ROOT REQUIRED COMPONENTS RIO)
 #--Define usefull ROOT Functions and macros

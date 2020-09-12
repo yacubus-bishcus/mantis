@@ -11,7 +11,7 @@ option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
 option(WITH_GEANT4_ANALYSIS_USE_ROOT "Build example with Geant4 ROOT ANALYSIS" ON)
 
 if(WITH_GEANT4_UIVIS)
-  find_package(Geant4 REQUIRED ui_all vis_all ANALYSIS_USE_ROOT)
+  find_package(Geant4 REQUIRED ui_all vis_all)
 else()
   find_package(Geant4 REQUIRED)
 endif()
@@ -22,10 +22,12 @@ endif()
 include(${Geant4_USE_FILE})
 
 #----------------------------------------------------------------------------
-list(APPEND CMAKE_MODULE_PATH $ENV{ROOTCMAKEPATH})
 # Find ROOT (required package)
-find_package(ROOT REQUIRED COMPONENTS RIO)
-include_directories(${ROOT_INCLUDE_DIRS})
+if(WITH_GEANT4_ANALYSIS_USE_ROOT)
+  list(APPEND CMAKE_MODULE_PATH $ENV{ROOTCMAKEPATH})
+  find_package(ROOT REQUIRED G4ANALYSIS_USE_ROOT)
+  include_directories(${ROOT_INCLUDE_DIRS})
+endif()
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
@@ -40,7 +42,9 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #
 add_executable(mantis mantis.cc ${sources} ${headers})
 target_link_libraries(mantis ${Geant4_LIBRARIES})
-target_link_libraries(mantis ${ROOT_LIBRARIES})
+if(WITH_GEANT4_ANALYSIS_USE_ROOT)
+  target_link_libraries(mantis ${ROOT_LIBRARIES})
+endif()
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we

@@ -8,8 +8,10 @@ project(mantis)
 # to build a batch mode only executable
 #
 option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
+option(WITH_GEANT4_ANALYSIS_USE_ROOT "Build example with Geant4 ROOT ANALYSIS" ON)
+
 if(WITH_GEANT4_UIVIS)
-  find_package(Geant4 REQUIRED ui_all vis_all)
+  find_package(Geant4 REQUIRED ui_all vis_all ANALYSIS_USE_ROOT)
 else()
   find_package(Geant4 REQUIRED)
 endif()
@@ -23,8 +25,6 @@ include(${Geant4_USE_FILE})
 list(APPEND CMAKE_MODULE_PATH $ENV{ROOTCMAKEPATH})
 # Find ROOT (required package)
 find_package(ROOT REQUIRED COMPONENTS RIO)
-#--Define usefull ROOT Functions and macros
-include(${ROOT_USE_FILE})
 include_directories(${ROOT_INCLUDE_DIRS})
 
 #----------------------------------------------------------------------------

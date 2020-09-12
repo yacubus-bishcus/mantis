@@ -2,14 +2,22 @@
 #define PrimaryGeneratorAction_h 1
 
 #include "G4VUserPrimaryGeneratorAction.hh"
+#include "HistoManager.hh"
 #include "globals.hh"
 #include <vector>
 #include "G4ParticleGun.hh"
 #include "Randomize.hh"
-#include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4Event.hh"
+#include "G4Gamma.hh"
+
+#if defined (G4ANALYSIS_USE_ROOT)
+#include "TFile.h"
+#include "TROOT.h"
+#include "TH1D.h"
+#include "TRandom1.h"
+#endif
 
 class G4Event;
 class PrimaryGenActionMessenger;
@@ -31,6 +39,12 @@ private:
   G4double chosen_energy;
   PrimaryGenActionMessenger* genM;
   G4ParticleGun* fParticleGun;
+#if defined (G4ANALYSIS_USE_ROOT)
+  TRandom1 Random;
+  TH1D *hBrems;
+  TH1D *hSample;
+  TH1D *hBinary;
+#endif
 
 protected:
 

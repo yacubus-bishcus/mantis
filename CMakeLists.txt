@@ -49,6 +49,7 @@ target_link_libraries(mantis ${Geant4_LIBRARIES})
 #
 set(mantis_SCRIPTS
     mantis.in
+    brems_distributions.root
     vis.mac
     input_spectrum.txt
     init_vis.mac

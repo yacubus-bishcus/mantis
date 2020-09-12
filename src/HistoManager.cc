@@ -28,6 +28,7 @@ void HistoManager::Book()
     manager->CreateNtuple("WaterData","WaterData");
 
     manager->CreateNtupleDColumn("Energy");
+    manager->CreateNtupleIColumn("isNRF");
     manager->CreateNtupleDColumn("x");
     manager->CreateNtupleDColumn("y");
     manager->CreateNtupleDColumn("z");
@@ -37,9 +38,10 @@ void HistoManager::Book()
 
     // Create Ntuple for Incident Detector Data
 
-    manager->CreateNtuple("IncidentData","IncidentData");
+    manager->CreateNtuple("IncidentDet","IncidentDet");
 
     manager->CreateNtupleDColumn("Energy");
+    manager->CreateNtupleIColumn("isNRF");
     manager->CreateNtupleDColumn("x");
     manager->CreateNtupleDColumn("y");
     manager->CreateNtupleDColumn("z");
@@ -47,17 +49,19 @@ void HistoManager::Book()
 
     // Create Ntuple for Reactions within detector
 
-    manager->CreateNtuple("DetData","DetData");
+    manager->CreateNtuple("DetProcess","DetProcess");
 
     manager->CreateNtupleSColumn("Process");
     manager->CreateNtupleDColumn("E_beam");
     manager->FinishNtuple();
 
     // Create Nutple for Energy if detected
-    manager->CreateNtuple("DetEnergy","DetEnergy");
+    manager->CreateNtuple("Detected","Detected");
     manager->CreateNtupleDColumn("det_energy");
+    manager->CreateNtupleIColumn("isNRF");
     manager->CreateNtupleDColumn("x");
     manager->CreateNtupleDColumn("y");
+    manager->CreateNtupleDColumn("z");
     manager->FinishNtuple();
 
     // Create Ntuple for Number of Photons Emitted in Water
@@ -70,6 +74,13 @@ void HistoManager::Book()
     manager->CreateNtuple("IntObj","IntObj");
     manager->CreateNtupleDColumn("E_incident");
     manager->FinishNtuple();
+
+#if defined (G4ANALYSIS_USE_ROOT)
+    // Create Ntuple for Resonance Sampling
+    manager->CreateNtuple("ResSample", "ResSample");
+    manager->CreateNtupleIColumn("Res");
+    manager->FinishNtuple();
+#endif
 
     fFactoryOn = true;
     G4cout << "Data Book Created." << G4endl;

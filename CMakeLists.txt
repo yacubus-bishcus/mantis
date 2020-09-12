@@ -20,12 +20,12 @@ endif()
 include(${Geant4_USE_FILE})
 
 #----------------------------------------------------------------------------
-#list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
+list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
 # Find ROOT (required package)
-#find_package(ROOT REQUIRED COMPONENTS RIO)
+find_package(ROOT REQUIRED COMPONENTS RIO)
 #--Define usefull ROOT Functions and macros
-#include("${ROOT_USE_FILE}")
-#include_directories(${ROOT_INCLUDE_DIRS})
+include("${ROOT_USE_FILE}")
+include_directories(${ROOT_INCLUDE_DIRS})
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
@@ -40,7 +40,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #
 add_executable(mantis mantis.cc ${sources} ${headers})
 target_link_libraries(mantis ${Geant4_LIBRARIES})
-#target_link_libraries(mantis ${ROOT_LIBRARIES})
+target_link_libraries(mantis ${ROOT_LIBRARIES})
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we

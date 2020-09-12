@@ -13,7 +13,8 @@
 #/mytar/fAbundance 90
 #/mytar/target Uranium
 # Caution the tank should not be set larger than world (600x600x600)
-#/input/energy 1.73355
+# for input spectrum energy set to -1 for brem spectrum energy set to -2
+/input/energy -2
 # Initialize kernel
 /run/initialize
 /output/myoutput WaterData

@@ -24,7 +24,7 @@ list(APPEND CMAKE_MODULE_PATH $ENV{ROOTCMAKEPATH})
 # Find ROOT (required package)
 find_package(ROOT REQUIRED COMPONENTS RIO)
 #--Define usefull ROOT Functions and macros
-include("${ROOT_USE_FILE}")
+include(${ROOT_USE_FILE})
 include_directories(${ROOT_INCLUDE_DIRS})
 
 #----------------------------------------------------------------------------

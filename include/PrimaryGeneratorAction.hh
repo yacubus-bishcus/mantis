@@ -7,7 +7,6 @@
 #include <vector>
 #include "G4ParticleGun.hh"
 #include "Randomize.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4Event.hh"
 #include "G4Gamma.hh"

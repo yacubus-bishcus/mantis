@@ -31,11 +31,11 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction
             hBinary = (TH1D*) fin->Get("hBinary");
             if (hBrems && hSample && hBinary)
             {
-              G4cout << "Imported brems and sampling distributions from " << fin->GetName() << G4endl << G4endl;
+              std::cout << "Imported brems and sampling distributions from " << fin->GetName() << std::endl << std::endl;
             }
             else
             {
-              G4cout << "Error reading from file " << fin->GetName() << G4endl;
+              std::cerr << "Error reading from file " << fin->GetName() << std::endl;
               exit(1);
             }
           }
@@ -64,7 +64,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         std::cout << "here 2" << std::endl;
         if(chosen_energy == -2)
         {
-          energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
+          energy = hSample->GetRandom(); // sample the resonances specified by hSample
+          std::cout << "here" << std::endl;
+          energy = energy*MeV;
         }
 #else
         if(chosen_energy == -2)

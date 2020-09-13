@@ -2,14 +2,9 @@
 # Setup the project
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 project(mantis)
-#----------------------------------------------------------------------------
-# Find Geant4 package, activating all available UI and Vis drivers by default
-# You can set WITH_GEANT4_UIVIS to OFF via the command line or ccmake/cmake-gui
-# to build a batch mode only executable
-#
 option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
 option(WITH_GEANT4_ANALYSIS_USE_ROOT "Build example with Geant4 ROOT ANALYSIS" ON)
-
+add_compile_options(-Wno-unused-variable -Wno-shadow -Wno-unused-parameter)
 if(WITH_GEANT4_UIVIS)
   find_package(Geant4 REQUIRED ui_all vis_all)
 else()
@@ -33,7 +28,6 @@ if(WITH_GEANT4_ANALYSIS_USE_ROOT)
     message(STATUS "G4 ROOT NOT Found. --> ROOT disabled")
   endif()
 endif()
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-shadow")
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project

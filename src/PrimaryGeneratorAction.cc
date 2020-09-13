@@ -14,31 +14,27 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction
 
         fParticleGun->SetParticleTime(0.0*ns);
         // Determine particle Beam Energy
+        ReadInputSpectrumFile("input_spectrum.txt");
 
-        if(chosen_energy == -1)
-        {
-          ReadInputSpectrumFile("input_spectrum.txt");
-        }
 
 #if defined (G4ANALYSIS_USE_ROOT)
-        if(chosen_energy == -2)
+
+        // file contains the normalized brems distribution p(E), sampling distribution s(E),
+        // and binary 0/1 for off/on resonance useful in weighting
+        TFile *fin = TFile::Open("brems_distributions.root");
+        hBrems  = (TH1D*) fin->Get("hBrems");
+        hSample = (TH1D*) fin->Get("hSample");
+        hBinary = (TH1D*) fin->Get("hBinary");
+        if (hBrems && hSample && hBinary)
         {
-            // file contains the normalized brems distribution p(E), sampling distribution s(E),
-            // and binary 0/1 for off/on resonance useful in weighting
-            TFile *fin = TFile::Open("brems_distributions.root");
-            hBrems  = (TH1D*) fin->Get("hBrems");
-            hSample = (TH1D*) fin->Get("hSample");
-            hBinary = (TH1D*) fin->Get("hBinary");
-            if (hBrems && hSample && hBinary)
-            {
-              std::cout << "Imported brems and sampling distributions from " << fin->GetName() << std::endl << std::endl;
-            }
-            else
-            {
-              std::cerr << "Error reading from file " << fin->GetName() << std::endl;
-              exit(1);
-            }
-          }
+          std::cout << "Imported brems and sampling distributions from " << fin->GetName() << std::endl << std::endl;
+        }
+        else
+        {
+          std::cerr << "Error reading from file " << fin->GetName() << std::endl;
+          exit(1);
+        }
+
 #endif
         // Set Beam Position
         beam_offset_x = 0*cm;
@@ -61,12 +57,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
         // Set Particle Energy (Must be in generate primaries)
 #if defined (G4ANALYSIS_USE_ROOT)
-        std::cout << "here 2" << std::endl;
+
         if(chosen_energy == -2)
         {
-          energy = hSample->GetRandom(); // sample the resonances specified by hSample
-          std::cout << "here" << std::endl;
-          energy = energy*MeV;
+          energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
         }
 #else
         if(chosen_energy == -2)

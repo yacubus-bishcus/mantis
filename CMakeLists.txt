@@ -33,7 +33,7 @@ if(WITH_GEANT4_ANALYSIS_USE_ROOT)
     message(STATUS "G4 ROOT NOT Found. --> ROOT disabled")
   endif()
 endif()
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wshadow")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-shadow")
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project

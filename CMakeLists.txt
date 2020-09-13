@@ -26,21 +26,21 @@ include(${Geant4_USE_FILE})
 if(WITH_GEANT4_ANALYSIS_USE_ROOT)
   list(APPEND CMAKE_MODULE_PATH $ENV{ROOTCMAKEPATH})
   find_package(ROOT QUIET)
-  include_directories(${ROOT_INCLUDE_DIRS})
   if(ROOT_FOUND)
     message(STATUS "ROOT found. --> Compiling with ROOT enabled")
     add_definitions(-DG4ANALYSIS_USE_ROOT)
-    add_definitions(-Wshadow)
   else()
     message(STATUS "G4 ROOT NOT Found. --> ROOT disabled")
   endif()
 endif()
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wshadow")
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
 #
 include_directories(${PROJECT_SOURCE_DIR}/include
-                    ${Geant4_INCLUDE_DIR})
+                    ${Geant4_INCLUDE_DIR}
+                    ${ROOT_INCLUDE_DIR})
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
@@ -48,10 +48,8 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 # Add the executable, and link it to the Geant4 libraries
 #
 add_executable(mantis mantis.cc ${sources} ${headers})
-target_link_libraries(mantis ${Geant4_LIBRARIES})
-if(WITH_GEANT4_ANALYSIS_USE_ROOT)
-  target_link_libraries(mantis ${ROOT_LIBRARIES})
-endif()
+target_link_libraries(mantis ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we

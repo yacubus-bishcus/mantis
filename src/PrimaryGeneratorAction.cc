@@ -61,6 +61,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
         // Set Particle Energy (Must be in generate primaries)
 #if defined (G4ANALYSIS_USE_ROOT)
+        std::cout << "here 2" << std::endl;
         if(chosen_energy == -2)
         {
           energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
@@ -72,7 +73,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
           std::cerr << "SYSTEM EXITING" << std::endl;
           exit(100);
         }
-        
+
 #endif
         if(chosen_energy == -1)
         {
@@ -117,6 +118,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
         // if histogram exists find whether it was a resonance sample or not
 #if defined (G4ANALYSIS_USE_ROOT)
+        std::cout << "Here 3" <<std::endl;
         G4bool onRes;
         if(hBinary)
         {

@@ -27,7 +27,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction
         hBinary = (TH1D*) fin->Get("hBinary");
         if (hBrems && hSample && hBinary)
         {
-          std::cout << "Imported brems and sampling distributions from " << fin->GetName() << std::endl << std::endl;
+          G4cout << "Imported brems and sampling distributions from " << fin->GetName() << G4endl << G4endl;
         }
         else
         {
@@ -114,7 +114,6 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
         // if histogram exists find whether it was a resonance sample or not
 #if defined (G4ANALYSIS_USE_ROOT)
-        std::cout << "Here 3" <<std::endl;
         G4bool onRes;
         if(hBinary)
         {
@@ -153,7 +152,7 @@ void PrimaryGeneratorAction::ReadInputSpectrumFile(std::string filename){
                 }
         }
         else {
-                std::cout<<"Input file expected, however open failed, exiting."<<std::endl;
+                std::cerr<<"Input file expected, however open failed, exiting."<<std::endl;
                 exit(8);
         }
 

@@ -4,11 +4,11 @@
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
 #include "G4RunManager.hh"
-#include "PMTSD.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4LogicalVolume.hh"
 #include "G4ThreeVector.hh"
 #include "G4PVPlacement.hh"
+#include "G4PVReplica.hh"
 #include "globals.hh"
 #include "G4UImanager.hh"
 #include "G4PhysicalConstants.hh"
@@ -28,16 +28,13 @@
 #include "G4Box.hh" //for box
 //#include "G4Cons.hh" //for cone
 //#include "G4Orb.hh" //for orb
-//#include "G4Sphere.hh" //for sphere
+#include "G4Sphere.hh" //for sphere
 #include "G4Tubs.hh" // for tube/cylinder
 
 // for color attributes
 #include "G4Colour.hh"
 #include "G4VisAttributes.hh"
 #include "DetectorMessenger.hh"
-
-#include "PMTSD.hh"
-#include "G4SDManager.hh"
 #include "G4RunManager.hh"
 #include "G4NistManager.hh"
 #include "G4RotationMatrix.hh"
@@ -56,13 +53,9 @@ public:
     DetectorConstruction();
     virtual ~DetectorConstruction();
 
-    //G4VPhysicalVolume* GetDet() const {return physWater;}
 
     virtual G4VPhysicalVolume* Construct();
-        //return physWorld;
 
-    virtual void ConstructSDandField();
-    std::vector<G4ThreeVector> PmtPositions;
     void SetWaterX(G4double val)
     {
       water_size_x = val;
@@ -82,20 +75,10 @@ public:
     {PMT_rmax = val;
       PMT_rmax = PMT_rmax*cm;
     };
-    void SetIntObjX(G4double val)
+    void SetIntObj_radius(G4double val)
     {
-      IntObj_x = val;
-      IntObj_x = IntObj_x*cm;
-    }
-    void SetIntObjY(G4double val)
-    {
-      IntObj_y = val;
-      IntObj_y = IntObj_y*cm;
-    }
-    void SetIntObjZ(G4double val)
-    {
-      IntObj_z = val;
-      IntObj_z = IntObj_z*cm;
+      IntObj_rad = val;
+      IntObj_rad = IntObj_rad*cm;
     }
     void SetIntObjX_pos(G4double val)
     {
@@ -123,19 +106,19 @@ public:
       if(val == "Uranium")
       {
         IntObj_Selection = val;
-        intObjDensity = 19.1;
+        intObjDensity = 19.1*g/cm3;
       }
       else if(val == "Plutonium")
       {
         IntObj_Selection = val;
-        intObjDensity = 19.6;
+        intObjDensity = 19.6*g/cm3;
       }
       else{std::cerr << "ERROR: IntObj not correctly chosen"<<std::endl;}
     }
 
-    void setEndIntObj(G4double z_Size, G4double z_pos)
+    void setEndIntObj(G4double z_pos_con, G4double con_z_size)
     {
-      EndIntObj = z_Size + z_pos + 1;
+      EndIntObj = z_pos_con + con_z_size/2;
       std::cout << "The Cut position is set to: " << EndIntObj/(cm) << " cm" << std::endl;
     }
 
@@ -143,24 +126,34 @@ public:
     {
       return EndIntObj;
     }
+    void SetPC_material(G4String val)
+    {
+      pc_mat = val;
+    }
+    void SetnPMT(G4int val)
+    {
+      nPMT = val;
+    }
 
 private:
     G4double EndIntObj;
-    G4double IntObj_x, IntObj_y, IntObj_z;
+    G4double IntObj_rad;
     G4double radio_abundance;
     G4String IntObj_Selection;
     G4double intObjDensity;
     G4double intObj_x_pos, intObj_y_pos, intObj_z_pos;
     G4VPhysicalVolume* physIntObj;
+    G4Material* PC_mat;
     G4LogicalVolume* logicPC;
     G4LogicalVolume* logicPMT;
     G4VPhysicalVolume* physPC;
-    G4VPhysicalVolume* physPMTLeft;
-    G4VPhysicalVolume* physPMTRight;
     G4VPhysicalVolume* physWaterLeft;
     G4VPhysicalVolume* physWaterRight;
     G4double water_size_x, water_size_y, water_size_z, PMT_rmax;
+    G4int nPMT;
+    G4String pc_mat;
     DetectorMessenger* detectorM;
+
 };
 
 

@@ -3,23 +3,17 @@
 /run/verbose 0
 /event/verbose 0
 # must be called prior to run initalized
-#/mydet/PCrad 100
-/mydet/WaterX 10
-/mydet/WaterY 30
-/mydet/WaterZ 30
-/mytar/IntObjX 10
-/mytar/IntObjY 10
-/mytar/IntObjZ 0.5
+/mydet/nPMT 4
 #/mytar/fAbundance 90
 #/mytar/target Uranium
 # Caution the tank should not be set larger than world (600x600x600)
 # for input spectrum energy set to -1 for brem spectrum energy set to -2
-/input/energy -2
+#/input/energy -2
 # Initialize kernel
 /run/initialize
-/output/myoutput WaterData
-/output/myoutput IncidentData
-/output/myoutput DetData
-/output/myoutput IntObjData
+#/output/myoutput WaterData
+#/output/myoutput IncidentData
+#/output/myoutput DetData
+#/output/myoutput IntObjData
 #/event/output Yes
-/run/beamOn 200
+/run/beamOn 10

@@ -35,7 +35,7 @@ void ActionInitialization::Build() const
       primary_action->GetParticleGun(), run);
     SetUserAction(stepAction);
     EventAction *eventAction = new EventAction(primary_action->GetParticleGun(),
-    stepAction,fDetector, histo, run);
+    stepAction);
     SetUserAction(eventAction);
     StackingAction *stackAction = new StackingAction(fDetector, run);
     SetUserAction(stackAction);

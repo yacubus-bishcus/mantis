@@ -46,6 +46,7 @@ int main(int argc,char **argv)
   G4bool use_xsec_tables = true;
   G4bool use_xsec_integration = true;
   G4bool force_isotropic = false;
+  G4bool addNRF = true;
   macro = "mantis.in";
   seed = 1;
 
@@ -98,7 +99,7 @@ int main(int argc,char **argv)
         runManager->SetUserInitialization(det);
 
         // Set up Physics List
-        physicsList *thePL = new physicsList(use_xsec_tables, use_xsec_integration, force_isotropic);
+        physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic);
         runManager->SetUserInitialization(thePL);
 
         runManager->SetUserInitialization(new ActionInitialization(det));

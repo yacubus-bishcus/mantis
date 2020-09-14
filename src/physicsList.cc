@@ -34,8 +34,9 @@
 #include "G4Positron.hh"
 
 
-physicsList::physicsList(G4bool use_xsec_tables_in, G4bool use_xsec_integration_in, G4bool force_isotropic_in)
-  : use_xsec_tables(use_xsec_tables_in),
+physicsList::physicsList(G4bool addNRF_in, G4bool use_xsec_tables_in, G4bool use_xsec_integration_in, G4bool force_isotropic_in)
+  : addNRF(addNRF_in),
+    use_xsec_tables(use_xsec_tables_in),
     use_xsec_integration(use_xsec_integration_in),
     force_isotropic(force_isotropic_in) {
   defaultCutValue = 0.05*mm;
@@ -71,8 +72,12 @@ void physicsList::ConstructPhysics() {
   RegisterPhysics(opticalPhysics);
 
   // Add NRF to the physicsList
-  RegisterPhysics(new G4NRFPhysics("NRF", use_xsec_tables, use_xsec_integration, force_isotropic));
-  G4cout << "\nAdded NRF to the physicsList.\n" << G4endl;
+  if(addNRF)
+  {
+    RegisterPhysics(new G4NRFPhysics("NRF", use_xsec_tables, use_xsec_integration, force_isotropic));
+    G4cout << "\nAdded NRF to the physicsList.\n" << G4endl;
+    std::cout << "Added NRF to the PhysicsList." << std::endl;
+  }
 
   // Add the rest of the usual suspects
   RegisterPhysics(new G4EmStandardPhysics_option4(0));

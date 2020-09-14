@@ -1,8 +1,6 @@
 /control/verbose 0
 /run/verbose 0
-/mydet/WaterX 10
-/mydet/WaterY 30
-/mydet/WaterZ 30
+#/mydet/nPMT 1
 /run/initialize
 
 /vis/open VRML2FILE
@@ -16,8 +14,6 @@
 # Make the "World" box invisible
 /vis/geometry/set/visibility World 0 false
 /vis/viewer/set/background 1 1 1
-
-/vis/viewer/flush
 
 /vis/modeling/trajectories/create/drawByCharge
 /vis/modeling/trajectories/drawByCharge-0/set 1 blue

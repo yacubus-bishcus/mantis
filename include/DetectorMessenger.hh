@@ -6,6 +6,7 @@
 #include "G4ApplicationState.hh"
 #include "G4UIcmdWithADouble.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithAnInteger.hh"
 #include "DetectorConstruction.hh"
 #include "G4UIdirectory.hh"
 
@@ -27,14 +28,14 @@ private:
   G4UIcmdWithADouble* CmdX;
   G4UIcmdWithADouble* CmdY;
   G4UIcmdWithADouble* CmdZ;
-  G4UIcmdWithADouble* CmdtX;
-  G4UIcmdWithADouble* CmdtY;
-  G4UIcmdWithADouble* CmdtZ;
+  G4UIcmdWithADouble* Cmdtr;
   G4UIcmdWithADouble* CmdtXpos;
   G4UIcmdWithADouble* CmdtYpos;
   G4UIcmdWithADouble* CmdtZpos;
   G4UIcmdWithADouble* Cmdtrad;
   G4UIcmdWithAString* Cmdtsel;
+  G4UIcmdWithAString* Cmdpcmat;
+  G4UIcmdWithAnInteger* CmdnPMT;
   G4UIdirectory *myDir;
   G4UIdirectory * myDir2;
 };

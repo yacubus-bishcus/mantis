@@ -12,53 +12,56 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdX = new G4UIcmdWithADouble("/mydet/WaterX",this);
   CmdY = new G4UIcmdWithADouble("/mydet/WaterY",this);
   CmdZ = new G4UIcmdWithADouble("/mydet/WaterZ",this);
-  CmdtX = new G4UIcmdWithADouble("/mytar/IntObjX",this);
-  CmdtY = new G4UIcmdWithADouble("/mytar/IntObjY",this);
-  CmdtZ = new G4UIcmdWithADouble("/mytar/IntObjZ",this);
+  Cmdtr = new G4UIcmdWithADouble("/mytar/IntObjRad",this);
   Cmdtrad = new G4UIcmdWithADouble("/mytar/fAbundance",this);
   Cmdtsel = new G4UIcmdWithAString("/mytar/target",this);
   CmdtXpos = new G4UIcmdWithADouble("/mytar/IntObjXPos",this);
   CmdtYpos = new G4UIcmdWithADouble("/mytar/IntObjYPos",this);
   CmdtZpos = new G4UIcmdWithADouble("/mytar/IntObjZPos",this);
+  Cmdpcmat = new G4UIcmdWithAString("/mydet/Pcmat",this);
+  CmdnPMT = new G4UIcmdWithAnInteger("/mydet/nPMT",this);
 
 
   Cmd->SetGuidance("Choose Desired PhotoCathode Radius");
   CmdX->SetGuidance("Choose Desired X Size of Water Tank");
   CmdY->SetGuidance("Choose Desired Y Size of Water Tank");
   CmdZ->SetGuidance("Choose Desired Z Size of Water Tank");
-  CmdtX->SetGuidance("Choose Desired X Size of Interogation Target");
-  CmdtY->SetGuidance("Choose Desired Y Size of Interogation Target");
-  CmdtZ->SetGuidance("Choose Desired Z Size of Interogation Target");
+  Cmdtr->SetGuidance("Choose Desired radius Size of Interogation Target");
   Cmdtrad->SetGuidance("Choose Desired fission isotope abundance(enrichment) of Interogation Target");
   Cmdtsel->SetGuidance("Choose Desired Weapons grade target");
   CmdtXpos->SetGuidance("Choose Desired X Position of Interogation Target");
   CmdtYpos->SetGuidance("Choose Desired Y Position of Interogation Target");
   CmdtZpos->SetGuidance("Choose Desired Z Position of Interogation Target");
+  Cmdpcmat->SetGuidance("Choose desired photocathode material");
+  CmdnPMT->SetGuidance("Choose desired number of PMTs");
+
   Cmd->SetParameterName("radius",false);
   CmdX->SetParameterName("waterx",false);
   CmdY->SetParameterName("watery",false);
   CmdZ->SetParameterName("waterz",false);
-  CmdtX->SetParameterName("targetx",false);
-  CmdtY->SetParameterName("targety",false);
-  CmdtZ->SetParameterName("targetz",false);
-  Cmdtrad->SetParameterName("targetrad",false);
+  Cmdtr->SetParameterName("targetradius",false);
+  Cmdtrad->SetParameterName("targetabundance",false);
   Cmdtsel->SetParameterName("targetsel",false);
   CmdtXpos->SetParameterName("targetxpos",false);
   CmdtYpos->SetParameterName("targetypos",false);
   CmdtZpos->SetParameterName("targetzpos",false);
+  Cmdpcmat->SetParameterName("photocathodeMat", false);
+  CmdnPMT->SetParameterName("numberPMT", false);
+
   Cmd->SetDefaultValue(-1);
   CmdX->SetDefaultValue(-1);
   CmdY->SetDefaultValue(-1);
   CmdZ->SetDefaultValue(-1);
-  CmdtX->SetDefaultValue(-1);
-  CmdtY->SetDefaultValue(-1);
-  CmdtZ->SetDefaultValue(-1);
+  Cmdtr->SetDefaultValue(-1);
   Cmdtrad->SetDefaultValue(-1);
   Cmdtsel->SetDefaultValue("Uranium");
   Cmdtsel->SetCandidates("Uranium Plutonium");
   CmdtXpos->SetDefaultValue(-1);
   CmdtYpos->SetDefaultValue(-1);
   CmdtZpos->SetDefaultValue(-1);
+  Cmdpcmat->SetDefaultValue("GaAsP");
+  Cmdpcmat->SetCandidates("GaAsP Bialkali");
+  CmdnPMT->SetDefaultValue(1);
 
   //Cmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle);
 
@@ -70,14 +73,14 @@ DetectorMessenger::~DetectorMessenger()
   delete CmdX;
   delete CmdY;
   delete CmdZ;
-  delete CmdtX;
-  delete CmdtY;
-  delete CmdtZ;
+  delete Cmdtr;
   delete Cmdtrad;
   delete Cmdtsel;
   delete CmdtXpos;
   delete CmdtYpos;
   delete CmdtZpos;
+  delete Cmdpcmat;
+  delete CmdnPMT;
 }
 
 
@@ -132,42 +135,19 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
       DetectorA->SetWaterZ(theCommandZ);
     }
   }
-  else if(command == CmdtX)
+  else if(command == Cmdtr)
   {
-    G4double theCommandtX = CmdtX->GetNewDoubleValue(newValue);
+    G4double theCommandtX = Cmdtr->GetNewDoubleValue(newValue);
     if(theCommandtX == -1)
     {
-      std::cout << "Using Default Target X" <<std::endl;
+      std::cout << "Using Default Target radius" <<std::endl;
     }
     else
     {
-      DetectorA->SetIntObjX(theCommandtX);
+      DetectorA->SetIntObj_radius(theCommandtX);
     }
   }
-  else if(command == CmdtY)
-  {
-    G4double theCommandtY = CmdtY->GetNewDoubleValue(newValue);
-    if(theCommandtY == -1)
-    {
-      std::cout << "Using Default Target Y" <<std::endl;
-    }
-    else
-    {
-      DetectorA->SetIntObjY(theCommandtY);
-    }
-  }
-  else if(command == CmdtZ)
-  {
-    G4double theCommandtZ = CmdtZ->GetNewDoubleValue(newValue);
-    if(theCommandtZ == -1)
-    {
-      std::cout << "Using Default Target Z" <<std::endl;
-    }
-    else
-    {
-      DetectorA->SetIntObjZ(theCommandtZ);
-    }
-  }
+
   else if(command == Cmdtrad)
   {
     G4double theCommandtrad = Cmdtrad->GetNewDoubleValue(newValue);
@@ -183,17 +163,9 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   else if(command == Cmdtsel)
   {
     G4String theCommandtsel = newValue;
-    if(theCommandtsel == "Uranium")
-    {
-      std::cout << "Using a Uranium Target" <<std::endl;
-      DetectorA->SetIntObj(theCommandtsel);
-    }
-    else if(theCommandtsel == "Plutonium")
-    {
-      std::cout << "Using a Plutonium Target" << std::endl;
-      DetectorA->SetIntObj(theCommandtsel);
-    }
-    else{std::cerr << "ERROR: DetectorMessenger: Target not selected."<<std::endl;}
+    std::cout << "Using a " << theCommandtsel << " target." << std::endl;
+    DetectorA->SetIntObj(theCommandtsel);
+
   }
   else if(command == CmdtXpos)
   {
@@ -229,6 +201,24 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     else
     {
       DetectorA->SetIntObjZ_pos(theCommandtZpos);
+    }
+  }
+  else if(command == Cmdpcmat)
+  {
+    G4String commandpcmat = newValue;
+    std::cout << commandpcmat << " set as photocathode material." << std::endl;
+    DetectorA->SetPC_material(commandpcmat);
+  }
+  else if(command == CmdnPMT)
+  {
+    G4int thecmdnPMT = CmdnPMT->GetNewIntValue(newValue);
+    if(thecmdnPMT == 1)
+    {
+      std::cout << "Using Default Number of PMTs: 1" << std::endl;
+    }
+    else
+    {
+      DetectorA->SetnPMT(thecmdnPMT);
     }
   }
   else

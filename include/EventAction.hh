@@ -9,16 +9,11 @@
 #include <vector>
 #include "G4Types.hh"
 #include "G4ParticleGun.hh"
-#include "SteppingAction.hh"
-#include "HistoManager.hh"
-#include "PMTHit.hh"
-#include "DetectorConstruction.hh"
 #include "StackingAction.hh"
 #include "SteppingAction.hh"
 #include "HistoManager.hh"
 #include "EventMessenger.hh"
 #include "G4EventManager.hh"
-#include "G4SDManager.hh"
 #include "G4RunManager.hh"
 #include "G4Event.hh"
 #include "G4VVisManager.hh"
@@ -29,56 +24,27 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 class G4Event;
-class DetectorConstruction;
 class EventMessenger;
 
 class EventAction : public G4UserEventAction
 {
   public:
-    EventAction(G4ParticleGun*,SteppingAction*, const DetectorConstruction*, HistoManager*, const RunAction*);
+    EventAction(G4ParticleGun*,SteppingAction*);
    ~EventAction();
 
   public:
     void BeginOfEventAction(const G4Event* anEvent);
     void EndOfEventAction(const G4Event* anEvent);
 
-    void SetPMTThreshold(G4int t){fPMTThreshold=t;}
-
-    //void IncBoundaryAbsorption(){fBoundaryAbsorptionCount++;}
-    void IncHitCount(G4int i=1){fHitCount+=i;}
-    void SetReconPos(const G4ThreeVector& p){fReconPos=p;}
-    //void SetConvPos(const G4ThreeVector& p){fConvPos=p;fConvPosSet=true;}
-
-    G4int GetHitCount()const {return fHitCount;}
-
-    //G4ThreeVector GetEWeightPos(){return fEWeightPos;}
-    G4ThreeVector GetReconPos(){return fReconPos;}
-
-    void IncPMTSAboveThreshold(){fPMTsAboveThreshold++;}
-    G4int GetPMTSAboveThreshold(){return fPMTsAboveThreshold;}
     void SetNumPhotonsFlag(G4int val){drawNumPhotonsFlag = val;};
 
 private:
 
     void ResetEverything();
     //void Weighting(const G4Event* anEvent);
-
+    G4int drawNumPhotonsFlag;
     G4ParticleGun* particle_gun_local;
     SteppingAction* stepA_local;
-    const DetectorConstruction* fDetector;
-    HistoManager* local_histo;
-    const RunAction* local_run;
-
-    // for PMT analysis
-    G4int fPMTCollID;
-
-    G4int fPMTThreshold;
-    G4bool fForcedrawphotons;
-    G4bool fForcenophotons;
-    G4int fHitCount;
-    G4ThreeVector fReconPos; //relies on hitCount>0
-    G4int fPMTsAboveThreshold;
-    G4int drawNumPhotonsFlag;
     EventMessenger* eventM;
 
 

@@ -6,8 +6,10 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
 {
   myDir = new G4UIdirectory("/mydet/");
   myDir2 = new G4UIdirectory("/mytar/");
+  myDir3 = new G4UIdirectory("/chopper/");
   myDir2->SetGuidance("Target Setup Commands");
   myDir->SetGuidance("Detector Setup Commands");
+  myDir3->SetGuidance("Chopper Setup Commands");
   Cmd = new G4UIcmdWithADouble("/mydet/PCrad",this);
   CmdX = new G4UIcmdWithADouble("/mydet/WaterX",this);
   CmdY = new G4UIcmdWithADouble("/mydet/WaterY",this);
@@ -18,8 +20,12 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdtXpos = new G4UIcmdWithADouble("/mytar/IntObjXPos",this);
   CmdtYpos = new G4UIcmdWithADouble("/mytar/IntObjYPos",this);
   CmdtZpos = new G4UIcmdWithADouble("/mytar/IntObjZPos",this);
-  Cmdpcmat = new G4UIcmdWithAString("/mydet/Pcmat",this);
+  Cmdpcmat = new G4UIcmdWithAString("/mydet/PCmat",this);
   CmdnPMT = new G4UIcmdWithAnInteger("/mydet/nPMT",this);
+  CmdAngle = new G4UIcmdWithADouble("/mydet/Angle",this);
+  CmdChopthick = new G4UIcmdWithADouble("/chopper/thickness", this);
+  CmdChopZ = new G4UIcmdWithADouble("/chopper/distance", this);
+  CmdChopperOn = new G4UIcmdWithAString("/chopper/On", this);
 
 
   Cmd->SetGuidance("Choose Desired PhotoCathode Radius");
@@ -34,6 +40,10 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdtZpos->SetGuidance("Choose Desired Z Position of Interogation Target");
   Cmdpcmat->SetGuidance("Choose desired photocathode material");
   CmdnPMT->SetGuidance("Choose desired number of PMTs");
+  CmdChopthick->SetGuidance("Choose desired chopper thickness");
+  CmdChopZ->SetGuidance("Choose desired chopper distance from brem beam");
+  CmdChopperOn->SetGuidance("Choose desired chopper wheel state");
+  CmdAngle->SetGuidance("Choose desired Detector BackScatter Angle in Degrees");
 
   Cmd->SetParameterName("radius",false);
   CmdX->SetParameterName("waterx",false);
@@ -47,6 +57,11 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdtZpos->SetParameterName("targetzpos",false);
   Cmdpcmat->SetParameterName("photocathodeMat", false);
   CmdnPMT->SetParameterName("numberPMT", false);
+  CmdChopZ->SetParameterName("chopperZ", false);
+  CmdChopthick->SetParameterName("chopperthickness",false);
+  CmdChopperOn->SetParameterName("chopperOn",false);
+  CmdAngle->SetParameterName("Angle",false);
+  CmdAngle->SetRange("Angle > 90 && Angle < 135");
 
   Cmd->SetDefaultValue(-1);
   CmdX->SetDefaultValue(-1);
@@ -62,7 +77,11 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   Cmdpcmat->SetDefaultValue("GaAsP");
   Cmdpcmat->SetCandidates("GaAsP Bialkali");
   CmdnPMT->SetDefaultValue(1);
-
+  CmdChopZ->SetDefaultValue(-1);
+  CmdChopthick->SetDefaultValue(-1);
+  CmdChopperOn->SetDefaultValue("false");
+  CmdChopperOn->SetCandidates("True true False false");
+  CmdAngle->SetDefaultValue(135.);
   //Cmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle);
 
 }
@@ -81,6 +100,10 @@ DetectorMessenger::~DetectorMessenger()
   delete CmdtZpos;
   delete Cmdpcmat;
   delete CmdnPMT;
+  delete CmdChopthick;
+  delete CmdChopZ;
+  delete CmdChopperOn;
+  delete CmdAngle;
 }
 
 
@@ -220,6 +243,47 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     {
       DetectorA->SetnPMT(thecmdnPMT);
     }
+  }
+  else if(command == CmdChopZ)
+  {
+    G4double thecmdchopz = CmdChopZ->GetNewDoubleValue(newValue);
+    if(thecmdchopz == -1)
+    {
+      std::cout << "Using default chopper distance." << std::endl;
+    }
+    else
+    {
+      DetectorA->SetChopper_z(thecmdchopz);
+    }
+  }
+  else if(command == CmdChopthick)
+  {
+    G4double thecmdchopthick = CmdChopthick->GetNewDoubleValue(newValue);
+    if(thecmdchopthick == -1)
+    {
+      std::cout << "Using default chopper thickness." << std::endl;
+    }
+    else
+    {
+      DetectorA->SetChopperThick(thecmdchopthick);
+    }
+  }
+  else if(command == CmdChopperOn)
+  {
+    G4String thecmdchopperon = newValue;
+    if(thecmdchopperon == "True" || thecmdchopperon == "true")
+    {
+      DetectorA->SetChopperOn(true);
+    }
+    else
+    {
+      DetectorA->SetChopperOn(false);
+    }
+  }
+  else if(command == CmdAngle)
+  {
+    G4double thecmdAngle = CmdAngle->GetNewDoubleValue(newValue);
+    DetectorA->SettheAngle(thecmdAngle);
   }
   else
   {

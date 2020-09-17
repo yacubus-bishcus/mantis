@@ -36,8 +36,13 @@ private:
   G4UIcmdWithAString* Cmdtsel;
   G4UIcmdWithAString* Cmdpcmat;
   G4UIcmdWithAnInteger* CmdnPMT;
+  G4UIcmdWithADouble* CmdChopthick;
+  G4UIcmdWithADouble* CmdChopZ;
+  G4UIcmdWithAString* CmdChopperOn;
+  G4UIcmdWithADouble* CmdAngle;
   G4UIdirectory *myDir;
   G4UIdirectory * myDir2;
+  G4UIdirectory * myDir3;
 };
 
 #endif

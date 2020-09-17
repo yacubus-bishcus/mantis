@@ -4,6 +4,7 @@ DetectorConstruction::DetectorConstruction()
         : G4VUserDetectorConstruction(), IntObj_rad(4.5*cm),
         radio_abundance(90*perCent), IntObj_Selection("Uranium"), intObjDensity(19.1*g/cm3),
         intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm),
+        chopperOn(false), chopper_thick(1*mm), chopper_z(10*cm), theAngle(120.0),
         water_size_x(60*cm),water_size_y(2.5908*m), water_size_z(30*cm),
          PMT_rmax(25.4*cm), nPMT(3), pc_mat("GaAsP"), detectorM(NULL)
 {
@@ -21,9 +22,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 G4NistManager* nist = G4NistManager::Instance();
 
 // Set materials
-G4Material* air = nist->FindOrBuildMaterial("G4_AIR");
+G4Material *air = nist->FindOrBuildMaterial("G4_AIR");
 G4Material *steel = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
-G4Material* Water = nist->FindOrBuildMaterial("G4_WATER");
+G4Material *Water = nist->FindOrBuildMaterial("G4_WATER");
+G4Material *lead = nist->FindOrBuildMaterial("G4_Pb");
 // technically PMT glass is a special borosilicate glass calle k-free glass
 // but pyrex is close enough as a borosilicate glass
 G4Material* PMT_mat = nist->FindOrBuildMaterial("G4_Pyrex_Glass");
@@ -73,12 +75,17 @@ G4VPhysicalVolume* physWorld =
                           0,         //copy number
                           false);    //overlaps checking
 
-
-// Set up shipping container environment (8ft wide and 8.5ft high)
-G4double container_x = 0.6096*m; // 2ft cross section
-G4double container_y = 2.5908*m; // 8.5 ft in height
-G4double container_z = 2.4384*m; // 8 ft width
+// Set up Collimator
 G4double container_z_pos = container_z +water_size_x + 1.0*m;
+G4Box *solidCollimator = new G4Box("Collimator", 1*cm, water_size_y, container_z_pos - container_z);
+G4LogicalVolume * logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
+new G4PVPlacement(0, G4ThreeVector(-container_x, 0, 0),
+                  logicCollimator, "CollimatorLeft", logicWorld,
+                  false, 0, checkOverlaps);
+new G4PVPlacement(0, G4ThreeVector(container_x, 0, 0),
+                  logicCollimator, "CollimatorRight", logicWorld,
+                  false, 0, checkOverlaps);
+// Set up shipping container environment (8ft wide and 8.5ft high)
 G4double c_thick = 0.1905*cm; // approx 0.075 inch thick
 G4Box *solidContainer = new G4Box("Container", container_x, container_y, container_z);
 G4LogicalVolume *logicContainer = new G4LogicalVolume(solidContainer, steel, "Container");
@@ -133,7 +140,6 @@ physIntObj = new G4PVPlacement(0,
                               logicIntObj, "IntObjPhysical", logicHollowC, false,
                               0, checkOverlaps);
 
-
 // Tub of water
 std::cout << "The Water Tank X was set to: " << water_size_x/(cm)<< " cm" << std::endl;
 std::cout << "The Water Tank Y was set to: " << water_size_y/(cm)<< " cm" << std::endl;
@@ -146,15 +152,17 @@ G4LogicalVolume* logicWater =
                             "Water"); //its name
 
 // Make Physical volume
-G4double water_x_pos = water_size_x+water_size_z; // approximately centered a foot
-G4double water_y_pos =0*cm;
-G4double water_z_pos =30*cm;
+G4double water_z_pos = 1*m + container_z_pos - container_z;
+G4double myangle = (180. - theAngle)*pi/180.;
+G4double water_x_pos = tan(myangle)*(container_z_pos + intObj_z_pos - water_z_pos);
+G4double detDistance = water_x_pos/sin(myangle) + water_size_z;
+std::cout << "The Distance Between the Interrogation Object and the Water is: " << detDistance/(cm) << " cm." << std::endl;
 G4RotationMatrix* waterRot = new G4RotationMatrix;
-waterRot->rotateY(35.*deg);
+waterRot->rotateY((180. - theAngle)*deg);
 G4RotationMatrix* waterRot2 = new G4RotationMatrix;
-waterRot2->rotateY(325.*deg);
+waterRot2->rotateY((180. + theAngle)*deg);
 physWaterLeft = new G4PVPlacement(waterRot,                 //no rotation
-                              G4ThreeVector(water_x_pos,water_y_pos,water_z_pos),
+                              G4ThreeVector(water_x_pos,0,water_z_pos),
                               logicWater, //its logical volume
                               "WaterLeft", //its name
                               logicWorld, //its mother logical volume
@@ -162,13 +170,29 @@ physWaterLeft = new G4PVPlacement(waterRot,                 //no rotation
                               0,     //copy number
                               checkOverlaps); //overlaps checking
 physWaterRight = new G4PVPlacement(waterRot2,
-                                  G4ThreeVector(-1*water_x_pos, water_y_pos, water_z_pos),
+                                  G4ThreeVector(-1*water_x_pos, 0, water_z_pos),
                                   logicWater,
                                   "WaterRight",
                                   logicWorld,
                                   false,
                                   0,
                                   checkOverlaps);
+// Set up chopper wheel
+if(chopperOn)
+{
+  std::cout << "The Chopper Thickness was set to: " << chopper_thick/(cm) << std::endl;
+  std::cout << "The Chopper distance from beam was set to: " << chopper_z/(cm) << std::endl;
+  if(chopper_z > water_z_pos)
+  {
+    std::cerr << "ERROR: Chopper wheel location should be behind water detectors, exiting." << std::endl;
+    exit(100);
+  }
+  G4Box *solidChopper = new G4Box("Chopper", 1*cm, 1*cm, chopper_thick);
+  logicChopper = new G4LogicalVolume(solidChopper, intObjMat, "Chopper");
+  new G4PVPlacement(0, G4ThreeVector(0,0,chopper_z),
+                    logicChopper, "Chopper", logicWorld, false,
+                    0, checkOverlaps);
+}
 
 G4double PMT_rmin = 0*cm;
 std::cout << "The PC Radius was set to " << PMT_rmax/(cm) << " cm" << std::endl;
@@ -259,6 +283,10 @@ green->SetForceSolid(true);
 grayc->SetVisibility(false);
 lightGray->SetVisibility(true);
 lightGray->SetForceSolid(true);
+black->SetForceSolid(true);
+black->SetVisibility(true);
+magenta->SetForceWireframe(true);
+magenta->SetVisibility(true);
 
 // Set Visual colors
 logicWater->SetVisAttributes(blue);
@@ -267,6 +295,11 @@ logicPC->SetVisAttributes(red);
 logicIntObj->SetVisAttributes(lightGray);
 logicContainer->SetVisAttributes(yellow);
 logicHollowC->SetVisAttributes(grayc);
+logicCollimator->SetVisAttributes(magenta);
+if(chopperOn)
+{
+  logicChopper->SetVisAttributes(black);
+}
 
 //
 // ------------ Generate & Add Material Properties Table ------------
@@ -342,18 +375,18 @@ G4double scintilSlow[] =
 
 assert(sizeof(scintilSlow) == sizeof(photonEnergy));
 
-G4MaterialPropertiesTable* myMPT1 = new G4MaterialPropertiesTable();
+G4MaterialPropertiesTable* waterMPT = new G4MaterialPropertiesTable();
 
-myMPT1->AddProperty("RINDEX", photonEnergy, refractiveIndex1,nEntries)->SetSpline(true);
-myMPT1->AddProperty("ABSLENGTH",photonEnergy2, absorption, nEntries)->SetSpline(true);
-myMPT1->AddProperty("FASTCOMPONENT",photonEnergy, scintilFast, nEntries)->SetSpline(true);
-myMPT1->AddProperty("SLOWCOMPONENT",photonEnergy, scintilSlow, nEntries)->SetSpline(true);
+waterMPT->AddProperty("RINDEX", photonEnergy, refractiveIndex1,nEntries)->SetSpline(true);
+waterMPT->AddProperty("ABSLENGTH",photonEnergy2, absorption, nEntries)->SetSpline(true);
+waterMPT->AddProperty("FASTCOMPONENT",photonEnergy, scintilFast, nEntries)->SetSpline(true);
+waterMPT->AddProperty("SLOWCOMPONENT",photonEnergy, scintilSlow, nEntries)->SetSpline(true);
 
-myMPT1->AddConstProperty("SCINTILLATIONYIELD",50./MeV);
-myMPT1->AddConstProperty("RESOLUTIONSCALE",1.0);
-myMPT1->AddConstProperty("FASTTIMECONSTANT", 1.*ns);
-myMPT1->AddConstProperty("SLOWTIMECONSTANT",10.*ns);
-myMPT1->AddConstProperty("YIELDRATIO",0.8);
+waterMPT->AddConstProperty("SCINTILLATIONYIELD",50./MeV);
+waterMPT->AddConstProperty("RESOLUTIONSCALE",1.0);
+waterMPT->AddConstProperty("FASTTIMECONSTANT", 1.*ns);
+waterMPT->AddConstProperty("SLOWTIMECONSTANT",10.*ns);
+waterMPT->AddConstProperty("YIELDRATIO",0.8);
 
 G4double energy_water[] = {
         1.56962*eV, 1.58974*eV, 1.61039*eV, 1.63157*eV,
@@ -418,10 +451,10 @@ assert(sizeof(mie_water) == sizeof(energy_water));
 // gforward, gbackward, forward backward ratio
 G4double mie_water_const[3]={0.99,0.99,0.8};
 
-myMPT1->AddProperty("MIEHG",energy_water,mie_water,numentries_water)->SetSpline(true);
-myMPT1->AddConstProperty("MIEHG_FORWARD",mie_water_const[0]);
-myMPT1->AddConstProperty("MIEHG_BACKWARD",mie_water_const[1]);
-myMPT1->AddConstProperty("MIEHG_FORWARD_RATIO",mie_water_const[2]);
+waterMPT->AddProperty("MIEHG",energy_water,mie_water,numentries_water)->SetSpline(true);
+waterMPT->AddConstProperty("MIEHG_FORWARD",mie_water_const[0]);
+waterMPT->AddConstProperty("MIEHG_BACKWARD",mie_water_const[1]);
+waterMPT->AddConstProperty("MIEHG_FORWARD_RATIO",mie_water_const[2]);
 
 G4double rayleigh_water[] = {
     2335.5*m, 2210.5*m, 2090.8*m, 1976.4*m, 1866.8*m, 1762.1*m,
@@ -435,8 +468,8 @@ G4double rayleigh_water[] = {
 
 // Note to Self: Never have spline set to true if rayleigh water goes to zero. Creates seg fault
 assert(sizeof(rayleigh_water) == sizeof(energy_ray_water));
-myMPT1->AddProperty("RAYLEIGH",energy_ray_water,rayleigh_water,numentries_water_ray)->SetSpline(true);
-Water->SetMaterialPropertiesTable(myMPT1);
+waterMPT->AddProperty("RAYLEIGH",energy_ray_water,rayleigh_water,numentries_water_ray)->SetSpline(true);
+Water->SetMaterialPropertiesTable(waterMPT);
 // Set the Birks Constant for the Water scintillator
 Water->GetIonisation()->SetBirksConstant(0.126*mm/MeV);
 
@@ -446,10 +479,11 @@ Water->GetIonisation()->SetBirksConstant(0.126*mm/MeV);
 
 G4OpticalSurface* water_opsurf= new G4OpticalSurface("water_opsurf");
 
-water_opsurf->SetType(dielectric_metal);
+water_opsurf->SetType(dielectric_dielectric);
 water_opsurf->SetFinish(polished);
 water_opsurf->SetPolish(1.0);
 water_opsurf->SetModel(glisur);
+water_opsurf->SetMaterialPropertiesTable(waterMPT);
 //new G4LogicalBorderSurface("water_surf_left", physWaterLeft, physPMT, water_opsurf); // name, physical volume1, phsical volume2, G4optical surface
 //new G4LogicalBorderSurface("water_surf_right", physWaterRight, physPMT, water_opsurf);
 // PMT
@@ -473,13 +507,13 @@ G4double reflectivity[] = {0.03822, 0.0392,  0.040,  0.041,
 assert(sizeof(reflectivity) == sizeof(ephotonPMT));
 G4double efficiency[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 assert(sizeof(efficiency) == sizeof(ephotonPMT));
-G4double PMT_IOF[] = {1.486, 1.4945, 1.5013, 1.5075, 1.5118, 1.5214, 1.5253, 1.5308, 1.5392, 1.5528};
-assert(sizeof(PMT_IOF) == sizeof(ephotonPMT));
+G4double pmt_iof[] = {1.486, 1.4945, 1.5013, 1.5075, 1.5118, 1.5214, 1.5253, 1.5308, 1.5392, 1.5528};
+assert(sizeof(pmt_iof) == sizeof(ephotonPMT));
 G4OpticalSurface* PMT_opsurf = new G4OpticalSurface("PMTSurface",unified,polished,dielectric_metal);
 G4MaterialPropertiesTable* PMTopt = new G4MaterialPropertiesTable();
-PMTopt->AddProperty("REFLECTIVITY", ephotonPMT, reflectivity, num)->SetSpline(true);
+PMTopt->AddProperty("REFLECTIVITY", ephotonPMT, reflectivity, num);//->SetSpline(true);
 PMTopt->AddProperty("EFFICIENCY", ephotonPMT, efficiency, num);
-PMTopt->AddProperty("RINDEX", ephotonPMT, PMT_IOF, num)->SetSpline(true);
+PMTopt->AddProperty("RINDEX", ephotonPMT, pmt_iof, num);//->SetSpline(true);
 PMT_opsurf->SetMaterialPropertiesTable(PMTopt);
 
 // Photocathode surface properties
@@ -502,15 +536,15 @@ assert(sizeof(bialkali_photocath_ImR) == sizeof(ephotonPMT3));
 G4MaterialPropertiesTable* photocath_mt = new G4MaterialPropertiesTable();
 if(pc_mat == "GaAsP")
 {
-  photocath_mt->AddProperty("EFFICIENCY", ephotonPMT2,Ga_As_photocath_EFF, num2)->SetSpline(true);
-  photocath_mt->AddProperty("REALRINDEX", ephotonPMT,Ga_As_photocath_ReR,num)->SetSpline(true);
-  photocath_mt->AddProperty("IMAGINARYRINDEX", ephotonPMT, Ga_As_photocath_ImR, num)->SetSpline(true);
+  photocath_mt->AddProperty("EFFICIENCY", ephotonPMT2,Ga_As_photocath_EFF, num2);//->SetSpline(true);
+  photocath_mt->AddProperty("REALRINDEX", ephotonPMT,Ga_As_photocath_ReR,num);//->SetSpline(true);
+  photocath_mt->AddProperty("IMAGINARYRINDEX", ephotonPMT, Ga_As_photocath_ImR, num);//->SetSpline(true);
 }
 else if(pc_mat == "Bialkali")
 {
-  photocath_mt->AddProperty("EFFICIENCY", ephotonPMT2,bialkali_photocath_EFF, num)->SetSpline(true);
-  photocath_mt->AddProperty("REALRINDEX", ephotonPMT3,bialkali_photocath_ReR,num3)->SetSpline(true);
-  photocath_mt->AddProperty("IMAGINARYRINDEX", ephotonPMT3, bialkali_photocath_ImR, num3)->SetSpline(true);
+  photocath_mt->AddProperty("EFFICIENCY", ephotonPMT2,bialkali_photocath_EFF, num);//->SetSpline(true);
+  photocath_mt->AddProperty("REALRINDEX", ephotonPMT3,bialkali_photocath_ReR,num3);//->SetSpline(true);
+  photocath_mt->AddProperty("IMAGINARYRINDEX", ephotonPMT3, bialkali_photocath_ImR, num3);//->SetSpline(true);
 }
 
 G4OpticalSurface* photocath_opsurf= new G4OpticalSurface("photocath_opsurf");
@@ -521,6 +555,7 @@ photocath_opsurf->SetModel(glisur);
 photocath_opsurf->SetMaterialPropertiesTable(photocath_mt);
 
 new G4LogicalSkinSurface("photocath_surf", logicPC, photocath_opsurf); // name, physical volume of surface, phsical volume of world?, G4optical surface
+new G4LogicalSkinSurface("PMT_surf", logicPMT, PMT_opsurf);
 // Air
 G4double refractiveIndex2[] =
 { 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,

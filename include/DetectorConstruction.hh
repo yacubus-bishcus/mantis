@@ -134,8 +134,29 @@ public:
     {
       nPMT = val;
     }
+    void SetChopperOn(G4bool val)
+    {
+      chopperOn = val;
+    }
+    void SetChopperThick(G4double val)
+    {
+      chopper_thick = val;
+      chopper_thick = chopper_thick*mm;
+    }
+    void SetChopper_z(G4double val)
+    {
+      chopper_z = val;
+      chopper_z = chopper_z*cm;
+    }
+    void SettheAngle(G4double val)
+    {
+      theAngle = val;
+    }
 
 private:
+    G4double container_x = 0.6096*m; // 2ft cross section
+    G4double container_y = 2.5908*m; // 8.5 ft in height
+    G4double container_z = 2.4384*m; // 8 ft width
     G4double EndIntObj;
     G4double IntObj_rad;
     G4double radio_abundance;
@@ -147,8 +168,12 @@ private:
     G4LogicalVolume* logicPC;
     G4LogicalVolume* logicPMT;
     G4VPhysicalVolume* physPC;
+    G4LogicalVolume* logicChopper;
     G4VPhysicalVolume* physWaterLeft;
     G4VPhysicalVolume* physWaterRight;
+    G4bool chopperOn;
+    G4double chopper_thick, chopper_z;
+    G4double theAngle;
     G4double water_size_x, water_size_y, water_size_z, PMT_rmax;
     G4int nPMT;
     G4String pc_mat;

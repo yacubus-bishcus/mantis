@@ -35,10 +35,22 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
     if(theTrack->GetPosition().x()/(cm) > EndIntObj/(cm))
     {
+      // kill photons that go beyond the interrogation object
       theTrack->SetTrackStatus(fStopAndKill);
       run->AddStatusKilled();
     }
-
+    else if(aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 10, "Collimator") == 0)
+    {
+      // kill photons in collimator
+      theTrack->SetTrackStatus(fStopAndKill);
+      run->AddStatusKilled();
+    }
+    else if(theTrack->GetPosition().z()/(cm) < -1.*cm)
+    {
+      // Kill photons that go in behind beam origin 
+      theTrack->SetTrackStatus(fStopAndKill);
+      run->AddStatusKilled();
+    }
     if (particleName == "opticalphoton") {
          const G4VProcess* pds = aStep->GetPostStepPoint()->
                                                       GetProcessDefinedStep();

@@ -1293,7 +1293,7 @@ void G4NRF::MakeCrossSectionTable(G4NRFNuclearLevel* pLevel, G4double Teff) {
   G4double Er = E1 + E1*E1/(2.0*M); // small approximation to use E1 instead of E, but it makes it constant for the table
   G4double Delta_eff = Er * sqrt(2.0*k_Boltzmann*Teff/M);
 
-  G4cout << "Building cross section table for Z = " << Z << ", A = " << A << ", Er/MeV = " << Er << G4endl;
+  //G4cout << "Building cross section table for Z = " << Z << ", A = " << A << ", Er/MeV = " << Er << G4endl;
   std::vector<G4double> cross_sec_tab;
   std::vector<G4double> E_tab;
 
@@ -1314,7 +1314,7 @@ void G4NRF::MakeCrossSectionTable(G4NRFNuclearLevel* pLevel, G4double Teff) {
   interpolating_function_p<G4double> *cross_sec_interp_func = new interpolating_function_p<G4double>();
   cross_sec_interp_func->load(E_tab, cross_sec_tab, true, 0, true, 0, true);
   pLevel->SetCrossSectionTable(cross_sec_interp_func);
-  G4cout << "...built" << G4endl;
+  //G4cout << "...built" << G4endl;
 }
 
 

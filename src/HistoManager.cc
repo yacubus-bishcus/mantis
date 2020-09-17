@@ -57,7 +57,7 @@ void HistoManager::Book()
 
     // Create Nutple for Energy if detected
     manager->CreateNtuple("Detected","Detected");
-    manager->CreateNtupleDColumn("det_energy");
+    manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleIColumn("isNRF");
     manager->CreateNtupleDColumn("x");
     manager->CreateNtupleDColumn("y");
@@ -73,6 +73,13 @@ void HistoManager::Book()
     // Create Ntuple for Interogation Object
     manager->CreateNtuple("IntObj","IntObj");
     manager->CreateNtupleDColumn("E_incident");
+    manager->CreateNtupleIColumn("isNRF");
+    manager->FinishNtuple();
+
+    // Create Ntuple for incident water data 
+    manager->CreateNtuple("IncidentWater","IncidentWater");
+    manager->CreateNtupleDColumn("E_incident");
+    manager->CreateNtupleIColumn("isNRF");
     manager->FinishNtuple();
 
 #if defined (G4ANALYSIS_USE_ROOT)

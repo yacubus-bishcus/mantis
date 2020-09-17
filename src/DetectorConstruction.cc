@@ -254,7 +254,7 @@ G4Tubs* solidPhotoCathode = new G4Tubs("PC", PMT_rmin, PMT_rmax, PC_z, 0*deg, 36
 logicPC = new G4LogicalVolume(solidPhotoCathode, PC_mat, "PC");
 G4double PMT_window_thickness = 50*mm;
 physPC = new G4PVPlacement(0,
-                         G4ThreeVector(0,0,PMT_z-PMT_window_thickness*2),
+                         G4ThreeVector(0,0,PMT_z-PMT_window_thickness),
                          logicPC,
                          "PC",
                          logicPMT, // daughter of PMT logical
@@ -511,9 +511,9 @@ G4double pmt_iof[] = {1.486, 1.4945, 1.5013, 1.5075, 1.5118, 1.5214, 1.5253, 1.5
 assert(sizeof(pmt_iof) == sizeof(ephotonPMT));
 G4OpticalSurface* PMT_opsurf = new G4OpticalSurface("PMTSurface",unified,polished,dielectric_metal);
 G4MaterialPropertiesTable* PMTopt = new G4MaterialPropertiesTable();
-PMTopt->AddProperty("REFLECTIVITY", ephotonPMT, reflectivity, num);//->SetSpline(true);
-PMTopt->AddProperty("EFFICIENCY", ephotonPMT, efficiency, num);
-PMTopt->AddProperty("RINDEX", ephotonPMT, pmt_iof, num);//->SetSpline(true);
+PMTopt->AddProperty("REFLECTIVITY", ephotonPMT, reflectivity, num)->SetSpline(true);
+PMTopt->AddProperty("EFFICIENCY", ephotonPMT, efficiency, num)->SetSpline(true);
+PMTopt->AddProperty("RINDEX", ephotonPMT, pmt_iof, num)->SetSpline(true);
 PMT_opsurf->SetMaterialPropertiesTable(PMTopt);
 
 // Photocathode surface properties
@@ -536,15 +536,15 @@ assert(sizeof(bialkali_photocath_ImR) == sizeof(ephotonPMT3));
 G4MaterialPropertiesTable* photocath_mt = new G4MaterialPropertiesTable();
 if(pc_mat == "GaAsP")
 {
-  photocath_mt->AddProperty("EFFICIENCY", ephotonPMT2,Ga_As_photocath_EFF, num2);//->SetSpline(true);
-  photocath_mt->AddProperty("REALRINDEX", ephotonPMT,Ga_As_photocath_ReR,num);//->SetSpline(true);
-  photocath_mt->AddProperty("IMAGINARYRINDEX", ephotonPMT, Ga_As_photocath_ImR, num);//->SetSpline(true);
+  photocath_mt->AddProperty("EFFICIENCY", ephotonPMT2,Ga_As_photocath_EFF, num2)->SetSpline(true);
+  photocath_mt->AddProperty("REALRINDEX", ephotonPMT,Ga_As_photocath_ReR,num)->SetSpline(true);
+  photocath_mt->AddProperty("IMAGINARYRINDEX", ephotonPMT, Ga_As_photocath_ImR, num)->SetSpline(true);
 }
 else if(pc_mat == "Bialkali")
 {
-  photocath_mt->AddProperty("EFFICIENCY", ephotonPMT2,bialkali_photocath_EFF, num);//->SetSpline(true);
-  photocath_mt->AddProperty("REALRINDEX", ephotonPMT3,bialkali_photocath_ReR,num3);//->SetSpline(true);
-  photocath_mt->AddProperty("IMAGINARYRINDEX", ephotonPMT3, bialkali_photocath_ImR, num3);//->SetSpline(true);
+  photocath_mt->AddProperty("EFFICIENCY", ephotonPMT2,bialkali_photocath_EFF, num)->SetSpline(true);
+  photocath_mt->AddProperty("REALRINDEX", ephotonPMT3,bialkali_photocath_ReR,num3)->SetSpline(true);
+  photocath_mt->AddProperty("IMAGINARYRINDEX", ephotonPMT3, bialkali_photocath_ImR, num3)->SetSpline(true);
 }
 
 G4OpticalSurface* photocath_opsurf= new G4OpticalSurface("photocath_opsurf");
@@ -564,10 +564,10 @@ G4double refractiveIndex2[] =
   1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
   1.00, 1.00, 1.00, 1.00 };
 
-G4MaterialPropertiesTable* myMPT2 = new G4MaterialPropertiesTable();
-myMPT2->AddProperty("RINDEX", photonEnergy, refractiveIndex2, nEntries);
+G4MaterialPropertiesTable* airMPT = new G4MaterialPropertiesTable();
+airMPT->AddProperty("RINDEX", photonEnergy, refractiveIndex2, nEntries);
 
-air->SetMaterialPropertiesTable(myMPT2);
+air->SetMaterialPropertiesTable(airMPT);
 //
 //always return the physical World!!!
 //

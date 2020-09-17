@@ -33,7 +33,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     // kill photons past IntObj
     G4double EndIntObj = local_det->getEndIntObj();
 
-    if(theTrack->GetPosition().x()/(cm) > EndIntObj/(cm))
+    if(theTrack->GetPosition().z()/(cm) > EndIntObj/(cm))
     {
       // kill photons that go beyond the interrogation object
       theTrack->SetTrackStatus(fStopAndKill);
@@ -47,7 +47,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     }
     else if(theTrack->GetPosition().z()/(cm) < -1.*cm)
     {
-      // Kill photons that go in behind beam origin 
+      // Kill photons that go in behind beam origin
       theTrack->SetTrackStatus(fStopAndKill);
       run->AddStatusKilled();
     }
@@ -82,11 +82,24 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
        {
          G4double energy_IntObj = theTrack->GetKineticEnergy()/(MeV);
          manager->FillNtupleDColumn(5,0,energy_IntObj);
+         manager->FillNtupleIColumn(5,1,isNRF);
          manager->AddNtupleRow(5);
        }
      }
 
     // Water Analysis
+    // first time in detector determine incident water energies 
+    if(drawWaterIncDataFlag)
+    {
+      if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5 ,"Water") == 0
+         && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5, "Water") != 0)
+         {
+           G4double energy_inc_water = theTrack->GetKineticEnergy()/(MeV);
+           manager->FillNtupleDColumn(6,0, energy_inc_water);
+           manager->FillNtupleIColumn(6,1, isNRF);
+           manager->AddNtupleRow(6);
+         }
+    }
 
     // Here I am inside the water
     if(aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0,5,"Water")==0){

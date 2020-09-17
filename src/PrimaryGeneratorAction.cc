@@ -2,7 +2,8 @@
 #include "PrimaryGenActionMessenger.hh"
 
 
-PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction(), chosen_energy(-1),genM(NULL),fParticleGun(0)
+PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction(),
+chosen_energy(-1), resDataFlag(0), genM(NULL),fParticleGun(0)
 {
 
         genM = new PrimaryGenActionMessenger(this);
@@ -127,9 +128,12 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
           {
             theRes = 0;
           }
-          G4AnalysisManager* manager = G4AnalysisManager::Instance();
-          manager->FillNtupleIColumn(6,0,theRes);
-          manager->AddNtupleRow(6);
+          if(resDataFlag)
+          {
+            G4AnalysisManager* manager = G4AnalysisManager::Instance();
+            manager->FillNtupleIColumn(7,0,theRes);
+            manager->AddNtupleRow(7);
+          }
         }
 
 #endif

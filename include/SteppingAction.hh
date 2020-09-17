@@ -47,6 +47,7 @@ public: // for now set to public until I can figure out how to work with protect
         void SetIncidentDataFlag(G4int val){drawIncFlag = val;};
         void SetDetDataFlag(G4int val){drawDetFlag = val;};
         void SetIntObjDataFlag(G4int val){drawIntObjDataFlag = val;};
+        void SetIncWatDataFlag(G4int val){drawWaterIncDataFlag = val;};
 
 
 private:
@@ -63,6 +64,7 @@ private:
     G4OpBoundaryProcessStatus fExpectedNextStatus;
     G4String procCount;
     G4int drawIntObjDataFlag;
+    G4int drawWaterIncDataFlag;
     G4int drawWaterFlag;
     G4int drawIncFlag;
     G4int drawDetFlag;

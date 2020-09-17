@@ -5,7 +5,7 @@ DetectorConstruction::DetectorConstruction()
         radio_abundance(90*perCent), IntObj_Selection("Uranium"), intObjDensity(19.1*g/cm3),
         intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm),
         chopperOn(false), chopper_thick(1*mm), chopper_z(10*cm), theAngle(120.0),
-        water_size_x(60*cm),water_size_y(2.5908*m), water_size_z(30*cm),
+        water_size_x(60*cm),water_size_y(2.5908*m), water_size_z(40*cm),
          PMT_rmax(25.4*cm), nPMT(3), pc_mat("GaAsP"), detectorM(NULL)
 {
   detectorM = new DetectorMessenger(this);
@@ -152,7 +152,7 @@ G4LogicalVolume* logicWater =
                             "Water"); //its name
 
 // Make Physical volume
-G4double water_z_pos = 1*m + container_z_pos - container_z;
+G4double water_z_pos = container_z_pos - container_z;
 G4double myangle = (180. - theAngle)*pi/180.;
 G4double water_x_pos = tan(myangle)*(container_z_pos + intObj_z_pos - water_z_pos);
 G4double detDistance = water_x_pos/sin(myangle) + water_size_z;

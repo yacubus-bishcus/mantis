@@ -37,7 +37,7 @@
 
 
 DetectorConstruction::DetectorConstruction()
-        : G4VUserDetectorConstruction(),water_size_x(100*cm),water_size_y(100*cm), water_size_z(50*cm),PMT_rmax(100*cm), detectorM(NULL)
+        : G4VUserDetectorConstruction(),water_size_x(100*cm),water_size_y(100*cm), water_size_z(50*cm),PMT_rmax(50*cm), detectorM(NULL)
 {
   detectorM = new DetectorMessenger(this);
 }
@@ -145,10 +145,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         PmtPositions.push_back(G4ThreeVector(PMT_x_pos,PMT_y_pos,PMT_z_pos));
 
         physPMT = new G4PVPlacement(0,
-                                    G4ThreeVector(PMT_x_pos,PMT_y_pos,PMT_z_pos),
+                                    G4ThreeVector(0,0,water_size_x/2 - PMT_z),
                                     logicPMT,
                                     "PMT",
-                                    logicWorld,
+                                    logicWater,
                                     false,
                                     0,
                                     checkOverlaps);
@@ -398,7 +398,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         const G4int num = sizeof(ephotonPMT)/sizeof(G4double);
 
         // PMT Surface Properties
-        G4double reflectivity[] = {0.95831455,  0.95812048,  0.95790026,  0.95761486,  0.95722493, 0.95674285,  0.95601079,  0.95598459,  0.95598459};
+        G4double reflectivity[] = {0.03822, 0.0392,  0.040,  0.041,
+          0.0415,  0.0428,  0.0433,  0.0440, 0.0451};
         assert(sizeof(reflectivity) == sizeof(ephotonPMT));
         G4double efficiency[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
         assert(sizeof(efficiency) == sizeof(ephotonPMT));
@@ -410,7 +411,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         PMT_opsurf->SetMaterialPropertiesTable(PMTopt);
 
         // Photocathode surface properties
-        G4double photocath_EFF[]={0.13392893,0.72115423,0.9375,0.99431704,1.,0.86805444,0.703125,0.44642893,0.20833417}; //Enables 'detection' of photons
+        G4double photocath_EFF[]={0.25*perCent,36.246*perCent,39.8*perCent,40.0*perCent,36.0*perCent,30.0*perCent,
+          24.0*perCent, 15.0*perCent,4.8*perCent}; //Enables 'detection' of photons
         assert(sizeof(photocath_EFF) == sizeof(ephotonPMT));
         G4double photocath_ReR[]={3.3817,3.3970,3.4392,3.5246,3.6880,4.0462,4.3354,3.6361,3.5688};
         assert(sizeof(photocath_ReR) == sizeof(ephotonPMT));

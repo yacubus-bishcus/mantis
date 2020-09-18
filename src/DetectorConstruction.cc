@@ -330,8 +330,6 @@ G4double photonEnergy2[] =
   3.542285714*eV, 4.132666667*eV, 4.508363636*eV, 4.9592*eV
 };
 
-
-//
 // Water need to add rayleigh scattering! -- added automatically if material name = Water
 //
 G4double refractiveIndex1[] =
@@ -484,8 +482,7 @@ water_opsurf->SetFinish(polished);
 water_opsurf->SetPolish(1.0);
 water_opsurf->SetModel(glisur);
 water_opsurf->SetMaterialPropertiesTable(waterMPT);
-//new G4LogicalBorderSurface("water_surf_left", physWaterLeft, physPMT, water_opsurf); // name, physical volume1, phsical volume2, G4optical surface
-//new G4LogicalBorderSurface("water_surf_right", physWaterRight, physPMT, water_opsurf);
+
 // PMT
 // wavelengths 2.5, 2.0,1.5 1, .75, .5 ,.45, .4, .35, .30
 G4double ephotonPMT[] = {0.4959388*eV, 0.6199*eV, 0.8265*eV, 1.239*eV, 1.653*eV, 2.480*eV,
@@ -509,12 +506,18 @@ G4double efficiency[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 assert(sizeof(efficiency) == sizeof(ephotonPMT));
 G4double pmt_iof[] = {1.486, 1.4945, 1.5013, 1.5075, 1.5118, 1.5214, 1.5253, 1.5308, 1.5392, 1.5528};
 assert(sizeof(pmt_iof) == sizeof(ephotonPMT));
+G4double abslength[] = {1000*m,1000*m,1000*m,1000*m,1000*m,1000*m,1000*m,1000*m,1000*m, 1000*m}; // treating glass as transparent
+assert(sizeof(abslength) == sizeof(ephotonPMT));
 G4OpticalSurface* PMT_opsurf = new G4OpticalSurface("PMTSurface",unified,polished,dielectric_metal);
 G4MaterialPropertiesTable* PMTopt = new G4MaterialPropertiesTable();
+G4MaterialPropertiesTable* PMTphysabs = new G4MaterialPropertiesTable();
 PMTopt->AddProperty("REFLECTIVITY", ephotonPMT, reflectivity, num)->SetSpline(true);
 PMTopt->AddProperty("EFFICIENCY", ephotonPMT, efficiency, num)->SetSpline(true);
 PMTopt->AddProperty("RINDEX", ephotonPMT, pmt_iof, num)->SetSpline(true);
+PMTphysabs->AddProperty("RINDEX", ephotonPMT, pmt_iof, num)->SetSpline(true);
+PMTphysabs->AddProperty("ABSLENGTH", ephotonPMT, abslength, num);
 PMT_opsurf->SetMaterialPropertiesTable(PMTopt);
+PMT_mat->SetMaterialPropertiesTable(PMTphysabs);
 
 // Photocathode surface properties
 G4double Ga_As_photocath_EFF[]={0.25*perCent,36.246*perCent,39.8*perCent,40.0*perCent,36.0*perCent,30.0*perCent,

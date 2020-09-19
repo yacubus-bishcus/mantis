@@ -31,13 +31,11 @@ void ActionInitialization::Build() const
     RunAction* run = new RunAction(histo);
     SetUserAction(run);
 
-    SteppingAction *stepAction = new SteppingAction(primary_action->
-      GetParticleGun(), run);
+    SteppingAction *stepAction = new SteppingAction(fDetector, run);
     SetUserAction(stepAction);
     EventAction *eventAction = new EventAction(primary_action->GetParticleGun(),
-    stepAction,fDetector);
+    stepAction);
     SetUserAction(eventAction);
-    SetUserAction(new StackingAction(eventAction));
-
-
+    StackingAction *stackAction = new StackingAction(fDetector, run);
+    SetUserAction(stackAction);
 }

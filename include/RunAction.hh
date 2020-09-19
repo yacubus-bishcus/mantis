@@ -31,9 +31,20 @@ class RunAction : public G4UserRunAction
     void AddRayleigh(void) {fRayleighCount++;}
     void AddOpAbsorption(void) {fOpAbsorption++;}
     void AddTotalSurface(void) {fTotalSurface += 1;}
+    void AddNRF(void){fNRF++;}
+    void AddStatusKilled(void){fStatusKilled++;}
+    void setStartTime()
+    {
+      startTime = time(0);
+    }
+    time_t getStartTime()const
+    {
+      return startTime;
+    }
 
   private:
     G4Timer* fTimer;
+    time_t startTime;
     void WriteResults();
     std::ofstream data_file;
     HistoManager* fHistoManager;
@@ -45,6 +56,8 @@ class RunAction : public G4UserRunAction
     G4int fRayleighCount;
     G4int fOpAbsorption;
     G4int fTotalSurface;
+    G4int fNRF;
+    G4int fStatusKilled;
 };
 
 

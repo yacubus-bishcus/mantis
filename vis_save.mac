@@ -1,23 +1,26 @@
-/control/verbose 2
-/control/saveHistory
-/run/verbose 2
+/control/verbose 0
+/run/verbose 0
+/mydet/nPMT 4
+/chopper/On True 
 /run/initialize
 
 /vis/open VRML2FILE
 /vis/viewer/set/autoRefresh false
-/vis/verbose errors
 /vis/drawVolume
 /vis/scene/add/trajectories smooth
 /vis/modeling/trajectories/create/drawByCharge
-/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
-/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
-/vis/scene/endOfEventAction accumulate
+/vis/scene/add/hits
+/vis/scene/endOfEventAction accumulate 1000
 
 # Make the "World" box invisible
 /vis/geometry/set/visibility World 0 false
 /vis/viewer/set/background 1 1 1
-#
-# Re-establish auto refreshing and verbosity:
+
+/vis/modeling/trajectories/create/drawByCharge
+/vis/modeling/trajectories/drawByCharge-0/set 1 blue
+/vis/modeling/trajectories/drawByCharge-0/set -1 blue
+/vis/modeling/trajectories/drawByCharge-0/set 0 red
+
+/vis/viewer/update
 /vis/viewer/set/autoRefresh true
-/vis/verbose warnings
-/run/beamOn 10
+/run/beamOn 100

@@ -1,15 +1,9 @@
-# Macro file for the initialization of example B1
-# in interactive session
-#
-# Set some default verbose
+
 /control/verbose 0
 /control/saveHistory
 /run/verbose 0
-# set PC radius here 
-/mydet/PCrad 100
-/mydet/WaterX 50
-/mydet/WaterY 50
-/mydet/WaterZ 20
+# set PC radius here
+
 #
 # Initialize kernel
 /run/initialize

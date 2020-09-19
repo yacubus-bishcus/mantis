@@ -2,7 +2,8 @@
 #include "PrimaryGenActionMessenger.hh"
 
 
-PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction(), chosen_energy(-1),genM(NULL),fParticleGun(0)
+PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction(),
+chosen_energy(-1), resDataFlag(0), genM(NULL),fParticleGun(0)
 {
 
         genM = new PrimaryGenActionMessenger(this);
@@ -10,24 +11,37 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction
         fParticleGun = new G4ParticleGun(n_particle);
 
         // Default Kinematics
-
-        G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-        particleNumber= 22; // gamma particle number
-        G4ParticleDefinition *particle = particleTable->FindParticle(particleNumber);
-        fParticleGun->SetParticleDefinition(particle);
+        fParticleGun->SetParticleDefinition(G4Electron::Definition());
 
         fParticleGun->SetParticleTime(0.0*ns);
         // Determine particle Beam Energy
+        ReadInputSpectrumFile("input_spectrum.txt");
 
-        if(chosen_energy == -1){
-          ReadInputSpectrumFile("input_spectrum.txt");
-          }
 
+#if defined (G4ANALYSIS_USE_ROOT)
+
+        // file contains the normalized brems distribution p(E), sampling distribution s(E),
+        // and binary 0/1 for off/on resonance useful in weighting
+        TFile *fin = TFile::Open("brems_distributions.root");
+        hBrems  = (TH1D*) fin->Get("hBrems");
+        hSample = (TH1D*) fin->Get("hSample");
+        hBinary = (TH1D*) fin->Get("hBinary");
+        if (hBrems && hSample && hBinary)
+        {
+          G4cout << "Imported brems and sampling distributions from " << fin->GetName() << G4endl << G4endl;
+        }
+        else
+        {
+          std::cerr << "Error reading from file " << fin->GetName() << std::endl;
+          exit(1);
+        }
+
+#endif
         // Set Beam Position
         beam_offset_x = 0*cm;
         beam_offset_y = 0*cm;
         z0 = 0*cm;
-        beam_size = 1;
+        beam_size = 1.3*mm;
         source_width=0; //by default the width along Z is zero
 
 }
@@ -43,6 +57,21 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 
         // Set Particle Energy (Must be in generate primaries)
+#if defined (G4ANALYSIS_USE_ROOT)
+
+        if(chosen_energy == -2)
+        {
+          energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
+        }
+#else
+        if(chosen_energy == -2)
+        {
+          std::cerr << "ERROR: G4ANALYSIS_USE_ROOT not defined in pre-compiler" << std::endl;
+          std::cerr << "SYSTEM EXITING" << std::endl;
+          exit(100);
+        }
+
+#endif
         if(chosen_energy == -1)
         {
           random=G4UniformRand()*N[N.size()-1];
@@ -56,7 +85,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
                       break;
                   }
         }
-        else{energy = chosen_energy;}
+        else if(chosen_energy != -2 && chosen_energy != -1)
+        {
+          energy = chosen_energy;
+        }
 
         fParticleGun->SetParticleEnergy(energy*MeV);
 
@@ -81,6 +113,31 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
         fParticleGun->GeneratePrimaryVertex(anEvent);
 
+        // if histogram exists find whether it was a resonance sample or not
+#if defined (G4ANALYSIS_USE_ROOT)
+        G4bool onRes;
+        if(hBinary)
+        {
+          onRes = hBinary->GetBinContent(hBinary->GetXaxis()->FindBin(energy));
+          G4int theRes;
+          if(onRes)
+          {
+            theRes = 1;
+          }
+          else
+          {
+            theRes = 0;
+          }
+          if(resDataFlag)
+          {
+            G4AnalysisManager* manager = G4AnalysisManager::Instance();
+            manager->FillNtupleIColumn(7,0,theRes);
+            manager->AddNtupleRow(7);
+          }
+        }
+
+#endif
+
 }
 
 
@@ -99,7 +156,7 @@ void PrimaryGeneratorAction::ReadInputSpectrumFile(std::string filename){
                 }
         }
         else {
-                std::cout<<"Input file expected, however open failed, exiting."<<std::endl;
+                std::cerr<<"Input file expected, however open failed, exiting."<<std::endl;
                 exit(8);
         }
 

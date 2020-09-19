@@ -1,35 +1,11 @@
 #include "SteppingAction.hh"
-#include "EventAction.hh"
-#include "PMTSD.hh"
-#include "StackingAction.hh"
-#include "HistoManager.hh"
-#include "StepMessenger.hh"
-
-#include "G4SteppingManager.hh"
-#include "G4SDManager.hh"
-#include "G4EventManager.hh"
-#include "G4ProcessManager.hh"
-#include "G4Track.hh"
-#include "G4Step.hh"
-#include "G4Event.hh"
-#include "G4StepPoint.hh"
-#include "G4TrackStatus.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleTypes.hh"
-
-#include "G4RunManager.hh"
-#include "G4ParticleGun.hh"
-#include "vector"
-#include "globals.hh"
-#include "G4SystemOfUnits.hh"
 
 
-SteppingAction::SteppingAction(G4ParticleGun* particle_gun, RunAction* localrun)
-: G4UserSteppingAction(), drawWaterFlag(0), drawIncFlag(0), drawDetFlag(0), stepM(NULL)
+SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun)
+: G4UserSteppingAction(), drawIntObjDataFlag(0), drawWaterFlag(0), drawIncFlag(0), drawDetFlag(0), stepM(NULL)
 {
     stepM = new StepMessenger(this);
-    particle_gun_local = particle_gun;
+    local_det = det;
     fExpectedNextStatus = Undefined;
     run = localrun;
 }
@@ -39,6 +15,7 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
+    G4int isNRF = 0;
 
     G4String particleName = aStep->GetTrack()->GetDynamicParticle()
     ->GetParticleDefinition()->GetParticleName();
@@ -52,7 +29,27 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     }
 
     G4Track* theTrack = aStep->GetTrack();
+    // kill photons past IntObj
+    G4double EndIntObj = local_det->getEndIntObj();
 
+    if(theTrack->GetPosition().z()/(cm) > EndIntObj/(cm))
+    {
+      // kill photons that go beyond the interrogation object
+      theTrack->SetTrackStatus(fStopAndKill);
+      run->AddStatusKilled();
+    }
+    else if(aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 10, "Collimator") == 0)
+    {
+      // kill photons in collimator
+      theTrack->SetTrackStatus(fStopAndKill);
+      run->AddStatusKilled();
+    }
+    else if(theTrack->GetPosition().z()/(cm) < -1.*cm)
+    {
+      // Kill photons that go in behind beam origin
+      theTrack->SetTrackStatus(fStopAndKill);
+      run->AddStatusKilled();
+    }
     if (particleName == "opticalphoton") {
          const G4VProcess* pds = aStep->GetPostStepPoint()->
                                                       GetProcessDefinedStep();
@@ -65,8 +62,43 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
          }
      }
 
-    // Water Analysis
+     if(theTrack->GetCreatorProcess() !=0)
+     {
+       G4String CPName = theTrack->GetCreatorProcess()->GetProcessName();
+       if(CPName == "NRF")
+       {
+         run->AddNRF();
+         isNRF = 1;
+       }
+     }
 
+     // Testing NRF Analysis
+     // inside Interogation Object for first time
+     if(drawIntObjDataFlag)
+     {
+       if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14 ,"IntObjPhysical") == 0
+          && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14, "IntObjPhysical") != 0)
+       {
+         G4double energy_IntObj = theTrack->GetKineticEnergy()/(MeV);
+         manager->FillNtupleDColumn(5,0,energy_IntObj);
+         manager->FillNtupleIColumn(5,1,isNRF);
+         manager->AddNtupleRow(5);
+       }
+     }
+
+    // Water Analysis
+    // first time in detector determine incident water energies
+    if(drawWaterIncDataFlag)
+    {
+      if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5 ,"Water") == 0
+         && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5, "Water") != 0)
+         {
+           G4double energy_inc_water = theTrack->GetKineticEnergy()/(MeV);
+           manager->FillNtupleDColumn(6,0, energy_inc_water);
+           manager->FillNtupleIColumn(6,1, isNRF);
+           manager->AddNtupleRow(6);
+         }
+    }
 
     // Here I am inside the water
     if(aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0,5,"Water")==0){
@@ -99,11 +131,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         if(drawWaterFlag)
                         {
                           manager->FillNtupleDColumn(0,0, secondaries->at(i)->GetKineticEnergy()/(MeV));
-                          manager->FillNtupleDColumn(0,1, X.x()/(cm));
-                          manager->FillNtupleDColumn(0,2, X.y()/(cm));
-                          manager->FillNtupleDColumn(0,3, X.z()/(cm));
-                          manager->FillNtupleDColumn(0,4, asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()));
-                          manager->FillNtupleDColumn(0,5, secondaries->at(i)->GetGlobalTime());
+                          manager->FillNtupleIColumn(0,1, isNRF);
+                          manager->FillNtupleDColumn(0,2, X.x()/(cm));
+                          manager->FillNtupleDColumn(0,3, X.y()/(cm));
+                          manager->FillNtupleDColumn(0,4, X.z()/(cm));
+                          manager->FillNtupleDColumn(0,5, asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()));
+                          manager->FillNtupleDColumn(0,6, secondaries->at(i)->GetGlobalTime());
                           manager->AddNtupleRow(0);
 
                         }
@@ -145,10 +178,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             if(drawIncFlag)
             {
               manager->FillNtupleDColumn(1,0,theParticle->GetKineticEnergy()/(MeV));
+              manager->FillNtupleIColumn(1,1,isNRF);
               Xdet = endPoint->GetPosition();
-              manager->FillNtupleDColumn(1,1,Xdet.x()/(cm));
-              manager->FillNtupleDColumn(1,2,Xdet.y()/(cm));
-              manager->FillNtupleDColumn(1,3,Xdet.z()/(cm));
+              manager->FillNtupleDColumn(1,2,Xdet.x()/(cm));
+              manager->FillNtupleDColumn(1,3,Xdet.y()/(cm));
+              manager->FillNtupleDColumn(1,4,Xdet.z()/(cm));
               manager->AddNtupleRow(1);
             }
 
@@ -160,7 +194,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
                 if(opProc){
                     theStatus = opProc->GetStatus();
-                    E_beam = particle_gun_local->GetParticleEnergy();
 
                     if(theStatus == Transmission){
                         //run->AddTransmission();
@@ -204,27 +237,24 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         G4StepPoint* Xdetected_point = aStep->GetPostStepPoint();
                         Xdetected = Xdetected_point->GetPosition();
                         manager->FillNtupleDColumn(3,0,det_energy);
-                        manager->FillNtupleDColumn(3,1,Xdetected.x()/(cm));
-                        manager->FillNtupleDColumn(3,2,Xdetected.y()/(cm));
+                        manager->FillNtupleIColumn(3,1,isNRF);
+                        manager->FillNtupleDColumn(3,2,Xdetected.x()/(cm));
+                        manager->FillNtupleDColumn(3,3,Xdetected.y()/(cm));
+                        manager->FillNtupleDColumn(3,4,Xdetected.z()/(cm));
                         manager->AddNtupleRow(3);
-                        //G4cout << "Detection" << G4endl;
+
                     }
                     else if (theStatus == NotAtBoundary) {
-                      //run->AddNotAtBoundary();
                         procCount = "NotAtBoundary";
                     }
                     else if (theStatus == SameMaterial) {
-                      //run->AddSameMaterial();
                         procCount = "SameMaterial";
                     }
                     else if (theStatus == StepTooSmall) {
-                      //run->AddStepTooSmall();
                         procCount = "SteptooSmall";
                     }
                     else if (theStatus == NoRINDEX) {
-                      //run->AddNoRINDEX();
                         procCount = "NoRINDEX";
-                        //G4cout << "No Rindex" << G4endl;
                     }
                     else {
                         G4cout << "theStatus: " << theStatus
@@ -236,7 +266,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 {
 
                   manager->FillNtupleSColumn(2,0,procCount);
-                  manager->FillNtupleDColumn(2,1,E_beam);
                   manager->AddNtupleRow(2);
 
                 }

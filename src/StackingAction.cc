@@ -1,33 +1,27 @@
 #include "StackingAction.hh"
-#include "G4Track.hh"
-#include "G4TrackStatus.hh"
-#include "G4ParticleTypes.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4VProcess.hh"
-#include "G4ios.hh"
-#include "EventAction.hh"
-#include "SteppingAction.hh"
-#include "G4Event.hh"
-#include "G4EventManager.hh"
 
-StackingAction::StackingAction(EventAction *ea)
-        : fEventAction(ea)
+
+StackingAction::StackingAction(const DetectorConstruction* det, RunAction* run)
 {
-
+  local_det = det;
+  local_run = run;
 }
-
 
 StackingAction::~StackingAction()
+{}
+
+G4ClassificationOfNewTrack StackingAction::ClassifyNewTrack(const G4Track* currentTrack)
 {
-}
-
-void StackingAction::NewStage(){
-
-        //G4cout << "Number of Scintillation photons produced in this event : " << fScintillationCounter << G4endl;
-        //G4cout << "Number of Cerenkov photons produced in this event : " << fCerenkovCounter << G4endl;
-}
-
-void StackingAction::PrepareNewEvent(){
-        //G4cout << "preparing new event" << G4endl;
-
+  // if a new track is created beyond interogation material kill it
+  G4double EndIntObj = local_det->getEndIntObj();
+  G4double trackZ = currentTrack->GetPosition().z();
+  if(trackZ/(cm) > EndIntObj/(cm))
+  {
+    local_run->AddStatusKilled();
+    return fKill;
+  }
+  G4ParticleDefinition *pdef = currentTrack->GetDefinition();
+  // kill neutrons (probably not important)
+  if(pdef == G4Neutron::Definition()) return fKill;
+  return fUrgent;
 }

@@ -3,6 +3,9 @@
 
 #include "globals.hh"
 #include "g4root.hh"
+#include <time.h>
+#include "G4UnitsTable.hh"
+#include "G4SystemOfUnits.hh"
 
 
 class HistoManager
@@ -13,15 +16,14 @@ HistoManager();
 
 void finish();     // close root file
 void Book();
+G4bool OnceAWhileSave(time_t);
+G4bool checkPrint;
 
 private:
 G4bool fFactoryOn;
-G4double fE_beam, fEnergy, fx, fy, fz, ftheta, ftime;
-G4double fincEnergy;
-G4String fProcess;
-G4double fE_Beam, fNumPhotons;
+G4bool checkLast;
+time_t startTime;
 
 };
-
 
 #endif

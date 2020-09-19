@@ -26,6 +26,14 @@ G4Material *air = nist->FindOrBuildMaterial("G4_AIR");
 G4Material *steel = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
 G4Material *Water = nist->FindOrBuildMaterial("G4_WATER");
 G4Material *lead = nist->FindOrBuildMaterial("G4_Pb");
+G4Material *tungsten = nist->FindOrBuildMaterial("G4_W");
+G4Element *elN = new G4Element("Nitrogen", "N2", 7, 14.01*g/mole);
+G4Element *elO = new G4Element("Oxygen", "O2", 8, 16.0*g/mole);
+G4Material *myAir = new G4Material("Air", 1.290*mg/cm3, 2);
+myAir->AddElement(elN, 0.7);
+myAir->AddElement(elO, 0.3);
+G4Material *myVacuum = new G4Material("Vacuum", 1.e-5*g/cm3, 1, kStateGas, 273.15, 2.e-2*bar);
+myVacuum->AddMaterial(myAir,1);
 // technically PMT glass is a special borosilicate glass calle k-free glass
 // but pyrex is close enough as a borosilicate glass
 G4Material* PMT_mat = nist->FindOrBuildMaterial("G4_Pyrex_Glass");
@@ -75,6 +83,19 @@ G4VPhysicalVolume* physWorld =
                           0,         //copy number
                           false);    //overlaps checking
 
+// ********************World and Materials Complete ***********************//
+
+// Set up Linac configuration
+G4Tubs *solidLinac = new G4Tubs("Linac",0, 10*cm, 3*cm, 0*deg, 360*deg);
+G4LogicalVolume *logicalLinac = new G4LogicalVolume(solidLinac, tungsten, "Linac");
+new G4PVPlacement(0, G4ThreeVector(0,0, 3*cm), logicalLinac, "Linac", logicWorld, false, 0, checkOverlaps);
+G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 10*mm, 3*cm, 0*deg, 360*deg);
+G4LogicalVolume *logicalVacuum = new G4LogicalVolume(solidVacuum, myVacuum, "Vacuum");
+new G4PVPlacement(0, G4ThreeVector(0,0,0), logicalVacuum, "Vacuum", logicalLinac, false,0,checkOverlaps);
+// Make Brem target
+G4Box *solidBremTarget = new G4Box("Brem", 2*mm, 2*mm, 0.1*mm);
+G4LogicalVolume *logicBremTarget = new G4LogicalVolume(solidBremTarget, tungsten, "Brem");
+new G4PVPlacement(0, G4ThreeVector(0, 0, -2*cm),logicBremTarget,"Brem", logicalVacuum, false, 0, checkOverlaps);
 // Set up Collimator
 G4double container_z_pos = container_z +water_size_x + 1.0*m;
 G4Box *solidCollimator = new G4Box("Collimator", 1*cm, water_size_y, container_z_pos - container_z);
@@ -178,21 +199,27 @@ physWaterRight = new G4PVPlacement(waterRot2,
                                   0,
                                   checkOverlaps);
 // Set up chopper wheel
+
+std::cout << "The Chopper Thickness was set to: " << chopper_thick/(cm) << " cm" << std::endl;
+std::cout << "The Chopper distance from beam was set to: " << chopper_z/(cm) << " cm" << std::endl;
+if(chopper_z > water_z_pos)
+{
+  std::cerr << "ERROR: Chopper wheel location should be behind water detectors, exiting." << std::endl;
+  exit(100);
+}
+G4Tubs *solidChopper = new G4Tubs("Chopper", 0*cm, 5*cm, chopper_thick, 0.*deg, 180.*deg);
 if(chopperOn)
 {
-  std::cout << "The Chopper Thickness was set to: " << chopper_thick/(cm) << std::endl;
-  std::cout << "The Chopper distance from beam was set to: " << chopper_z/(cm) << std::endl;
-  if(chopper_z > water_z_pos)
-  {
-    std::cerr << "ERROR: Chopper wheel location should be behind water detectors, exiting." << std::endl;
-    exit(100);
-  }
-  G4Box *solidChopper = new G4Box("Chopper", 1*cm, 1*cm, chopper_thick);
   logicChopper = new G4LogicalVolume(solidChopper, intObjMat, "Chopper");
-  new G4PVPlacement(0, G4ThreeVector(0,0,chopper_z),
-                    logicChopper, "Chopper", logicWorld, false,
-                    0, checkOverlaps);
 }
+else
+{
+  logicChopper = new G4LogicalVolume(solidChopper, lead, "Chopper");
+}
+
+new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,chopper_z),
+                  logicChopper, "Chopper", logicWorld, false,
+                  0, checkOverlaps);
 
 G4double PMT_rmin = 0*cm;
 std::cout << "The PC Radius was set to " << PMT_rmax/(cm) << " cm" << std::endl;
@@ -271,6 +298,7 @@ G4VisAttributes *lightGray= new G4VisAttributes( G4Colour(178/255., 178/255.,  1
 G4VisAttributes *green= new G4VisAttributes( G4Colour(0/255., 255/255.,  0/255. ));
 G4VisAttributes *black = new G4VisAttributes(G4Colour(0.,0.,0.));
 G4VisAttributes *magenta = new G4VisAttributes(G4Colour(1.0, 0.0, 1.0));
+G4VisAttributes *white = new G4VisAttributes(G4Colour(1.0,1.0,1.0));
 
 yellow->SetVisibility(true);
 yellow->SetForceWireframe(true);
@@ -287,8 +315,13 @@ black->SetForceSolid(true);
 black->SetVisibility(true);
 magenta->SetForceWireframe(true);
 magenta->SetVisibility(true);
+white->SetForceWireframe(true);
+white->SetVisibility(true);
 
 // Set Visual colors
+logicalLinac->SetVisAttributes(lightGray);
+logicalVacuum->SetVisAttributes(white);
+logicBremTarget->SetVisAttributes(black);
 logicWater->SetVisAttributes(blue);
 logicPMT->SetVisAttributes(green);
 logicPC->SetVisAttributes(red);
@@ -296,10 +329,8 @@ logicIntObj->SetVisAttributes(lightGray);
 logicContainer->SetVisAttributes(yellow);
 logicHollowC->SetVisAttributes(grayc);
 logicCollimator->SetVisAttributes(magenta);
-if(chopperOn)
-{
-  logicChopper->SetVisAttributes(black);
-}
+logicChopper->SetVisAttributes(black);
+
 
 //
 // ------------ Generate & Add Material Properties Table ------------

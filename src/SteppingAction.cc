@@ -1,12 +1,11 @@
 #include "SteppingAction.hh"
 
 
-SteppingAction::SteppingAction(const DetectorConstruction* det, G4ParticleGun* particle_gun, RunAction* localrun)
+SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun)
 : G4UserSteppingAction(), drawIntObjDataFlag(0), drawWaterFlag(0), drawIncFlag(0), drawDetFlag(0), stepM(NULL)
 {
     stepM = new StepMessenger(this);
     local_det = det;
-    particle_gun_local = particle_gun;
     fExpectedNextStatus = Undefined;
     run = localrun;
 }
@@ -88,7 +87,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
      }
 
     // Water Analysis
-    // first time in detector determine incident water energies 
+    // first time in detector determine incident water energies
     if(drawWaterIncDataFlag)
     {
       if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5 ,"Water") == 0
@@ -195,7 +194,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
                 if(opProc){
                     theStatus = opProc->GetStatus();
-                    E_beam = particle_gun_local->GetParticleEnergy();
 
                     if(theStatus == Transmission){
                         //run->AddTransmission();
@@ -268,7 +266,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 {
 
                   manager->FillNtupleSColumn(2,0,procCount);
-                  manager->FillNtupleDColumn(2,1,E_beam);
                   manager->AddNtupleRow(2);
 
                 }

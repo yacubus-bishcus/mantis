@@ -5,7 +5,6 @@
 #include "globals.hh"
 #include <vector>
 #include "G4ThreeVector.hh"
-#include "G4ParticleGun.hh"
 #include "G4OpBoundaryProcess.hh"
 #include "RunAction.hh"
 #include "StackingAction.hh"
@@ -34,7 +33,7 @@ class StepMessenger;
 class SteppingAction : public G4UserSteppingAction
 {
   public:
-    SteppingAction(const DetectorConstruction*, G4ParticleGun*, RunAction*);
+    SteppingAction(const DetectorConstruction*, RunAction*);
     virtual ~SteppingAction();
 
     // method from the base class
@@ -59,7 +58,6 @@ private:
     G4ThreeVector Xdet, Xdetected;
     G4ThreeVector incX;
     const DetectorConstruction* local_det;
-    G4ParticleGun* particle_gun_local;
     RunAction* run;
     G4OpBoundaryProcessStatus fExpectedNextStatus;
     G4String procCount;

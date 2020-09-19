@@ -29,6 +29,7 @@ G4String macro;
 G4long seed;
 G4String root_output_name;
 G4String gOutName;
+G4bool output;
 
 namespace
 {
@@ -49,6 +50,7 @@ int main(int argc,char **argv)
   G4bool addNRF = true;
   macro = "mantis.in";
   seed = 1;
+  output = false;
 
   // Detect interactive mode (if no arguments) and define UI session
   //
@@ -85,7 +87,9 @@ int main(int argc,char **argv)
 
         G4UImanager* UI = G4UImanager::GetUIpointer();
         MySession* LoggedSession = new MySession;
-        if(! ui && macro != "vis_save.mac"){
+        if(! ui && macro != "vis_save.mac")
+        {
+          output = true;
           UI->SetCoutDestination(LoggedSession);
         }
         // choose the Random engine

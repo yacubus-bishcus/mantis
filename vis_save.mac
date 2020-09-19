@@ -1,7 +1,7 @@
 /control/verbose 0
 /run/verbose 0
-/mydet/nPMT 4
-/chopper/On True 
+#/mydet/nPMT 4
+#/chopper/On True
 /run/initialize
 
 /vis/open VRML2FILE

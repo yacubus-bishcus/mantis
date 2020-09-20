@@ -172,7 +172,6 @@ G4LogicalVolume* logicWater =
                             Water, //its material
                             "Water"); //its name
 
-// Make Physical volume
 G4double water_z_pos = container_z_pos - container_z;
 G4double myangle = (180. - theAngle)*pi/180.;
 G4double water_x_pos = tan(myangle)*(container_z_pos + intObj_z_pos - water_z_pos);

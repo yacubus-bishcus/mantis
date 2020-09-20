@@ -46,6 +46,7 @@ void ResetEverything();
 G4int drawNumPhotonsFlag;
 SteppingAction* stepA_local;
 EventMessenger* eventM;
+G4double E_beam;
 };
 
 #endif

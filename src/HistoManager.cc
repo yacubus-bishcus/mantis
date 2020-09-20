@@ -85,12 +85,9 @@ void HistoManager::Book()
       manager->CreateNtupleIColumn("isNRF");
       manager->FinishNtuple();
 
-  #if defined (G4ANALYSIS_USE_ROOT)
-      // Create Ntuple for Resonance Sampling
-      manager->CreateNtuple("ResSample", "ResSample");
-      manager->CreateNtupleIColumn("Res");
+      manager->CreateNtuple("ChopperData","ChopperData");
+      manager->CreateNtupleDColumn("E_incident");
       manager->FinishNtuple();
-  #endif
 
       fFactoryOn = true;
       G4cout << "Data Book Created." << G4endl;

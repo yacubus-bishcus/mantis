@@ -23,7 +23,7 @@ inline G4double GetBeamEnergy() const {
         return beamEnergy;
 }
 void SetBeamEnergy(G4double);
-
+void Print() const;
 private:
 G4double weight;
 G4double beamEnergy;

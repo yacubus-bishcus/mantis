@@ -56,7 +56,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         G4int isNRF = 0;
         eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
         weight = info->GetWeight();
-        E_beam = info->GetBeamEnergy();
         G4String particleName = aStep->GetTrack()->GetDynamicParticle()
                                 ->GetParticleDefinition()->GetParticleName();
         G4AnalysisManager* manager = G4AnalysisManager::Instance();
@@ -92,7 +91,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 {
                         G4double energy_chopper = theTrack->GetKineticEnergy()/(MeV);
                         manager->FillNtupleDColumn(7,0,energy_chopper*weight);
-                        manager->FillNtupleDColumn(7,1,E_beam);
                         manager->AddNtupleRow(7);
                 }
         }

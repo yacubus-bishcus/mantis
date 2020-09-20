@@ -27,3 +27,6 @@ void eventInformation::SetWeight(G4double x) {
 void eventInformation::SetBeamEnergy(G4double x) {
         beamEnergy = x;
 }
+
+void eventInformation::Print() const
+{;}

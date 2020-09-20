@@ -66,7 +66,6 @@ void SetIncWatDataFlag(G4int val){
 
 private:
 G4double weight;
-G4double E_beam;
 int EventGeneratorParticle;
 float LowEnergyCutoff;
 G4ThreeVector p;
@@ -83,7 +82,6 @@ G4int drawWaterIncDataFlag;
 G4int drawWaterFlag;
 G4int drawIncFlag;
 G4int drawDetFlag;
-G4double E_beam;
 G4double det_energy;
 StepMessenger* stepM;
 

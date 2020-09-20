@@ -8,8 +8,7 @@
 #include <fstream>
 #include <vector>
 #include "G4Types.hh"
-#include "G4ParticleGun.hh"
-#include "StackingAction.hh"
+#include "eventInformation.hh"
 #include "SteppingAction.hh"
 #include "HistoManager.hh"
 #include "EventMessenger.hh"
@@ -28,26 +27,25 @@ class EventMessenger;
 
 class EventAction : public G4UserEventAction
 {
-  public:
-    EventAction(G4ParticleGun*,SteppingAction*);
-   ~EventAction();
+public:
+EventAction(SteppingAction*);
+~EventAction();
 
-  public:
-    void BeginOfEventAction(const G4Event* anEvent);
-    void EndOfEventAction(const G4Event* anEvent);
+public:
+void BeginOfEventAction(const G4Event* anEvent);
+void EndOfEventAction(const G4Event* anEvent);
 
-    void SetNumPhotonsFlag(G4int val){drawNumPhotonsFlag = val;};
+void SetNumPhotonsFlag(G4int val){
+        drawNumPhotonsFlag = val;
+};
 
 private:
 
-    void ResetEverything();
-    //void Weighting(const G4Event* anEvent);
-    G4int drawNumPhotonsFlag;
-    G4ParticleGun* particle_gun_local;
-    SteppingAction* stepA_local;
-    EventMessenger* eventM;
-
-
+void ResetEverything();
+//void Weighting(const G4Event* anEvent);
+G4int drawNumPhotonsFlag;
+SteppingAction* stepA_local;
+EventMessenger* eventM;
 };
 
 #endif

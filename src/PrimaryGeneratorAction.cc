@@ -3,7 +3,7 @@
 
 
 PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction(),
-chosen_energy(-1), resDataFlag(0), genM(NULL),fParticleGun(0)
+        chosen_energy(-1), genM(NULL), fParticleGun(0)
 {
 
         genM = new PrimaryGenActionMessenger(this);
@@ -25,15 +25,14 @@ chosen_energy(-1), resDataFlag(0), genM(NULL),fParticleGun(0)
         TFile *fin = TFile::Open("brems_distributions.root");
         hBrems  = (TH1D*) fin->Get("hBrems");
         hSample = (TH1D*) fin->Get("hSample");
-        hBinary = (TH1D*) fin->Get("hBinary");
-        if (hBrems && hSample && hBinary)
+        if (hBrems && hSample)
         {
-          G4cout << "Imported brems and sampling distributions from " << fin->GetName() << G4endl << G4endl;
+                G4cout << "Imported brems and sampling distributions from " << fin->GetName() << G4endl << G4endl;
         }
         else
         {
-          std::cerr << "Error reading from file " << fin->GetName() << std::endl;
-          exit(1);
+                std::cerr << "Error reading from file " << fin->GetName() << std::endl;
+                exit(1);
         }
 
 #endif
@@ -61,33 +60,33 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
         if(chosen_energy == -2)
         {
-          energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
+                energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
         }
 #else
         if(chosen_energy == -2)
         {
-          std::cerr << "ERROR: G4ANALYSIS_USE_ROOT not defined in pre-compiler" << std::endl;
-          std::cerr << "SYSTEM EXITING" << std::endl;
-          exit(100);
+                std::cerr << "ERROR: G4ANALYSIS_USE_ROOT not defined in pre-compiler" << std::endl;
+                std::cerr << "SYSTEM EXITING" << std::endl;
+                exit(100);
         }
 
 #endif
         if(chosen_energy == -1)
         {
-          random=G4UniformRand()*N[N.size()-1];
+                random=G4UniformRand()*N[N.size()-1];
 
-          // first order interpolation
-          for(unsigned int i=0; i<N.size(); i++)
-                  if(N[i]>random && i>0)
-                  {
-                      G4float f = (random - N[i-1]) / (N[i] - N[i-1]);
-                      energy= f*e[i] + (1-f)*e[i-1];
-                      break;
-                  }
+                // first order interpolation
+                for(unsigned int i=0; i<N.size(); i++)
+                        if(N[i]>random && i>0)
+                        {
+                                G4float f = (random - N[i-1]) / (N[i] - N[i-1]);
+                                energy= f*e[i] + (1-f)*e[i-1];
+                                break;
+                        }
         }
         else if(chosen_energy != -2 && chosen_energy != -1)
         {
-          energy = chosen_energy;
+                energy = chosen_energy;
         }
 
         fParticleGun->SetParticleEnergy(energy*MeV);
@@ -112,31 +111,22 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         fParticleGun->SetParticleMomentumDirection(vDir);
 
         fParticleGun->GeneratePrimaryVertex(anEvent);
+        G4double w = 1.0;
 
-        // if histogram exists find whether it was a resonance sample or not
 #if defined (G4ANALYSIS_USE_ROOT)
-        G4bool onRes;
-        if(hBinary)
+        if(chosen_energy == -2)
         {
-          onRes = hBinary->GetBinContent(hBinary->GetXaxis()->FindBin(energy));
-          G4int theRes;
-          if(onRes)
-          {
-            theRes = 1;
-          }
-          else
-          {
-            theRes = 0;
-          }
-          if(resDataFlag)
-          {
-            G4AnalysisManager* manager = G4AnalysisManager::Instance();
-            manager->FillNtupleIColumn(7,0,theRes);
-            manager->AddNtupleRow(7);
-          }
+                G4double s = hSample->GetBinContent(hSample->GetXaxis()->FindBin(energy));
+                G4double dNdE = hBrems->GetBinContent(hBrems->GetXaxis()->FindBin(energy));
+                w = dNdE/s;
         }
 
 #endif
+// Pass the event information
+        eventInformation *anInfo = new eventInformation(anEvent);
+        anInfo->SetWeight(w);
+        anInfo->SetBeamEnergy(energy);
+        anEvent->SetUserInformation(anInfo);
 
 }
 

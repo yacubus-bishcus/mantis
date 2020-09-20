@@ -9,13 +9,15 @@
 
 
 ActionInitialization::ActionInitialization(const DetectorConstruction* det)
- : G4VUserActionInitialization(), fDetector(det)
-{}
+        : G4VUserActionInitialization(), fDetector(det)
+{
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 ActionInitialization::~ActionInitialization()
-{}
+{
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -25,17 +27,16 @@ ActionInitialization::~ActionInitialization()
 void ActionInitialization::Build() const
 {
 
-    HistoManager* histo = new HistoManager();
-    PrimaryGeneratorAction *primary_action=new PrimaryGeneratorAction();
-    SetUserAction(primary_action);
-    RunAction* run = new RunAction(histo);
-    SetUserAction(run);
+        HistoManager* histo = new HistoManager();
+        PrimaryGeneratorAction *primary_action=new PrimaryGeneratorAction();
+        SetUserAction(primary_action);
+        RunAction* run = new RunAction(histo);
+        SetUserAction(run);
 
-    SteppingAction *stepAction = new SteppingAction(fDetector, run);
-    SetUserAction(stepAction);
-    EventAction *eventAction = new EventAction(primary_action->GetParticleGun(),
-    stepAction);
-    SetUserAction(eventAction);
-    StackingAction *stackAction = new StackingAction(fDetector, run);
-    SetUserAction(stackAction);
+        SteppingAction *stepAction = new SteppingAction(fDetector, run);
+        SetUserAction(stepAction);
+        EventAction *eventAction = new EventAction(stepAction);
+        SetUserAction(eventAction);
+        StackingAction *stackAction = new StackingAction(fDetector, run);
+        SetUserAction(stackAction);
 }

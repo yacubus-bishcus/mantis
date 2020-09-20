@@ -86,8 +86,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         // Testing Brem Beam Analysis
         if(drawChopperDataFlag)
         {
-                if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 7,"Chopper") != 0
-                   && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 7, "Chopper") == 0
+                if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 7,"Chopper") == 0
+                   && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 7, "Chopper") != 0
                    && theTrack->GetParticleDefinition() == G4Gamma::Definition())
                 {
                         G4double energy_chopper = theTrack->GetKineticEnergy()/(MeV);

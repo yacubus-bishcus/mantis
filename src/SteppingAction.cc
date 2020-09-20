@@ -32,8 +32,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         G4double EndIntObj = local_det->getEndIntObj();
 
         // Run Cuts
-        //if(theTrack->GetPosition().z()/(cm) > EndIntObj/(cm))
-        if(theTrack->GetPosition().z()/(cm) > 20.*cm) // for testing brem beam 
+        if(theTrack->GetPosition().z()/(cm) > EndIntObj/(cm))
+        //if(theTrack->GetPosition().z()/(cm) > 20.*cm) // for testing brem beam
         {
                 // kill photons that go beyond the interrogation object
                 theTrack->SetTrackStatus(fStopAndKill);

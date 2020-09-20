@@ -35,6 +35,7 @@
 /run/initialize
 # Output NumPhotons with data of number of cherenkov emitted per primary particle beam energy
 #/event/output Yes
+#/output/myoutput ChopperData
 #/output/myoutput WaterData
 #/output/myoutput WaterIncidentData
 #/output/myoutput DetIncidentData

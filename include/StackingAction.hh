@@ -1,5 +1,3 @@
-
-
 #ifndef StackingAction_h
 #define StackingAction_h 1
 

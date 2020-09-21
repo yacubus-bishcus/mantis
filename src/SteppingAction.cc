@@ -147,25 +147,22 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
                                                 }
 
-                                                // only care about cerernkov
-                                                // root file
-                                                X= secondaries->at(i)->GetPosition(); //take the position from the post step position
-                                                p = secondaries->at(i)->GetMomentum();
                                                 if(drawWaterFlag)
                                                 {
-                                                        manager->FillNtupleDColumn(0,0, weight*secondaries->at(i)->GetKineticEnergy()/(MeV));
-                                                        manager->FillNtupleIColumn(0,1, isNRF);
-                                                        manager->FillNtupleDColumn(0,2, X.x()/(cm));
-                                                        manager->FillNtupleDColumn(0,3, X.y()/(cm));
-                                                        manager->FillNtupleDColumn(0,4, X.z()/(cm));
-                                                        manager->FillNtupleDColumn(0,5, asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()));
-                                                        manager->FillNtupleDColumn(0,6, secondaries->at(i)->GetGlobalTime());
-                                                        manager->AddNtupleRow(0);
+                                                  X= secondaries->at(i)->GetPosition(); //take the position from the post step position
+                                                  p = secondaries->at(i)->GetMomentum();
+                                                  manager->FillNtupleDColumn(0,0, weight*secondaries->at(i)->GetKineticEnergy()/(MeV));
+                                                  manager->FillNtupleIColumn(0,1, isNRF);
+                                                  manager->FillNtupleDColumn(0,2, X.x()/(cm));
+                                                  manager->FillNtupleDColumn(0,3, X.y()/(cm));
+                                                  manager->FillNtupleDColumn(0,4, X.z()/(cm));
+                                                  manager->FillNtupleDColumn(0,5, asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()));
+                                                  manager->FillNtupleDColumn(0,6, secondaries->at(i)->GetGlobalTime());
+                                                  manager->AddNtupleRow(0);
 
                                                 }
 
                                                 Ev.push_back( weight*secondaries->at(i)->GetKineticEnergy()/(MeV));// records for histogram
-
 
                                         }
                                 }

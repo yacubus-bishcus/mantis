@@ -3,15 +3,15 @@
 
 #include "globals.hh"
 #include "G4UserRunAction.hh"
-#include <iostream>
-#include <fstream>
 #include <vector>
-#include "HistoManager.hh"
 #include "G4Run.hh"
-
+#include "HistoManager.hh"
+#include "G4RunManager.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4UnitsTable.hh"
+#include "G4Timer.hh"
 
 class G4Timer;
-class PrimaryGeneratorAction;
 
 class RunAction : public G4UserRunAction
 {
@@ -33,22 +33,10 @@ class RunAction : public G4UserRunAction
     void AddTotalSurface(void) {fTotalSurface += 1;}
     void AddNRF(void){fNRF++;}
     void AddStatusKilled(void){fStatusKilled++;}
-    void setStartTime()
-    {
-      startTime = time(0);
-    }
-    time_t getStartTime()const
-    {
-      return startTime;
-    }
 
   private:
     G4Timer* fTimer;
-    time_t startTime;
-    void WriteResults();
-    std::ofstream data_file;
     HistoManager* fHistoManager;
-
     G4double fCerenkovEnergy;
     G4double fScintEnergy;
     G4double fCerenkovCount;
@@ -61,4 +49,4 @@ class RunAction : public G4UserRunAction
 };
 
 
-#endif /*RunAction_h*/
+#endif

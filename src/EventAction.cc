@@ -16,10 +16,7 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event* anEvent)
 {
-
-        anEvent->GetEventID();
         ResetEverything(); //reset all the class variables
-
 }
 
 
@@ -38,9 +35,11 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
                         manager->AddNtupleRow(4);
                 }
         }
-
-
-        std::cout << "\r\tEvent and tracks:\t " << anEvent->GetEventID() << "\t" << stepA_local->Ev.size() <<std::flush;
+        tEvents = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
+        if(anEvent->GetEventID() != 0 && anEvent->GetEventID() % 1000000 == 0)
+        {
+          std::cout << "\r\tEvent & % Complete " << "\t" << anEvent->GetEventID() << "\t" << 100.*(anEvent->GetEventID()/(double)tEvents) << " %" << std::flush;
+        }
 }
 
 

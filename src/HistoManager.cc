@@ -2,7 +2,7 @@
 
 extern G4String gOutName;
 extern G4bool output;
-HistoManager::HistoManager():checkPrint(false), fFactoryOn(false), checkLast(false)
+HistoManager::HistoManager(): fFactoryOn(false)
 {}
 
 HistoManager::~HistoManager()
@@ -26,6 +26,10 @@ void HistoManager::Book()
     if(! fileOpen){
       G4cerr << "HistoManager::Book(): Cannot Open " <<manager->GetFileName()<<G4endl;
       return;
+    }
+    else
+    {
+      std::cout << "HistoManager::Book() Opened!" << std::endl;
     }
 
     // Create Ntuple for water data
@@ -120,30 +124,4 @@ void HistoManager::finish()
     delete manager;
     fFactoryOn = false;
   }
-}
-
-G4bool HistoManager::OnceAWhileSave(time_t val)
-{
-  startTime = val;
-  //std::cout << "here" <<std::endl;
-  time_t Now = time(0);
-  G4int testVal = (Now - startTime)%60;
-  if(!checkLast && testVal > 1)
-  {
-    checkLast = true;
-  }
-  //std::cout << std::endl << testVal << std::endl;
-  if((checkLast && (testVal == 1 || testVal == 0))) // every 60 seconds
-  {
-    G4AnalysisManager* manager = G4AnalysisManager::Instance();
-    manager->Write();
-    checkLast = false;
-    checkPrint = true;
-    G4cout << "Data Saved on Event..." << G4endl;
-  }
-  else
-  {
-    checkPrint = false;
-  }
-  return checkPrint;
 }

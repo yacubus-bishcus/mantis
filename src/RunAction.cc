@@ -1,14 +1,5 @@
-#include "G4Timer.hh"
 #include "RunAction.hh"
-#include "G4Run.hh"
-#include "HistoManager.hh"
-#include "PrimaryGeneratorAction.hh"
-#include "G4RunManager.hh"
-#include "EventAction.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4UnitsTable.hh"
-
-
+extern G4bool output;
 RunAction::RunAction(HistoManager* histoAnalysis)
         : G4UserRunAction(),fTimer(nullptr), fHistoManager(histoAnalysis)
 {
@@ -24,11 +15,10 @@ RunAction::~RunAction()
 
 void RunAction::BeginOfRunAction(const G4Run* aRun)
 {
-
-
-        fHistoManager->Book();
-        G4cout << "Writing Results to analysis file" << G4endl;
-        aRun->GetNumberOfEvent(); // not necessary but gets rid of warning
+  if(output)
+  {
+    fHistoManager->Book();
+  }
         fTotalSurface = 0;
         fCerenkovCount = 0;
         fScintCount = 0;
@@ -40,21 +30,15 @@ void RunAction::BeginOfRunAction(const G4Run* aRun)
         fStatusKilled = 0;
 
         fTimer->Start();
-        setStartTime();
 }
 
 void RunAction::EndOfRunAction(const G4Run* aRun)
 {
         fTimer->Stop();
-        // save histograms
-        G4cout << G4endl << "RunAction::EndOfRunAction: Histogram Saved." << G4endl;
 
-        //G4cout << "Made to end of run" << G4endl;
         G4int TotNbofEvents = aRun->GetNumberOfEvent();
         std::ios::fmtflags mode = G4cout.flags();
         G4int prec = G4cout.precision(2);
-        //G4double hits = G4double(fHitCount)/TotNbofEvents;
-        //G4double hitsAbove = G4double(fPMTsAboveThreshold)/TotNbofEvents;
         G4cout << G4endl << "Run Summary" << G4endl;
         G4cout <<   "---------------------------------" << G4endl;
         G4cout << "Total Number of Events: " << TotNbofEvents << G4endl;
@@ -121,6 +105,9 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
 
         std::cout <<   "---------------------------------" << std::endl;
 
-        fHistoManager->finish();
+if(output)
+{
+  fHistoManager->finish();
+}
 
 }

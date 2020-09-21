@@ -47,6 +47,7 @@ G4int drawNumPhotonsFlag;
 SteppingAction* stepA_local;
 EventMessenger* eventM;
 G4double E_beam;
+G4int tEvents;
 };
 
 #endif

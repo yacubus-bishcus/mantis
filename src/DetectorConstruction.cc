@@ -86,13 +86,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // ********************World and Materials Complete ***********************//
 
 // Set up Linac configuration
-        G4bool bremTest = false;
+        G4bool bremTest = true;
         if(bremTest)
         {
-                G4Tubs *solidLinac = new G4Tubs("Linac",0, 5*cm, 3*cm, 0*deg, 360*deg);
-                G4LogicalVolume *logicalLinac = new G4LogicalVolume(solidLinac, tungsten, "Linac");
+                G4Tubs *solidLinac = new G4Tubs("Linac",0, 10*cm, 3*cm, 0*deg, 360*deg);
+                logicalLinac = new G4LogicalVolume(solidLinac, tungsten, "Linac");
                 new G4PVPlacement(0, G4ThreeVector(0,0, 3*cm), logicalLinac, "Linac", logicWorld, false, 0, checkOverlaps);
-                G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 10*mm, 3*cm, 0*deg, 360*deg);
+                G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 20*mm, 3*cm, 0*deg, 360*deg);
                 logicalVacuum = new G4LogicalVolume(solidVacuum, myVacuum, "Vacuum");
                 new G4PVPlacement(0, G4ThreeVector(0,0,0), logicalVacuum, "Vacuum", logicalLinac, false,0,checkOverlaps);
 // Make Brem target
@@ -210,7 +210,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 std::cerr << "ERROR: Chopper wheel location should be behind water detectors, exiting." << std::endl;
                 exit(100);
         }
-        G4Tubs *solidChopper = new G4Tubs("Chopper", 0*cm, 5*cm, chopper_thick, 0.*deg, 180.*deg);
+        G4Tubs *solidChopper = new G4Tubs("Chopper", 0*cm, 10*cm, chopper_thick, 0.*deg, 180.*deg);
         if(chopperOn)
         {
                 logicChopper = new G4LogicalVolume(solidChopper, intObjMat, "Chopper");

@@ -1,3 +1,4 @@
+void Sampling()
 {
 	const double pi = TMath::Pi();
 	double Emin = 0.0; // spectrum min energy in MeV
@@ -42,11 +43,19 @@
 		for (int j = 0; j < Evec.size(); ++j) {
 			if (e < 1.7) {
 				hSample->SetBinContent(i, 0.0001);
-			} else if (e > Evec[j] - deltaE/2.0 && e < Evec[j] + deltaE/2.0) {
+			}
+            else if (e > Evec[j] - deltaE/2.0 && e < Evec[j] + deltaE/2.0)
+            {
 				hSample->SetBinContent(i, 1);
 				break;
-			} else {
-				hSample->SetBinContent(i, 0.001);
+            }
+            else if(e > 4.0)
+            {
+                hSample->SetBinContent(i,0.0001);
+            }
+            else
+            {
+				hSample->SetBinContent(i, 0.01);
 			}
 		}
 	}
@@ -56,9 +65,14 @@
 
 
 	// also create a normalized brems spectrum for weighting
-	TFile *f = TFile::Open("finalbremtest.root");
+	TFile *f = TFile::Open("brem.root");
+    TTree *ChopperData;
+    f->GetObject("ChopperData", ChopperData);
+    ChopperData->Print();
+    int brems_nbin = 300;
+    TH1D *ho = new TH1D("ho","ho", brems_nbin, Emin, Emax);
 	if (f != NULL) {
-		ChopperData->Draw("E_incident>>ho(300,0.0,6.0)", "", "goff");
+		ChopperData->Draw("E_incident>>ho", "", "goff");
 	} else {
 		cout << "Error! TFile not found.\nAborting..." << endl;
 		exit(1);
@@ -72,8 +86,8 @@
     
 	for (int i = 1; i <= nbins; ++i) {
         //std::cout << i << std::endl;
-     double value = ho->GetBinContent(300*(i-1)/nbins+1);
-		hBrems->SetBinContent(i, value); // this 300 corresponds to def of ho above
+     double value = ho->GetBinContent(brems_nbin*(i-1)/nbins+1);
+		hBrems->SetBinContent(i, value);
         if(i % 10000 == 0)
         {
             std::cout << i << " bin set..." << std::endl;
@@ -89,10 +103,10 @@
 	gPad->SetTicks(1,1);
 	gPad->SetLogy();
 
-	hSample->Draw();
+	hSample->Draw("HIST");
 	hBrems->SetLineColor(kRed);
 	hBrems->SetTitle("bremsstrahlung distribution");
-	hBrems->Draw("same");
+	hBrems->Draw("HIST, same");
     std::cout << "hBrems Drawn!" << std::endl;
 
 	hSample->GetYaxis()->SetRangeUser(1e-9, 1e-1);

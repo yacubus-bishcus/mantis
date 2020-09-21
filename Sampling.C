@@ -30,7 +30,7 @@
 
 	double deltaE = 10.0e-6; // width of each important sampling region in MeV
 
-	int nbins = (Emax-Emin)/(deltaE/2.0);
+	Int_t nbins = (Emax-Emin)/(deltaE/2.0);
 
 	TH1D *hSample = new TH1D("hSample", "hSample", nbins, Emin, Emax);
 
@@ -56,20 +56,31 @@
 
 
 	// also create a normalized brems spectrum for weighting
-	TFile *f = TFile::Open("bremtarget.root");
+	TFile *f = TFile::Open("finalbremtest.root");
 	if (f != NULL) {
-		ChopperData->Draw("E_incident>>ho(300,0.0,6.0)", "goff");
+		ChopperData->Draw("E_incident>>ho(300,0.0,6.0)", "", "goff");
 	} else {
 		cout << "Error! TFile not found.\nAborting..." << endl;
 		exit(1);
 	}
 
 	ho->Smooth(1024);
-
-	TH1D *hBrems = new TH1D("hBrems", "hBrems", nbins, ho->GetXaxis()->GetXmin(), ho->GetXaxis()->GetXmax());
+    double xmin = ho->GetXaxis()->GetXmin();
+    double xmax = ho->GetXaxis()->GetXmax();
+	TH1D *hBrems = new TH1D("hBrems", "hBrems", nbins, xmin, xmax);
+    std::cout << "Creating hBrems with " << nbins << " bins..." << std::endl;
+    
 	for (int i = 1; i <= nbins; ++i) {
-		hBrems->SetBinContent(i, ho->GetBinContent(300*(i-1)/nbins+1)); // this 300 corresponds to def of ho above
+        //std::cout << i << std::endl;
+     double value = ho->GetBinContent(300*(i-1)/nbins+1);
+		hBrems->SetBinContent(i, value); // this 300 corresponds to def of ho above
+        if(i % 10000 == 0)
+        {
+            std::cout << i << " bin set..." << std::endl;
+            std::cout << 100.*((double)i/nbins) << " percent complete" << std::endl;
+        }
 	}
+    std::cout << "Finished creating hBrems!" << std::endl;
 	hBrems->Scale(1.0/hBrems->Integral());
 
 
@@ -82,6 +93,7 @@
 	hBrems->SetLineColor(kRed);
 	hBrems->SetTitle("bremsstrahlung distribution");
 	hBrems->Draw("same");
+    std::cout << "hBrems Drawn!" << std::endl;
 
 	hSample->GetYaxis()->SetRangeUser(1e-9, 1e-1);
 	hSample->SetTitle("NRF importance sampling distribution");
@@ -89,10 +101,13 @@
 	hSample->GetYaxis()->SetTitle("probability per 5 eV");
 	hSample->SetStats(0);
 	c0->SaveAs("brems_distributions.png");
+    std::cout << "brems_distributions.png created!" << std::endl;
 
 	// save everything to file
 	TFile *fout = new TFile("brems_distributions.root","recreate");
 	fout->cd();
 	hBrems->Write();
 	hSample->Write();
+    std::cout << "File Complete. Saved to brems_distributions.root" << std::endl;
+ 
 }

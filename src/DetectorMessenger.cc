@@ -70,7 +70,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   Cmdtr->SetDefaultValue(-1);
   Cmdtrad->SetDefaultValue(-1);
   Cmdtsel->SetDefaultValue("Uranium");
-  Cmdtsel->SetCandidates("Uranium Plutonium");
+  Cmdtsel->SetCandidates("Uranium Plutonium Lead/Uranium Lead/Plutonium");
   CmdtXpos->SetDefaultValue(-1);
   CmdtYpos->SetDefaultValue(-1);
   CmdtZpos->SetDefaultValue(-1);
@@ -186,7 +186,6 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   else if(command == Cmdtsel)
   {
     G4String theCommandtsel = newValue;
-    std::cout << "Using a " << theCommandtsel << " target." << std::endl;
     DetectorA->SetIntObj(theCommandtsel);
 
   }

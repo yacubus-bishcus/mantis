@@ -2,7 +2,7 @@
 
 DetectorConstruction::DetectorConstruction()
         : G4VUserDetectorConstruction(), IntObj_rad(4.5*cm),
-        radio_abundance(90*perCent), IntObj_Selection("Uranium"), intObjDensity(19.1*g/cm3),
+        radio_abundance(90*perCent), IntObj_Selection("Uranium"),
         intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm),
         chopperOn(false), chopper_thick(1*mm), chopper_z(10*cm), theAngle(120.0),
         water_size_x(60*cm),water_size_y(2.5908*m), water_size_z(40*cm),
@@ -25,8 +25,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4Material *air = nist->FindOrBuildMaterial("G4_AIR");
         G4Material *steel = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
         G4Material *Water = nist->FindOrBuildMaterial("G4_WATER");
-        G4Material *lead = nist->FindOrBuildMaterial("G4_Pb");
         G4Material *tungsten = nist->FindOrBuildMaterial("G4_W");
+        G4Material *lead = nist->FindOrBuildMaterial("G4_Pb");
+        G4Element *elPb = new G4Element("Lead", "Pb", 82, 207.2*g/mole);
         G4Element *elN = new G4Element("Nitrogen", "N2", 7, 14.01*g/mole);
         G4Element *elO = new G4Element("Oxygen", "O2", 8, 16.0*g/mole);
         G4Material *myAir = new G4Material("Air", 1.290*mg/cm3, 2);
@@ -42,8 +43,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4Isotope* Uranium238 = new G4Isotope("Uranium238", 92, 238, 238.02891*g/mole);
         G4Isotope* Plutonium239 = new G4Isotope("Plutonium239",94, 239, 239.0521634*g/mole);
         G4Isotope* Plutonium240 = new G4Isotope("Plutonium240", 94, 240, 240.05381*g/mole);
-        G4Element* WGU = new G4Element("WGU", "U", 2); // name, element symbol, #isotopes
+        G4Element* U = new G4Element("WGU", "U", 2); // name, element symbol, #isotopes
         G4Element* WGPu = new G4Element("WGPu","Pu",2);
+        G4Element* natU = new G4Element("NaturalU", "U",2);
+        G4Element* Pu = new G4Element("Plutonium240","Pu",2);
+
 // Set up Photocathode materials
         G4Element* elGa = new G4Element("Gallium", "Ga", 31, 69.723*g/mole);
         G4Element* elAs = new G4Element("Arsenic", "As", 33, 74.9216*g/mole);
@@ -129,35 +133,40 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         std::cout << "The Interogation Object Radius was set to: " << IntObj_rad/(cm)<< " cm" << std::endl;
 
         G4Sphere* solidIntObj = new G4Sphere("InterogationObject", 0, IntObj_rad, 0, 2*pi, 0, pi);
-        std::cout << "The Interogation Object Fission Radioisotope Abundance was set to: "
-                  << radio_abundance/(perCent) << " percent." << std::endl;
+
         G4float U238_abundance = 100*perCent - radio_abundance;
-        WGU->AddIsotope(Uranium235, radio_abundance);
-        WGU->AddIsotope(Uranium238, U238_abundance);
+        U->AddIsotope(Uranium235, radio_abundance);
+        U->AddIsotope(Uranium238, U238_abundance);
+        natU->AddIsotope(Uranium235, 0.0072);
+        natU->AddIsotope(Uranium238, 1 - 0.0072);
         G4float Pu240_abundance = 100*perCent - radio_abundance;
         WGPu->AddIsotope(Plutonium239, radio_abundance);
         WGPu->AddIsotope(Plutonium240, Pu240_abundance);
+        Pu->AddIsotope(Plutonium240, 0.9999);
+        Pu->AddIsotope(Plutonium239, 1 - 0.9999);
+
 
         std::cout << "The User has chosen the following Interogation Object Material: "
                   << IntObj_Selection << std::endl;
-        std::cout << "The Interogation Object Density was set to: " << intObjDensity/(g/cm3) << std::endl;
         G4Material* intObjMat = new G4Material("IntObjMaterial", intObjDensity, 1);
         if(IntObj_Selection == "Uranium")
         {
-                intObjMat->AddElement(WGU,1);
-                std::cout << "Uranium Element Added!" << std::endl;
+                intObjMat->AddElement(U,1);
         }
         else if(IntObj_Selection == "Plutonium")
         {
                 intObjMat->AddElement(WGPu,1);
-                std::cout << "Plutonium Element Added!" << std::endl;
+        }
+        else if(IntObj_Selection == "Lead")
+        {
+          intObjMat->AddElement(elPb,1);
         }
         else{std::cerr << "ERROR: Interogation Material not found."<<std::endl;}
         G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObjLogicVolume");
 
         std::cout << "The Interogation Object X Position was set to: " << intObj_x_pos/(cm) << std::endl;
         std::cout << "The Interogation Object Y Position was set to: " << intObj_y_pos/(cm) << std::endl;
-        std::cout << "The Interogation Object Z Position was set to: " << intObj_z_pos/(cm) << std::endl;
+        std::cout << "The Interogation Object Z Position was set to: " << intObj_z_pos/(cm) << std::endl << std::endl;
         setEndIntObj(container_z_pos, container_z);
 
         physIntObj = new G4PVPlacement(0,
@@ -168,7 +177,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // Tub of water
         std::cout << "The Water Tank X was set to: " << water_size_x/(cm)<< " cm" << std::endl;
         std::cout << "The Water Tank Y was set to: " << water_size_y/(cm)<< " cm" << std::endl;
-        std::cout << "The Water Tank Z was set to: " << water_size_z/(cm) << " cm" << std::endl;
+        std::cout << "The Water Tank Z was set to: " << water_size_z/(cm) << " cm" << std::endl << std::endl;
 
         G4Box* solidWater = new G4Box("Water", water_size_x, water_size_y, water_size_z);
         G4LogicalVolume* logicWater =
@@ -180,7 +189,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4double myangle = (180. - theAngle)*pi/180.;
         G4double water_x_pos = tan(myangle)*(container_z_pos + intObj_z_pos - water_z_pos);
         G4double detDistance = water_x_pos/sin(myangle) + water_size_z;
-        std::cout << "The Distance Between the Interrogation Object and the Water is: " << detDistance/(cm) << " cm." << std::endl;
+
         G4RotationMatrix* waterRot = new G4RotationMatrix;
         waterRot->rotateY((180. - theAngle)*deg);
         G4RotationMatrix* waterRot2 = new G4RotationMatrix;
@@ -211,21 +220,43 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 exit(100);
         }
         G4Tubs *solidChopper = new G4Tubs("Chopper", 0*cm, 10*cm, chopper_thick, 0.*deg, 180.*deg);
+        G4Material *chopperMat = new G4Material("chopperMaterial", chopperDensity, 1);
         if(chopperOn)
         {
-                logicChopper = new G4LogicalVolume(solidChopper, intObjMat, "Chopper");
+          if(chopperDensity == 19.1*g/cm3)
+          {
+            chopperMat->AddElement(U,1);
+            std::cout << "Weapons grade Uranium set as Chopper Wheel material." << std::endl;
+          }
+          else if(chopperDensity == 19.6*g/cm3)
+          {
+            chopperMat->AddElement(WGPu, 1);
+            std::cout << "Weapons grade Plutonium set as Chopper Wheel material." << std::endl;
+          }
+          else{std::cerr << "ERROR chopperDensity not found!" << std::endl; exit(100);}
         }
         else
         {
-                logicChopper = new G4LogicalVolume(solidChopper, lead, "Chopper");
+          //std::cout << "Chopper Density Set to: " << chopperDensity/(g/cm3) << " g/cm3" << std::endl;
+          if(chopperDensity == 19.1*g/cm3)
+          {
+            chopperMat->AddElement(natU,1);
+            std::cout << "Chopper Material set to Natural Uranium" << std::endl;
+          }
+          else if(chopperDensity == 19.6*g/cm3)
+          {
+            chopperMat->AddElement(Pu,1);
+            std::cout << "Chopper Material set to Plutonium-240" << std::endl;
+          }
+          else{std::cerr << "ERROR: Chopper Density not found." << std::endl; exit(100);}
         }
-
+        logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chopper");
         new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,chopper_z),
                           logicChopper, "Chopper", logicWorld, false,
                           0, checkOverlaps);
 
         G4double PMT_rmin = 0*cm;
-        std::cout << "The PC Radius was set to " << PMT_rmax/(cm) << " cm" << std::endl;
+        std::cout << std::endl << "The PC Radius was set to " << PMT_rmax/(cm) << " cm" << std::endl;
         G4double PMT_z = 7.62*cm; // 3 in PMT
         G4Tubs* solidPMT = new G4Tubs("PMT", PMT_rmin, PMT_rmax, PMT_z, 0*deg, 360*deg);
         logicPMT = new G4LogicalVolume(solidPMT, PMT_mat, "PMT");

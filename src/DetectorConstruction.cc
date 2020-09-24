@@ -313,7 +313,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
         G4Tubs* solidPhotoCathode = new G4Tubs("PC", PMT_rmin, PMT_rmax, PC_z, 0*deg, 360.*deg);
         logicPC = new G4LogicalVolume(solidPhotoCathode, PC_mat, "PC");
-        G4double PMT_window_thickness = 50*mm;
+        G4double PMT_window_thickness = 3*mm;
         physPC = new G4PVPlacement(0,
                                    G4ThreeVector(0,0,PMT_z-PMT_window_thickness),
                                    logicPC,

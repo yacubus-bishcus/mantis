@@ -11,7 +11,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction
         fParticleGun = new G4ParticleGun(n_particle);
 
         // Default Kinematics
-        fParticleGun->SetParticleDefinition(G4Electron::Definition());
+        fParticleGun->SetParticleDefinition(G4Gamma::Definition());
 
         fParticleGun->SetParticleTime(0.0*ns);
         // Determine particle Beam Energy

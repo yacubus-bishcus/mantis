@@ -3,7 +3,7 @@
 
 SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun)
         : G4UserSteppingAction(), drawChopperDataFlag(0), drawIntObjDataFlag(0),
-        drawWaterFlag(0), drawIncFlag(0), drawDetFlag(0), stepM(NULL)
+        drawWaterFlag(0), drawIncFlag(0), drawDetFlag(0), drawWaterIncDataFlag(0), stepM(NULL)
 {
         stepM = new StepMessenger(this);
         local_det = det;
@@ -45,7 +45,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 theTrack->SetTrackStatus(fStopAndKill);
                 run->AddStatusKilled();
         }
-        else if(theTrack->GetPosition().z()/(cm) < -1.*cm)
+        else if(theTrack->GetPosition().z()/(cm) < -10.*cm)
         {
                 // Kill photons that go in behind beam origin
                 theTrack->SetTrackStatus(fStopAndKill);

@@ -78,10 +78,10 @@ G4OpBoundaryProcessStatus fExpectedNextStatus;
 G4String procCount;
 G4int drawChopperDataFlag;
 G4int drawIntObjDataFlag;
-G4int drawWaterIncDataFlag;
 G4int drawWaterFlag;
 G4int drawIncFlag;
 G4int drawDetFlag;
+G4int drawWaterIncDataFlag;
 G4double det_energy;
 StepMessenger* stepM;
 

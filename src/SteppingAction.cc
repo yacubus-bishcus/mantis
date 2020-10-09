@@ -1,5 +1,6 @@
 #include "SteppingAction.hh"
 
+extern G4bool output;
 
 SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun)
         : G4UserSteppingAction(), drawChopperDataFlag(0), drawIntObjDataFlag(0),
@@ -212,7 +213,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
                                 G4OpBoundaryProcess* opProc = dynamic_cast<G4OpBoundaryProcess*>(currentProcess);
 
-                                if(opProc) {
+                                if(opProc && output) {
                                         theStatus = opProc->GetStatus();
 
                                         if(theStatus == Transmission) {

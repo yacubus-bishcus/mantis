@@ -30,9 +30,9 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
                 {
                         eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
                         E_beam = info->GetBeamEnergy();
-                        manager->FillNtupleDColumn(4,0,E_beam);
-                        manager->FillNtupleDColumn(4,1,stepA_local->Ev.size());
-                        manager->AddNtupleRow(4);
+                        manager->FillNtupleDColumn(7,0,E_beam);
+                        manager->FillNtupleDColumn(7,1,stepA_local->Ev.size());
+                        manager->AddNtupleRow(7);
                 }
         }
         tEvents = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();

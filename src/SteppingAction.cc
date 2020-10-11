@@ -153,12 +153,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                   X= secondaries->at(i)->GetPosition(); //take the position from the post step position
                                                   p = secondaries->at(i)->GetMomentum();
                                                   manager->FillNtupleDColumn(0,0, weight*secondaries->at(i)->GetKineticEnergy()/(MeV));
-                                                  manager->FillNtupleIColumn(0,1, isNRF);
-                                                  manager->FillNtupleDColumn(0,2, X.x()/(cm));
-                                                  manager->FillNtupleDColumn(0,3, X.y()/(cm));
-                                                  manager->FillNtupleDColumn(0,4, X.z()/(cm));
-                                                  manager->FillNtupleDColumn(0,5, asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()));
-                                                  manager->FillNtupleDColumn(0,6, secondaries->at(i)->GetGlobalTime());
+                                                  manager->FillNtupleDColumn(0,1, X.x()/(cm));
+                                                  manager->FillNtupleDColumn(0,2, X.y()/(cm));
+                                                  manager->FillNtupleDColumn(0,3, X.z()/(cm));
+                                                  manager->FillNtupleDColumn(0,4, asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()));
+                                                  manager->FillNtupleDColumn(0,5, secondaries->at(i)->GetGlobalTime());
                                                   manager->AddNtupleRow(0);
 
                                                 }
@@ -199,11 +198,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         if(drawIncFlag)
                         {
                                 manager->FillNtupleDColumn(1,0,weight*theParticle->GetKineticEnergy()/(MeV));
-                                manager->FillNtupleIColumn(1,1,isNRF);
                                 Xdet = endPoint->GetPosition();
-                                manager->FillNtupleDColumn(1,2,Xdet.x()/(cm));
-                                manager->FillNtupleDColumn(1,3,Xdet.y()/(cm));
-                                manager->FillNtupleDColumn(1,4,Xdet.z()/(cm));
+                                manager->FillNtupleDColumn(1,1,Xdet.x()/(cm));
+                                manager->FillNtupleDColumn(1,2,Xdet.y()/(cm));
+                                manager->FillNtupleDColumn(1,3,Xdet.z()/(cm));
                                 manager->AddNtupleRow(1);
                         }
 
@@ -258,10 +256,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                 G4StepPoint* Xdetected_point = aStep->GetPostStepPoint();
                                                 Xdetected = Xdetected_point->GetPosition();
                                                 manager->FillNtupleDColumn(3,0,det_energy*weight);
-                                                manager->FillNtupleIColumn(3,1,isNRF);
-                                                manager->FillNtupleDColumn(3,2,Xdetected.x()/(cm));
-                                                manager->FillNtupleDColumn(3,3,Xdetected.y()/(cm));
-                                                manager->FillNtupleDColumn(3,4,Xdetected.z()/(cm));
+                                                manager->FillNtupleDColumn(3,1,Xdetected.x()/(cm));
+                                                manager->FillNtupleDColumn(3,2,Xdetected.y()/(cm));
+                                                manager->FillNtupleDColumn(3,3,Xdetected.z()/(cm));
                                                 manager->AddNtupleRow(3);
 
                                         }

@@ -32,11 +32,26 @@ void HistoManager::Book()
       std::cout << "HistoManager::Book() Opened!" << std::endl;
     }
 
-    // Create Ntuple for water data
-      manager->CreateNtuple("WaterData","WaterData");
-
-      manager->CreateNtupleDColumn("Energy");
+    // Create 0 Ntuple for Chopper Data 
+      manager->CreateNtuple("ChopData","Chopper Data");
+      manager->CreateNtupleDColumn("E_incident");
+      manager->FinishNtuple();
+    
+    // Create 1 Ntuple for Interogation Object
+      manager->CreateNtuple("IncObj","Incident Interrogation Obj");
+      manager->CreateNtupleDColumn("E_incident");
       manager->CreateNtupleIColumn("isNRF");
+      manager->FinishNtuple();
+    
+    // Create 2 Ntuple for incident water data
+      manager->CreateNtuple("IncWater","Incident Water");
+      manager->CreateNtupleDColumn("E_incident");
+      manager->CreateNtupleIColumn("isNRF");
+      manager->FinishNtuple();
+    
+    // Create 3 Ntuple for water data
+      manager->CreateNtuple("Cherenkov","Cherenkov Data");
+      manager->CreateNtupleDColumn("Energy");
       manager->CreateNtupleDColumn("x");
       manager->CreateNtupleDColumn("y");
       manager->CreateNtupleDColumn("z");
@@ -44,53 +59,31 @@ void HistoManager::Book()
       manager->CreateNtupleDColumn("Time");
       manager->FinishNtuple();
 
-      // Create Ntuple for Incident Detector Data
-
-      manager->CreateNtuple("IncidentDet","IncidentDet");
-
+      // Create 4 Ntuple for Incident Detector Data
+      manager->CreateNtuple("IncDet","Incident Photocathode");
       manager->CreateNtupleDColumn("Energy");
-      manager->CreateNtupleIColumn("isNRF");
       manager->CreateNtupleDColumn("x");
       manager->CreateNtupleDColumn("y");
       manager->CreateNtupleDColumn("z");
       manager->FinishNtuple();
 
-      // Create Ntuple for Reactions within detector
-
-      manager->CreateNtuple("DetProcess","DetProcess");
-
+      // Create 5 Nutple for Energy if detected
+      manager->CreateNtuple("Det","Detected Spectrum");
+      manager->CreateNtupleDColumn("Energy");
+      manager->CreateNtupleDColumn("x");
+      manager->CreateNtupleDColumn("y");
+      manager->CreateNtupleDColumn("z");
+      manager->FinishNtuple();
+    
+      // Create 6 Ntuple for Reactions within detector
+      manager->CreateNtuple("DetPro","Detector Processes");
       manager->CreateNtupleSColumn("Process");
       manager->FinishNtuple();
 
-      // Create Nutple for Energy if detected
-      manager->CreateNtuple("Detected","Detected");
-      manager->CreateNtupleDColumn("Energy");
-      manager->CreateNtupleIColumn("isNRF");
-      manager->CreateNtupleDColumn("x");
-      manager->CreateNtupleDColumn("y");
-      manager->CreateNtupleDColumn("z");
-      manager->FinishNtuple();
-
-      // Create Ntuple for Number of Photons Emitted in Water
-      manager->CreateNtuple("NumPhotons","NumPhotons");
+      // Create 7 Ntuple for Number of Photons Emitted in Water
+      manager->CreateNtuple("NumPhotons","Number of Photons Produced Per Primary Particle Energy");
       manager->CreateNtupleDColumn("E_Beam");
       manager->CreateNtupleDColumn("NumPhotons");
-      manager->FinishNtuple();
-
-      // Create Ntuple for Interogation Object
-      manager->CreateNtuple("IntObj","IntObj");
-      manager->CreateNtupleDColumn("E_incident");
-      manager->CreateNtupleIColumn("isNRF");
-      manager->FinishNtuple();
-
-      // Create Ntuple for incident water data
-      manager->CreateNtuple("IncidentWater","IncidentWater");
-      manager->CreateNtupleDColumn("E_incident");
-      manager->CreateNtupleIColumn("isNRF");
-      manager->FinishNtuple();
-
-      manager->CreateNtuple("ChopperData","ChopperData");
-      manager->CreateNtupleDColumn("E_incident");
       manager->FinishNtuple();
 
       fFactoryOn = true;

@@ -24,6 +24,7 @@ To Build
 
 Now go to geant4 application
 `> mkdir <application_build> && cd <application_build>`
+
 `> cmake /path/to/application/source && make -j[N]`
 
 To Run in Batch Mode

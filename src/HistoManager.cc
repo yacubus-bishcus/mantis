@@ -61,7 +61,7 @@ void HistoManager::Book()
       manager->CreateH1("IncDet","Incident Photocathode", nbins, 0., xmax, "MeV");
 
       // Create 4 Histogram for Energy if detected
-      manager->CreateH1("Det","Detected Spectrum", nbins, 0., 1E-3, "MeV");
+      manager->CreateH1("Det","Detected Spectrum", nbins, 0., 1E-5, "MeV");
 
       // Create 0 Ntuple for Reactions within detector
       manager->CreateNtuple("DetPro","Detector Processes");

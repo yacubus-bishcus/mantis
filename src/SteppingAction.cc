@@ -222,7 +222,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                         else if (theStatus == Detection) {
                                                 //run->AddDetection();
                                                 procCount = "Det";
-                                                det_energy = theParticle->GetKineticEnergy()/(eV);
+                                                det_energy = theParticle->GetKineticEnergy()/(MeV);
                                                 manager->FillH1(4, det_energy, weight);
                                         }
                                         else if (theStatus == NotAtBoundary) {

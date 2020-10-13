@@ -54,7 +54,6 @@ set(mantis_SCRIPTS
     mantis.in
     brems_distributions.root
     vis.mac
-    input_spectrum.txt
     init_vis.mac
     vis_save.mac
   )

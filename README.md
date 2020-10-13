@@ -32,21 +32,11 @@ Also be sure to export the ROOT Cmake path in the directory where the user built
 
 Lastly some path issues may occur without the following lines in the user's bash:
 
-`export G4MPICMAKEPATH=/path/to/geant4MPI/geant4MPI_build`
-
 `source /path/to/root_build_directory/bin/thisroot.sh`
 
 `source /path/to/geant4-install/bin/geant4.sh`
 
 `source /path/to/geant4-install/share/Geant4-10.5.1/geant4make/geant4make.sh`
-
-`PATH=$HOME/bin:$PATH`
-
-`PATH=$PATH:/bin/mpiexec`
-
-`PATH=/path/to/mpich-install/bin:$PATH`
-
-`export PATH`
 
 
 To Build

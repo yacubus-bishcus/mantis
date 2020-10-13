@@ -58,7 +58,7 @@ void HistoManager::Book()
       manager->CreateH1("IncWater","NRF Incident Water", nbins, 0., xmax, "MeV");
 
       // Create 3 Histogram for Incident Detector Data
-      manager->CreateH1("IncDet","Incident Photocathode", nbins, 0., xmax, "MeV");
+      manager->CreateH1("IncDet","Incident Photocathode", nbins, 0., xmax/2, "MeV");
 
       // Create 4 Histogram for Energy if detected
       manager->CreateH1("Det","Detected Spectrum", nbins, 0., 1E-5, "MeV");

@@ -42,14 +42,10 @@ virtual void UserSteppingAction(const G4Step*);
 
 public: // for now set to public until I can figure out how to work with protected
 
-std::vector<double> Ev;
 void SetChopperDataFlag(G4int val)
 {
         drawChopperDataFlag = val;
 }
-void SetWaterDataFlag(G4int val){
-        drawWaterFlag = val;
-};
 void SetIncidentDataFlag(G4int val){
         drawIncFlag = val;
 };
@@ -62,7 +58,6 @@ void SetIntObjDataFlag(G4int val){
 void SetIncWatDataFlag(G4int val){
         drawWaterIncDataFlag = val;
 };
-
 
 private:
 G4double weight;
@@ -78,7 +73,6 @@ G4OpBoundaryProcessStatus fExpectedNextStatus;
 G4String procCount;
 G4int drawChopperDataFlag;
 G4int drawIntObjDataFlag;
-G4int drawWaterFlag;
 G4int drawIncFlag;
 G4int drawDetFlag;
 G4int drawWaterIncDataFlag;

@@ -62,10 +62,6 @@ G4bool randomizePrimary;
 G4float beam_offset_x,beam_offset_y,beam_size,source_width;
 G4float energy;
 double random;
-std::vector<float> e,dNde,N;       //the input from the file
-
-void ReadInputSpectrumFile(std::string);
-
 };
 
 

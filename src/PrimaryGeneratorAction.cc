@@ -14,8 +14,6 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction
         fParticleGun->SetParticleDefinition(G4Gamma::Definition());
 
         fParticleGun->SetParticleTime(0.0*ns);
-        // Determine particle Beam Energy
-        ReadInputSpectrumFile("input_spectrum.txt");
 
 
 #if defined (G4ANALYSIS_USE_ROOT)
@@ -58,12 +56,12 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         // Set Particle Energy (Must be in generate primaries)
 #if defined (G4ANALYSIS_USE_ROOT)
 
-        if(chosen_energy == -2)
+        if(chosen_energy < 0)
         {
                 energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
         }
 #else
-        if(chosen_energy == -2)
+        if(chosen_energy < 0)
         {
                 std::cerr << "ERROR: G4ANALYSIS_USE_ROOT not defined in pre-compiler" << std::endl;
                 std::cerr << "SYSTEM EXITING" << std::endl;
@@ -71,20 +69,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         }
 
 #endif
-        if(chosen_energy == -1)
-        {
-                random=G4UniformRand()*N[N.size()-1];
 
-                // first order interpolation
-                for(unsigned int i=0; i<N.size(); i++)
-                        if(N[i]>random && i>0)
-                        {
-                                G4float f = (random - N[i-1]) / (N[i] - N[i-1]);
-                                energy= f*e[i] + (1-f)*e[i-1];
-                                break;
-                        }
-        }
-        else if(chosen_energy != -2 && chosen_energy != -1)
+        if(chosen_energy > 0)
         {
                 energy = chosen_energy;
         }
@@ -114,7 +100,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         G4double w = 1.0;
 
 #if defined (G4ANALYSIS_USE_ROOT)
-        if(chosen_energy == -2)
+        if(chosen_energy < 0)
         {
                 G4double s = hSample->GetBinContent(hSample->GetXaxis()->FindBin(energy));
                 G4double dNdE = hBrems->GetBinContent(hBrems->GetXaxis()->FindBin(energy));
@@ -128,27 +114,4 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         anInfo->SetBeamEnergy(energy);
         anEvent->SetUserInformation(anInfo);
 
-}
-
-
-void PrimaryGeneratorAction::ReadInputSpectrumFile(std::string filename){
-
-        std::ifstream f(filename);
-        if(f.is_open()) { //check that the file is open
-                G4cout<<"oooooooooooooo Reading input file for beam energies oooooooooooo"<<G4endl;
-                N.push_back(0);
-                while(!f.eof()) {
-                        float a,b;
-                        f>>a>>b;
-                        e.push_back(a);
-                        dNde.push_back(b);
-                        if(dNde.size()>1) N.push_back(N.at(N.size()-1)+dNde.at(dNde.size()-1)*(e.at(e.size()-1)-e.at(e.size()-2)));
-                }
-        }
-        else {
-                std::cerr<<"Input file expected, however open failed, exiting."<<std::endl;
-                exit(8);
-        }
-
-        f.close();
 }

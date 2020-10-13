@@ -3,50 +3,32 @@
 
 #include "G4UserEventAction.hh"
 #include "globals.hh"
-#include "G4ThreeVector.hh"
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include "G4Types.hh"
-#include "eventInformation.hh"
-#include "SteppingAction.hh"
-#include "HistoManager.hh"
-#include "EventMessenger.hh"
 #include "G4EventManager.hh"
 #include "G4RunManager.hh"
 #include "G4Event.hh"
-#include "G4VVisManager.hh"
 #include "G4ios.hh"
 #include "G4UImanager.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4Run.hh"
 #include <time.h>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 class G4Event;
-class EventMessenger;
 
 class EventAction : public G4UserEventAction
 {
 public:
-EventAction(SteppingAction*);
+EventAction();
 ~EventAction();
 
 public:
-void BeginOfEventAction(const G4Event* anEvent);
-void EndOfEventAction(const G4Event* anEvent);
-
-void SetNumPhotonsFlag(G4int val){
-        drawNumPhotonsFlag = val;
-};
+void BeginOfEventAction(const G4Event*);
+void EndOfEventAction(const G4Event*);
 
 private:
-
-void ResetEverything();
-//void Weighting(const G4Event* anEvent);
-G4int drawNumPhotonsFlag;
-SteppingAction* stepA_local;
-EventMessenger* eventM;
-G4double E_beam;
 G4int tEvents;
 };
 

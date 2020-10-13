@@ -19,24 +19,13 @@ ActionInitialization::~ActionInitialization()
 {
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 void ActionInitialization::Build() const
 {
-
         HistoManager* histo = new HistoManager();
-        PrimaryGeneratorAction *primary_action=new PrimaryGeneratorAction();
-        SetUserAction(primary_action);
+        SetUserAction(new PrimaryGeneratorAction());
         RunAction* run = new RunAction(histo);
         SetUserAction(run);
-
-        SteppingAction *stepAction = new SteppingAction(fDetector, run);
-        SetUserAction(stepAction);
-        EventAction *eventAction = new EventAction(stepAction);
-        SetUserAction(eventAction);
-        StackingAction *stackAction = new StackingAction(fDetector, run);
-        SetUserAction(stackAction);
+        SetUserAction(new SteppingAction(fDetector, run));
+        SetUserAction(new EventAction());
+        SetUserAction(new StackingAction(fDetector, run));
 }

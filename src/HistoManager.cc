@@ -14,12 +14,28 @@ void HistoManager::Book()
   {
 
     G4AnalysisManager* manager = G4AnalysisManager::Instance();
+    #if defined (G4ANALYSIS_USE_ROOT)
+
+        TFile *fin = TFile::Open("brems_distributions.root");
+        hBrems  = (TH1D*) fin->Get("hBrems");
+        if (hBrems)
+        {
+            G4cout << "Imported brems from " << fin->GetName() << G4endl << G4endl;
+            xmax = hBrems->GetXaxis()->GetXmax();
+            G4cout << "Found X Max: " << xmax << G4endl;
+            fin->Close();
+        }
+        else
+        {
+                std::cerr << "Error reading from file " << fin->GetName() << std::endl;
+                exit(1);
+        }
+    #else
+        XMax = 5; // this is really just a placeholder
+    #endif
+    G4int nbins = 10000;
     manager->SetVerboseLevel(0);
     manager->SetNtupleMerging(true);
-
-    // Create Directories
-    //manager->SetNtupleDirectoryName("CherenkovData");
-
     // open output file
     G4bool fileOpen = manager->OpenFile(gOutName);
 
@@ -32,58 +48,24 @@ void HistoManager::Book()
       std::cout << "HistoManager::Book() Opened!" << std::endl;
     }
 
-    // Create 0 Ntuple for Chopper Data 
-      manager->CreateNtuple("ChopData","Chopper Data");
-      manager->CreateNtupleDColumn("E_incident");
-      manager->FinishNtuple();
-    
-    // Create 1 Ntuple for Interogation Object
-      manager->CreateNtuple("IncObj","Incident Interrogation Obj");
-      manager->CreateNtupleDColumn("E_incident");
-      manager->CreateNtupleIColumn("isNRF");
-      manager->FinishNtuple();
-    
-    // Create 2 Ntuple for incident water data
-      manager->CreateNtuple("IncWater","Incident Water");
-      manager->CreateNtupleDColumn("E_incident");
-      manager->CreateNtupleIColumn("isNRF");
-      manager->FinishNtuple();
-    
-    // Create 3 Ntuple for water data
-      manager->CreateNtuple("Cherenkov","Cherenkov Data");
-      manager->CreateNtupleDColumn("Energy");
-      manager->CreateNtupleDColumn("x");
-      manager->CreateNtupleDColumn("y");
-      manager->CreateNtupleDColumn("z");
-      manager->CreateNtupleDColumn("Theta");
-      manager->CreateNtupleDColumn("Time");
-      manager->FinishNtuple();
+    // Create 0 Histogram for Chopper Data
+      manager->CreateH1("ChopData","Chopper Data",nbins,0., xmax, "MeV");
 
-      // Create 4 Ntuple for Incident Detector Data
-      manager->CreateNtuple("IncDet","Incident Photocathode");
-      manager->CreateNtupleDColumn("Energy");
-      manager->CreateNtupleDColumn("x");
-      manager->CreateNtupleDColumn("y");
-      manager->CreateNtupleDColumn("z");
-      manager->FinishNtuple();
+    // Create 1 Histogram for Interogation Object
+      manager->CreateH1("IncObj","Incident Interrogation Obj", nbins, 0., xmax, "MeV");
 
-      // Create 5 Nutple for Energy if detected
-      manager->CreateNtuple("Det","Detected Spectrum");
-      manager->CreateNtupleDColumn("Energy");
-      manager->CreateNtupleDColumn("x");
-      manager->CreateNtupleDColumn("y");
-      manager->CreateNtupleDColumn("z");
-      manager->FinishNtuple();
-    
-      // Create 6 Ntuple for Reactions within detector
+    // Create 2 Histogram for incident water data
+      manager->CreateH1("IncWater","NRF Incident Water", nbins, 0., xmax, "MeV");
+
+      // Create 3 Histogram for Incident Detector Data
+      manager->CreateH1("IncDet","Incident Photocathode", nbins, 0., xmax, "MeV");
+
+      // Create 4 Histogram for Energy if detected
+      manager->CreateH1("Det","Detected Spectrum", nbins, 0., 10, "eV");
+
+      // Create 0 Ntuple for Reactions within detector
       manager->CreateNtuple("DetPro","Detector Processes");
       manager->CreateNtupleSColumn("Process");
-      manager->FinishNtuple();
-
-      // Create 7 Ntuple for Number of Photons Emitted in Water
-      manager->CreateNtuple("NumPhotons","Number of Photons Produced Per Primary Particle Energy");
-      manager->CreateNtupleDColumn("E_Beam");
-      manager->CreateNtupleDColumn("NumPhotons");
       manager->FinishNtuple();
 
       fFactoryOn = true;

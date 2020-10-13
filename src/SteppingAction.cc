@@ -4,7 +4,7 @@ extern G4bool output;
 
 SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun)
         : G4UserSteppingAction(), drawChopperDataFlag(0), drawIntObjDataFlag(0),
-        drawWaterFlag(0), drawIncFlag(0), drawDetFlag(0), drawWaterIncDataFlag(0), stepM(NULL)
+        drawIncFlag(0), drawDetFlag(0), drawWaterIncDataFlag(0), stepM(NULL)
 {
         stepM = new StepMessenger(this);
         local_det = det;
@@ -92,8 +92,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                    && theTrack->GetParticleDefinition() == G4Gamma::Definition())
                 {
                         G4double energy_chopper = theTrack->GetKineticEnergy()/(MeV);
-                        manager->FillNtupleDColumn(0,0,energy_chopper); // not weighting chopper 
-                        manager->AddNtupleRow(0);
+                        manager->FillH1(0,energy_chopper, weight); // not weighting chopper
                 }
         }
         // Testing NRF Analysis
@@ -104,9 +103,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                    && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14, "IntObjPhysical") == 0)
                 {
                         G4double energy_IntObj = theTrack->GetKineticEnergy()/(MeV);
-                        manager->FillNtupleDColumn(1,0,energy_IntObj*weight);
-                        manager->FillNtupleIColumn(1,1,isNRF);
-                        manager->AddNtupleRow(1);
+                        manager->FillH1(1, energy_IntObj, weight);
                 }
         }
 
@@ -115,12 +112,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         if(drawWaterIncDataFlag)
         {
                 if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5,"Water") == 0
-                   && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5, "Water") != 0)
+                   && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5, "Water") != 0 && isNRF)
                 {
                         G4double energy_inc_water = theTrack->GetKineticEnergy()/(MeV);
-                        manager->FillNtupleDColumn(2,0, energy_inc_water*weight);
-                        manager->FillNtupleIColumn(2,1, isNRF);
-                        manager->AddNtupleRow(2);
+                        manager->FillH1(2, energy_inc_water, weight);
                 }
         }
 
@@ -144,26 +139,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                         G4double en = secondaries->at(i)->GetKineticEnergy();
                                                         run->AddCerenkovEnergy(en);
                                                         run->AddCerenkov();
-                                                        //for step
-
                                                 }
-
-                                                if(drawWaterFlag)
-                                                {
-                                                  X= secondaries->at(i)->GetPosition(); //take the position from the post step position
-                                                  p = secondaries->at(i)->GetMomentum();
-                                                  manager->FillNtupleDColumn(3,0, weight*secondaries->at(i)->GetKineticEnergy()/(MeV));
-                                                  manager->FillNtupleDColumn(3,1, X.x()/(cm));
-                                                  manager->FillNtupleDColumn(3,2, X.y()/(cm));
-                                                  manager->FillNtupleDColumn(3,3, X.z()/(cm));
-                                                  manager->FillNtupleDColumn(3,4, asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()));
-                                                  manager->FillNtupleDColumn(3,5, secondaries->at(i)->GetGlobalTime());
-                                                  manager->AddNtupleRow(3);
-
-                                                }
-
-                                                Ev.push_back( weight*secondaries->at(i)->GetKineticEnergy()/(MeV));// records for histogram
-
                                         }
                                 }
                         }
@@ -192,19 +168,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         OpManager->GetPostStepProcessVector()->entries();
                 G4ProcessVector* postStepDoItVector =
                         OpManager->GetPostStepProcessVector(typeDoIt);
-                // incident photocathode 
+                // incident photocathode
                 if(endPoint->GetPhysicalVolume()->GetName().compare(0,2,"PC")==0 && startPoint->GetPhysicalVolume()->GetName().compare(0,2,"PC")!=0) { // first time in photocathode
                         run->AddTotalSurface();
                         if(drawIncFlag)
                         {
-                                manager->FillNtupleDColumn(4,0,weight*theParticle->GetKineticEnergy()/(MeV));
-                                Xdet = endPoint->GetPosition();
-                                manager->FillNtupleDColumn(4,1,Xdet.x()/(cm));
-                                manager->FillNtupleDColumn(4,2,Xdet.y()/(cm));
-                                manager->FillNtupleDColumn(4,3,Xdet.z()/(cm));
-                                manager->AddNtupleRow(4);
+                          manager->FillH1(3, theParticle->GetKineticEnergy()/(MeV), weight);
                         }
-
 
                         for (G4int i=0; i<MAXofPostStepLoops; ++i) {
                                 G4VProcess* currentProcess = (*postStepDoItVector)[i];
@@ -252,15 +222,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                         else if (theStatus == Detection) {
                                                 //run->AddDetection();
                                                 procCount = "Det";
-                                                det_energy = theParticle->GetKineticEnergy()/(MeV);
-                                                G4StepPoint* Xdetected_point = aStep->GetPostStepPoint();
-                                                Xdetected = Xdetected_point->GetPosition();
-                                                manager->FillNtupleDColumn(5,0,det_energy*weight);
-                                                manager->FillNtupleDColumn(5,1,Xdetected.x()/(cm));
-                                                manager->FillNtupleDColumn(5,2,Xdetected.y()/(cm));
-                                                manager->FillNtupleDColumn(5,3,Xdetected.z()/(cm));
-                                                manager->AddNtupleRow(5);
-
+                                                det_energy = theParticle->GetKineticEnergy()/(eV);
+                                                manager->FillH1(4, det_energy, weight);
                                         }
                                         else if (theStatus == NotAtBoundary) {
                                                 procCount = "NotAtBoundary";
@@ -282,18 +245,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                 } // for if opProc
                                 if(drawDetFlag)
                                 {
-
-                                        manager->FillNtupleSColumn(6,0,procCount);
-                                        manager->AddNtupleRow(6);
-
+                                        manager->FillNtupleSColumn(0,0,procCount);
+                                        manager->AddNtupleRow(0);
                                 }
-
                         } // for for loop
-
-
                 } // for if statement if first time in photocathode
-
         } // for if at boundary
-          //G4cout << "Stepping Fine" << G4endl;
-
 } // end of user steepping action function

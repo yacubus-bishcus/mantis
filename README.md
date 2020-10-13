@@ -19,6 +19,36 @@ __Version__:  Mantis and been built against and tested with Geant4 10.3 and 10.5
 
 The Following Instructions should work once the Geant4 and CERN ROOT are installed:
 
+Be sure to untar the NRF Database using 
+`> tar xfz NRF_Database.tar.gz`
+
+Export the path to the untarred NRF Database for example in the user's bash:
+
+`export G4NRFGAMMADATA=/path/to/Database/Database1.1`
+
+Also be sure to export the ROOT Cmake path in the directory where the user built ROOT for example in user's bash:
+
+`export ROOTCMAKEPATH=/path/to/root_build_directory/etc/cmake`
+
+Lastly some path issues may occur without the following lines in the user's bash:
+
+`export G4MPICMAKEPATH=/path/to/geant4MPI/geant4MPI_build`
+
+`source /path/to/root_build_directory/bin/thisroot.sh`
+
+`source /path/to/geant4-install/bin/geant4.sh`
+
+`source /path/to/geant4-install/share/Geant4-10.5.1/geant4make/geant4make.sh`
+
+`PATH=$HOME/bin:$PATH`
+
+`PATH=$PATH:/bin/mpiexec`
+
+`PATH=/path/to/mpich-install/bin:$PATH`
+
+`export PATH`
+
+
 To Build
 ==
 

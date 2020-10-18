@@ -2,8 +2,8 @@
 #include "PrimaryGenActionMessenger.hh"
 
 
-PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction(),
-        chosen_energy(-1), genM(NULL), fParticleGun(0), bremTest(false)
+PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest) : G4VUserPrimaryGeneratorAction(),
+        chosen_energy(-1), genM(NULL), fParticleGun(0)
 {
 
         genM = new PrimaryGenActionMessenger(this);

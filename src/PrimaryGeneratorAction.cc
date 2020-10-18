@@ -9,10 +9,17 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction
         genM = new PrimaryGenActionMessenger(this);
         G4int n_particle = 1;
         fParticleGun = new G4ParticleGun(n_particle);
-
+        
+        if(bremTest)
+        {
+          fParticleGun->SetParticleDefinition(G4Electron::Definition());
+        }
+        else
+        {
+          fParticleGun->SetParticleDefinition(G4Gamma::Definition());
+        }
+                
         // Default Kinematics
-        fParticleGun->SetParticleDefinition(G4Gamma::Definition());
-
         fParticleGun->SetParticleTime(0.0*ns);
 
 

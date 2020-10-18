@@ -29,17 +29,19 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest) : G4VUserPrimary
 
         // file contains the normalized brems distribution p(E), sampling distribution s(E),
         // and binary 0/1 for off/on resonance useful in weighting
-        TFile *fin = TFile::Open("brems_distributions.root");
-        hBrems  = (TH1D*) fin->Get("hBrems");
-        hSample = (TH1D*) fin->Get("hSample");
-        if (hBrems && hSample)
-        {
+        if(!bremTest)
+           TFile *fin = TFile::Open("brems_distributions.root");
+           hBrems  = (TH1D*) fin->Get("hBrems");
+           hSample = (TH1D*) fin->Get("hSample");
+           if (hBrems && hSample)
+           {
                 G4cout << "Imported brems and sampling distributions from " << fin->GetName() << G4endl << G4endl;
-        }
-        else
-        {
+           }
+           else
+           {
                 std::cerr << "Error reading from file " << fin->GetName() << std::endl;
                 exit(1);
+           }
         }
 
 #endif
@@ -65,7 +67,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         // Set Particle Energy (Must be in generate primaries)
 #if defined (G4ANALYSIS_USE_ROOT)
 
-        if(chosen_energy < 0)
+        if(chosen_energy < 0 && !bremTest)
         {
                 energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
         }
@@ -109,7 +111,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         G4double w = 1.0;
 
 #if defined (G4ANALYSIS_USE_ROOT)
-        if(chosen_energy < 0)
+        if(chosen_energy < 0 && !bremTest)
         {
                 G4double s = hSample->GetBinContent(hSample->GetXaxis()->FindBin(energy));
                 G4double dNdE = hBrems->GetBinContent(hBrems->GetXaxis()->FindBin(energy));

@@ -48,30 +48,27 @@ void HistoManager::Book()
       std::cout << "HistoManager::Book() Opened!" << std::endl;
     }
 
-    // Create 0 Histogram for Chopper Data
-      manager->CreateH1("ChopData","Chopper Data",nbins,0., xmax, "MeV");
-
-    // Create 1 Histogram for Interogation Object
+    // Create 0 Histogram for Interogation Object
       manager->CreateH1("IncObj","Incident Interrogation Obj", nbins, 0., xmax, "MeV");
 
-    // Create 2 Histogram for incident water data
+    // Create 1 Histogram for incident water data
       manager->CreateH1("IncWater","NRF Incident Water", nbins, 0., xmax, "MeV");
 
-      // Create 3 Histogram for Incident Detector Data
+      // Create 2 Histogram for Incident Detector Data
       manager->CreateH1("IncDet","Incident Photocathode", nbins, 0., xmax/2, "MeV");
 
-      // Create 4 Histogram for Energy if detected
+      // Create 3 Histogram for Energy if detected
       manager->CreateH1("Det","Detected Spectrum", nbins, 0., 1E-5, "MeV");
 
-      // Create 0 Ntuple for Reactions within detector
-      manager->CreateNtuple("DetPro","Detector Processes");
-      manager->CreateNtupleSColumn("Process");
-      manager->FinishNtuple();
-    
-    // Create 1 Ntuple for Brem Test Chop Data 
+      // Create 0 Ntuple for Brem Test Chop Data 
     manager->CreateNtuple("ChopperData", "Chopper Ntuple Data");
     manager->CreateNtupleDColumn("ChopperData");
     manager->FinishNtuple();
+    
+      // Create 1 Ntuple for Reactions within detector
+      manager->CreateNtuple("DetPro","Detector Processes");
+      manager->CreateNtupleSColumn("Process");
+      manager->FinishNtuple();
 
       fFactoryOn = true;
       G4cout << "Data Book Created." << G4endl;

@@ -8,9 +8,10 @@
 #include "HistoManager.hh"
 
 
-ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool bremTest)
+ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool brem_check)
         : G4VUserActionInitialization(), fDetector(det)
 {
+   bremTest = brem_check;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

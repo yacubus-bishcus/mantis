@@ -13,6 +13,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction
         if(bremTest)
         {
           fParticleGun->SetParticleDefinition(G4Electron::Definition());
+          std::cout << "Particle Type set to Electron!" << std::endl;
         }
         else
         {

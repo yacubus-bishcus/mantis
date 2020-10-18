@@ -40,6 +40,7 @@ void SetEnergyValue(G4double val){
 }
 
 private:
+G4bool bremTest;
 G4double chosen_energy;
 PrimaryGenActionMessenger* genM;
 G4ParticleGun* fParticleGun;

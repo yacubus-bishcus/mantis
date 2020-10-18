@@ -94,7 +94,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // ********************World and Materials Complete ***********************//
 
 // Set up Linac configuration
-        G4bool bremTest = false;
+        G4bool bremTest = true;
         if(bremTest)
         {
                 G4Tubs *solidLinac = new G4Tubs("Linac",0, 10*cm, 3*cm, 0*deg, 360*deg);

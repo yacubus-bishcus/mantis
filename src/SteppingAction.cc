@@ -92,7 +92,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                    && theTrack->GetParticleDefinition() == G4Gamma::Definition())
                 {
                         G4double energy_chopper = theTrack->GetKineticEnergy()/(MeV);
-                        manager->FillH1(0,energy_chopper, weight); // not weighting chopper
+                        manager->FillNtupleDColumn(0,0, energy_chopper); // not weighting chopper
+                        manager->AddNtupleRow(0);
                 }
         }
         // Testing NRF Analysis
@@ -103,7 +104,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                    && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14, "IntObjPhysical") == 0)
                 {
                         G4double energy_IntObj = theTrack->GetKineticEnergy()/(MeV);
-                        manager->FillH1(1, energy_IntObj, weight);
+                        manager->FillH1(0, energy_IntObj, weight);
                 }
         }
 
@@ -115,7 +116,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                    && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5, "Water") != 0 && isNRF)
                 {
                         G4double energy_inc_water = theTrack->GetKineticEnergy()/(MeV);
-                        manager->FillH1(2, energy_inc_water, weight);
+                        manager->FillH1(1, energy_inc_water, weight);
                 }
         }
 
@@ -173,7 +174,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         run->AddTotalSurface();
                         if(drawIncFlag)
                         {
-                          manager->FillH1(3, theParticle->GetKineticEnergy()/(MeV), weight);
+                          manager->FillH1(2, theParticle->GetKineticEnergy()/(MeV), weight);
                         }
 
                         for (G4int i=0; i<MAXofPostStepLoops; ++i) {
@@ -223,7 +224,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                 //run->AddDetection();
                                                 procCount = "Det";
                                                 det_energy = theParticle->GetKineticEnergy()/(MeV);
-                                                manager->FillH1(4, det_energy, weight);
+                                                manager->FillH1(3, det_energy, weight);
                                         }
                                         else if (theStatus == NotAtBoundary) {
                                                 procCount = "NotAtBoundary";
@@ -245,8 +246,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                 } // for if opProc
                                 if(drawDetFlag)
                                 {
-                                        manager->FillNtupleSColumn(0,0,procCount);
-                                        manager->AddNtupleRow(0);
+                                        manager->FillNtupleSColumn(1,0,procCount);
+                                        manager->AddNtupleRow(1);
                                 }
                         } // for for loop
                 } // for if statement if first time in photocathode

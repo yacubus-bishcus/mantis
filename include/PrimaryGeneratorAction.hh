@@ -27,7 +27,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
 
 public:
-PrimaryGeneratorAction();
+PrimaryGeneratorAction(G4bool);
 virtual ~PrimaryGeneratorAction();
 
 public:
@@ -38,19 +38,11 @@ G4ParticleGun* GetParticleGun(){
 void SetEnergyValue(G4double val){
         chosen_energy = val;
 }
-void SetBremTest(G4bool val){
-    bremTest = val;
-    if(bremTest)
-    {
-        std::cout << "WARNING: Testing Brem Beam!" << std::endl;
-    }
-}
 
 private:
 G4double chosen_energy;
 PrimaryGenActionMessenger* genM;
 G4ParticleGun* fParticleGun;
-G4bool bremTest;
 #if defined (G4ANALYSIS_USE_ROOT)
 TRandom1 Random;
 TH1D *hBrems;

@@ -30,6 +30,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest) : G4VUserPrimary
         // file contains the normalized brems distribution p(E), sampling distribution s(E),
         // and binary 0/1 for off/on resonance useful in weighting
         if(!bremTest)
+        {
            TFile *fin = TFile::Open("brems_distributions.root");
            hBrems  = (TH1D*) fin->Get("hBrems");
            hSample = (TH1D*) fin->Get("hSample");

@@ -30,13 +30,14 @@ G4long seed;
 G4String root_output_name;
 G4String gOutName;
 G4bool output;
+G4String bremTest;
 
 namespace
 {
 void PrintUsage()
 {
         std::cerr << "Usage: " << std::endl;
-        std::cerr << "mantis [-m macro] [-s seed] [-o output_name]" << std::endl;
+        std::cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false]" << std::endl;
 }
 }
 
@@ -51,6 +52,7 @@ int main(int argc,char **argv)
   macro = "mantis.in";
   seed = 1;
   output = false;
+  bremTest = "false";
 
   // Detect interactive mode (if no arguments) and define UI session
   //
@@ -61,7 +63,7 @@ int main(int argc,char **argv)
         }
 
         // Evaluate Arguments
-        if ( argc > 7 )
+        if ( argc > 9 )
         {
                 PrintUsage();
                 return 1;
@@ -71,7 +73,7 @@ int main(int argc,char **argv)
                 if (G4String(argv[i]) == "-m") macro = argv[i+1];
                 else if (G4String(argv[i]) == "-s") seed = atoi(argv[i+1]);
                 else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];
-
+                else if (G4String(argv[i]) == "-t") bremTest = argv[i+1];
                 else
                 {
                         PrintUsage();
@@ -105,8 +107,10 @@ int main(int argc,char **argv)
         // Set up Physics List
         physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic);
         runManager->SetUserInitialization(thePL);
-
-        runManager->SetUserInitialization(new ActionInitialization(det));
+        if(bremTest == "True" || bremTest == "true")
+           runMangager->SetUserInitialization(new ActionInitialization(det, true)); // conducting brem test 
+        else
+           runManager->SetUserInitialization(new ActionInitialization(det, false));
 
         // Run manager initialized in macros
 #ifdef G4VIS_USE

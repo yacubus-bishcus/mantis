@@ -49,8 +49,8 @@ void SetBremTest(G4bool val){
 private:
 G4double chosen_energy;
 PrimaryGenActionMessenger* genM;
-G4bool bremTest;
 G4ParticleGun* fParticleGun;
+G4bool bremTest;
 #if defined (G4ANALYSIS_USE_ROOT)
 TRandom1 Random;
 TH1D *hBrems;

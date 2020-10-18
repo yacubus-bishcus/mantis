@@ -10,7 +10,7 @@ PrimaryGenActionMessenger::PrimaryGenActionMessenger(PrimaryGeneratorAction* gen
   Cmd->SetGuidance("Choose Desired Energy Input");
   Cmd->SetParameterName("energy",false);
   Cmd->SetDefaultValue(-1);
-  Cmd2 = new G4UicmdWithAString("/input/bremTest",this);
+  Cmd2 = new G4UIcmdWithAString("/input/bremTest",this);
   Cmd2->SetGuidance("Testing Bremstrahlung");
   Cmd2->SetParameterName("brem",false);
   Cmd2->SetDefaultValue("false");

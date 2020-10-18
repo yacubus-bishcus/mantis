@@ -17,6 +17,7 @@ class ActionInitialization : public G4VUserActionInitialization
 
 private:
     const DetectorConstruction* fDetector;
+    G4bool bremTest;
 };
 
 #endif

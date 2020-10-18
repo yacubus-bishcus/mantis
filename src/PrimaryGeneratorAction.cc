@@ -18,6 +18,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction
         else
         {
           fParticleGun->SetParticleDefinition(G4Gamma::Definition());
+          std::cout << "Particle Type set to Gamma!"<<std::endl;
         }
                 
         // Default Kinematics

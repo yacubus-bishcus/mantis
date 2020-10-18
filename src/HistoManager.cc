@@ -67,6 +67,11 @@ void HistoManager::Book()
       manager->CreateNtuple("DetPro","Detector Processes");
       manager->CreateNtupleSColumn("Process");
       manager->FinishNtuple();
+    
+    // Create 1 Ntuple for Brem Test Chop Data 
+    manager->CreateNtuple("ChopperData", "Chopper Ntuple Data");
+    manager->CreateNtupleDColumn("ChopperData");
+    manager->FinishNtuple();
 
       fFactoryOn = true;
       G4cout << "Data Book Created." << G4endl;

@@ -9,7 +9,7 @@ class DetectorConstruction;
 class ActionInitialization : public G4VUserActionInitialization
 {
   public:
-    ActionInitialization(const DetectorConstruction*);
+    ActionInitialization(const DetectorConstruction*, G4bool);
     virtual ~ActionInitialization();
 
     virtual void Build() const;

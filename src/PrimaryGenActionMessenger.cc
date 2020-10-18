@@ -10,12 +10,18 @@ PrimaryGenActionMessenger::PrimaryGenActionMessenger(PrimaryGeneratorAction* gen
   Cmd->SetGuidance("Choose Desired Energy Input");
   Cmd->SetParameterName("energy",false);
   Cmd->SetDefaultValue(-1);
+  Cmd2 = new G4UicmdWithAString("/input/bremTest",this);
+  Cmd2->SetGuidance("Testing Bremstrahlung");
+  Cmd2->SetParameterName("brem",false);
+  Cmd2->SetDefaultValue("false");
+  Cmd2->SetCandidates("True true False false");
 
 }
 
 PrimaryGenActionMessenger::~PrimaryGenActionMessenger()
 {
   delete Cmd;
+  delete Cmd2;
 }
 
 
@@ -27,6 +33,14 @@ void PrimaryGenActionMessenger::SetNewValue(G4UIcommand* command, G4String newVa
     G4double theCommand = Cmd->GetNewDoubleValue(newValue);
     genA->SetEnergyValue(theCommand);
 
+  }
+  else if(command == Cmd2)
+  {
+    if(newValue == "True" || newValue == "true")
+      genA->SetBremTest(true);
+    else
+      genA->SetBremTest(false);
+    
   }
   else
   {

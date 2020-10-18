@@ -108,7 +108,7 @@ int main(int argc,char **argv)
         physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic);
         runManager->SetUserInitialization(thePL);
         if(bremTest == "True" || bremTest == "true")
-           runMangager->SetUserInitialization(new ActionInitialization(det, true)); // conducting brem test 
+           runManager->SetUserInitialization(new ActionInitialization(det, true)); // conducting brem test 
         else
            runManager->SetUserInitialization(new ActionInitialization(det, false));
 

@@ -38,10 +38,18 @@ G4ParticleGun* GetParticleGun(){
 void SetEnergyValue(G4double val){
         chosen_energy = val;
 }
+void SetBremTest(G4bool val){
+    bremTest = val;
+    if(bremTest)
+    {
+        std::cout << "WARNING: Testing Brem Beam!" << std::endl;
+    }
+}
 
 private:
 G4double chosen_energy;
 PrimaryGenActionMessenger* genM;
+G4bool bremTest;
 G4ParticleGun* fParticleGun;
 #if defined (G4ANALYSIS_USE_ROOT)
 TRandom1 Random;

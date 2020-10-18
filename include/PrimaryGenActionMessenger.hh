@@ -24,6 +24,7 @@ public:
 private:
   PrimaryGeneratorAction* genA;
   G4UIcmdWithADouble* Cmd;
+  G4UIcmdWithAString* Cmd2;
   G4UIdirectory *myDir;
 };
 

@@ -108,9 +108,14 @@ int main(int argc,char **argv)
         physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic);
         runManager->SetUserInitialization(thePL);
         if(bremTest == "True" || bremTest == "true")
-           runManager->SetUserInitialization(new ActionInitialization(det, true)); // conducting brem test 
+        {
+          std::cout << "Conducting Brem Test..."<<std::endl;
+          runManager->SetUserInitialization(new ActionInitialization(det, true)); // conducting brem test 
+        }
         else
-           runManager->SetUserInitialization(new ActionInitialization(det, false));
+        {
+          runManager->SetUserInitialization(new ActionInitialization(det, false));
+        }
 
         // Run manager initialized in macros
 #ifdef G4VIS_USE

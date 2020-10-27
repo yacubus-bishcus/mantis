@@ -69,3 +69,27 @@ Output
 ==
 
 The Code will generate a .log and _error.log file in addition to a root file. All G4cout is sent to .log and all G4cerr is sent to _error.log. The Root File will consist of 4 histograms and 1 TTree. The user must select output in mantis.in for the histograms/TTree to be filled during the simulation. 
+
+Analysis
+==
+
+Several helper scripts are included:
+1. runBatch.sh
+* The main call for running in batch mode on PSFC engaging cluster through slurm
+* Takes input <start Seed> <Last Seed> <Output FileName Root> where the number of jobs submitted = <Last Seed> - <start Seed>
+ 
+2. submit_geant4.slurm
+* This is the file for the slurm scheduler. Adjusting the time limit on each run can be important for scheduling 
+
+3. stitch.sh 
+* This merges the output files.
+* Takes inputs <"Output_FileName_Root*.root"> <merged_FileName.root> 
+* This script asks if the user would like to cleanup the .log files 
+
+4. PostAnalysis.cc 
+* This allows for quick comparison of the On/Off chopper states of merged root files 
+The PostAnalysis.cc file can be run in CERN ROOT with the command:
+
+`> root -b -q 'PostAnalysis("ChopperOn.root","ChopperOff.root")'`
+
+The File outputs the On/Off States respective: Detected Entries, Detected Weighted Sum, NRF Incident Water Weighted Sum. It also outputs the percent difference between the Chopper On/Off detected weighted sums. 

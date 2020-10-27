@@ -97,6 +97,7 @@ int main(int argc,char **argv)
         // choose the Random engine
         CLHEP::HepRandom::setTheEngine(new CLHEP::RanluxEngine);
         CLHEP::HepRandom::setTheSeed(seed);
+        std::cout << "Seed set to: " << seed << std::endl;
 
         // construct the default run manager
         G4RunManager* runManager = new G4RunManager;

@@ -56,6 +56,10 @@ set(mantis_SCRIPTS
     vis.mac
     init_vis.mac
     vis_save.mac
+    PostAnalysis.cc
+    submit_geant4.slurm
+    runBatch.sh
+    stitch.sh
   )
 
 foreach(_script ${mantis_SCRIPTS})

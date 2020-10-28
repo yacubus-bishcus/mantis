@@ -37,12 +37,12 @@ else
 fi
 echo "Cleaning..."
 "rm" slurm*
-"rm" ${filepattern}
 echo Would you like to clean up log files?
 read -p "Answer (y/n): " VAR1
 if [ "$VAR1" = "y" ];
 then
 echo "Cleaning log files..."
 "rm" *.log
+"rm" ${filepattern}
 fi
 echo "Files Cleaned."

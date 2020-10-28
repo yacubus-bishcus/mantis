@@ -103,7 +103,7 @@ void Sampling(const char *bremInputFilename, double Emax)
 		hBrems->SetBinContent(i, value);
         if(i % 10000 == 0)
         {
-            std::cout << i << " bin set..." << std::endl;
+            //std::cout << i << " bin set..." << std::endl;
             std::cout << 100.*((double)i/nbins) << " percent complete" << std::endl;
         }
 	}

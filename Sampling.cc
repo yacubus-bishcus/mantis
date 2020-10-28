@@ -85,7 +85,7 @@ void Sampling(const char *bremInputFilename, double Emax)
     int brems_nbin = 300;
     TH1D *ho = new TH1D("ho","ho", brems_nbin, Emin, Emax);
 	if (f != NULL) {
-		ChopperData->Draw("E_incident>>ho", "", "goff");
+		ChopperData->Draw("ChopperData>>ho", "", "goff");
 	} else {
 		cout << "Error! TFile not found.\nAborting..." << endl;
 		exit(1);

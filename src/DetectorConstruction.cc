@@ -153,8 +153,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         Pu->AddIsotope(Plutonium239, 1 - 0.9999);
 
 
-        std::cout << "The User has chosen the following Interogation Object Material: "
-                  << IntObj_Selection << std::endl;
+        G4cout << "The User has chosen the following Interogation Object Material: "
+                  << IntObj_Selection << G4endl;
         G4Material* intObjMat = new G4Material("IntObjMaterial", intObjDensity, 1);
         if(IntObj_Selection == "Uranium")
         {
@@ -252,12 +252,12 @@ physWater = new G4PVPlacement(0,         //no rotation
           if(chopperDensity == 19.1*g/cm3)
           {
             chopperMat->AddElement(U,1);
-            std::cout << "Weapons grade Uranium set as Chopper Wheel material." << std::endl;
+            G4cout << "Weapons grade Uranium set as Chopper Wheel material." << G4endl;
           }
           else if(chopperDensity == 19.6*g/cm3)
           {
             chopperMat->AddElement(WGPu, 1);
-            std::cout << "Weapons grade Plutonium set as Chopper Wheel material." << std::endl;
+            G4cout << "Weapons grade Plutonium set as Chopper Wheel material." << G4endl;
           }
           else{std::cerr << "ERROR chopperDensity not found!" << std::endl; exit(100);}
         }
@@ -267,12 +267,12 @@ physWater = new G4PVPlacement(0,         //no rotation
           if(chopperDensity == 19.1*g/cm3)
           {
             chopperMat->AddElement(natU,1);
-            std::cout << "Chopper Material set to Natural Uranium" << std::endl;
+            G4cout << "Chopper Material set to Natural Uranium" << G4endl;
           }
           else if(chopperDensity == 19.6*g/cm3)
           {
             chopperMat->AddElement(Pu,1);
-            std::cout << "Chopper Material set to Plutonium-240" << std::endl;
+            G4cout << "Chopper Material set to Plutonium-240" << G4endl;
           }
           else{std::cerr << "ERROR: Chopper Density not found." << std::endl; exit(100);}
         }
@@ -287,7 +287,7 @@ physWater = new G4PVPlacement(0,         //no rotation
         G4Tubs* solidPMT = new G4Tubs("PMT", PMT_rmin, PMT_rmax, PMT_z, 0*deg, 360*deg);
         logicPMT = new G4LogicalVolume(solidPMT, PMT_mat, "PMT");
 
-        std::cout << "The Number of PMTs was set to: " << nPMT << std::endl;
+       G4cout << "The Number of PMTs was set to: " << nPMT << G4endl;
         G4double PMT_y_pos;
         std::vector<G4double> PMT_y_posv;
         if(nPMT>1)

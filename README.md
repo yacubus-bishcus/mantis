@@ -90,6 +90,6 @@ Several helper scripts are included:
 * This allows for quick comparison of the On/Off chopper states of merged root files 
 The PostAnalysis.cc file can be run in CERN ROOT with the command:
 
-`> root -b -q 'PostAnalysis("ChopperOn.root","ChopperOff.root")'`
+`> root -b -q 'PostAnalysis.cc("ChopperOn.root","ChopperOff.root")'`
 
 The File outputs the On/Off States respective: Detected Entries, Detected Weighted Sum, NRF Incident Water Weighted Sum. It also outputs the percent difference between the Chopper On/Off detected weighted sums. 

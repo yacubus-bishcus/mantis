@@ -1,4 +1,5 @@
-void Sampling()
+// to Run in root: root -b -q 'Sampling("brem.root")'
+void Sampling(const char *bremInputFilename)
 {
 	const double pi = TMath::Pi();
 	double Emin = 0.0; // spectrum min energy in MeV
@@ -6,6 +7,7 @@ void Sampling()
 
 	// resonance energies in MeV as calculated by G4NRF
 	vector<double> Evec;
+	vector<double> Evec_above_threshold;
 	// U-238
 	Evec.push_back(2.17601067909);
 	Evec.push_back(2.20901100546);
@@ -28,6 +30,16 @@ void Sampling()
 	Evec.push_back(2.43321324158);
 	Evec.push_back(2.57751485869);
 	Evec.push_back(2.56641473101);
+	for(int i=0;i<Evec.size();i++)
+	{
+	  if(Evec[i] < Emax)
+	  {
+	    Evec_above_threshold.push_back(Evec[i]);
+	  }
+	}
+	
+	double maxNRF = *std::max_element(Evec_above_threshold.begin(), Evec_above_threshold.end());
+	double minNRF = *std::min_element(Evec_above_threshold.begin(), Evec_above_threshold.end());
 
 	double deltaE = 10.0e-6; // width of each important sampling region in MeV
 
@@ -40,21 +52,21 @@ void Sampling()
 	for (int i = 1; i <= nbins; ++i) {
 		double e = hSample->GetBinCenter(i);
 
-		for (int j = 0; j < Evec.size(); ++j) {
-			if (e < 1.7) {
+		for (int j = 0; j < Evec_above_threshold.size(); ++j) {
+			if (e < minNRF) {
 				hSample->SetBinContent(i, 0.0001);
 			}
-            else if (e > Evec[j] - deltaE/2.0 && e < Evec[j] + deltaE/2.0)
-            {
+            		else if (e > Evec_above_threshold[j] - deltaE/2.0 && e < Evec_above_threshold[j] + deltaE/2.0)
+            		{
 				hSample->SetBinContent(i, 1);
 				break;
-            }
-            else if(e > 4.0)
-            {
-                hSample->SetBinContent(i,0.0001);
-            }
-            else
-            {
+            		}
+            		else if(e > maxNRF)
+            		{
+                		hSample->SetBinContent(i,0.0001);
+            		}
+            		else
+            		{
 				hSample->SetBinContent(i, 0.01);
 			}
 		}
@@ -64,8 +76,9 @@ void Sampling()
 	hSample->Scale(1.0/(hSample->Integral()));
 
 
-	// also create a normalized brems spectrum for weighting
-	TFile *f = TFile::Open("brem.root");
+    // also create a normalized brems spectrum for weighting
+    TFile *f = TFile::Open(bremInputFilename);
+    std::cout << "Root input File: " <<bremInputFilename << " being read..." << std::endl;
     TTree *ChopperData;
     f->GetObject("ChopperData", ChopperData);
     ChopperData->Print();

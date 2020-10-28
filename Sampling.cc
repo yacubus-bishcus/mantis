@@ -1,9 +1,9 @@
 // to Run in root: root -b -q 'Sampling.cc("brem.root")'
-void Sampling(const char *bremInputFilename)
+void Sampling(const char *bremInputFilename, double Emax)
 {
 	const double pi = TMath::Pi();
 	double Emin = 0.0; // spectrum min energy in MeV
-	double Emax = 6.0; // spectrum max energy in MeV
+	cout << "Emax set to: " << Emax << endl; // spectrum max energy in MeV
 
 	// resonance energies in MeV as calculated by G4NRF
 	vector<double> Evec;

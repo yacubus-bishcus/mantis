@@ -1,4 +1,4 @@
-// to Run in root: root -b -q 'Sampling.cc("brem.root")'
+// to Run in root: root -b -q 'Sampling.cc("brem.root", Emax)'
 void Sampling(const char *bremInputFilename, double Emax)
 {
 	const double pi = TMath::Pi();

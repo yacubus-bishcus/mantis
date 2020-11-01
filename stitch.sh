@@ -43,6 +43,5 @@ if [ "$VAR1" = "y" ];
 then
 echo "Cleaning log files..."
 "rm" *.log
-"rm" ${filepattern}
 fi
 echo "Files Cleaned."

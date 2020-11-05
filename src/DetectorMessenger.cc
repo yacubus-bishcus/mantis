@@ -25,7 +25,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdAngle = new G4UIcmdWithADouble("/mydet/Angle",this);
   CmdChopthick = new G4UIcmdWithADouble("/chopper/thickness", this);
   CmdChopZ = new G4UIcmdWithADouble("/chopper/distance", this);
-  CmdChopperOn = new G4UIcmdWithAString("/chopper/On", this);
+  CmdChopperOn = new G4UIcmdWithAString("/chopper/state", this);
   CmdAttenOn = new G4UIcmdWithAString("/mydet/attenuator", this);
   CmdAttenThick = new G4UIcmdWithADouble("/mydet/attenuatorThickness",this);
   CmdAttenMat = new G4UIcmdWithAString("/mydet/attenuatorMaterial",this);

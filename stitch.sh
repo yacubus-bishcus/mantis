@@ -35,13 +35,3 @@ else
     echo "Hmm, the files you want to stitch are neither root, nor dat. Please specify the correct file pattern.  Btw, here's the usage:"
     echo "stitch.sh <\"filepattern\"> <fileout>";
 fi
-echo "Cleaning..."
-"rm" slurm*
-echo Would you like to clean up log files?
-read -p "Answer (y/n): " VAR1
-if [ "$VAR1" = "y" ];
-then
-echo "Cleaning log files..."
-"rm" *.log
-fi
-echo "Files Cleaned."

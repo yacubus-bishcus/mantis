@@ -154,8 +154,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         Pu->AddIsotope(Plutonium239, 1 - 0.9999);
 
 
-        G4cout << "The User has chosen the following Interogation Object Material: "
-                  << IntObj_Selection << G4endl;
+        std::cout << "The User has chosen the following Interogation Object Material: "
+                  << IntObj_Selection << std::endl;
         G4Material* intObjMat = new G4Material("IntObjMaterial", intObjDensity, 1);
         if(IntObj_Selection == "Uranium")
         {
@@ -222,9 +222,9 @@ G4LogicalVolume* logicTape = new G4LogicalVolume(solidTape, teflonTape, "Tape");
 physTape = new G4PVPlacement(0,G4ThreeVector(0,0,0), logicTape, "Tape", logicCasing, false, 0, checkOverlaps);
 
 // Tub of water
-        std::cout << "The Water Tank X was set to: " << water_size_x/(cm)<< " cm" << std::endl;
-        std::cout << "The Water Tank Y was set to: " << water_size_y/(cm)<< " cm" << std::endl;
-        std::cout << "The Water Tank Z was set to: " << water_size_z/(cm) << " cm" << std::endl << std::endl;
+        G4cout << "The Water Tank X was set to: " << water_size_x/(cm)<< " cm" << G4endl;
+        G4cout << "The Water Tank Y was set to: " << water_size_y/(cm)<< " cm" << G4endl;
+        G4cout << "The Water Tank Z was set to: " << water_size_z/(cm) << " cm" << G4endl << G4endl;
 
 G4Box* solidWater = new G4Box("Water", water_size_x-attenThickness-plexiThickness-tapeThick, water_size_y-attenThickness-plexiThickness-tapeThick, 
                               water_size_z-attenThickness-plexiThickness-tapeThick);
@@ -251,8 +251,8 @@ physWater = new G4PVPlacement(0,         //no rotation
         {
           std::cout << "The Chopper State was set to: " << "Off!" << std::endl;      
         }
-        std::cout << "The Chopper Thickness was set to: " << chopper_thick/(cm) << " cm" << std::endl;
-        std::cout << "The Chopper distance from beam was set to: " << chopper_z/(cm) << " cm" << std::endl;
+        G4cout << "The Chopper Thickness was set to: " << chopper_thick/(cm) << " cm" << G4endl;
+        G4cout << "The Chopper distance from beam was set to: " << chopper_z/(cm) << " cm" << G4endl;
         if(chopper_z > water_z_pos)
         {
                 std::cerr << "ERROR: Chopper wheel location should be behind water detectors, exiting." << std::endl;
@@ -265,27 +265,26 @@ physWater = new G4PVPlacement(0,         //no rotation
           if(chopperDensity == 19.1*g/cm3)
           {
             chopperMat->AddElement(U,1);
-            G4cout << "Weapons grade Uranium set as Chopper Wheel material." << G4endl;
+            std::cout << "Weapons grade Uranium set as Chopper Wheel material." << std::endl;
           }
           else if(chopperDensity == 19.6*g/cm3)
           {
             chopperMat->AddElement(WGPu, 1);
-            G4cout << "Weapons grade Plutonium set as Chopper Wheel material." << G4endl;
+            std::cout << "Weapons grade Plutonium set as Chopper Wheel material." << std::endl;
           }
           else{std::cerr << "ERROR chopperDensity not found!" << std::endl; exit(100);}
         }
         else
         {
-          //std::cout << "Chopper Density Set to: " << chopperDensity/(g/cm3) << " g/cm3" << std::endl;
           if(chopperDensity == 19.1*g/cm3)
           {
             chopperMat->AddElement(natU,1);
-            G4cout << "Chopper Material set to Natural Uranium" << G4endl;
+            std::cout << "Chopper Material set to Natural Uranium" << std::endl;
           }
           else if(chopperDensity == 19.6*g/cm3)
           {
             chopperMat->AddElement(Pu,1);
-            G4cout << "Chopper Material set to Plutonium-240" << G4endl;
+            std::cout << "Chopper Material set to Plutonium-240" << std::endl;
           }
           else{std::cerr << "ERROR: Chopper Density not found." << std::endl; exit(100);}
         }
@@ -295,7 +294,7 @@ physWater = new G4PVPlacement(0,         //no rotation
                           0, checkOverlaps);
 
         G4double PMT_rmin = 0*cm;
-        std::cout << std::endl << "The PC Radius was set to " << PMT_rmax/(cm) << " cm" << std::endl;
+        G4cout << G4endl << "The PC Radius was set to " << PMT_rmax/(cm) << " cm" << G4endl;
         G4double PMT_z = 7.62*cm; // 3 in PMT
         G4Tubs* solidPMT = new G4Tubs("PMT", PMT_rmin, PMT_rmax, PMT_z, 0*deg, 360*deg);
         logicPMT = new G4LogicalVolume(solidPMT, PMT_mat, "PMT");
@@ -337,7 +336,7 @@ physWater = new G4PVPlacement(0,         //no rotation
 
 // Make Solid PhotoCathode
         G4double PC_z = 20*nm;
-        std::cout << "The Photocathode material was set as: " << pc_mat << std::endl;
+        G4cout << "The Photocathode material was set as: " << pc_mat << G4endl;
         if(pc_mat == "GaAsP")
         {
                 PC_mat = GaAsP;
@@ -347,8 +346,6 @@ physWater = new G4PVPlacement(0,         //no rotation
                 PC_mat = bialkali;
         }
         else exit(1);
-
-        G4cout << "The Photocathode material was set as: " << PC_mat->GetName() << G4endl;
 
         G4Tubs* solidPhotoCathode = new G4Tubs("PC", PMT_rmin, PMT_rmax, PC_z, 0*deg, 360.*deg);
         logicPC = new G4LogicalVolume(solidPhotoCathode, PC_mat, "PC");

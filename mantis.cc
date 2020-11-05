@@ -53,6 +53,7 @@ int main(int argc,char **argv)
   seed = 1;
   output = false;
   bremTest = "false";
+  G4bool brem = false;
 
   // Detect interactive mode (if no arguments) and define UI session
   //
@@ -101,22 +102,19 @@ int main(int argc,char **argv)
 
         // construct the default run manager
         G4RunManager* runManager = new G4RunManager;
+        if(bremTest == "True" || bremTest == "true")
+        {
+           std::cout << "Conducting Brem Test!" << std::endl;
+           brem = true;
+        }
         // set mandatory initialization classes
-        DetectorConstruction* det = new DetectorConstruction();
+        DetectorConstruction* det = new DetectorConstruction(brem);
         runManager->SetUserInitialization(det);
 
         // Set up Physics List
         physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic);
         runManager->SetUserInitialization(thePL);
-        if(bremTest == "True" || bremTest == "true")
-        {
-          std::cout << "Conducting Brem Test..."<<std::endl;
-          runManager->SetUserInitialization(new ActionInitialization(det, true)); // conducting brem test 
-        }
-        else
-        {
-          runManager->SetUserInitialization(new ActionInitialization(det, false));
-        }
+        runManager->SetUserInitialization(new ActionInitialization(det, brem));
 
         // Run manager initialized in macros
 #ifdef G4VIS_USE

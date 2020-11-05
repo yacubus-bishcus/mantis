@@ -1,10 +1,11 @@
 #include "RunAction.hh"
 extern G4bool output;
-RunAction::RunAction(HistoManager* histoAnalysis)
+RunAction::RunAction(HistoManager* histoAnalysis, G4bool brem)
         : G4UserRunAction(),fTimer(nullptr), fHistoManager(histoAnalysis)
 {
 
         fTimer = new G4Timer;
+        bremTest = brem;
 }
 
 RunAction::~RunAction()
@@ -17,7 +18,7 @@ void RunAction::BeginOfRunAction(const G4Run* aRun)
 {
   if(output)
   {
-    fHistoManager->Book();
+    fHistoManager->Book(bremTest);
   }
         fTotalSurface = 0;
         fCerenkovCount = 0;

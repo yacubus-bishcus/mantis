@@ -49,7 +49,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdAngle->SetGuidance("Choose desired Detector BackScatter Angle in Degrees");
   CmdAttenOn->SetGuidance("Choose if Attenuator Present or not");
   CmdAttenThick->SetGuidance("Choose Desired attenuator thickness");
-  CmdAttenMaterial->SetGuidance("Choose desired attenuator material from NIST materials");
+  CmdAttenMat->SetGuidance("Choose desired attenuator material from NIST materials");
 
   Cmd->SetParameterName("radius",false);
   CmdX->SetParameterName("waterx",false);
@@ -70,13 +70,13 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdAngle->SetRange("Angle > 90 && Angle < 135");
   CmdAttenOn->SetParameterName("attenuator",false);
   CmdAttenThick->SetParameterName("attenThickness",false);
-  CmdAttenMaterial->SetParameterName("attenMaterial",false);
+  CmdAttenMat->SetParameterName("attenMaterial",false);
 
   Cmdtsel->SetCandidates("Uranium Plutonium Lead/Uranium Lead/Plutonium");
   Cmdpcmat->SetCandidates("GaAsP Bialkali");
   CmdChopperOn->SetCandidates("On on Off off");
   CmdAttenOn->SetCandidates("On on Off off");
-  CmdAttenMaterial->SetCandidates("G4_Pb G4_Cu G4_Zn G4_Ag G4_Cd G4_Th G4_U G4_Au G4_W G4_Fe");
+  CmdAttenMat->SetCandidates("G4_Pb G4_Cu G4_Zn G4_Ag G4_Cd G4_Th G4_U G4_Au G4_W G4_Fe");
 
 }
 
@@ -99,8 +99,8 @@ DetectorMessenger::~DetectorMessenger()
   delete CmdChopperOn;
   delete CmdAngle;
   delete CmdAttenOn;
-  delete CmdAttenThickness;
-  delete CmdAttenMaterial;
+  delete CmdAttenThick;
+  delete CmdAttenMat;
 }
 
 
@@ -224,12 +224,12 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
       check_atten_on = true;
     }
   }
-  else if(command == CmdAttenThickness)
+  else if(command == CmdAttenThick)
   {
     G4double theCmdAttendThickness = CmdAttenThickness->GetNewDoubleValue(newValue);
     DetectorA->SetAttenuatorThickness(theCmdAttendThickness);
   }
-  else if(command == CmdAttenMaterial)
+  else if(command == CmdAttenMat)
   {
     if(check_atten_on)
     {

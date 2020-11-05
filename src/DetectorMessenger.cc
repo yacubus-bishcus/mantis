@@ -98,6 +98,7 @@ DetectorMessenger::~DetectorMessenger()
   delete CmdChopZ;
   delete CmdChopperOn;
   delete CmdAngle;
+  delete CmdAttenOn;
   delete CmdAttenThickness;
   delete CmdAttenMaterial;
 }

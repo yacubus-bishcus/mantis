@@ -202,7 +202,7 @@ new G4PVPlacement(waterRot,
 G4ThreeVector(water_x_pos,0,water_z_pos), logicAttenuator,
 "AttenuatorLeft", logicWorld, false, 0, checkOverlaps);
 new G4PVPlacement(waterRot2,
-G4ThreeVector(-1*water_x_pos,0,water_z_pos), logicCasing,
+G4ThreeVector(-1*water_x_pos,0,water_z_pos), logicAttenuator,
 "AttenuatorRight", logicWorld, false, 0, checkOverlaps);
 
 // Make Water Casing (Plexiglass)

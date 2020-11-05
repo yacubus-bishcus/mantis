@@ -33,7 +33,7 @@
 #units degrees *Backscatter angle
 #/mydet/Angle 120
 # Attenuator Settings Surrounding Cherenkov Detector (optional)
-#/mydet/Attenuator On
+#/mydet/attenuator On
 # Attenuator Thickness in cm
 #/mydet/attenuatorThickness 1
 # Attenuator Material Options (G4_Pb, G4_W, G4_Ag, G4_Au, G4_U, G4_Cu, G4_Fe)

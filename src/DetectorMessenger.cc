@@ -26,6 +26,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdChopthick = new G4UIcmdWithADouble("/chopper/thickness", this);
   CmdChopZ = new G4UIcmdWithADouble("/chopper/distance", this);
   CmdChopperOn = new G4UIcmdWithAString("/chopper/On", this);
+  CmdAttenOn = new G4UIcmdWithAString("/mydet/attenuator", this);
   CmdAttenThick = new G4UIcmdWithADouble("/mydet/attenuatorThickness",this);
   CmdAttenMat = new G4UIcmdWithAString("/mydet/attenuatorMaterial",this);
 
@@ -46,6 +47,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdChopZ->SetGuidance("Choose desired chopper distance from brem beam");
   CmdChopperOn->SetGuidance("Choose desired chopper wheel state");
   CmdAngle->SetGuidance("Choose desired Detector BackScatter Angle in Degrees");
+  CmdAttenOn->SetGuidance("Choose if Attenuator Present or not");
   CmdAttenThick->SetGuidance("Choose Desired attenuator thickness");
   CmdAttenMaterial->SetGuidance("Choose desired attenuator material from NIST materials");
 
@@ -66,12 +68,14 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdChopperOn->SetParameterName("chopperOn",false);
   CmdAngle->SetParameterName("Angle",false);
   CmdAngle->SetRange("Angle > 90 && Angle < 135");
+  CmdAttenOn->SetParameterName("attenuator",false);
   CmdAttenThick->SetParameterName("attenThickness",false);
   CmdAttenMaterial->SetParameterName("attenMaterial",false);
 
   Cmdtsel->SetCandidates("Uranium Plutonium Lead/Uranium Lead/Plutonium");
   Cmdpcmat->SetCandidates("GaAsP Bialkali");
-  CmdChopperOn->SetCandidates("True true False false");
+  CmdChopperOn->SetCandidates("On on Off off");
+  CmdAttenOn->SetCandidates("On on Off off");
   CmdAttenMaterial->SetCandidates("G4_Pb G4_Cu G4_Zn G4_Ag G4_Cd G4_Th G4_U G4_Au G4_W G4_Fe");
 
 }
@@ -129,51 +133,23 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   else if(command == CmdY)
   {
     G4double theCommandY = CmdY->GetNewDoubleValue(newValue);
-    if(theCommandY == -1)
-    {
-      std::cout << "Using Default Y Water"<<std::endl;
-    }
-    else
-    {
-      DetectorA->SetWaterY(theCommandY);
-    }
+    DetectorA->SetWaterY(theCommandY);
   }
   else if(command == CmdZ)
   {
     G4double theCommandZ = CmdZ->GetNewDoubleValue(newValue);
-    if(theCommandZ == -1)
-    {
-      std::cout << "Using Default Z Water"<<std::endl;
-    }
-    else
-    {
-      DetectorA->SetWaterZ(theCommandZ);
-    }
+    DetectorA->SetWaterZ(theCommandZ);
   }
   else if(command == Cmdtr)
   {
     G4double theCommandtX = Cmdtr->GetNewDoubleValue(newValue);
-    if(theCommandtX == -1)
-    {
-      std::cout << "Using Default Target radius" <<std::endl;
-    }
-    else
-    {
-      DetectorA->SetIntObj_radius(theCommandtX);
-    }
+    DetectorA->SetIntObj_radius(theCommandtX);
   }
 
   else if(command == Cmdtrad)
   {
     G4double theCommandtrad = Cmdtrad->GetNewDoubleValue(newValue);
-    if(theCommandtrad == -1)
-    {
-      std::cout << "Using Default Target fission abundance" <<std::endl;
-    }
-    else
-    {
-      DetectorA->SetAbundance(theCommandtrad);
-    }
+    DetectorA->SetAbundance(theCommandtrad);
   }
   else if(command == Cmdtsel)
   {
@@ -184,38 +160,17 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   else if(command == CmdtXpos)
   {
     G4double theCommandtXpos = CmdtXpos->GetNewDoubleValue(newValue);
-    if(theCommandtXpos == -1)
-    {
-      std::cout << "Using Default Target X position" <<std::endl;
-    }
-    else
-    {
-      DetectorA->SetIntObjX_pos(theCommandtXpos);
-    }
+    DetectorA->SetIntObjX_pos(theCommandtXpos);
   }
   else if(command == CmdtYpos)
   {
     G4double theCommandtYpos = CmdtYpos->GetNewDoubleValue(newValue);
-    if(theCommandtYpos == -1)
-    {
-      std::cout << "Using Default Target Y position" <<std::endl;
-    }
-    else
-    {
-      DetectorA->SetIntObjY_pos(theCommandtYpos);
-    }
+    DetectorA->SetIntObjY_pos(theCommandtYpos);
   }
   else if(command == CmdtZpos)
   {
     G4double theCommandtZpos = CmdtZpos->GetNewDoubleValue(newValue);
-    if(theCommandtZpos == -1)
-    {
-      std::cout << "Using Default Target Z position" <<std::endl;
-    }
-    else
-    {
-      DetectorA->SetIntObjZ_pos(theCommandtZpos);
-    }
+    DetectorA->SetIntObjZ_pos(theCommandtZpos);
   }
   else if(command == Cmdpcmat)
   {
@@ -226,43 +181,22 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   else if(command == CmdnPMT)
   {
     G4int thecmdnPMT = CmdnPMT->GetNewIntValue(newValue);
-    if(thecmdnPMT == 1)
-    {
-      std::cout << "Using Default Number of PMTs: 1" << std::endl;
-    }
-    else
-    {
-      DetectorA->SetnPMT(thecmdnPMT);
-    }
+    DetectorA->SetnPMT(thecmdnPMT);
   }
   else if(command == CmdChopZ)
   {
     G4double thecmdchopz = CmdChopZ->GetNewDoubleValue(newValue);
-    if(thecmdchopz == -1)
-    {
-      std::cout << "Using default chopper distance." << std::endl;
-    }
-    else
-    {
-      DetectorA->SetChopper_z(thecmdchopz);
-    }
+    DetectorA->SetChopper_z(thecmdchopz);
   }
   else if(command == CmdChopthick)
   {
     G4double thecmdchopthick = CmdChopthick->GetNewDoubleValue(newValue);
-    if(thecmdchopthick == -1)
-    {
-      std::cout << "Using default chopper thickness." << std::endl;
-    }
-    else
-    {
-      DetectorA->SetChopperThick(thecmdchopthick);
-    }
+    DetectorA->SetChopperThick(thecmdchopthick);
   }
   else if(command == CmdChopperOn)
   {
     G4String thecmdchopperon = newValue;
-    if(thecmdchopperon == "True" || thecmdchopperon == "true")
+    if(thecmdchopperon == "On" || thecmdchopperon == "on")
     {
       DetectorA->SetChopperOn(true);
     }
@@ -276,6 +210,19 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     G4double thecmdAngle = CmdAngle->GetNewDoubleValue(newValue);
     DetectorA->SettheAngle(thecmdAngle);
   }
+  else if(command == CmdAttenOn)
+  {
+    G4String theCmdAttenOn = newValue;
+    if(theCmdAttenOn == "Off" || theCmdAttenOn == "off")
+    {
+      DetectorA->SetAttenuatorMaterial("G4_AIR");
+      check_atten_on = false;
+    }
+    else
+    {
+      check_atten_on = true;
+    }
+  }
   else if(command == CmdAttenThickness)
   {
     G4double theCmdAttendThickness = CmdAttenThickness->GetNewDoubleValue(newValue);
@@ -283,8 +230,11 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   }
   else if(command == CmdAttenMaterial)
   {
-    G4String theAttenMaterial = newValue;
-    DetectorA->SetAttenuatorMaterial(theAttenMaterial);
+    if(check_atten_on)
+    {
+      G4String theAttenMaterial = newValue;
+      DetectorA->SetAttenuatorMaterial(theAttenMaterial);
+    }
   }
   else
   {

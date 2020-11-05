@@ -171,10 +171,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         }
         else{std::cerr << "ERROR: Interogation Material not found."<<std::endl;}
         G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObjLogicVolume");
-
-        std::cout << "The Interogation Object X Position was set to: " << intObj_x_pos/(cm) << std::endl;
-        std::cout << "The Interogation Object Y Position was set to: " << intObj_y_pos/(cm) << std::endl;
-        std::cout << "The Interogation Object Z Position was set to: " << intObj_z_pos/(cm) << std::endl << std::endl;
         setEndIntObj(container_z_pos, container_z);
 
         physIntObj = new G4PVPlacement(0,
@@ -247,7 +243,14 @@ physWater = new G4PVPlacement(0,         //no rotation
                                   checkOverlaps); //overlaps checking
 
 // Set up chopper wheel
-
+        if(chopperOn)
+        {
+          std::cout << "The Chopper State was set to: " << "On!" << std::endl;
+        }
+        else
+        {
+          std::cout << "The Chopper State was set to: " << "Off!" << std::endl;      
+        }
         std::cout << "The Chopper Thickness was set to: " << chopper_thick/(cm) << " cm" << std::endl;
         std::cout << "The Chopper distance from beam was set to: " << chopper_z/(cm) << " cm" << std::endl;
         if(chopper_z > water_z_pos)

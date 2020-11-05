@@ -40,6 +40,8 @@ private:
   G4UIcmdWithADouble* CmdChopZ;
   G4UIcmdWithAString* CmdChopperOn;
   G4UIcmdWithADouble* CmdAngle;
+  G4UIcmdWithADouble* CmdAttenThickness;
+  G4UIcmdWithAString* CmdAttenMaterial;
   G4UIdirectory *myDir;
   G4UIdirectory * myDir2;
   G4UIdirectory * myDir3;

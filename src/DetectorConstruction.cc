@@ -313,7 +313,7 @@ physWater = new G4PVPlacement(0,         //no rotation
                 {
                         PMT_y_pos = 0. - water_size_y/2 + i*(water_size_y/(nPMT + 1));
                         PMT_y_posv.push_back(PMT_y_pos);
-                        std::cout << "PMT Position " << i << " set to " << PMT_y_posv[i-1]/(cm)<< " cm" << std::endl;
+                        G4cout << "PMT Position " << i << " set to " << PMT_y_posv[i-1]/(cm)<< " cm" << G4endl;
                 }
         }
         else

@@ -46,7 +46,7 @@ void HistoManager::Book(G4bool bremTest)
     {
       std::cout << "HistoManager::Book() Opened!" << std::endl;
     }
-
+if(!bremTest){
     // Create 0 Histogram for Interogation Object
       manager->CreateH1("IncObj","Incident Interrogation Obj", nbins, 0., xmax, "MeV");
 
@@ -68,6 +68,14 @@ void HistoManager::Book(G4bool bremTest)
     manager->CreateNtuple("DetPro","Detector Processes");
     manager->CreateNtupleSColumn("Process");
     manager->FinishNtuple();
+}
+else
+{
+    // Create 0 Ntuple for Brem Test Chop Data 
+    manager->CreateNtuple("ChopperData", "Chopper Ntuple Data");
+    manager->CreateNtupleDColumn("ChopperData");
+    manager->FinishNtuple();
+}
 
     fFactoryOn = true;
     G4cout << "Output file is open in " << manager->GetFileName()<<"."

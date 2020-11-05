@@ -2,7 +2,7 @@
 
 extern G4bool output;
 
-SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun)
+SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun, G4bool brem)
         : G4UserSteppingAction(), drawChopperDataFlag(0), drawIntObjDataFlag(0),
         drawIncFlag(0), drawDetFlag(0), drawWaterIncDataFlag(0), stepM(NULL)
 {
@@ -10,6 +10,7 @@ SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* local
         local_det = det;
         fExpectedNextStatus = Undefined;
         run = localrun;
+        bremTest = brem;
 }
 
 SteppingAction::~SteppingAction()
@@ -98,7 +99,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         }
         // Testing NRF Analysis
         // inside Interogation Object for first time
-        if(drawIntObjDataFlag)
+        if(drawIntObjDataFlag && !bremTest)
         {
                 if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14,"IntObjPhysical") != 0
                    && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14, "IntObjPhysical") == 0)
@@ -110,7 +111,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
         // Water Analysis
         // first time in detector determine incident water energies
-        if(drawWaterIncDataFlag)
+        if(drawWaterIncDataFlag && !bremTest)
         {
                 if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5,"Water") == 0
                    && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5, "Water") != 0 && isNRF)
@@ -172,7 +173,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 // incident photocathode
                 if(endPoint->GetPhysicalVolume()->GetName().compare(0,2,"PC")==0 && startPoint->GetPhysicalVolume()->GetName().compare(0,2,"PC")!=0) { // first time in photocathode
                         run->AddTotalSurface();
-                        if(drawIncFlag)
+                        if(drawIncFlag && !bremTest)
                         {
                           manager->FillH1(2, theParticle->GetKineticEnergy()/(MeV), weight);
                         }
@@ -182,7 +183,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
                                 G4OpBoundaryProcess* opProc = dynamic_cast<G4OpBoundaryProcess*>(currentProcess);
 
-                                if(opProc && output) {
+                                if(opProc && output && !bremTest) {
                                         theStatus = opProc->GetStatus();
 
                                         if(theStatus == Transmission) {
@@ -244,7 +245,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                 procCount = "noStatus";
                                         }
                                 } // for if opProc
-                                if(drawDetFlag)
+                                if(drawDetFlag && !bremTest)
                                 {
                                         manager->FillNtupleSColumn(1,0,procCount);
                                         manager->AddNtupleRow(1);

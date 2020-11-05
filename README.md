@@ -61,8 +61,9 @@ Now go to geant4 application
 
 To Run in Batch Mode
 ==
-vis_save.mac will make a .wrl visualization file based on the commands provided in vis_save.mac
-mantis.in will not create a visualization. 
+"vis_save.mac" will make a .wrl visualization file based on the commands provided in "vis_save.mac".
+
+"mantis.in" will not create a visualization. 
 `> ./mantis -m macro(mantis.in or vis_save.mac) -o <root output filename> -s <seed>`
   
 To Run in Interactive Mode
@@ -77,10 +78,38 @@ Mantis Requires one input:
 
 * brems_distributions.root - This is the input spectrum file that is read if the user does not uncomment the /input/energy line in mantis.in. The bremstrahlung input and sampling distribution can be easily manipulated with Sampling.cc  
 
+Manipulating the Input Spectrum "brems_distributions.root" with Sampling.cc
+==
+
+Sampling.cc can be run with the following terminal command:
+
+`> root -b -q 'Sampling.cc("brem.root",maxEnergyOfBremBeam)' `
+
+Where the "brem.root" file is the bremsstrahulung spectrum expected to impact the chopper wheel. The "brem.root" file can be obtained with the instructions under the section "Creating a Bremsstrahlung Input Beam" below. The "maxEnergyOfBremBeam" is the same maximum energy of the input bremsstrahulung beam from the "brem.root" file. 
+
+Sampling.cc creates two output files.
+
+1. brems_distributions.root
+2. brems_distributions.png 
+
+The root file consists of two histograms: hBrems and hSample. These histograms are used to determine the importance sampling in the mantis program. The .png file is a depiction of the hBrems and hSampled overlayed on the same canvas. 
+
+Creating a Bremsstrahlung Input Beam
+==
+
+The bremsstrahlung beam can be determined via other Geant4 simulations or through mantis. To create the input bremsstrahlung beam expected to inpinge upon the chopper wheel run mantis the following way:
+
+`> ./mantis -m mantis.in -o brem.root -s <seed> -t true `
+
+Adding the -t flag tells mantis that it should only output the Chopper Data TTree. Be sure to edit the following line in "mantis.in": 
+
+`/input/energy maxEnergyOfBremBeam`
+
+
 Output
 ==
 
-The Code will generate a .log and _error.log file in addition to a root file. All G4cout is sent to .log and all G4cerr is sent to _error.log. The Root File will consist of 4 histograms and 2 TTree. The user must select output in mantis.in for the histograms/TTree to be filled during the simulation. 
+The Code will generate a .log and _error.log file in addition to a root file. All G4cout is sent to .log and all G4cerr is sent to _error.log. The Root File will consist of 4 histograms and 2 TTree. The user must select output in "mantis.in" for the histograms/TTree to be filled during the simulation. 
 
 Analysis
 ==
@@ -96,7 +125,6 @@ Several helper scripts are included:
 3. stitch.sh 
 * This merges the output files.
 * Takes inputs <"Output_FileName_Root*.root"> <merged_FileName.root> 
-* This script asks if the user would like to cleanup the .log files 
 
 4. PostAnalysis.cc 
 * This allows for quick comparison of the On/Off chopper states of merged root files 

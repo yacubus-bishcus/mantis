@@ -6,7 +6,7 @@ DetectorConstruction::DetectorConstruction(G4bool brem)
         chopperDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm),
         chopperOn(false), chopper_thick(1*mm), chopper_z(10*cm), theAngle(120.0),
         water_size_x(60*cm),water_size_y(2.5908*m), water_size_z(40*cm),
-        PMT_rmax(25.4*cm), nPMT(3), pc_mat("GaAsP"), detectorM(NULL)
+        PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), attenThickness(1*cm), attenuatorMat("G4_Pb"), detectorM(NULL)
 {
         detectorM = new DetectorMessenger(this);
         bremTest = brem;
@@ -28,6 +28,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4Material *Water = nist->FindOrBuildMaterial("G4_WATER");
         G4Material *tungsten = nist->FindOrBuildMaterial("G4_W");
         G4Material *lead = nist->FindOrBuildMaterial("G4_Pb");
+        G4Material *attenuator = nist->FindOrBuildMaterial(attenuatorMat);
         G4Element *elPb = new G4Element("Lead", "Pb", 82, 207.2*g/mole);
         G4Element *elN = new G4Element("Nitrogen", "N2", 7, 14.01*g/mole);
         G4Element *elO = new G4Element("Oxygen", "O2", 8, 16.0*g/mole);
@@ -186,8 +187,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // Make Plate Attenuator in front of glass 
 
 G4Box* solidAttenuator = new G4Box("Attenuator", water_size_x, water_size_y, water_size_z);
-G4LogicalVolume* logicAttenuator = new G4LogicalVolume(solidAttenuator, lead, "Attenuator");
-G4double attenThickness = 1*cm;
+G4LogicalVolume* logicAttenuator = new G4LogicalVolume(solidAttenuator, attenuator, "Attenuator");
+std::cout << "Attenuator Thickness set to: " << attenThickness << " cm " << "of " << attenuator->GetName() << std::endl;
 
 G4double water_z_pos = container_z_pos - container_z;
 G4double myangle = (180. - theAngle)*pi/180.;

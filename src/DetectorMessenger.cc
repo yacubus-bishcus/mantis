@@ -26,6 +26,8 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdChopthick = new G4UIcmdWithADouble("/chopper/thickness", this);
   CmdChopZ = new G4UIcmdWithADouble("/chopper/distance", this);
   CmdChopperOn = new G4UIcmdWithAString("/chopper/On", this);
+  CmdAttenThick = new G4UIcmdWithADouble("/mydet/attenuatorThickness",this);
+  CmdAttenMat = new G4UIcmdWithAString("/mydet/attenuatorMaterial",this);
 
 
   Cmd->SetGuidance("Choose Desired PhotoCathode Radius");
@@ -44,6 +46,8 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdChopZ->SetGuidance("Choose desired chopper distance from brem beam");
   CmdChopperOn->SetGuidance("Choose desired chopper wheel state");
   CmdAngle->SetGuidance("Choose desired Detector BackScatter Angle in Degrees");
+  CmdAttenThick->SetGuidance("Choose Desired attenuator thickness");
+  CmdAttenMaterial->SetGuidance("Choose desired attenuator material from NIST materials");
 
   Cmd->SetParameterName("radius",false);
   CmdX->SetParameterName("waterx",false);
@@ -62,27 +66,13 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdChopperOn->SetParameterName("chopperOn",false);
   CmdAngle->SetParameterName("Angle",false);
   CmdAngle->SetRange("Angle > 90 && Angle < 135");
+  CmdAttenThick->SetParameterName("attenThickness",false);
+  CmdAttenMaterial->SetParameterName("attenMaterial",false);
 
-  Cmd->SetDefaultValue(-1);
-  CmdX->SetDefaultValue(-1);
-  CmdY->SetDefaultValue(-1);
-  CmdZ->SetDefaultValue(-1);
-  Cmdtr->SetDefaultValue(-1);
-  Cmdtrad->SetDefaultValue(-1);
-  Cmdtsel->SetDefaultValue("Uranium");
   Cmdtsel->SetCandidates("Uranium Plutonium Lead/Uranium Lead/Plutonium");
-  CmdtXpos->SetDefaultValue(-1);
-  CmdtYpos->SetDefaultValue(-1);
-  CmdtZpos->SetDefaultValue(-1);
-  Cmdpcmat->SetDefaultValue("GaAsP");
   Cmdpcmat->SetCandidates("GaAsP Bialkali");
-  CmdnPMT->SetDefaultValue(1);
-  CmdChopZ->SetDefaultValue(-1);
-  CmdChopthick->SetDefaultValue(-1);
-  CmdChopperOn->SetDefaultValue("false");
   CmdChopperOn->SetCandidates("True true False false");
-  CmdAngle->SetDefaultValue(135.);
-  //Cmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle);
+  CmdAttenMaterial->SetCandidates("G4_Pb G4_Cu G4_Zn G4_Ag G4_Cd G4_Th G4_U G4_Au G4_W G4_Fe");
 
 }
 
@@ -104,6 +94,8 @@ DetectorMessenger::~DetectorMessenger()
   delete CmdChopZ;
   delete CmdChopperOn;
   delete CmdAngle;
+  delete CmdAttenThickness;
+  delete CmdAttenMaterial;
 }
 
 
@@ -283,6 +275,16 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   {
     G4double thecmdAngle = CmdAngle->GetNewDoubleValue(newValue);
     DetectorA->SettheAngle(thecmdAngle);
+  }
+  else if(command == CmdAttenThickness)
+  {
+    G4double theCmdAttendThickness = CmdAttenThickness->GetNewDoubleValue(newValue);
+    DetectorA->SetAttenuatorThickness(theCmdAttendThickness);
+  }
+  else if(command == CmdAttenMaterial)
+  {
+    G4String theAttenMaterial = newValue;
+    DetectorA->SetAttenuatorMaterial(theAttenMaterial);
   }
   else
   {

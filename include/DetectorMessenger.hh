@@ -40,6 +40,8 @@ private:
   G4UIcmdWithADouble* CmdChopZ;
   G4UIcmdWithAString* CmdChopperOn;
   G4UIcmdWithADouble* CmdAngle;
+  G4UIcmdWithAString* CmdAttenOn;
+  G4bool check_atten_on = false;
   G4UIcmdWithADouble* CmdAttenThickness;
   G4UIcmdWithAString* CmdAttenMaterial;
   G4UIdirectory *myDir;

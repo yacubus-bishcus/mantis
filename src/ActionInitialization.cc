@@ -26,7 +26,7 @@ void ActionInitialization::Build() const
         SetUserAction(new PrimaryGeneratorAction(bremTest));
         RunAction* run = new RunAction(histo);
         SetUserAction(run);
-        SetUserAction(new SteppingAction(fDetector, run));
+        SetUserAction(new SteppingAction(fDetector, run, bremTest));
         SetUserAction(new EventAction());
         SetUserAction(new StackingAction(fDetector, run));
 }

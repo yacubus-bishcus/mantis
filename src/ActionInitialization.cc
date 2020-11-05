@@ -14,8 +14,6 @@ ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bo
    bremTest = brem_check;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 ActionInitialization::~ActionInitialization()
 {
 }
@@ -24,7 +22,7 @@ void ActionInitialization::Build() const
 {
         HistoManager* histo = new HistoManager();
         SetUserAction(new PrimaryGeneratorAction(bremTest));
-        RunAction* run = new RunAction(histo);
+        RunAction* run = new RunAction(histo, bremTest);
         SetUserAction(run);
         SetUserAction(new SteppingAction(fDetector, run, bremTest));
         SetUserAction(new EventAction());

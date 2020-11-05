@@ -226,7 +226,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   }
   else if(command == CmdAttenThick)
   {
-    G4double theCmdAttendThickness = CmdAttenThickness->GetNewDoubleValue(newValue);
+    G4double theCmdAttendThickness = CmdAttenThick->GetNewDoubleValue(newValue);
     DetectorA->SetAttenuatorThickness(theCmdAttendThickness);
   }
   else if(command == CmdAttenMat)

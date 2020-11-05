@@ -1,6 +1,6 @@
 #include "DetectorConstruction.hh"
 
-DetectorConstruction::DetectorConstruction()
+DetectorConstruction::DetectorConstruction(G4bool brem)
         : G4VUserDetectorConstruction(), IntObj_rad(4.5*cm),
         radio_abundance(90*perCent), IntObj_Selection("Uranium"), intObjDensity(19.1*g/cm3),
         chopperDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm),
@@ -9,6 +9,7 @@ DetectorConstruction::DetectorConstruction()
         PMT_rmax(25.4*cm), nPMT(3), pc_mat("GaAsP"), detectorM(NULL)
 {
         detectorM = new DetectorMessenger(this);
+        bremTest = brem;
 }
 
 DetectorConstruction::~DetectorConstruction()
@@ -94,7 +95,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // ********************World and Materials Complete ***********************//
 
 // Set up Linac configuration
-        G4bool bremTest = false;
         if(bremTest)
         {
                 G4Tubs *solidLinac = new G4Tubs("Linac",0, 10*cm, 1*cm, 0*deg, 360*deg);

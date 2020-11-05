@@ -34,7 +34,7 @@ class StepMessenger;
 class SteppingAction : public G4UserSteppingAction
 {
 public:
-SteppingAction(const DetectorConstruction*, RunAction*);
+SteppingAction(const DetectorConstruction*, RunAction*, G4bool);
 virtual ~SteppingAction();
 
 // method from the base class
@@ -60,6 +60,7 @@ void SetIncWatDataFlag(G4int val){
 };
 
 private:
+G4bool bremTest;
 G4double weight;
 int EventGeneratorParticle;
 float LowEnergyCutoff;

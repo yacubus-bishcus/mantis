@@ -183,14 +183,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 // ************************** Begin Detector Construction **************************//
 
-// Make Water Casing (Plexiglass)
+// Make Plate Attenuator in front of glass 
 
-G4Box* solidCasing = new G4Box("Encasing", water_size_x, water_size_y, water_size_z);
-G4Material *plexiglass = new G4Material("Plexiglass", 1.19*g/cm3, 3);
-plexiglass->AddElement(elC, 5);
-plexiglass->AddElement(elH, 8);
-plexiglass->AddElement(elO, 2);
-G4LogicalVolume* logicCasing = new G4LogicalVolume(solidCasing, plexiglass, "Encasing");
+G4Box* solidAttenuator = new G4Box("Attenuator", water_size_x, water_size_y, water_size_z);
+G4LogicalVolume* logicAttenuator = new G4LogicalVolume(solidAttenuator, lead, "Attenuator");
+G4double attenThickness = 1*cm;
 
 G4double water_z_pos = container_z_pos - container_z;
 G4double myangle = (180. - theAngle)*pi/180.;
@@ -202,26 +199,38 @@ G4RotationMatrix* waterRot2 = new G4RotationMatrix;
 waterRot2->rotateY((180. + theAngle)*deg);
 
 new G4PVPlacement(waterRot,
-G4ThreeVector(water_x_pos,0,water_z_pos), logicCasing,
-"EncasingLeft", logicWorld, false, 0, checkOverlaps);
+G4ThreeVector(water_x_pos,0,water_z_pos), logicAttenuator,
+"AttenuatorLeft", logicWorld, false, 0, checkOverlaps);
 new G4PVPlacement(waterRot2,
 G4ThreeVector(-1*water_x_pos,0,water_z_pos), logicCasing,
-"EncasingRight", logicWorld, false, 0, checkOverlaps);
+"AttenuatorRight", logicWorld, false, 0, checkOverlaps);
 
+// Make Water Casing (Plexiglass)
+
+G4Box* solidCasing = new G4Box("Encasing", water_size_x - attenThickness, water_size_y - attenThickness, water_size_z - attenThickness);
+G4Material *plexiglass = new G4Material("Plexiglass", 1.19*g/cm3, 3);
+plexiglass->AddElement(elC, 5);
+plexiglass->AddElement(elH, 8);
+plexiglass->AddElement(elO, 2);
+G4LogicalVolume* logicCasing = new G4LogicalVolume(solidCasing, plexiglass, "Encasing");
+new G4PVPlacement(0,G4ThreeVector(0,0,0), logicCasing, "Encasing", logicAttenuator, false, 0, checkOverlaps);
+        
 G4double plexiThickness = 0.18*mm; //0.18*mm;
 // Make Teflon tape wrap
 G4double tapeThick = 0.01*cm;
-G4VSolid* solidTape = new G4Box("Tape", water_size_x-plexiThickness, water_size_y-plexiThickness, water_size_z-plexiThickness);
+G4VSolid* solidTape = new G4Box("Tape", water_size_x-attenThickness-plexiThickness, water_size_y-attenThickness-plexiThickness, 
+                                water_size_z-attenThickness-plexiThickness);
 G4Material *teflonTape = nist->FindOrBuildMaterial("G4_TEFLON");
 G4LogicalVolume* logicTape = new G4LogicalVolume(solidTape, teflonTape, "Tape");
-physTape = new G4PVPlacement(0,G4ThreeVector(0, 0, 0), logicTape, "Tape", logicCasing, false, 0, checkOverlaps);
+physTape = new G4PVPlacement(0,G4ThreeVector(0,0,0), logicTape, "Tape", logicCasing, false, 0, checkOverlaps);
 
 // Tub of water
         std::cout << "The Water Tank X was set to: " << water_size_x/(cm)<< " cm" << std::endl;
         std::cout << "The Water Tank Y was set to: " << water_size_y/(cm)<< " cm" << std::endl;
         std::cout << "The Water Tank Z was set to: " << water_size_z/(cm) << " cm" << std::endl << std::endl;
 
-G4Box* solidWater = new G4Box("Water", water_size_x - plexiThickness - tapeThick, water_size_y- plexiThickness - tapeThick, water_size_z- plexiThickness - tapeThick);
+G4Box* solidWater = new G4Box("Water", water_size_x-attenThickness-plexiThickness-tapeThick, water_size_y-attenThickness-plexiThickness-tapeThick, 
+                              water_size_z-attenThickness-plexiThickness-tapeThick);
         G4LogicalVolume* logicWater =
                 new G4LogicalVolume(solidWater, //its solid
                                     Water, //its material
@@ -385,6 +394,7 @@ physWater = new G4PVPlacement(0,         //no rotation
                 logicalVacuum->SetVisAttributes(white);
                 logicBremTarget->SetVisAttributes(black);
         }
+        logicAttenuator->SetVisAttributes(black);
         logicTape->SetVisAttributes(yellow);
         logicCasing->SetVisAttributes(magenta);
         logicWater->SetVisAttributes(blue);

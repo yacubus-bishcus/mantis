@@ -77,7 +77,6 @@ void physicsList::ConstructPhysics() {
         {
                 RegisterPhysics(new G4NRFPhysics("NRF", use_xsec_tables, use_xsec_integration, force_isotropic));
                 G4cout << "\nAdded NRF to the physicsList.\n" << G4endl;
-                std::cout << "Added NRF to the PhysicsList." << std::endl;
         }
 
         // Add the rest of the usual suspects

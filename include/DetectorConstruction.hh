@@ -56,6 +56,14 @@ virtual ~DetectorConstruction();
 
 virtual G4VPhysicalVolume* Construct();
 
+void SetAttenuatorThickness(G4double val)
+{
+   attenThickness = val;
+}
+void SetAttenuatorMaterial(G4String val)
+{
+  attenuatorMat = val;
+}
 void SetWaterX(G4double val)
 {
         water_size_x = val;
@@ -201,6 +209,8 @@ G4double theAngle;
 G4double water_size_x, water_size_y, water_size_z, PMT_rmax;
 G4int nPMT;
 G4String pc_mat;
+G4double attenThickness;
+G4String attenuatorMat;
 DetectorMessenger* detectorM;
 
 };

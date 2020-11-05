@@ -11,7 +11,7 @@
 
 # CHOPPER WHEEL OPTIONS 
 # Turn chopper wheel On/off
-#/chopper/On True
+#/chopper/state On
 #units mm
 #/chopper/thickness 5
 #units cm

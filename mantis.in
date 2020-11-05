@@ -1,3 +1,4 @@
+# Comments are syntaxed by "#", remove "#" for commands 
 /control/verbose 0
 /tracking/verbose 0
 /run/verbose 0
@@ -5,37 +6,52 @@
 # must be called prior to run initialized
 # default is read from brems_distribution.root where any positive energy input
 # by user will give monoenergetic beam
-# Change following line of code for monoenergetic beam 
+# Change following line of code for monoenergetic beam (MeV)
 #/input/energy 2
+
+# CHOPPER WHEEL OPTIONS 
 # Turn chopper wheel On/off
 #/chopper/On True
 #units mm
 #/chopper/thickness 5
 #units cm
 #/chopper/distance
+
+# INTERROGATION TARGET OPTIONS 
 #units cm for XPos,YPos, ZPos
 #/mytar/IntObjXPos
 # units cm
 #/mytar/IntObjRad
 #percentage of Fission isotope
 #/mytar/fAbundance 90
-#Target options Uranium Plutonium
+#Target options Uranium Plutonium Lead/Uranium Lead/Plutonium Second value sets chopper wheel materials 
 #/mytar/target Uranium
-#units cm WaterX, WaterY, WaterZ
+
+# DETECTOR OPTIONS 
+#units cm WaterX, WaterY, WaterZ sets the cherenkov detector size 
 #/mydet/WaterX
 #units degrees *Backscatter angle
 #/mydet/Angle 120
+# Attenuator Settings Surrounding Cherenkov Detector (optional)
+#/mydet/Attenuator On
+# Attenuator Thickness in cm
+#/mydet/attenuatorThickness 1
+# Attenuator Material Options (G4_Pb, G4_W, G4_Ag, G4_Au, G4_U, G4_Cu, G4_Fe)
+#/mydet/attenuatorMaterial G4_Pb
 # units cm for photocathode radius (also adjust PMT radius accordingly)
 #/mydet/PCrad
-# Photocathode material options GaAsP Bialkali
+# Photocathode material options (GaAsP, Bialkali)
 #/mydet/PCmat
 # Number of PMTs in each Cherenkov Detector so total = input*2
 #/mydet/nPMT 4
-# Caution the tank should not be set larger than world (5x5x10 meters)
+
 /run/initialize
+
+# OUTPUT OPTIONS 
 #/output/myoutput ChopperData
 #/output/myoutput WaterIncidentData
 #/output/myoutput DetIncidentData
 #/output/myoutput DetData
 #/output/myoutput IntObjData
+
 /run/beamOn 10

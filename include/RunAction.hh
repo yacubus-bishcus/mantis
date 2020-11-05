@@ -16,7 +16,7 @@ class G4Timer;
 class RunAction : public G4UserRunAction
 {
   public:
-    RunAction(HistoManager* histoAnalysis);
+    RunAction(HistoManager* histoAnalysis, G4bool);
     virtual ~RunAction();
 
   public:
@@ -35,6 +35,7 @@ class RunAction : public G4UserRunAction
     void AddStatusKilled(void){fStatusKilled++;}
 
   private:
+    G4bool bremTest;
     G4Timer* fTimer;
     HistoManager* fHistoManager;
     G4double fCerenkovEnergy;

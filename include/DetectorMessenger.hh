@@ -42,8 +42,8 @@ private:
   G4UIcmdWithADouble* CmdAngle;
   G4UIcmdWithAString* CmdAttenOn;
   G4bool check_atten_on = false;
-  G4UIcmdWithADouble* CmdAttenThickness;
-  G4UIcmdWithAString* CmdAttenMaterial;
+  G4UIcmdWithADouble* CmdAttenThick;
+  G4UIcmdWithAString* CmdAttenMat;
   G4UIdirectory *myDir;
   G4UIdirectory * myDir2;
   G4UIdirectory * myDir3;

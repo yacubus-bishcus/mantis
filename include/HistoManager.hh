@@ -19,7 +19,7 @@ HistoManager();
 ~HistoManager();
 
 void finish();     // close root file
-void Book();
+void Book(G4bool);
 
 private:
 G4bool fFactoryOn;

@@ -8,14 +8,14 @@ HistoManager::HistoManager(): fFactoryOn(false)
 HistoManager::~HistoManager()
 {}
 
-void HistoManager::Book()
+void HistoManager::Book(G4bool bremTest)
 {
   if(output)
   {
 
     G4AnalysisManager* manager = G4AnalysisManager::Instance();
-    #if defined (G4ANALYSIS_USE_ROOT)
-
+#if defined (G4ANALYSIS_USE_ROOT)
+    if(!bremTest){
         TFile *fin = TFile::Open("brems_distributions.root");
         hBrems  = (TH1D*) fin->Get("hBrems");
         if (hBrems)
@@ -30,9 +30,8 @@ void HistoManager::Book()
                 std::cerr << "Error reading from file " << fin->GetName() << std::endl;
                 exit(1);
         }
-    #else
-        XMax = 5; // this is really just a placeholder
-    #endif
+    }
+#endif
     G4int nbins = 10000;
     manager->SetVerboseLevel(0);
     manager->SetNtupleMerging(true);
@@ -66,13 +65,12 @@ void HistoManager::Book()
     manager->FinishNtuple();
     
       // Create 1 Ntuple for Reactions within detector
-      manager->CreateNtuple("DetPro","Detector Processes");
-      manager->CreateNtupleSColumn("Process");
-      manager->FinishNtuple();
+    manager->CreateNtuple("DetPro","Detector Processes");
+    manager->CreateNtupleSColumn("Process");
+    manager->FinishNtuple();
 
-      fFactoryOn = true;
-      G4cout << "Data Book Created." << G4endl;
-      G4cout << "Output file is open in " << manager->GetFileName()<<"."
+    fFactoryOn = true;
+    G4cout << "Output file is open in " << manager->GetFileName()<<"."
             << manager->GetFileType() << G4endl;
 
   }
@@ -87,8 +85,6 @@ void HistoManager::finish()
 {
   if(output)
   {
-
-
     if(! fFactoryOn){
         G4cout << "ERROR HistoManager::finish: Failed to write to file" << G4endl;
         return;

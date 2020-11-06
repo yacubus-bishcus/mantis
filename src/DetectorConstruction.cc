@@ -100,14 +100,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         {
                 G4Tubs *solidLinac = new G4Tubs("Linac",0, 10*cm, 1*cm, 0*deg, 360*deg);
                 logicalLinac = new G4LogicalVolume(solidLinac, tungsten, "Linac");
-                new G4PVPlacement(0, G4ThreeVector(0,0, 3*cm), logicalLinac, "Linac", logicWorld, false, 0, checkOverlaps);
+                new G4PVPlacement(0, G4ThreeVector(0,0, 2*cm), logicalLinac, "Linac", logicWorld, false, 0, checkOverlaps);
                 G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 20*mm, 1*cm, 0*deg, 360*deg);
                 logicalVacuum = new G4LogicalVolume(solidVacuum, myVacuum, "Vacuum");
                 new G4PVPlacement(0, G4ThreeVector(0,0,0), logicalVacuum, "Vacuum", logicalLinac, false,0,checkOverlaps);
 // Make Brem target
                 G4Box *solidBremTarget = new G4Box("Brem", 2*mm, 2*mm, 0.5*mm);
                 logicBremTarget = new G4LogicalVolume(solidBremTarget, tungsten, "Brem");
-                new G4PVPlacement(0, G4ThreeVector(0, 0, -2*cm),logicBremTarget,"Brem", logicalVacuum, false, 0, checkOverlaps);
+                new G4PVPlacement(0, G4ThreeVector(0, 0, 0),logicBremTarget,"Brem", logicalVacuum, false, 0, checkOverlaps);
         }
 
 // *************************** End of Brem Test Materials ************************//

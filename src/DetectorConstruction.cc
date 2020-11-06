@@ -4,7 +4,7 @@ DetectorConstruction::DetectorConstruction(G4bool brem)
         : G4VUserDetectorConstruction(), IntObj_rad(4.5*cm),
         radio_abundance(90*perCent), IntObj_Selection("Uranium"), intObjDensity(19.1*g/cm3),
         chopperDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm),
-        chopperOn(false), chopper_thick(1*mm), chopper_z(10*cm), theAngle(120.0),
+        chopperOn(false), chopper_thick(1*mm), chopper_z(5*cm), theAngle(120.0),
         water_size_x(60*cm),water_size_y(2.5908*m), water_size_z(40*cm),
         PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), attenThickness(1*cm), attenuatorMat("G4_AIR"), detectorM(NULL)
 {

@@ -182,7 +182,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 // Make Plate Attenuator in front of glass 
 
-G4Box* solidAttenuator = new G4Box("Attenuator", water_size_x, water_size_y, water_size_z);
+G4Box* solidAttenuator = new G4Box("Attenuator", water_size_x + attenThickness, water_size_y + attenThickness, water_size_z + attenThickness);
 G4LogicalVolume* logicAttenuator = new G4LogicalVolume(solidAttenuator, attenuator, "Attenuator");
 std::cout << "Attenuator Thickness set to: " << attenThickness << " cm " << "of " << attenuator->GetName() << std::endl;
 

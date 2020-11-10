@@ -216,18 +216,23 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     G4String theCmdAttenOn = newValue;
     if(theCmdAttenOn == "Off" || theCmdAttenOn == "off")
     {
+      DetectorA->SetAttenuatorState(false);
       DetectorA->SetAttenuatorMaterial("G4_AIR");
       check_atten_on = false;
     }
     else
     {
       check_atten_on = true;
+      DetectorA->SetAttenuatorState(true);
     }
   }
   else if(command == CmdAttenThick)
   {
-    G4double theCmdAttendThickness = CmdAttenThick->GetNewDoubleValue(newValue);
-    DetectorA->SetAttenuatorThickness(theCmdAttendThickness);
+    if(check_atten_on)
+    {
+      G4double theCmdAttendThickness = CmdAttenThick->GetNewDoubleValue(newValue);
+      DetectorA->SetAttenuatorThickness(theCmdAttendThickness);
+    }
   }
   else if(command == CmdAttenMat)
   {

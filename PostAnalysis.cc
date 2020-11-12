@@ -56,15 +56,15 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         chopOff->GetObject("Detected",Detected2);
         chopOff->GetObject("IncWater",IncWater2);
         
-        nbins = Detected->GetSize() - 2;
+        nbins = Detected2->GetSize() - 2;
         chopOff_entries = Detected2->GetEntries();
         chopOff_sum = Detected2->Integral();
-        chopOff_Energy_Sum_Guess = chopOff_entries*Detected->GetMean();
+        chopOff_Energy_Sum_Guess = chopOff_entries*Detected2->GetMean();
         chopOff_inc_sum = IncWater2->Integral();
         
         for(Int_t i=0;i<nbins;i++)
         {
-          chopOffBinValue = Detected->GetBinContent(i);
+          chopOffBinValue = Detected2->GetBinContent(i);
           chopOff_Energy_Counter = chopOff_Energy_Counter + chopOffBinValue;
         }
     }

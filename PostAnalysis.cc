@@ -36,7 +36,7 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         chopOn_sum = Detected->Integral();
         chopOn_Energy_Sum_Guess = chopOn_entries*Detected->GetMean();
         chopOn_inc_sum = IncWater->Integral();
-        for(i=0;i<nbins;i++)
+        for(Int_t i=0;i<nbins;i++)
         {
           chopOnBinValue = Detected->GetBinContent(i);
           chopOn_Energy_Counter = chopOn_Energy_Counter + chopOnBinValue;
@@ -62,7 +62,7 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         chopOff_Energy_Sum_Guess = chopOff_entries*Detected->GetMean();
         chopOff_inc_sum = IncWater2->Integral();
         
-        for(i=0;i<nbins;i++)
+        for(Int_t i=0;i<nbins;i++)
         {
           chopOffBinValue = Detected->GetBinContent(i);
           chopOff_Energy_Counter = chopOff_Energy_Counter + chopOffBinValue;

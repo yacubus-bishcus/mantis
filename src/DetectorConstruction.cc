@@ -6,7 +6,9 @@ DetectorConstruction::DetectorConstruction(G4bool brem)
         chopperDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm),
         chopperOn(false), chopper_thick(1*mm), chopper_z(5*cm), theAngle(120.0),
         water_size_x(60*cm),water_size_y(2.5908*m), water_size_z(40*cm),
-        PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), attenuatorState(false), attenThickness(0*cm), attenuatorMat("G4_AIR"), detectorM(NULL)
+        PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), attenuatorState(false), attenuatorState2(false), 
+        attenThickness(0*cm), attenuatorMat("G4_AIR"), lowZAttenThickness(0*cm), 
+        lowZAttenuatorMat("G4_POLYETHYLENE"), detectorM(NULL)
 {
         detectorM = new DetectorMessenger(this);
         bremTest = brem;
@@ -20,163 +22,165 @@ DetectorConstruction::~DetectorConstruction()
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
 // Get nist material manager
-        G4NistManager* nist = G4NistManager::Instance();
+G4NistManager* nist = G4NistManager::Instance();
 
 // Set materials
-        G4Material *air = nist->FindOrBuildMaterial("G4_AIR");
-        G4Material *steel = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
-        G4Material *Water = nist->FindOrBuildMaterial("G4_WATER");
-        G4Material *tungsten = nist->FindOrBuildMaterial("G4_W");
-        G4Material *lead = nist->FindOrBuildMaterial("G4_Pb");
-        G4Material *attenuator = nist->FindOrBuildMaterial(attenuatorMat);
-        G4Element *elPb = new G4Element("Lead", "Pb", 82, 207.2*g/mole);
-        G4Element *elN = new G4Element("Nitrogen", "N2", 7, 14.01*g/mole);
-        G4Element *elO = new G4Element("Oxygen", "O2", 8, 16.0*g/mole);
-        G4Element *elC = new G4Element("Carbon", "C", 6, 12.0*g/mole);
-        G4Element *elH = new G4Element("Hydrogen", "H2", 1, 1.0*g/mole);
+G4Material *air = nist->FindOrBuildMaterial("G4_AIR");
+G4Material *steel = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
+G4Material *Water = nist->FindOrBuildMaterial("G4_WATER");
+G4Material *tungsten = nist->FindOrBuildMaterial("G4_W");
+G4Material *lead = nist->FindOrBuildMaterial("G4_Pb");
+G4Material *attenuator = nist->FindOrBuildMaterial(attenuatorMat);
+G4Material *low_z_attenuator = nist->FindOrBuildMaterial(lowZAttenuatorMat);
+G4Element *elPb = new G4Element("Lead", "Pb", 82, 207.2*g/mole);
+G4Element *elN = new G4Element("Nitrogen", "N2", 7, 14.01*g/mole);
+G4Element *elO = new G4Element("Oxygen", "O2", 8, 16.0*g/mole);
+G4Element *elC = new G4Element("Carbon", "C", 6, 12.0*g/mole);
+G4Element *elH = new G4Element("Hydrogen", "H2", 1, 1.0*g/mole);
+G4Material *plexiglass = nist->FindOrBuildMaterial("G4_PLEXIGLASS");
 
 
-        G4Material *myAir = new G4Material("Air", 1.290*mg/cm3, 2);
-        myAir->AddElement(elN, 0.7);
-        myAir->AddElement(elO, 0.3);
-        G4Material *myVacuum = new G4Material("Vacuum", 1.e-5*g/cm3, 1, kStateGas, 273.15, 2.e-2*bar);
-        myVacuum->AddMaterial(myAir,1);
+G4Material *myAir = new G4Material("Air", 1.290*mg/cm3, 2);
+myAir->AddElement(elN, 0.7);
+myAir->AddElement(elO, 0.3);
+G4Material *myVacuum = new G4Material("Vacuum", 1.e-5*g/cm3, 1, kStateGas, 273.15, 2.e-2*bar);
+myVacuum->AddMaterial(myAir,1);
 // technically PMT glass is a special borosilicate glass calle k-free glass
 // but pyrex is close enough as a borosilicate glass
-        G4Material* PMT_mat = nist->FindOrBuildMaterial("G4_Pyrex_Glass");
+G4Material* PMT_mat = nist->FindOrBuildMaterial("G4_Pyrex_Glass");
 // Setting up weapons grade materials
-        G4Isotope* Uranium235 = new G4Isotope("Uranium235", 92, 235, 235.04393*g/mole); // atomicnumber, number of nucleons, mass of mole
-        G4Isotope* Uranium238 = new G4Isotope("Uranium238", 92, 238, 238.02891*g/mole);
-        G4Isotope* Plutonium239 = new G4Isotope("Plutonium239",94, 239, 239.0521634*g/mole);
-        G4Isotope* Plutonium240 = new G4Isotope("Plutonium240", 94, 240, 240.05381*g/mole);
-        G4Element* U = new G4Element("WGU", "U", 2); // name, element symbol, #isotopes
-        G4Element* WGPu = new G4Element("WGPu","Pu",2);
-        G4Element* natU = new G4Element("NaturalU", "U",2);
-        G4Element* Pu = new G4Element("Plutonium240","Pu",2);
+G4Isotope* Uranium235 = new G4Isotope("Uranium235", 92, 235, 235.04393*g/mole); // atomicnumber, number of nucleons, mass of mole
+G4Isotope* Uranium238 = new G4Isotope("Uranium238", 92, 238, 238.02891*g/mole);
+G4Isotope* Plutonium239 = new G4Isotope("Plutonium239",94, 239, 239.0521634*g/mole);
+G4Isotope* Plutonium240 = new G4Isotope("Plutonium240", 94, 240, 240.05381*g/mole);
+G4Element* U = new G4Element("WGU", "U", 2); // name, element symbol, #isotopes
+G4Element* WGPu = new G4Element("WGPu","Pu",2);
+G4Element* natU = new G4Element("NaturalU", "U",2);
+G4Element* Pu = new G4Element("Plutonium240","Pu",2);
 
 // Set up Photocathode materials
-        G4Element* elGa = new G4Element("Gallium", "Ga", 31, 69.723*g/mole);
-        G4Element* elAs = new G4Element("Arsenic", "As", 33, 74.9216*g/mole);
-        G4Element* elP = new G4Element("Phosphorous", "P", 15, 30.973762*g/mole);
-        G4Material* GaAsP = new G4Material("GaAsP", 4.138*g/cm3, 3, kStateSolid, 293*kelvin, 1*pow(10,-6)*pascal);
-        GaAsP->AddElement(elGa, 1);
-        GaAsP->AddElement(elAs, 1);
-        GaAsP->AddElement(elP, 1);
-        G4Element* elCs = new G4Element("Cesium", "Cs", 55, 132.90545*g/mole);
-        G4Element* elK = new G4Element("Potassium", "K", 19, 39.0983*g/mole);
-        G4Element* elSb = new G4Element("Antimony", "Sb", 51, 121.76*g/mole);
-        G4Material * bialkali = new G4Material("Bialkali", 3.29*g/cm3, 3, kStateSolid, 293*kelvin, 1*pow(10,-6)*pascal);
-        bialkali->AddElement(elCs,1);
-        bialkali->AddElement(elK,2);
-        bialkali->AddElement(elSb,1);
+G4Element* elGa = new G4Element("Gallium", "Ga", 31, 69.723*g/mole);
+G4Element* elAs = new G4Element("Arsenic", "As", 33, 74.9216*g/mole);
+G4Element* elP = new G4Element("Phosphorous", "P", 15, 30.973762*g/mole);
+G4Material* GaAsP = new G4Material("GaAsP", 4.138*g/cm3, 3, kStateSolid, 293*kelvin, 1*pow(10,-6)*pascal);
+GaAsP->AddElement(elGa, 1);
+GaAsP->AddElement(elAs, 1);
+GaAsP->AddElement(elP, 1);
+G4Element* elCs = new G4Element("Cesium", "Cs", 55, 132.90545*g/mole);
+G4Element* elK = new G4Element("Potassium", "K", 19, 39.0983*g/mole);
+G4Element* elSb = new G4Element("Antimony", "Sb", 51, 121.76*g/mole);
+G4Material * bialkali = new G4Material("Bialkali", 3.29*g/cm3, 3, kStateSolid, 293*kelvin, 1*pow(10,-6)*pascal);
+bialkali->AddElement(elCs,1);
+bialkali->AddElement(elK,2);
+bialkali->AddElement(elSb,1);
 
-        G4bool checkOverlaps = true;
+G4bool checkOverlaps = true;
 
-        G4double world_size_x = 5.*m;
-        G4double world_size_z = 10.*m;
+G4double world_size_x = 5.*m;
+G4double world_size_z = 10.*m;
 
-        G4Box* solidWorld = new G4Box("World", world_size_x, world_size_x, world_size_z);
+G4Box* solidWorld = new G4Box("World", world_size_x, world_size_x, world_size_z);
 
-        G4LogicalVolume* logicWorld =
-                new G4LogicalVolume(solidWorld, //its solid
-                                    air, //its material
-                                    "World"); //its name
+G4LogicalVolume* logicWorld =
+        new G4LogicalVolume(solidWorld, //its solid
+                            air, //its material
+                            "World"); //its name
 
 // Make Physical volume ** NEVER CHANGE THIS **
-        G4VPhysicalVolume* physWorld =
-                new G4PVPlacement(0, //no rotation
-                                  G4ThreeVector(), //at (0,0,0)
-                                  logicWorld, //its logical volume
-                                  "World", //its name
-                                  0, //its mother  volume
-                                  false, //no boolean operation
-                                  0, //copy number
-                                  false); //overlaps checking
+G4VPhysicalVolume* physWorld =
+        new G4PVPlacement(0, //no rotation
+                          G4ThreeVector(), //at (0,0,0)
+                          logicWorld, //its logical volume
+                          "World", //its name
+                          0, //its mother  volume
+                          false, //no boolean operation
+                          0, //copy number
+                          false); //overlaps checking
 
 // ********************World and Materials Complete ***********************//
 
 // Set up Linac configuration
-        if(bremTest)
-        {
-                G4Tubs *solidLinac = new G4Tubs("Linac",0, 10*cm, 1*cm, 0*deg, 360*deg);
-                logicalLinac = new G4LogicalVolume(solidLinac, tungsten, "Linac");
-                new G4PVPlacement(0, G4ThreeVector(0,0, 2*cm), logicalLinac, "Linac", logicWorld, false, 0, checkOverlaps);
-                G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 20*mm, 1*cm, 0*deg, 360*deg);
-                logicalVacuum = new G4LogicalVolume(solidVacuum, myVacuum, "Vacuum");
-                new G4PVPlacement(0, G4ThreeVector(0,0,0), logicalVacuum, "Vacuum", logicalLinac, false,0,checkOverlaps);
+if(bremTest)
+{
+        G4Tubs *solidLinac = new G4Tubs("Linac",0, 10*cm, 1*cm, 0*deg, 360*deg);
+        logicalLinac = new G4LogicalVolume(solidLinac, tungsten, "Linac");
+        new G4PVPlacement(0, G4ThreeVector(0,0, 2*cm), logicalLinac, "Linac", logicWorld, false, 0, checkOverlaps);
+        G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 20*mm, 1*cm, 0*deg, 360*deg);
+        logicalVacuum = new G4LogicalVolume(solidVacuum, myVacuum, "Vacuum");
+        new G4PVPlacement(0, G4ThreeVector(0,0,0), logicalVacuum, "Vacuum", logicalLinac, false,0,checkOverlaps);
 // Make Brem target
-                G4Box *solidBremTarget = new G4Box("Brem", 2*mm, 2*mm, 0.5*mm);
-                logicBremTarget = new G4LogicalVolume(solidBremTarget, tungsten, "Brem");
-                new G4PVPlacement(0, G4ThreeVector(0, 0, 0),logicBremTarget,"Brem", logicalVacuum, false, 0, checkOverlaps);
-        }
+        G4Box *solidBremTarget = new G4Box("Brem", 2*mm, 2*mm, 0.5*mm);
+        logicBremTarget = new G4LogicalVolume(solidBremTarget, tungsten, "Brem");
+        new G4PVPlacement(0, G4ThreeVector(0, 0, 0),logicBremTarget,"Brem", logicalVacuum, false, 0, checkOverlaps);
+}
 
 // *************************** End of Brem Test Materials ************************//
 
 // Set up Collimator
-        G4double container_z_pos = container_z +water_size_x + 1.0*m;
-        G4Box *solidCollimator = new G4Box("Collimator", 1*cm, water_size_y, container_z_pos - container_z);
-        G4LogicalVolume * logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
-        new G4PVPlacement(0, G4ThreeVector(-container_x, 0, 0),
-                          logicCollimator, "CollimatorLeft", logicWorld,
-                          false, 0, checkOverlaps);
-        new G4PVPlacement(0, G4ThreeVector(container_x, 0, 0),
-                          logicCollimator, "CollimatorRight", logicWorld,
-                          false, 0, checkOverlaps);
+G4double container_z_pos = container_z +water_size_x + 1.0*m;
+G4Box *solidCollimator = new G4Box("Collimator", 1*cm, water_size_y, container_z_pos - container_z);
+G4LogicalVolume * logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
+new G4PVPlacement(0, G4ThreeVector(-container_x, 0, 0),
+                  logicCollimator, "CollimatorLeft", logicWorld,
+                  false, 0, checkOverlaps);
+new G4PVPlacement(0, G4ThreeVector(container_x, 0, 0),
+                  logicCollimator, "CollimatorRight", logicWorld,
+                  false, 0, checkOverlaps);
 // Set up shipping container environment (8ft wide and 8.5ft high)
-        G4double c_thick = 0.1905*cm; // approx 0.075 inch thick
-        G4Box *solidContainer = new G4Box("Container", container_x, container_y, container_z);
-        G4LogicalVolume *logicContainer = new G4LogicalVolume(solidContainer, steel, "Container");
-        new G4PVPlacement(0,
-                          G4ThreeVector(0, 0, container_z_pos),
-                          logicContainer, "Container",logicWorld,
-                          false,0,checkOverlaps);
+G4double c_thick = 0.1905*cm; // approx 0.075 inch thick
+G4Box *solidContainer = new G4Box("Container", container_x, container_y, container_z);
+G4LogicalVolume *logicContainer = new G4LogicalVolume(solidContainer, steel, "Container");
+new G4PVPlacement(0,
+                  G4ThreeVector(0, 0, container_z_pos),
+                  logicContainer, "Container",logicWorld,
+                  false,0,checkOverlaps);
 
 // make container hollow
-        G4Box *hollowContainer = new G4Box("ContainerAir", container_x -c_thick, container_y -c_thick, container_z -c_thick);
-        G4LogicalVolume *logicHollowC = new G4LogicalVolume(hollowContainer, air, "hollowContainer");
-        new G4PVPlacement(0, G4ThreeVector(),
-                          logicHollowC, "HollowContainer",logicContainer, false,0,checkOverlaps);
+G4Box *hollowContainer = new G4Box("ContainerAir", container_x -c_thick, container_y -c_thick, container_z -c_thick);
+G4LogicalVolume *logicHollowC = new G4LogicalVolume(hollowContainer, air, "hollowContainer");
+new G4PVPlacement(0, G4ThreeVector(),
+                  logicHollowC, "HollowContainer",logicContainer, false,0,checkOverlaps);
 
 
-        std::cout << "The Interogation Object Radius was set to: " << IntObj_rad/(cm)<< " cm" << std::endl;
+std::cout << "The Interogation Object Radius was set to: " << IntObj_rad/(cm)<< " cm" << std::endl;
 
-        G4Sphere* solidIntObj = new G4Sphere("InterogationObject", 0, IntObj_rad, 0, 2*pi, 0, pi);
+G4Sphere* solidIntObj = new G4Sphere("InterogationObject", 0, IntObj_rad, 0, 2*pi, 0, pi);
 
-        G4float U238_abundance = 100*perCent - radio_abundance;
-        U->AddIsotope(Uranium235, radio_abundance);
-        U->AddIsotope(Uranium238, U238_abundance);
-        natU->AddIsotope(Uranium235, 0.0072);
-        natU->AddIsotope(Uranium238, 1 - 0.0072);
-        G4float Pu240_abundance = 100*perCent - radio_abundance;
-        WGPu->AddIsotope(Plutonium239, radio_abundance);
-        WGPu->AddIsotope(Plutonium240, Pu240_abundance);
-        Pu->AddIsotope(Plutonium240, 0.9999);
-        Pu->AddIsotope(Plutonium239, 1 - 0.9999);
+G4float U238_abundance = 100*perCent - radio_abundance;
+U->AddIsotope(Uranium235, radio_abundance);
+U->AddIsotope(Uranium238, U238_abundance);
+natU->AddIsotope(Uranium235, 0.0072);
+natU->AddIsotope(Uranium238, 1 - 0.0072);
+G4float Pu240_abundance = 100*perCent - radio_abundance;
+WGPu->AddIsotope(Plutonium239, radio_abundance);
+WGPu->AddIsotope(Plutonium240, Pu240_abundance);
+Pu->AddIsotope(Plutonium240, 0.9999);
+Pu->AddIsotope(Plutonium239, 1 - 0.9999);
 
 
-        std::cout << "The User has chosen the following Interogation Object Material: "
-                  << IntObj_Selection << std::endl;
-        G4Material* intObjMat = new G4Material("IntObjMaterial", intObjDensity, 1);
-        if(IntObj_Selection == "Uranium")
-        {
-                intObjMat->AddElement(U,1);
-        }
-        else if(IntObj_Selection == "Plutonium")
-        {
-                intObjMat->AddElement(WGPu,1);
-        }
-        else if(IntObj_Selection == "Lead")
-        {
-          intObjMat->AddElement(elPb,1);
-        }
-        else{std::cerr << "ERROR: Interogation Material not found."<<std::endl;}
-        G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObjLogicVolume");
-        setEndIntObj(container_z_pos, container_z);
+std::cout << "The User has chosen the following Interogation Object Material: "
+          << IntObj_Selection << std::endl;
+G4Material* intObjMat = new G4Material("IntObjMaterial", intObjDensity, 1);
+if(IntObj_Selection == "Uranium")
+{
+        intObjMat->AddElement(U,1);
+}
+else if(IntObj_Selection == "Plutonium")
+{
+        intObjMat->AddElement(WGPu,1);
+}
+else if(IntObj_Selection == "Lead")
+{
+  intObjMat->AddElement(elPb,1);
+}
+else{std::cerr << "ERROR: Interogation Material not found."<<std::endl;}
+G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObjLogicVolume");
+setEndIntObj(container_z_pos, container_z);
 
-        physIntObj = new G4PVPlacement(0,
-                                       G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos),
-                                       logicIntObj, "IntObjPhysical", logicHollowC, false,
-                                       0, checkOverlaps);
+physIntObj = new G4PVPlacement(0,
+                               G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos),
+                               logicIntObj, "IntObjPhysical", logicHollowC, false,
+                               0, checkOverlaps);
 
 // ************************** Begin Detector Construction **************************//
 
@@ -186,7 +190,7 @@ G4Box* solidAttenuator = new G4Box("Attenuator", water_size_x + attenThickness, 
 G4LogicalVolume* logicAttenuator = new G4LogicalVolume(solidAttenuator, attenuator, "Attenuator");
 if(attenuatorState)
 {
-  std::cout << "Attenuator Thickness set to: " << attenThickness << " cm " << "of " << attenuator->GetName() << std::endl;
+  std::cout << "Attenuator Thickness set to: " << attenThickness << " cm of " << attenuator->GetName() << std::endl;
 }
 
 G4double water_z_pos = container_z_pos - container_z;
@@ -205,32 +209,39 @@ new G4PVPlacement(waterRot2,
 G4ThreeVector(-1*water_x_pos,0,water_z_pos), logicAttenuator,
 "AttenuatorRight", logicWorld, false, 0, checkOverlaps);
 
+// Option to add second layer of low Z attenuation material 
+G4Box* solidSecondAttenuator = new G4Box("LowZAttenuator", water_size_x+attenThickness+lowZAttenThickness, water_size_y+attenThickness+lowZAttenThickness,
+                                         water_size_z+attenThickness+lowZAttenThickness);
+G4LogicalVolume* logicSecondAttenuator = new G4LogicalVolume(solidSecondAttenuator, low_z_attenuator, "LowZAttenuator");
+new G4PVPlacement(0,G4ThreeVector(0,0,0), logicSecondAttenuator, "LowZAttenuator", logicAttenuator, false, 0, checkOverlaps);
+if(attenuatorState2)
+{
+  std::cout << "Low Z Attenuator set to: " << lowZAttenThickness << " cm of " << low_z_attenuator->GetName() << std::endl;
+}
 // Make Water Casing (Plexiglass)
 
-G4Box* solidCasing = new G4Box("Encasing", water_size_x - attenThickness, water_size_y - attenThickness, water_size_z - attenThickness);
-G4Material *plexiglass = new G4Material("Plexiglass", 1.19*g/cm3, 3);
-plexiglass->AddElement(elC, 5);
-plexiglass->AddElement(elH, 8);
-plexiglass->AddElement(elO, 2);
+G4Box* solidCasing = new G4Box("Encasing", water_size_x - attenThickness - lowZAttenThickness, water_size_y - attenThickness - lowZAttenThickness, 
+                               water_size_z - attenThickness - lowZAttenThickness);
 G4LogicalVolume* logicCasing = new G4LogicalVolume(solidCasing, plexiglass, "Encasing");
-new G4PVPlacement(0,G4ThreeVector(0,0,0), logicCasing, "Encasing", logicAttenuator, false, 0, checkOverlaps);
+new G4PVPlacement(0,G4ThreeVector(0,0,0), logicCasing, "Encasing", logicSecondAttenuator, false, 0, checkOverlaps);
         
 G4double plexiThickness = 0.18*mm; //0.18*mm;
 // Make Teflon tape wrap
 G4double tapeThick = 0.01*cm;
-G4VSolid* solidTape = new G4Box("Tape", water_size_x-attenThickness-plexiThickness, water_size_y-attenThickness-plexiThickness, 
-                                water_size_z-attenThickness-plexiThickness);
+G4VSolid* solidTape = new G4Box("Tape", water_size_x-attenThickness-lowZAttenThickness-plexiThickness, water_size_y-attenThickness-lowZAttenThickness-
+                                plexiThickness, water_size_z-attenThickness-lowZAttenThickness-plexiThickness);
 G4Material *teflonTape = nist->FindOrBuildMaterial("G4_TEFLON");
 G4LogicalVolume* logicTape = new G4LogicalVolume(solidTape, teflonTape, "Tape");
 physTape = new G4PVPlacement(0,G4ThreeVector(0,0,0), logicTape, "Tape", logicCasing, false, 0, checkOverlaps);
 
 // Tub of water
-        G4cout << "The Water Tank X was set to: " << water_size_x/(cm)<< " cm" << G4endl;
-        G4cout << "The Water Tank Y was set to: " << water_size_y/(cm)<< " cm" << G4endl;
-        G4cout << "The Water Tank Z was set to: " << water_size_z/(cm) << " cm" << G4endl << G4endl;
+G4cout << "The Water Tank X was set to: " << water_size_x/(cm)<< " cm" << G4endl;
+G4cout << "The Water Tank Y was set to: " << water_size_y/(cm)<< " cm" << G4endl;
+G4cout << "The Water Tank Z was set to: " << water_size_z/(cm) << " cm" << G4endl << G4endl;
 
-G4Box* solidWater = new G4Box("Water", water_size_x-attenThickness-plexiThickness-tapeThick, water_size_y-attenThickness-plexiThickness-tapeThick, 
-                              water_size_z-attenThickness-plexiThickness-tapeThick);
+G4Box* solidWater = new G4Box("Water", water_size_x-attenThickness-lowZAttenThickness-plexiThickness-tapeThick, 
+                              water_size_y-attenThickness-lowZAttenThickness-plexiThickness-tapeThick, 
+                              water_size_z-attenThickness-lowZAttenThickness-plexiThickness-tapeThick);
         G4LogicalVolume* logicWater =
                 new G4LogicalVolume(solidWater, //its solid
                                     Water, //its material
@@ -246,169 +257,170 @@ physWater = new G4PVPlacement(0,         //no rotation
                                   checkOverlaps); //overlaps checking
 
 // Set up chopper wheel
-        if(chopperOn)
-        {
-          std::cout << "The Chopper State was set to: " << "On!" << std::endl;
-        }
-        else
-        {
-          std::cout << "The Chopper State was set to: " << "Off!" << std::endl;      
-        }
-        G4cout << "The Chopper Thickness was set to: " << chopper_thick/(cm) << " cm" << G4endl;
-        G4cout << "The Chopper distance from beam was set to: " << chopper_z/(cm) << " cm" << G4endl;
-        if(chopper_z > water_z_pos)
-        {
-                std::cerr << "ERROR: Chopper wheel location should be behind water detectors, exiting." << std::endl;
-                exit(100);
-        }
-        G4Tubs *solidChopper = new G4Tubs("Chopper", 0*cm, 10*cm, chopper_thick, 0.*deg, 180.*deg);
-        G4Material *chopperMat = new G4Material("chopperMaterial", chopperDensity, 1);
-        if(chopperOn)
-        {
-          if(chopperDensity == 19.1*g/cm3)
-          {
-            chopperMat->AddElement(U,1);
-            std::cout << "Weapons grade Uranium set as Chopper Wheel material." << std::endl;
-          }
-          else if(chopperDensity == 19.6*g/cm3)
-          {
-            chopperMat->AddElement(WGPu, 1);
-            std::cout << "Weapons grade Plutonium set as Chopper Wheel material." << std::endl;
-          }
-          else{std::cerr << "ERROR chopperDensity not found!" << std::endl; exit(100);}
-        }
-        else
-        {
-          if(chopperDensity == 19.1*g/cm3)
-          {
-            chopperMat->AddElement(natU,1);
-            std::cout << "Chopper Material set to Natural Uranium" << std::endl;
-          }
-          else if(chopperDensity == 19.6*g/cm3)
-          {
-            chopperMat->AddElement(Pu,1);
-            std::cout << "Chopper Material set to Plutonium-240" << std::endl;
-          }
-          else{std::cerr << "ERROR: Chopper Density not found." << std::endl; exit(100);}
-        }
-        logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chopper");
-        new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,chopper_z),
-                          logicChopper, "Chopper", logicWorld, false,
-                          0, checkOverlaps);
+if(chopperOn)
+{
+  std::cout << "The Chopper State was set to: " << "On!" << std::endl;
+}
+else
+{
+  std::cout << "The Chopper State was set to: " << "Off!" << std::endl;      
+}
+G4cout << "The Chopper Thickness was set to: " << chopper_thick/(cm) << " cm" << G4endl;
+G4cout << "The Chopper distance from beam was set to: " << chopper_z/(cm) << " cm" << G4endl;
+if(chopper_z > water_z_pos)
+{
+        std::cerr << "ERROR: Chopper wheel location should be behind water detectors, exiting." << std::endl;
+        exit(100);
+}
+G4Tubs *solidChopper = new G4Tubs("Chopper", 0*cm, 10*cm, chopper_thick, 0.*deg, 180.*deg);
+G4Material *chopperMat = new G4Material("chopperMaterial", chopperDensity, 1);
+if(chopperOn)
+{
+  if(chopperDensity == 19.1*g/cm3)
+  {
+    chopperMat->AddElement(U,1);
+    std::cout << "Weapons grade Uranium set as Chopper Wheel material." << std::endl;
+  }
+  else if(chopperDensity == 19.6*g/cm3)
+  {
+    chopperMat->AddElement(WGPu, 1);
+    std::cout << "Weapons grade Plutonium set as Chopper Wheel material." << std::endl;
+  }
+  else{std::cerr << "ERROR chopperDensity not found!" << std::endl; exit(100);}
+}
+else
+{
+  if(chopperDensity == 19.1*g/cm3)
+  {
+    chopperMat->AddElement(natU,1);
+    std::cout << "Chopper Material set to Natural Uranium" << std::endl;
+  }
+  else if(chopperDensity == 19.6*g/cm3)
+  {
+    chopperMat->AddElement(Pu,1);
+    std::cout << "Chopper Material set to Plutonium-240" << std::endl;
+  }
+  else{std::cerr << "ERROR: Chopper Density not found." << std::endl; exit(100);}
+}
+logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chopper");
+new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,chopper_z),
+                  logicChopper, "Chopper", logicWorld, false,
+                  0, checkOverlaps);
 
-        G4double PMT_rmin = 0*cm;
-        G4cout << G4endl << "The PC Radius was set to " << PMT_rmax/(cm) << " cm" << G4endl;
-        G4double PMT_z = 7.62*cm; // 3 in PMT
-        G4Tubs* solidPMT = new G4Tubs("PMT", PMT_rmin, PMT_rmax, PMT_z, 0*deg, 360*deg);
-        logicPMT = new G4LogicalVolume(solidPMT, PMT_mat, "PMT");
+G4double PMT_rmin = 0*cm;
+G4cout << G4endl << "The PC Radius was set to " << PMT_rmax/(cm) << " cm" << G4endl;
+G4double PMT_z = 7.62*cm; // 3 in PMT
+G4Tubs* solidPMT = new G4Tubs("PMT", PMT_rmin, PMT_rmax, PMT_z, 0*deg, 360*deg);
+logicPMT = new G4LogicalVolume(solidPMT, PMT_mat, "PMT");
 
-       G4cout << "The Number of PMTs was set to: " << nPMT << G4endl;
-        G4double PMT_y_pos;
-        std::vector<G4double> PMT_y_posv;
-        if(nPMT>1)
+G4cout << "The Number of PMTs was set to: " << nPMT << G4endl;
+G4double PMT_y_pos;
+std::vector<G4double> PMT_y_posv;
+if(nPMT>1)
+{
+        if(PMT_rmax*2 > water_size_y/(nPMT+1))
         {
-                if(PMT_rmax*2 > water_size_y/(nPMT+1))
-                {
-                        std::cerr << "ERROR Too many PMTs to fit on Water Surface!" << std::endl;
-                        exit(10);
-                }
-                for(G4int i=1; i<=nPMT; i++)
-                {
-                        PMT_y_pos = 0. - water_size_y/2 + i*(water_size_y/(nPMT + 1));
-                        PMT_y_posv.push_back(PMT_y_pos);
-                        G4cout << "PMT Position " << i << " set to " << PMT_y_posv[i-1]/(cm)<< " cm" << G4endl;
-                }
+                std::cerr << "ERROR Too many PMTs to fit on Water Surface!" << std::endl;
+                exit(10);
         }
-        else
+        for(G4int i=1; i<=nPMT; i++)
         {
-                PMT_y_posv.push_back(0);
+                PMT_y_pos = 0. - water_size_y/2 + i*(water_size_y/(nPMT + 1));
+                PMT_y_posv.push_back(PMT_y_pos);
+                G4cout << "PMT Position " << i << " set to " << PMT_y_posv[i-1]/(cm)<< " cm" << G4endl;
         }
+}
+else
+{
+        PMT_y_posv.push_back(0);
+}
 
-        for(G4int k=1; k<=nPMT; k++)
-        {
+for(G4int k=1; k<=nPMT; k++)
+{
 
-                new G4PVPlacement(0,
-                                  G4ThreeVector(0, PMT_y_posv[k-1], -water_size_x/2 + PMT_z - plexiThickness - tapeThick),
-                                  logicPMT,
-                                  "PMT",
-                                  logicWater,
-                                  false,
-                                  k,
-                                  checkOverlaps);
-        }
+        new G4PVPlacement(0,
+                          G4ThreeVector(0, PMT_y_posv[k-1], -water_size_x/2 + PMT_z - plexiThickness - tapeThick),
+                          logicPMT,
+                          "PMT",
+                          logicWater,
+                          false,
+                          k,
+                          checkOverlaps);
+}
 
 // Make Solid PhotoCathode
-        G4double PC_z = 20*nm;
-        G4cout << "The Photocathode material was set as: " << pc_mat << G4endl;
-        if(pc_mat == "GaAsP")
-        {
-                PC_mat = GaAsP;
-        }
-        else if(pc_mat == "Bialkali")
-        {
-                PC_mat = bialkali;
-        }
-        else exit(1);
+G4double PC_z = 20*nm;
+G4cout << "The Photocathode material was set as: " << pc_mat << G4endl;
+if(pc_mat == "GaAsP")
+{
+        PC_mat = GaAsP;
+}
+else if(pc_mat == "Bialkali")
+{
+        PC_mat = bialkali;
+}
+else exit(1);
 
-        G4Tubs* solidPhotoCathode = new G4Tubs("PC", PMT_rmin, PMT_rmax, PC_z, 0*deg, 360.*deg);
-        logicPC = new G4LogicalVolume(solidPhotoCathode, PC_mat, "PC");
-        G4double PMT_window_thickness = 3*mm;
-        physPC = new G4PVPlacement(0,
-                                   G4ThreeVector(0,0,PMT_z-PMT_window_thickness),
-                                   logicPC,
-                                   "PC",
-                                   logicPMT, // daughter of PMT logical
-                                   false,
-                                   0,
-                                   checkOverlaps);
+G4Tubs* solidPhotoCathode = new G4Tubs("PC", PMT_rmin, PMT_rmax, PC_z, 0*deg, 360.*deg);
+logicPC = new G4LogicalVolume(solidPhotoCathode, PC_mat, "PC");
+G4double PMT_window_thickness = 3*mm;
+physPC = new G4PVPlacement(0,
+                           G4ThreeVector(0,0,PMT_z-PMT_window_thickness),
+                           logicPC,
+                           "PC",
+                           logicPMT, // daughter of PMT logical
+                           false,
+                           0,
+                           checkOverlaps);
 
 // Visualization Attributes
-        G4VisAttributes *yellow= new G4VisAttributes( G4Colour(255/255.,255/255.,51/255. ));
-        G4VisAttributes *red= new G4VisAttributes( G4Colour(255/255., 0/255., 0/255. ));
-        G4VisAttributes *blue= new G4VisAttributes( G4Colour(0/255., 0/255.,  255/255. ));
-        G4VisAttributes *grayc= new G4VisAttributes( G4Colour(128/255., 128/255.,  128/255. ));
-        G4VisAttributes *lightGray= new G4VisAttributes( G4Colour(178/255., 178/255.,  178/255. ));
-        G4VisAttributes *green= new G4VisAttributes( G4Colour(0/255., 255/255.,  0/255. ));
-        G4VisAttributes *black = new G4VisAttributes(G4Colour(0.,0.,0.));
-        G4VisAttributes *magenta = new G4VisAttributes(G4Colour(1.0, 0.0, 1.0));
-        G4VisAttributes *white = new G4VisAttributes(G4Colour(1.0,1.0,1.0));
+G4VisAttributes *yellow= new G4VisAttributes( G4Colour(255/255.,255/255.,51/255. ));
+G4VisAttributes *red= new G4VisAttributes( G4Colour(255/255., 0/255., 0/255. ));
+G4VisAttributes *blue= new G4VisAttributes( G4Colour(0/255., 0/255.,  255/255. ));
+G4VisAttributes *grayc= new G4VisAttributes( G4Colour(128/255., 128/255.,  128/255. ));
+G4VisAttributes *lightGray= new G4VisAttributes( G4Colour(178/255., 178/255.,  178/255. ));
+G4VisAttributes *green= new G4VisAttributes( G4Colour(0/255., 255/255.,  0/255. ));
+G4VisAttributes *black = new G4VisAttributes(G4Colour(0.,0.,0.));
+G4VisAttributes *magenta = new G4VisAttributes(G4Colour(1.0, 0.0, 1.0));
+G4VisAttributes *white = new G4VisAttributes(G4Colour(1.0,1.0,1.0));
 
-        yellow->SetVisibility(true);
-        yellow->SetForceWireframe(true);
-        red->SetVisibility(true);
-        red->SetForceSolid(true);
-        blue->SetVisibility(true);
-        blue->SetForceWireframe(true);
-        green->SetVisibility(true);
-        green->SetForceSolid(true);
-        grayc->SetVisibility(false);
-        lightGray->SetVisibility(true);
-        lightGray->SetForceSolid(true);
-        black->SetForceSolid(true);
-        black->SetVisibility(true);
-        magenta->SetForceWireframe(true);
-        magenta->SetVisibility(true);
-        white->SetForceWireframe(true);
-        white->SetVisibility(true);
+yellow->SetVisibility(true);
+yellow->SetForceWireframe(true);
+red->SetVisibility(true);
+red->SetForceSolid(true);
+blue->SetVisibility(true);
+blue->SetForceWireframe(true);
+green->SetVisibility(true);
+green->SetForceSolid(true);
+grayc->SetVisibility(false);
+lightGray->SetVisibility(true);
+lightGray->SetForceSolid(true);
+black->SetForceSolid(true);
+black->SetVisibility(true);
+magenta->SetForceWireframe(true);
+magenta->SetVisibility(true);
+white->SetForceWireframe(true);
+white->SetVisibility(true);
 
 // Set Visual colors
-        if(bremTest)
-        {
-                logicalLinac->SetVisAttributes(lightGray);
-                logicalVacuum->SetVisAttributes(white);
-                logicBremTarget->SetVisAttributes(black);
-        }
-        logicAttenuator->SetVisAttributes(black);
-        logicTape->SetVisAttributes(yellow);
-        logicCasing->SetVisAttributes(magenta);
-        logicWater->SetVisAttributes(blue);
-        logicPMT->SetVisAttributes(green);
-        logicPC->SetVisAttributes(red);
-        logicIntObj->SetVisAttributes(lightGray);
-        logicContainer->SetVisAttributes(yellow);
-        logicHollowC->SetVisAttributes(grayc);
-        logicCollimator->SetVisAttributes(magenta);
-        logicChopper->SetVisAttributes(black);
+if(bremTest)
+{
+        logicalLinac->SetVisAttributes(lightGray);
+        logicalVacuum->SetVisAttributes(white);
+        logicBremTarget->SetVisAttributes(black);
+}
+logicAttenuator->SetVisAttributes(black);
+logicSecondAttenuator->SetVisAttributes(lightGray);
+logicTape->SetVisAttributes(yellow);
+logicCasing->SetVisAttributes(magenta);
+logicWater->SetVisAttributes(blue);
+logicPMT->SetVisAttributes(green);
+logicPC->SetVisAttributes(red);
+logicIntObj->SetVisAttributes(lightGray);
+logicContainer->SetVisAttributes(yellow);
+logicHollowC->SetVisAttributes(grayc);
+logicCollimator->SetVisAttributes(magenta);
+logicChopper->SetVisAttributes(black);
 
 
 //

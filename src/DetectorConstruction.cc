@@ -199,7 +199,7 @@ else
   attenThickness2 = 0*cm;
   std::cout<< "Second Attenuator Thickness automatically set to Off." << std::endl;
 }
-        
+G4cout << "Attenuator Thickness set to: " << attenThickness << " cm of " << attenuator->GetName() << std::endl;        
 
 G4double water_z_pos = container_z_pos - container_z;
 G4double myangle = (180. - theAngle)*pi/180.;
@@ -224,8 +224,9 @@ G4LogicalVolume* logicSecondAttenuator = new G4LogicalVolume(solidSecondAttenuat
 new G4PVPlacement(0,G4ThreeVector(0,0,0), logicSecondAttenuator, "LowZAttenuator", logicAttenuator, false, 0, checkOverlaps);
 if(attenuatorState2)
 {
-  std::cout << "Low Z Attenuator set to: " << attenThickness2 << " cm of " << low_z_attenuator->GetName() << std::endl;
+  std::cout << "Second Attenuator set to: " << attenThickness2 << " cm of " << low_z_attenuator->GetName() << std::endl;
 }
+G4cout << "Second Attenuator set to: " <<attenThickness2 << " cm of " << low_z_attenuator->GetName() << std::endl;
 // Make Water Casing (Plexiglass)
 
 G4Box* solidCasing = new G4Box("Encasing", water_size_x, water_size_y, water_size_z);

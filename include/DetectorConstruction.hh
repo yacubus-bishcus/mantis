@@ -68,6 +68,18 @@ void SetAttenuatorMaterial(G4String val)
 {
   attenuatorMat = val;
 }
+void SetAttenuatorState2(G4bool val)
+{
+  attenuatorState2 = val;
+}
+void SetAttenuatorThickness2(G4double val)
+{
+   attenThickness2 = val;
+}
+void SetAttenuatorMaterial2(G4String val)
+{
+  attenuatorMat2 = val;
+}
 void SetWaterX(G4double val)
 {
         water_size_x = val;
@@ -216,6 +228,9 @@ G4String pc_mat;
 G4bool attenuatorState;
 G4double attenThickness;
 G4String attenuatorMat;
+G4bool attenuatorState2;
+G4double attenThickness2;
+G4String attenuatorMat2;
 DetectorMessenger* detectorM;
 
 };

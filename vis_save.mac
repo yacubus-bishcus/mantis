@@ -2,12 +2,12 @@
 /run/verbose 0
 #/mydet/nPMT 4
 #/chopper/state On
-/mydet/attenuatorState On
-/mydet/attenuatorThickness 3
-/mydet/attenuatorMat G4_Pb
-/mydet/attenuatorState2 On
-/mydet/attenuatorThickness 5
-/mydet/attenuatorMat2 G4_POLYETHYLENE
+#/mydet/attenuator On
+#/mydet/attenuatorThickness 1
+#/mydet/attenuatorMaterial G4_Pb
+#/mydet/attenuator2 On
+#/mydet/attenuatorThickness2 1
+#/mydet/attenuatorMaterial2 G4_POLYETHYLENE
 /run/initialize
 
 /vis/open VRML2FILE

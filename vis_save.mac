@@ -1,7 +1,7 @@
 /control/verbose 0
 /run/verbose 0
 #/mydet/nPMT 4
-#/chopper/
+#/chopper/state On
 /mydet/attenuatorState On
 /mydet/attenuatorThickness 3
 /mydet/attenuatorMat G4_Pb

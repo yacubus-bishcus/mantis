@@ -44,6 +44,10 @@ private:
   G4bool check_atten_on = false;
   G4UIcmdWithADouble* CmdAttenThick;
   G4UIcmdWithAString* CmdAttenMat;
+  G4UIcmdWithAString* CmdAttenOn2;
+  G4bool check_atten2_on = false;
+  G4UIcmdWithADouble* CmdAttenThick2;
+  G4UIcmdWithAString* CmdAttenMat2;
   G4UIdirectory *myDir;
   G4UIdirectory * myDir2;
   G4UIdirectory * myDir3;

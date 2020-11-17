@@ -7,8 +7,8 @@ DetectorConstruction::DetectorConstruction(G4bool brem)
         chopperOn(false), chopper_thick(1*mm), chopper_z(5*cm), theAngle(120.0),
         water_size_x(60*cm),water_size_y(2.5908*m), water_size_z(40*cm),
         PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), attenuatorState(false), attenuatorState2(false), 
-        attenThickness(0*cm), attenuatorMat("G4_AIR"), lowZAttenThickness(0*cm), 
-        lowZAttenuatorMat("G4_AIR"), detectorM(NULL)
+        attenThickness(0*cm), attenuatorMat("G4_AIR"), attenThickness2(0*cm), 
+        attenuatorMat2("G4_AIR"), detectorM(NULL)
 {
         detectorM = new DetectorMessenger(this);
         bremTest = brem;
@@ -31,7 +31,7 @@ G4Material *Water = nist->FindOrBuildMaterial("G4_WATER");
 G4Material *tungsten = nist->FindOrBuildMaterial("G4_W");
 G4Material *lead = nist->FindOrBuildMaterial("G4_Pb");
 G4Material *attenuator = nist->FindOrBuildMaterial(attenuatorMat);
-G4Material *low_z_attenuator = nist->FindOrBuildMaterial(lowZAttenuatorMat);
+G4Material *low_z_attenuator = nist->FindOrBuildMaterial(attenuatorMat2);
 G4Element *elPb = new G4Element("Lead", "Pb", 82, 207.2*g/mole);
 G4Element *elN = new G4Element("Nitrogen", "N2", 7, 14.01*g/mole);
 G4Element *elO = new G4Element("Oxygen", "O2", 8, 16.0*g/mole);
@@ -210,8 +210,8 @@ G4ThreeVector(-1*water_x_pos,0,water_z_pos), logicAttenuator,
 "AttenuatorRight", logicWorld, false, 0, checkOverlaps);
 
 // Option to add second layer of low Z attenuation material 
-G4Box* solidSecondAttenuator = new G4Box("LowZAttenuator", water_size_x+attenThickness+lowZAttenThickness, water_size_y+attenThickness+lowZAttenThickness,
-                                         water_size_z+attenThickness+lowZAttenThickness);
+G4Box* solidSecondAttenuator = new G4Box("LowZAttenuator", water_size_x+attenThickness+attenThickness2, water_size_y+attenThickness+attenThickness2,
+                                         water_size_z+attenThickness+attenThickness2);
 G4LogicalVolume* logicSecondAttenuator = new G4LogicalVolume(solidSecondAttenuator, low_z_attenuator, "LowZAttenuator");
 new G4PVPlacement(0,G4ThreeVector(0,0,0), logicSecondAttenuator, "LowZAttenuator", logicAttenuator, false, 0, checkOverlaps);
 if(attenuatorState2)
@@ -220,16 +220,16 @@ if(attenuatorState2)
 }
 // Make Water Casing (Plexiglass)
 
-G4Box* solidCasing = new G4Box("Encasing", water_size_x - attenThickness - lowZAttenThickness, water_size_y - attenThickness - lowZAttenThickness, 
-                               water_size_z - attenThickness - lowZAttenThickness);
+G4Box* solidCasing = new G4Box("Encasing", water_size_x - attenThickness - attenThickness2, water_size_y - attenThickness - attenThickness2, 
+                               water_size_z - attenThickness - attenThickness2);
 G4LogicalVolume* logicCasing = new G4LogicalVolume(solidCasing, plexiglass, "Encasing");
 new G4PVPlacement(0,G4ThreeVector(0,0,0), logicCasing, "Encasing", logicSecondAttenuator, false, 0, checkOverlaps);
         
 G4double plexiThickness = 0.18*mm; //0.18*mm;
 // Make Teflon tape wrap
 G4double tapeThick = 0.01*cm;
-G4VSolid* solidTape = new G4Box("Tape", water_size_x-attenThickness-lowZAttenThickness-plexiThickness, water_size_y-attenThickness-lowZAttenThickness-
-                                plexiThickness, water_size_z-attenThickness-lowZAttenThickness-plexiThickness);
+G4VSolid* solidTape = new G4Box("Tape", water_size_x-attenThickness-attenThickness2-plexiThickness, water_size_y-attenThickness-attenThickness2-
+                                plexiThickness, water_size_z-attenThickness-attenThickness2-plexiThickness);
 G4Material *teflonTape = nist->FindOrBuildMaterial("G4_TEFLON");
 G4LogicalVolume* logicTape = new G4LogicalVolume(solidTape, teflonTape, "Tape");
 physTape = new G4PVPlacement(0,G4ThreeVector(0,0,0), logicTape, "Tape", logicCasing, false, 0, checkOverlaps);
@@ -239,9 +239,9 @@ G4cout << "The Water Tank X was set to: " << water_size_x/(cm)<< " cm" << G4endl
 G4cout << "The Water Tank Y was set to: " << water_size_y/(cm)<< " cm" << G4endl;
 G4cout << "The Water Tank Z was set to: " << water_size_z/(cm) << " cm" << G4endl << G4endl;
 
-G4Box* solidWater = new G4Box("Water", water_size_x-attenThickness-lowZAttenThickness-plexiThickness-tapeThick, 
-                              water_size_y-attenThickness-lowZAttenThickness-plexiThickness-tapeThick, 
-                              water_size_z-attenThickness-lowZAttenThickness-plexiThickness-tapeThick);
+G4Box* solidWater = new G4Box("Water", water_size_x-attenThickness-attenThickness2-plexiThickness-tapeThick, 
+                              water_size_y-attenThickness-attenThickness2-plexiThickness-tapeThick, 
+                              water_size_z-attenThickness-attenThickness2-plexiThickness-tapeThick);
         G4LogicalVolume* logicWater =
                 new G4LogicalVolume(solidWater, //its solid
                                     Water, //its material

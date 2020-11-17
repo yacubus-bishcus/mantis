@@ -8,7 +8,7 @@ DetectorConstruction::DetectorConstruction(G4bool brem)
         water_size_x(60*cm),water_size_y(2.5908*m), water_size_z(40*cm),
         PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), attenuatorState(false), attenuatorState2(false), 
         attenThickness(0*cm), attenuatorMat("G4_AIR"), lowZAttenThickness(0*cm), 
-        lowZAttenuatorMat("G4_POLYETHYLENE"), detectorM(NULL)
+        lowZAttenuatorMat("G4_AIR"), detectorM(NULL)
 {
         detectorM = new DetectorMessenger(this);
         bremTest = brem;

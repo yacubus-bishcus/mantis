@@ -216,7 +216,7 @@ G4LogicalVolume* logicSecondAttenuator = new G4LogicalVolume(solidSecondAttenuat
 new G4PVPlacement(0,G4ThreeVector(0,0,0), logicSecondAttenuator, "LowZAttenuator", logicAttenuator, false, 0, checkOverlaps);
 if(attenuatorState2)
 {
-  std::cout << "Low Z Attenuator set to: " << lowZAttenThickness << " cm of " << low_z_attenuator->GetName() << std::endl;
+  std::cout << "Low Z Attenuator set to: " << attenThickness2 << " cm of " << low_z_attenuator->GetName() << std::endl;
 }
 // Make Water Casing (Plexiglass)
 

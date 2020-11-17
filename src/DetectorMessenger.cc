@@ -27,8 +27,11 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdChopZ = new G4UIcmdWithADouble("/chopper/distance", this);
   CmdChopperOn = new G4UIcmdWithAString("/chopper/state", this);
   CmdAttenOn = new G4UIcmdWithAString("/mydet/attenuator", this);
+  CmdAttenOn2 = new G4UIcmdWithAString("/mydet/attenuator2",this);
   CmdAttenThick = new G4UIcmdWithADouble("/mydet/attenuatorThickness",this);
+  CmdAttenThick2 = new G4UIcmdWithADouble("/mydet/attenuatorThickness2",this);
   CmdAttenMat = new G4UIcmdWithAString("/mydet/attenuatorMaterial",this);
+  CmdAttenMat2 = new G4UIcmdWithAString("/mydet/attenuatorMaterial2",this);
 
 
   Cmd->SetGuidance("Choose Desired PhotoCathode Radius");
@@ -50,6 +53,9 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdAttenOn->SetGuidance("Choose if Attenuator Present or not");
   CmdAttenThick->SetGuidance("Choose Desired attenuator thickness");
   CmdAttenMat->SetGuidance("Choose desired attenuator material from NIST materials");
+  CmdAttenOn2->SetGuidance("Choose if Attenuator Second Layer Present or not");
+  CmdAttenThick2->SetGuidance("Choose Desired attenuator thickness");
+  CmdAttenMat2->SetGuidance("Choose desired attenuator material from NIST materials");
 
   Cmd->SetParameterName("radius",false);
   CmdX->SetParameterName("waterx",false);
@@ -71,12 +77,16 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdAttenOn->SetParameterName("attenuator",false);
   CmdAttenThick->SetParameterName("attenThickness",false);
   CmdAttenMat->SetParameterName("attenMaterial",false);
+  CmdAttenOn2->SetParameterName("attenuator2",false);
+  CmdAttenThick2->SetParameterName("attenThickness2",false);
+  CmdAttenMat2->SetParameterName("attenMaterial2",false);
 
   Cmdtsel->SetCandidates("Uranium Plutonium Lead/Uranium Lead/Plutonium");
   Cmdpcmat->SetCandidates("GaAsP Bialkali");
   CmdChopperOn->SetCandidates("On on Off off");
   CmdAttenOn->SetCandidates("On on Off off");
   CmdAttenMat->SetCandidates("G4_Pb G4_Cu G4_Zn G4_Ag G4_Cd G4_Th G4_U G4_Au G4_W G4_Fe");
+  CmdAttenMat2->SetCandidates("G4_POLYETHYLENE G4_POLYPROPYLENE G4_POLYSTYRENE G4_POLYVINYL_CHLORIDE G4_POLYCARBONATE");
 
 }
 
@@ -101,6 +111,9 @@ DetectorMessenger::~DetectorMessenger()
   delete CmdAttenOn;
   delete CmdAttenThick;
   delete CmdAttenMat;
+  delete CmdAttenOn2;
+  delete CmdAttenThick2;
+  delete CmdAttenMat2;
 }
 
 
@@ -240,6 +253,37 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     {
       G4String theAttenMaterial = newValue;
       DetectorA->SetAttenuatorMaterial(theAttenMaterial);
+    }
+  }
+    else if(command == CmdAttenOn2)
+  {
+    G4String theCmdAttenOn2 = newValue;
+    if(theCmdAttenOn2 == "Off" || theCmdAttenOn2 == "off")
+    {
+      DetectorA->SetAttenuatorState2(false);
+      DetectorA->SetAttenuatorMaterial2("G4_AIR");
+      check_atten2_on = false;
+    }
+    else
+    {
+      check_atten2_on = true;
+      DetectorA->SetAttenuatorState2(true);
+    }
+  }
+  else if(command == CmdAttenThick2)
+  {
+    if(check_atten2_on)
+    {
+      G4double theCmdAttendThickness2 = CmdAttenThick2->GetNewDoubleValue(newValue);
+      DetectorA->SetAttenuatorThickness2(theCmdAttendThickness2);
+    }
+  }
+  else if(command == CmdAttenMat2)
+  {
+    if(check_atten2_on)
+    {
+      G4String theAttenMaterial2 = newValue;
+      DetectorA->SetAttenuatorMaterial2(theAttenMaterial2);
     }
   }
   else

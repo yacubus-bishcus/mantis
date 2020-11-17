@@ -42,7 +42,7 @@
 # Second Attenuator material automatically removed if attenuator layer 1 set to "off"
 #/mydet/attenuator2 On
 # Second Attenuator Layer thickness in cm
-#/mydet/attenuator2Thickness 1 
+#/mydet/attenuatorThickness2 1 
 # Second Attenuator Layer (second material to be impacted by particles after first layer 
 #/mydet/attenuatorMaterial2 G4_POLYETHYLENE
 # units cm for photocathode radius (also adjust PMT radius accordingly)

@@ -36,8 +36,11 @@
 #/mydet/attenuator On
 # Attenuator Thickness in cm
 #/mydet/attenuatorThickness 1
-# Attenuator Material Options (G4_Pb, G4_W, G4_Ag, G4_Au, G4_U, G4_Cu, G4_Fe)
+# Attenuator Material Options from NIST materials 
+# First Attenuator Layer (first material to be impacted by particles)
 #/mydet/attenuatorMaterial G4_Pb
+# Second Attenuator Layer (second material to be impacted by particles after first layer 
+#/mydet/attenuatorMaterial2 G4_POLYETHYLENE
 # units cm for photocathode radius (also adjust PMT radius accordingly)
 #/mydet/PCrad
 # Photocathode material options (GaAsP, Bialkali)

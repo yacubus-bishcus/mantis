@@ -193,6 +193,13 @@ if(attenuatorState)
 {
   std::cout << "Attenuator Thickness set to: " << attenThickness << " cm of " << attenuator->GetName() << std::endl;
 }
+else
+{
+  attenuatorState2 = false;
+  attenThickness2 = 0*cm;
+  std::cout<< "Second Attenuator Thickness automatically set to Off." << std::endl;
+}
+        
 
 G4double water_z_pos = container_z_pos - container_z;
 G4double myangle = (180. - theAngle)*pi/180.;

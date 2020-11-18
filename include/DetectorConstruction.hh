@@ -195,6 +195,10 @@ void SettheAngle(G4double val)
 {
         theAngle = val;
 }
+void SetDetectorViewOnly(G4bool val)
+{
+  DetectorViewOnly = val;
+}
 
 private:
 G4bool bremTest;
@@ -231,6 +235,7 @@ G4String attenuatorMat;
 G4bool attenuatorState2;
 G4double attenThickness2;
 G4String attenuatorMat2;
+G4bool DetectorViewOnly;
 DetectorMessenger* detectorM;
 
 };

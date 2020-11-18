@@ -8,7 +8,7 @@ DetectorConstruction::DetectorConstruction(G4bool brem)
         water_size_x(60*cm),water_size_y(2.5908*m), water_size_z(40*cm),
         PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), attenuatorState(false), 
         attenThickness(0*cm), attenuatorMat("G4_AIR"), attenuatorState2(false), attenThickness2(0*cm), 
-        attenuatorMat2("G4_AIR"), detectorM(NULL)
+        attenuatorMat2("G4_AIR"), DetectorViewOnly(false), detectorM(NULL)
 {
         detectorM = new DetectorMessenger(this);
         bremTest = brem;
@@ -389,45 +389,46 @@ G4VisAttributes *lightGray= new G4VisAttributes( G4Colour(178/255., 178/255.,  1
 G4VisAttributes *green= new G4VisAttributes( G4Colour(0/255., 255/255.,  0/255. ));
 G4VisAttributes *black = new G4VisAttributes(G4Colour(0.,0.,0.));
 G4VisAttributes *magenta = new G4VisAttributes(G4Colour(1.0, 0.0, 1.0));
-G4VisAttributes *white = new G4VisAttributes(G4Colour(1.0,1.0,1.0));
 
-yellow->SetVisibility(true);
-yellow->SetForceWireframe(true);
-red->SetVisibility(true);
+yellow->SetForceWireFrame(true);
+logicAttenuator->SetVisAttributes(yellow);
+magenta->SetForceWireFrame(true);
+logicSecondAttenuator->SetVisAttributes(magenta);
+black->SetForceWireFrame(true);
+logicTape->SetVisAttributes(black);
+lightGray->SetForceWireFrame(true);
+logicCasing->SetVisAttributes(lightGray);
+blue->SetForceWireFrame(true);
+logicWater->SetVisAttributes(blue);
+green->SetForceWireFrame(true);
+logicPMT->SetVisAttributes(green);
 red->SetForceSolid(true);
-blue->SetVisibility(true);
-blue->SetForceWireframe(true);
-green->SetVisibility(true);
-green->SetForceSolid(true);
-grayc->SetVisibility(false);
-lightGray->SetVisibility(true);
-lightGray->SetForceSolid(true);
-black->SetForceSolid(true);
-black->SetVisibility(true);
-magenta->SetForceWireframe(true);
-magenta->SetVisibility(true);
-white->SetForceWireframe(true);
-white->SetVisibility(true);
+logicPC->SetVisAttributes(red);
 
 // Set Visual colors
 if(bremTest)
 {
         logicalLinac->SetVisAttributes(lightGray);
-        logicalVacuum->SetVisAttributes(white);
-        logicBremTarget->SetVisAttributes(black);
+        grayc->SetForceWireFrame(true);
+        logicalVacuum->SetVisAttributes(grayc);
+        logicBremTarget->SetVisAttributes(red);
 }
-logicAttenuator->SetVisAttributes(black);
-logicSecondAttenuator->SetVisAttributes(lightGray);
-logicTape->SetVisAttributes(yellow);
-logicCasing->SetVisAttributes(magenta);
-logicWater->SetVisAttributes(blue);
-logicPMT->SetVisAttributes(green);
-logicPC->SetVisAttributes(red);
-logicIntObj->SetVisAttributes(lightGray);
-logicContainer->SetVisAttributes(yellow);
-logicHollowC->SetVisAttributes(grayc);
-logicCollimator->SetVisAttributes(magenta);
-logicChopper->SetVisAttributes(black);
+if(DetectorViewOnly)
+{
+  logicIntObj->SetVisAttributes(G4VisAttributes::Invisible);
+  logicContainer->SetVisAttributes(G4VisAttributes::Invisible);
+  logicHollowC->SetVisAttributes(G4VisAttributes::Invisible);
+  logicCollimator->SetVisAttributes(G4VisAttributes::Invisible);
+  logicChopper->SetVisAttributes(G4VisAttributes::Invisible);
+}
+else
+{
+  logicIntObj->SetVisAttributes(red);
+  logicContainer->SetVisAttributes(black);
+  logicHollowC->SetVisAttributes(lightGray);
+  logicCollimator->SetVisAttributes(magenta);
+  logicChopper->SetVisAttributes(red);
+}
 
 
 //

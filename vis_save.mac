@@ -8,6 +8,8 @@
 #/mydet/attenuator2 On
 #/mydet/attenuatorThickness2 1
 #/mydet/attenuatorMaterial2 G4_POLYETHYLENE
+#/mydet/PlexiglassThickness 1
+#/mydet/OpticalTapeThickness 1
 /run/initialize
 
 /vis/open VRML2FILE

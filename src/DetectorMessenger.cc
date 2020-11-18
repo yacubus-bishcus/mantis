@@ -34,6 +34,8 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdAttenThick2 = new G4UIcmdWithADouble("/mydet/attenuatorThickness2",this);
   CmdAttenMat = new G4UIcmdWithAString("/mydet/attenuatorMaterial",this);
   CmdAttenMat2 = new G4UIcmdWithAString("/mydet/attenuatorMaterial2",this);
+  CmdPlexi = new G4UIcmdWithADouble("/mydet/PlexiglassThickness",this);
+  CmdTape = new G4UIcmdWithADouble("/mydet/OpticalTapeThickness",this);
   CmdVis = new G4UIcmdWithAString("/myvisualization/DetectorViewOnly", this);
 
 
@@ -59,6 +61,8 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdAttenOn2->SetGuidance("Choose if Attenuator Second Layer Present or not");
   CmdAttenThick2->SetGuidance("Choose Desired attenuator thickness");
   CmdAttenMat2->SetGuidance("Choose desired attenuator material from NIST materials");
+  CmdPlexi->SetGuidance("Choose desired plexiglass thickness in mm");
+  CmdTape->SetGuidance("Choose desired optical tape wrap thickness in cm");
   CmdVis->SetGuidance("Choose if visualization will show Cherenkov Detector Only");
   Cmd->SetParameterName("radius",false);
   CmdX->SetParameterName("waterx",false);
@@ -83,6 +87,8 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdAttenOn2->SetParameterName("attenuator2",false);
   CmdAttenThick2->SetParameterName("attenThickness2",false);
   CmdAttenMat2->SetParameterName("attenMaterial2",false);
+  CmdPlexi->SetParameterName("PlexiThickness",false);
+  CmdTape->SetParameterName("TapeThickness",false);
   CmdVis->SetParameterName("visualization",false);
 
   Cmdtsel->SetCandidates("Uranium Plutonium Lead/Uranium Lead/Plutonium");
@@ -119,6 +125,8 @@ DetectorMessenger::~DetectorMessenger()
   delete CmdAttenOn2;
   delete CmdAttenThick2;
   delete CmdAttenMat2;
+  delete CmdPlexi;
+  delete CmdTape;
   delete CmdVis;
 }
 
@@ -291,6 +299,16 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
       G4String theAttenMaterial2 = newValue;
       DetectorA->SetAttenuatorMaterial2(theAttenMaterial2);
     }
+  }
+  else if(command == CmdPlexi)
+  {
+    G4double plexiThickness = CmdPlexi->GetNewDoubleValue(newValue);
+    DetectorA->SetPlexiThickness(plexiThickness);
+  }
+  else if(command == CmdTape)
+  {
+    G4double tapeThickness = CmdTape->GetNewDoubleValue(newValue);
+    DetectorA->SetTapeThickness(tapeThickness);
   }
   else if(command == CmdVis)
   {

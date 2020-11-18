@@ -198,10 +198,12 @@ void SettheAngle(G4double val)
 void SetPlexiThickness(G4double val)
 {
   plexiThickness = val;
+  plexitThickness = plexiThickness*mm;
 }
 void SetTapeThickness(G4double val)
 {
   tapeThick = val;
+  tapeThick = tapeThick*cm;
 }
 void SetDetectorViewOnly(G4bool val)
 {

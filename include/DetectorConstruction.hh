@@ -201,7 +201,7 @@ void SetPlexiThickness(G4double val)
 }
 void SetTapeThickness(G4double val)
 {
-  tapeThickness = val;
+  tapeThick = val;
 }
 void SetDetectorViewOnly(G4bool val)
 {
@@ -244,7 +244,7 @@ G4bool attenuatorState2;
 G4double attenThickness2;
 G4String attenuatorMat2;
 G4double plexiThickness;
-G4double tapeThickness;
+G4double tapeThick;
 G4bool DetectorViewOnly;
 DetectorMessenger* detectorM;
 

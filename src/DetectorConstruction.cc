@@ -8,7 +8,7 @@ DetectorConstruction::DetectorConstruction(G4bool brem)
         water_size_x(60*cm),water_size_y(2.5908*m), water_size_z(40*cm),
         PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), attenuatorState(false), 
         attenThickness(0*cm), attenuatorMat("G4_AIR"), attenuatorState2(false), attenThickness2(0*cm), 
-        attenuatorMat2("G4_AIR"), DetectorViewOnly(false), detectorM(NULL)
+        attenuatorMat2("G4_AIR"), plexiThickness(0.18*mm), tapeThick(0.01*cm), DetectorViewOnly(false), detectorM(NULL)
 {
         detectorM = new DetectorMessenger(this);
         bremTest = brem;
@@ -233,9 +233,24 @@ G4Box* solidCasing = new G4Box("Encasing", water_size_x, water_size_y, water_siz
 G4LogicalVolume* logicCasing = new G4LogicalVolume(solidCasing, plexiglass, "Encasing");
 new G4PVPlacement(0,G4ThreeVector(0,0,0), logicCasing, "Encasing", logicSecondAttenuator, false, 0, checkOverlaps);
         
-G4double plexiThickness = 0.18*mm; //0.18*mm;
+if(plexiThickness != 0.18*mm)
+{
+  std::cout << "Plexiglass Thickness Changed to: " << plexiThickness << " mm" << std::endl;
+}
+else
+{
+  G4cout << "Plexiglass Thickness set to default: " << plexiThickness << " mm" << G4endl;
+}
+if(tapeThick != 0.01*cm)
+{
+  std::cout << "Optical Tape Thickness Changed to: " << tapeThick << " cm" << std::endl;
+}
+else
+{
+  G4cout << "Optical Tape Wrap set to default: " << tapeThick << " cm" << G4endl;
+}
+        
 // Make Teflon tape wrap
-G4double tapeThick = 0.01*cm;
 G4VSolid* solidTape = new G4Box("Tape", water_size_x-plexiThickness, water_size_y-plexiThickness, water_size_z-plexiThickness);
 G4Material *teflonTape = nist->FindOrBuildMaterial("G4_TEFLON");
 G4LogicalVolume* logicTape = new G4LogicalVolume(solidTape, teflonTape, "Tape");

@@ -7,9 +7,11 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   myDir = new G4UIdirectory("/mydet/");
   myDir2 = new G4UIdirectory("/mytar/");
   myDir3 = new G4UIdirectory("/chopper/");
+  myDir4 = new G4UIdirectory("/myvisualization/");
   myDir2->SetGuidance("Target Setup Commands");
   myDir->SetGuidance("Detector Setup Commands");
   myDir3->SetGuidance("Chopper Setup Commands");
+  myDir4->SetGuidance("Customized Visualization Commands");
   Cmd = new G4UIcmdWithADouble("/mydet/PCrad",this);
   CmdX = new G4UIcmdWithADouble("/mydet/WaterX",this);
   CmdY = new G4UIcmdWithADouble("/mydet/WaterY",this);
@@ -32,6 +34,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdAttenThick2 = new G4UIcmdWithADouble("/mydet/attenuatorThickness2",this);
   CmdAttenMat = new G4UIcmdWithAString("/mydet/attenuatorMaterial",this);
   CmdAttenMat2 = new G4UIcmdWithAString("/mydet/attenuatorMaterial2",this);
+  CmdVis = new G4UIcmdWithAString("/myvisualization/DetectorViewOnly", this);
 
 
   Cmd->SetGuidance("Choose Desired PhotoCathode Radius");
@@ -56,7 +59,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdAttenOn2->SetGuidance("Choose if Attenuator Second Layer Present or not");
   CmdAttenThick2->SetGuidance("Choose Desired attenuator thickness");
   CmdAttenMat2->SetGuidance("Choose desired attenuator material from NIST materials");
-
+  CmdVis->SetGuidance("Choose if visualization will show Cherenkov Detector Only");
   Cmd->SetParameterName("radius",false);
   CmdX->SetParameterName("waterx",false);
   CmdY->SetParameterName("watery",false);
@@ -80,6 +83,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdAttenOn2->SetParameterName("attenuator2",false);
   CmdAttenThick2->SetParameterName("attenThickness2",false);
   CmdAttenMat2->SetParameterName("attenMaterial2",false);
+  CmdVis->SetParameterName("visualization",false);
 
   Cmdtsel->SetCandidates("Uranium Plutonium Lead/Uranium Lead/Plutonium");
   Cmdpcmat->SetCandidates("GaAsP Bialkali");
@@ -87,6 +91,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdAttenOn->SetCandidates("On on Off off");
   CmdAttenMat->SetCandidates("G4_Pb G4_Cu G4_Zn G4_Ag G4_Cd G4_Th G4_U G4_Au G4_W G4_Fe");
   CmdAttenMat2->SetCandidates("G4_POLYETHYLENE G4_POLYPROPYLENE G4_POLYSTYRENE G4_POLYVINYL_CHLORIDE G4_POLYCARBONATE");
+  CmdVis->SetCandidates("True true False false");
 
 }
 
@@ -114,6 +119,7 @@ DetectorMessenger::~DetectorMessenger()
   delete CmdAttenOn2;
   delete CmdAttenThick2;
   delete CmdAttenMat2;
+  delete CmdVis;
 }
 
 
@@ -284,6 +290,14 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     {
       G4String theAttenMaterial2 = newValue;
       DetectorA->SetAttenuatorMaterial2(theAttenMaterial2);
+    }
+  }
+  else if(command == CmdVis)
+  {
+    G4String theCmdVis = newValue;
+    if(theCmdVis == "True" || theCmdVis == "true")
+    {
+      DetectorA->SetDetectorViewOnly(true);
     }
   }
   else

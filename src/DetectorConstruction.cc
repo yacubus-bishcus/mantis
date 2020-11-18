@@ -390,17 +390,17 @@ G4VisAttributes *green= new G4VisAttributes( G4Colour(0/255., 255/255.,  0/255. 
 G4VisAttributes *black = new G4VisAttributes(G4Colour(0.,0.,0.));
 G4VisAttributes *magenta = new G4VisAttributes(G4Colour(1.0, 0.0, 1.0));
 
-yellow->SetForceWireFrame(true);
+yellow->SetForceWireframe(true);
 logicAttenuator->SetVisAttributes(yellow);
-magenta->SetForceWireFrame(true);
+magenta->SetForceWireframe(true);
 logicSecondAttenuator->SetVisAttributes(magenta);
-black->SetForceWireFrame(true);
+black->SetForceWireframe(true);
 logicTape->SetVisAttributes(black);
-lightGray->SetForceWireFrame(true);
+lightGray->SetForceWireframe(true);
 logicCasing->SetVisAttributes(lightGray);
-blue->SetForceWireFrame(true);
+blue->SetForceWireframe(true);
 logicWater->SetVisAttributes(blue);
-green->SetForceWireFrame(true);
+green->SetForceWireframe(true);
 logicPMT->SetVisAttributes(green);
 red->SetForceSolid(true);
 logicPC->SetVisAttributes(red);
@@ -409,7 +409,7 @@ logicPC->SetVisAttributes(red);
 if(bremTest)
 {
         logicalLinac->SetVisAttributes(lightGray);
-        grayc->SetForceWireFrame(true);
+        grayc->SetForceWireframe(true);
         logicalVacuum->SetVisAttributes(grayc);
         logicBremTarget->SetVisAttributes(red);
 }

@@ -198,7 +198,7 @@ void SettheAngle(G4double val)
 void SetPlexiThickness(G4double val)
 {
   plexiThickness = val;
-  plexitThickness = plexiThickness*mm;
+  plexiThickness = plexiThickness*mm;
 }
 void SetTapeThickness(G4double val)
 {

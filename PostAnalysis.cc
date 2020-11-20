@@ -56,15 +56,11 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     std::cout << "Files Read Printing Results..." << std::endl;
     
     double per_diff = ((chopOn_sum - chopOff_sum)/chopOn_sum)*100.;
-    double t_test = abs(chopOn_sum - chopOff_sum)/sqrt(pow(chopOn_sum,2) + pow(chopOff_sum,2));
-    double stat_sigma = TMath::ErfInverse(1 - t_test)*sqrt(2);
+    double z = abs(chopOn_sum - chopOff_sum)/(sqrt(pow(chopOn_sum,2) + pow(chopOff_sum,2)));
     
     std::cout << "On Entries: " << chopOn_entries << " On Sum: " << chopOn_sum << " On NRF: " << chopOn_inc_sum << std::endl;
     std::cout << "Off Entries: " << chopOff_entries << " Off Sum: " << chopOff_sum << " Off NRF: " << chopOff_inc_sum << std::endl;
     std::cout << "Weighted Sum Percent Difference: " << per_diff << " %" << std::endl;
-    std::cout << "T-test result: " << t_test << std::endl;
-    if(t_test < 0.05)
-    {
-      std::cout << "T-test concludes the results are statistically significant with " << stat_sigma << " sigma difference." << std::endl;
-    }
+    std::cout << "Z-test result: " << z << std::endl;
+
 }

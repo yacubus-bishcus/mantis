@@ -53,9 +53,6 @@ if(!bremTest){
     // Create 1 Histogram for incident water data
       manager->CreateH1("IncWater","NRF Incident Water", nbins, 0., xmax, "MeV");
 
-      // Create 2 Histogram for Incident Detector Data
-      manager->CreateH1("IncDet","Incident Photocathode", nbins, 0., xmax/2, "MeV");
-
       // Create 3 Histogram for Energy if detected
       manager->CreateH1("Detected","Detected Spectrum", nbins, 0., 1E-5, "MeV");
 
@@ -68,6 +65,10 @@ if(!bremTest){
     manager->CreateNtuple("DetPro","Detector Processes");
     manager->CreateNtupleSColumn("Process");
     manager->FinishNtuple();
+  // Create 2 ntuple for incident detector 
+  manager->CreateNtuple("IncDet","Incident Photocathode");
+  manager->CreateNtupleDColumn("Energy");
+  manager->FinishNtuple();
 }
 else
 {

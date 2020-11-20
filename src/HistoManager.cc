@@ -48,27 +48,26 @@ void HistoManager::Book(G4bool bremTest)
     }
 if(!bremTest){
     // Create 0 Histogram for Interogation Object
-      manager->CreateH1("IncObj","Incident Interrogation Obj", nbins, 0., xmax, "MeV");
+    manager->CreateH1("IncObj","Incident Interrogation Obj", nbins, 0., xmax, "MeV");
 
     // Create 1 Histogram for incident water data
-      manager->CreateH1("IncWater","NRF Incident Water", nbins, 0., xmax, "MeV");
+    manager->CreateH1("IncWater","NRF Incident Water", nbins, 0., xmax, "MeV");
+    // Create 2 and 3 histogram for incident Photocathode
+    manager->CreateH1("IncDetLow","Low Energy Photons Incident Photocathode",nbins,0.,1E-5,"MeV");
+    manager->CreateH1("IncDetHigh", "High Energy Photons Incident Photocathode",nbins,1E-5, xmax, "MeV");
 
-      // Create 3 Histogram for Energy if detected
-      manager->CreateH1("Detected","Detected Spectrum", nbins, 0., 1E-5, "MeV");
+    // Create 4 Histogram for Energy if detected
+    manager->CreateH1("Detected","Detected Spectrum", nbins, 0., 1E-5, "MeV");
 
-      // Create 0 Ntuple for Brem Test Chop Data 
+    // Create 0 Ntuple for Brem Test Chop Data 
     manager->CreateNtuple("ChopperData", "Chopper Ntuple Data");
     manager->CreateNtupleDColumn("ChopperData");
     manager->FinishNtuple();
     
-      // Create 1 Ntuple for Reactions within detector
+    // Create 1 Ntuple for Reactions within detector
     manager->CreateNtuple("DetPro","Detector Processes");
     manager->CreateNtupleSColumn("Process");
     manager->FinishNtuple();
-  // Create 2 ntuple for incident detector 
-  manager->CreateNtuple("IncDet","Incident Photocathode");
-  manager->CreateNtupleDColumn("Energy");
-  manager->FinishNtuple();
 }
 else
 {

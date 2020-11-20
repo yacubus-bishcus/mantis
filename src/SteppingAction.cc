@@ -175,7 +175,14 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         run->AddTotalSurface();
                         if(drawIncFlag && !bremTest)
                         {
-                          manager->FillH1(2, theParticle->GetKineticEnergy()/(MeV), weight);
+                          if(theParticle->GetKineticEnergy()/(MeV) < 1E-5)
+                          {
+                            manager->FillH1(2, theParticle->GetKineticEnergy()/(MeV), weight);
+                          }
+                          else
+                          {
+                            manager->FillH1(3,theParticle->GetKineticEnergy()/(MeV),weight);
+                          }
                         }
 
                         for (G4int i=0; i<MAXofPostStepLoops; ++i) {
@@ -225,7 +232,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                 //run->AddDetection();
                                                 procCount = "Det";
                                                 det_energy = theParticle->GetKineticEnergy()/(MeV);
-                                                manager->FillH1(3, det_energy, weight);
+                                                manager->FillH1(4, det_energy, weight);
                                         }
                                         else if (theStatus == NotAtBoundary) {
                                                 procCount = "NotAtBoundary";

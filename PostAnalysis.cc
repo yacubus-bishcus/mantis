@@ -56,7 +56,7 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     std::cout << "Files Read Printing Results..." << std::endl;
     
     double per_diff = ((chopOn_sum - chopOff_sum)/chopOn_sum)*100.;
-    double z = abs(chopOn_sum - chopOff_sum)/(sqrt(pow(chopOn_sum,2) + pow(chopOff_sum,2)));
+    double z = abs(chopOn_sum - chopOff_sum)/(sqrt(pow(sqrt(chopOn_sum),2) + pow(sqrt(chopOff_sum),2)));
     
     std::cout << "On Entries: " << chopOn_entries << " On Sum: " << chopOn_sum << " On NRF: " << chopOn_inc_sum << std::endl;
     std::cout << "Off Entries: " << chopOff_entries << " Off Sum: " << chopOff_sum << " Off NRF: " << chopOff_inc_sum << std::endl;

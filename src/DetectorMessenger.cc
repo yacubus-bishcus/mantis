@@ -25,6 +25,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   Cmdpcmat = new G4UIcmdWithAString("/mydet/PCmat",this);
   CmdnPMT = new G4UIcmdWithAnInteger("/mydet/nPMT",this);
   CmdAngle = new G4UIcmdWithADouble("/mydet/Angle",this);
+  CmdChopMaterial = new G4UIcmdWithAString("/chopper/material",this);
   CmdChopthick = new G4UIcmdWithADouble("/chopper/thickness", this);
   CmdChopZ = new G4UIcmdWithADouble("/chopper/distance", this);
   CmdChopperOn = new G4UIcmdWithAString("/chopper/state", this);
@@ -51,6 +52,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdtZpos->SetGuidance("Choose Desired Z Position of Interogation Target");
   Cmdpcmat->SetGuidance("Choose desired photocathode material");
   CmdnPMT->SetGuidance("Choose desired number of PMTs");
+  CmdChopMaterial->SetGuidance("Choose desired Chopper Material");
   CmdChopthick->SetGuidance("Choose desired chopper thickness");
   CmdChopZ->SetGuidance("Choose desired chopper distance from brem beam");
   CmdChopperOn->SetGuidance("Choose desired chopper wheel state");
@@ -76,6 +78,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdtZpos->SetParameterName("targetzpos",false);
   Cmdpcmat->SetParameterName("photocathodeMat", false);
   CmdnPMT->SetParameterName("numberPMT", false);
+  CmdChopMaterial->SetParameterName("ChopperMaterial",false);
   CmdChopZ->SetParameterName("chopperZ", false);
   CmdChopthick->SetParameterName("chopperthickness",false);
   CmdChopperOn->SetParameterName("chopperOn",false);
@@ -91,9 +94,10 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdTape->SetParameterName("TapeThickness",false);
   CmdVis->SetParameterName("visualization",false);
 
-  Cmdtsel->SetCandidates("Uranium Plutonium Lead/Uranium Lead/Plutonium");
+  Cmdtsel->SetCandidates("Uranium Plutonium Lead Steel Plastic");
   Cmdpcmat->SetCandidates("GaAsP Bialkali");
   CmdChopperOn->SetCandidates("On on Off off");
+  CmdChopMaterial->SetCandidates("Uranium","Plutonium");
   CmdAttenOn->SetCandidates("On on Off off");
   CmdAttenMat->SetCandidates("G4_Pb G4_Cu G4_Zn G4_Ag G4_Cd G4_Th G4_U G4_Au G4_W G4_Fe");
   CmdAttenMat2->SetCandidates("G4_POLYETHYLENE G4_POLYPROPYLENE G4_POLYSTYRENE G4_POLYVINYL_CHLORIDE G4_POLYCARBONATE");

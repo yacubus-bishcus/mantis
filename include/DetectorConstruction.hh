@@ -132,33 +132,45 @@ void SetIntObj(G4String val)
         {
                 IntObj_Selection = val;
                 intObjDensity = 19.1*g/cm3;
-                chopperDensity = intObjDensity;
         }
         else if(val == "Plutonium")
         {
                 IntObj_Selection = val;
                 intObjDensity = 19.6*g/cm3;
-                chopperDensity = intObjDensity;
         }
-        else if(val == "Lead/Uranium")
+        else if(val == "Lead")
         {
           IntObj_Selection = "Lead";
           intObjDensity = 11.4*g/cm3;
-          chopperDensity = 19.1*g/cm3;
         }
-        else if(val == "Lead/Plutonium")
+        else if(val == "Steel")
         {
-          IntObj_Selection = "Lead";
-          intObjDensity = 11.4*g/cm3;
-          chopperDensity = 19.6*g/cm3;
+          IntObj_Selection = "Steel";
+          intObjDensity = 8.05*g/cm3;
+        }
+        else if(val == "Plastic")
+        {
+          IntObj_Selection = "Plastic";
+          intObjDensity = 0.94*g/cm3;
         }
         else{std::cerr << "ERROR: IntObj not correctly chosen"<<std::endl;}
+}
+
+void SetChopperMaterial(G4String val)
+{
+  if(val == "Uranium")
+  {
+    chopperDensity = 19.1*g/cm3;
+  }
+  else if(val == "Plutonium")
+  {
+    chopperDensity = 19.6*g/cm3;
+  }
 }
 
 void setEndIntObj(G4double z_pos_con, G4double con_z_size)
 {
         EndIntObj = z_pos_con + con_z_size/2;
-        //std::cout << "The Cut position is set to: " << EndIntObj/(cm) << " cm" << std::endl;
 }
 
 G4double getEndIntObj()const

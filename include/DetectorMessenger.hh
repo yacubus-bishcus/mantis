@@ -36,6 +36,7 @@ private:
   G4UIcmdWithAString* Cmdtsel;
   G4UIcmdWithAString* Cmdpcmat;
   G4UIcmdWithAnInteger* CmdnPMT;
+  G4UIcmdWithAString* CmdChopMaterial;
   G4UIcmdWithADouble* CmdChopthick;
   G4UIcmdWithADouble* CmdChopZ;
   G4UIcmdWithAString* CmdChopperOn;

@@ -181,7 +181,7 @@ else if(IntObj_Selection == "Plastic")
 else{std::cerr << "ERROR: Interogation Material not found."<<std::endl;}
 
 std::cout << "The User has chosen the following Interogation Object Material: "
-          << intObjMat->GetBaseMaterial() << std::endl;
+          << intObjMat->GetZ() << std::endl;
         
 G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObjLogicVolume");
 setEndIntObj(container_z_pos, container_z);

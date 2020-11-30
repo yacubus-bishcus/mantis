@@ -172,7 +172,7 @@ else if(IntObj_Selection == "Lead")
 }
 else if(IntObj_Selection == "Steel")
 {
-  intObjMat = steel;
+  intObjMat = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
 }
 else if(IntObj_Selection == "Plastic")
 {

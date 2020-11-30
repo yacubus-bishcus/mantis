@@ -156,6 +156,7 @@ Pu->AddIsotope(Plutonium240, 0.9999);
 Pu->AddIsotope(Plutonium239, 1 - 0.9999);
 
 G4Material* intObjMat = new G4Material("IntObjMaterial", intObjDensity, 1);
+intObjMat->SetName(IntObj_Selection)
 if(IntObj_Selection == "Uranium")
 {
   intObjMat->AddElement(U,1);
@@ -170,9 +171,7 @@ else if(IntObj_Selection == "Lead")
 }
 else if(IntObj_Selection == "Steel")
 {
-  std::cout << "here" << std::endl;
   intObjMat->AddMaterial(steel,1);
-  std::cout << "here2" << std::endl;
 }
 else if(IntObj_Selection == "Plastic")
 {
@@ -180,8 +179,8 @@ else if(IntObj_Selection == "Plastic")
 }
 else{std::cerr << "ERROR: Interogation Material not found."<<std::endl;}
 
-std::cout << "The User's Interogation Object Material Z: "
-          << intObjMat->GetZ() << std::endl;
+std::cout << "The User's Interogation Object Material: "
+          << intObjMat->GetName() << std::endl;
         
 G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObjLogicVolume");
 setEndIntObj(container_z_pos, container_z);

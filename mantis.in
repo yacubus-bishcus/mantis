@@ -12,6 +12,7 @@
 # CHOPPER WHEEL OPTIONS 
 # Turn chopper wheel On/off
 #/chopper/state On
+# Chopper base material either Uranium or Plutonium 
 #/chopper/material Uranium
 #units mm
 #/chopper/thickness 5

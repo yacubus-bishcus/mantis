@@ -326,7 +326,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   else if(command == CmdChopMaterial)
   {
     G4String theCmdChopMaterial = newValue;
-    DetectorA->SetChopMaterial(theCmdChopMaterial);
+    DetectorA->SetChopperMaterial(theCmdChopMaterial);
   }
   else
   {

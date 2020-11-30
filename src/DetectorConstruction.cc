@@ -170,7 +170,9 @@ else if(IntObj_Selection == "Lead")
 }
 else if(IntObj_Selection == "Steel")
 {
+  std::cout << "here" << std::endl;
   intObjMat->AddMaterial(steel,1);
+  std::cout << "here2" << std::endl;
 }
 else if(IntObj_Selection == "Plastic")
 {

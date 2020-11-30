@@ -132,6 +132,7 @@ DetectorMessenger::~DetectorMessenger()
   delete CmdPlexi;
   delete CmdTape;
   delete CmdVis;
+  delete CmdChopMaterial;
 }
 
 
@@ -321,6 +322,11 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     {
       DetectorA->SetDetectorViewOnly(true);
     }
+  }
+  else if(command == CmdChopMaterial)
+  {
+    G4String theCmdChopMaterial = newValue;
+    DetectorA->SetChopMaterial(theCmdChopMaterial);
   }
   else
   {

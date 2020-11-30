@@ -27,6 +27,7 @@ G4NistManager* nist = G4NistManager::Instance();
 // Set materials
 G4Material *air = nist->FindOrBuildMaterial("G4_AIR");
 G4Material *steel = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
+G4Material *poly = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
 G4Material *Water = nist->FindOrBuildMaterial("G4_WATER");
 G4Material *tungsten = nist->FindOrBuildMaterial("G4_W");
 G4Material *lead = nist->FindOrBuildMaterial("G4_Pb");
@@ -40,11 +41,8 @@ G4Element *elH = new G4Element("Hydrogen", "H2", 1, 1.0*g/mole);
 G4Material *plexiglass = nist->FindOrBuildMaterial("G4_PLEXIGLASS");
 
 
-G4Material *myAir = new G4Material("Air", 1.290*mg/cm3, 2);
-myAir->AddElement(elN, 0.7);
-myAir->AddElement(elO, 0.3);
 G4Material *myVacuum = new G4Material("Vacuum", 1.e-5*g/cm3, 1, kStateGas, 273.15, 2.e-2*bar);
-myVacuum->AddMaterial(myAir,1);
+myVacuum->AddMaterial(air,1);
 // technically PMT glass is a special borosilicate glass calle k-free glass
 // but pyrex is close enough as a borosilicate glass
 G4Material* PMT_mat = nist->FindOrBuildMaterial("G4_Pyrex_Glass");
@@ -172,11 +170,11 @@ else if(IntObj_Selection == "Lead")
 }
 else if(IntObj_Selection == "Steel")
 {
-  intObjMat = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
+  intObjMat->AddMaterial(steel,1);
 }
 else if(IntObj_Selection == "Plastic")
 {
-  intObjMat = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
+  intObjMat->AddMaterial(poly,1);
 }
 else{std::cerr << "ERROR: Interogation Material not found."<<std::endl;}
 

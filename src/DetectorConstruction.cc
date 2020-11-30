@@ -158,15 +158,15 @@ Pu->AddIsotope(Plutonium239, 1 - 0.9999);
 G4Material* intObjMat = new G4Material("IntObjMaterial", intObjDensity, 1);
 if(IntObj_Selection == "Uranium")
 {
-        intObjMat->AddElement(U,1);
+  intObjMat->AddElement(U,1);
 }
 else if(IntObj_Selection == "Plutonium")
 {
-        intObjMat->AddElement(WGPu,1);
+  intObjMat->AddElement(WGPu,1);
 }
 else if(IntObj_Selection == "Lead")
 {
-  intObjMat->AddElement(elPb,1);
+  intObjMat->AddMaterial(lead,1);
 }
 else if(IntObj_Selection == "Steel")
 {

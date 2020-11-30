@@ -157,9 +157,6 @@ WGPu->AddIsotope(Plutonium240, Pu240_abundance);
 Pu->AddIsotope(Plutonium240, 0.9999);
 Pu->AddIsotope(Plutonium239, 1 - 0.9999);
 
-
-std::cout << "The User has chosen the following Interogation Object Material: "
-          << IntObj_Selection << std::endl;
 G4Material* intObjMat = new G4Material("IntObjMaterial", intObjDensity, 1);
 if(IntObj_Selection == "Uranium")
 {
@@ -182,6 +179,10 @@ else if(IntObj_Selection == "Plastic")
   intObjMat = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
 }
 else{std::cerr << "ERROR: Interogation Material not found."<<std::endl;}
+
+std::cout << "The User has chosen the following Interogation Object Material: "
+          << intObjMat->GetName() << std::endl;
+        
 G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObjLogicVolume");
 setEndIntObj(container_z_pos, container_z);
 

@@ -12,6 +12,7 @@
 # CHOPPER WHEEL OPTIONS 
 # Turn chopper wheel On/off
 #/chopper/state On
+#/chopper/material Uranium
 #units mm
 #/chopper/thickness 5
 #units cm
@@ -24,7 +25,7 @@
 #/mytar/IntObjRad
 #percentage of Fission isotope
 #/mytar/fAbundance 90
-#Target options Uranium Plutonium Lead/Uranium Lead/Plutonium Second value sets chopper wheel materials 
+#Target options Uranium Plutonium Lead Steel Plastic
 #/mytar/target Uranium
 
 # DETECTOR OPTIONS 

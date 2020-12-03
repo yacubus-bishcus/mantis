@@ -32,7 +32,7 @@ void HistoManager::Book(G4bool bremTest)
         }
     }
 #endif
-    G4int nbins = 10000;
+    G4int nbins = 100000;
     manager->SetVerboseLevel(0);
     manager->SetNtupleMerging(true);
     // open output file
@@ -50,13 +50,16 @@ if(!bremTest){
     // Create 0 Histogram for Interogation Object
     manager->CreateH1("IncObj","Incident Interrogation Obj", nbins, 0., xmax, "MeV");
 
-    // Create 1 Histogram for incident water data
-    manager->CreateH1("IncWater","NRF Incident Water", nbins, 0., xmax, "MeV");
-    // Create 2 and 3 histogram for incident Photocathode
+    // Create 1,2,3 Histogram for incident water data
+    manager->CreateH1("NRFIncWater","NRF Incident Water", nbins, 0., xmax, "MeV");
+    manager->CreateH1("IncWaterLow","Incident Water Low Energy Spectrum", nbins, 0.,1E-5,"MeV");
+    manager->CreateH1("IncWaterHigh", "Incident Water High Energy Spectrum", nbins,1E-5, xmax, "MeV");
+    
+    // Create 4 and 5 histogram for incident Photocathode
     manager->CreateH1("IncDetLow","Low Energy Photons Incident Photocathode",nbins,0.,1E-5,"MeV");
     manager->CreateH1("IncDetHigh", "High Energy Photons Incident Photocathode",nbins,1E-5, xmax, "MeV");
 
-    // Create 4 Histogram for Energy if detected
+    // Create 6 Histogram for Energy if detected
     manager->CreateH1("Detected","Detected Spectrum", nbins, 0., 1E-5, "MeV");
 
     // Create 0 Ntuple for Brem Test Chop Data 

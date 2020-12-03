@@ -22,6 +22,7 @@ void HistoManager::Book(G4bool bremTest)
         {
             G4cout << "Imported brems from " << fin->GetName() << G4endl << G4endl;
             xmax = hBrems->GetXaxis()->GetXmax();
+            std::cout << "Found X Max: " << xmax << std::endl;
             G4cout << "Found X Max: " << xmax << G4endl;
             fin->Close();
         }

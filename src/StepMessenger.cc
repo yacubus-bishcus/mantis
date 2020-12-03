@@ -30,6 +30,11 @@ void StepMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
                         stepA->SetChopperDataFlag(1);
                         std::cout << "User Selected Chopper Data." << std::endl;
                 }
+                else if(theCommand == "IntObjData")
+                {
+                        stepA->SetIntObjDataFlag(1);
+                        std::cout << "User Selected Interrogation Object Incident Data." << std::endl;
+                }
                 else if(theCommand == "WaterIncidentData")
                 {
                         stepA->SetIncWatDataFlag(1);
@@ -44,11 +49,6 @@ void StepMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
                 {
                         stepA->SetDetDataFlag(1);
                         std::cout << "User Selected Detected Data."<<std::endl;
-                }
-                else if(theCommand == "IntObjData")
-                {
-                        stepA->SetIntObjDataFlag(1);
-                        std::cout << "User Selected Interrogation Object Incident Data." << std::endl;
                 }
                 else if(theCommand == "none")
                 {

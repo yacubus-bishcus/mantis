@@ -114,10 +114,17 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         if(drawWaterIncDataFlag && !bremTest)
         {
                 if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5,"Water") == 0
-                   && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5, "Water") != 0 && isNRF)
+                   && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5, "Water") != 0)
                 {
-                        G4double energy_inc_water = theTrack->GetKineticEnergy()/(MeV);
-                        manager->FillH1(1, energy_inc_water, weight);
+                  if(isNRF)
+                  {
+                    manager->FillH1(1, theTrack->GetKineticEnergy()/(MeV), weight);
+                  }
+                  if(theTrack->GetKineticEnergy()/(MeV) < 1E-5)
+                  {
+                    manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
+                  }
+                  else{manager->FillH1(3, theTrack->GetKineticEnergy()/(MeV), weight);}
                 }
         }
 
@@ -177,11 +184,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         {
                           if(theParticle->GetKineticEnergy()/(MeV) < 1E-5)
                           {
-                            manager->FillH1(2, theParticle->GetKineticEnergy()/(MeV), weight);
+                            manager->FillH1(4, theParticle->GetKineticEnergy()/(MeV), weight);
                           }
                           else
                           {
-                            manager->FillH1(3,theParticle->GetKineticEnergy()/(MeV),weight);
+                            manager->FillH1(5,theParticle->GetKineticEnergy()/(MeV),weight);
                           }
                         }
 
@@ -232,7 +239,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                 //run->AddDetection();
                                                 procCount = "Det";
                                                 det_energy = theParticle->GetKineticEnergy()/(MeV);
-                                                manager->FillH1(4, det_energy, weight);
+                                                manager->FillH1(6, det_energy, weight);
                                         }
                                         else if (theStatus == NotAtBoundary) {
                                                 procCount = "NotAtBoundary";

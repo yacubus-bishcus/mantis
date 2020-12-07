@@ -20,13 +20,13 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     if(confirmation)
     {
         TH1D *Detected;
-        TH1D *IncWater;
+        TH1D *NRFIncWater;
         chopOn->GetObject("Detected",Detected);
-        chopOn->GetObject("IncWater",IncWater);
+        chopOn->GetObject("NRFIncWater",NRFIncWater);
         
         chopOn_entries = Detected->GetEntries();
         chopOn_sum = Detected->Integral();
-        chopOn_inc_sum = IncWater->Integral();
+        chopOn_inc_sum = NRFIncWater->Integral();
     }
     else
     {
@@ -38,13 +38,13 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     if(confirmation2)
     {
         TH1D *Detected2;
-        TH1D *IncWater2;
+        TH1D *NRFIncWater2;
         chopOff->GetObject("Detected",Detected2);
-        chopOff->GetObject("IncWater",IncWater2);
+        chopOff->GetObject("NRFIncWater",NRFIncWater2);
 
         chopOff_entries = Detected2->GetEntries();
         chopOff_sum = Detected2->Integral();
-        chopOff_inc_sum = IncWater2->Integral();
+        chopOff_inc_sum = NRFIncWater2->Integral();
         
     }
     else
@@ -53,7 +53,7 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         return;
     }
     
-    std::cout << "Files Read Printing Results..." << std::endl;
+    std::cout << "Files Read. Printing Results..." << std::endl;
     
     double per_diff = ((chopOn_sum - chopOff_sum)/chopOn_sum)*100.;
     double z = abs(chopOn_sum - chopOff_sum)/(sqrt(pow(sqrt(chopOn_sum),2) + pow(sqrt(chopOff_sum),2)));

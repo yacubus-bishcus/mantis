@@ -27,7 +27,7 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         try
         {
             chopOn->GetObject("NRFIncWater",NRFIncWater);
-            if(NRFIncWater->Integral() == NULL)
+            if(NRFIncWater == NULL)
             {
                 throw response;
             }
@@ -60,7 +60,7 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         try
         {
             chopOff->GetObject("NRFIncWater",NRFIncWater2);
-            if(NRFIncWater2->Integral() == NULL)
+            if(NRFIncWater2 == NULL)
             {
                 throw response;
             }

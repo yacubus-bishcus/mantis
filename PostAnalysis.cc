@@ -27,11 +27,11 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         try
         {
             chopOn->GetObject("NRFIncWater",NRFIncWater);
-            chopOn_inc_sum = NRFIncWater->Integral();
-            if(chopOn_inc_sum == 0)
+            if(NRFIncWater->Integral() == NULL)
             {
                 throw response;
             }
+            else chopOn_inc_sum = NRFIncWater->Integral();
         }
         catch(string response)
         {
@@ -60,11 +60,11 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         try
         {
             chopOff->GetObject("NRFIncWater",NRFIncWater2);
-            chopOff_inc_sum = NRFIncWater2->Integral();
-            if(chopOff_inc_sum == 0)
+            if(NRFIncWater2->Integral() == NULL)
             {
-                throw response;
+                throw response
             }
+            else chopOff_inc_sum = NRFIncWater2->Integral();
         }
         catch(string response)
         {

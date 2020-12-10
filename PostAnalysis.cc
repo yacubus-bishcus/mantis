@@ -3,6 +3,7 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
 {
     std::cout << "Setting Chop On File: " << ChopOn << std::endl;
     std::cout << "Setting Chop Off File: " << ChopOff << std::endl;
+    string response = "Processing an older file structure...";
     
     TFile *chopOn = new TFile(ChopOn);
     TFile *chopOff = new TFile(ChopOff);
@@ -21,12 +22,24 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     {
         TH1D *Detected;
         TH1D *NRFIncWater;
+        TH1D *IncWater; // for processing earlier runs 
         chopOn->GetObject("Detected",Detected);
-        chopOn->GetObject("NRFIncWater",NRFIncWater);
-        
+        try
+        {
+            chopOn->GetObject("NRFIncWater",NRFIncWater);
+            chopOn_inc_sum = NRFIncWater->Integral();
+            throw response;
+        }
+        catch(string response)
+        {
+            std::cout << response << std::endl;
+            chopOn->GetObject("IncWater",IncWater);
+            chopOn_inc_sum = IncWater->Integral();
+            std::cout << "Older Chopper On File Processed." << std::endl;
+        }
+            
         chopOn_entries = Detected->GetEntries();
         chopOn_sum = Detected->Integral();
-        chopOn_inc_sum = NRFIncWater->Integral();
     }
     else
     {
@@ -39,12 +52,24 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     {
         TH1D *Detected2;
         TH1D *NRFIncWater2;
+        TH1D *IncWater2; // for processing earlier runs 
         chopOff->GetObject("Detected",Detected2);
-        chopOff->GetObject("NRFIncWater",NRFIncWater2);
-
+        try
+        {
+            chopOff->GetObject("NRFIncWater",NRFIncWater2);
+            chopOff_inc_sum = NRFIncWater2->Integral();
+            throw response;
+        }
+        catch(string response)
+        {
+            std::cout << response << std::endl;
+            chopOff->GetObject("IncWater",IncWater2);
+            chopOff_inc_sum = IncWater2->Integral();
+            std::cout << "Older Chopper Off File Processed." << std::endl;
+        }
+            
         chopOff_entries = Detected2->GetEntries();
         chopOff_sum = Detected2->Integral();
-        chopOff_inc_sum = NRFIncWater2->Integral();
         
     }
     else
@@ -62,5 +87,4 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     std::cout << "Off Entries: " << chopOff_entries << " Off Sum: " << chopOff_sum << " Off NRF: " << chopOff_inc_sum << std::endl;
     std::cout << "Weighted Sum Percent Difference: " << per_diff << " %" << std::endl;
     std::cout << "Z-test result: " << z << std::endl;
-
 }

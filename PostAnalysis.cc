@@ -10,11 +10,11 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     bool confirmation = chopOn->cd();
     double chopOn_entries;
     double chopOn_sum;
-    double chopOn_inc_sum;
+    double chopOn_inc_sum = 0;
     
     double chopOff_entries;
     double chopOff_sum;
-    double chopOff_inc_sum;
+    double chopOff_inc_sum = 0;
     
     // Variables Set, Complete Calculations 
     
@@ -28,7 +28,10 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         {
             chopOn->GetObject("NRFIncWater",NRFIncWater);
             chopOn_inc_sum = NRFIncWater->Integral();
-            throw response;
+            if(chopOn_inc_sum == 0)
+            {
+                throw response;
+            }
         }
         catch(string response)
         {
@@ -58,7 +61,10 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         {
             chopOff->GetObject("NRFIncWater",NRFIncWater2);
             chopOff_inc_sum = NRFIncWater2->Integral();
-            throw response;
+            if(chopOff_inc_sum == 0)
+            {
+                throw response;
+            }
         }
         catch(string response)
         {

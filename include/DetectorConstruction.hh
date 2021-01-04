@@ -228,9 +228,9 @@ void SetDetectorViewOnly(G4bool val)
 
 private:
 G4bool bremTest;
-G4double container_x = 0.6096*m;     // 2ft cross section
-G4double container_y = 2.5908*m;     // 8.5 ft in height
-G4double container_z = 2.4384*m;     // 8 ft width
+//G4double container_x = 0.6096*m;     // 2ft cross section
+//G4double container_y = 2.5908*m;     // 8.5 ft in height
+//G4double container_z = 2.4384*m;     // 8 ft width
 G4double EndIntObj;
 G4double IntObj_rad;
 G4double radio_abundance;

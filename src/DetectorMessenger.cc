@@ -320,8 +320,8 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     {
       G4String theAttenMaterial2 = newValue;
       DetectorA->SetAttenuatorMaterial2(theAttenMaterial2);
+      std::cout << "The second attenuation layer material manually set to: " << theAttenMaterial2 << std::endl;
     }
-    std::cout << "The second attenuation layer material manually set to: " << theAttenMaterial2 << std::endl;
   }
   else if(command == CmdPlexi)
   {

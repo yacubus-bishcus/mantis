@@ -233,8 +233,16 @@ G4bool bremTest;
 //G4double container_z = 2.4384*m;     // 8 ft width
 G4double EndIntObj;
 G4double IntObj_rad;
-G4double intObj_radio_abundance;
 G4double chopper_radio_abundance;
+G4double intObj_radio_abundance;
+G4double intObj_U235_abundance;
+G4double intObj_U238_abundance;
+G4double intObj_Pu239_abundance;
+G4double intObj_Pu240_abundance;
+G4double chopper_U235_abundance;
+G4double chopper_U238_abundance;
+G4double chopper_Pu239_abundance;
+G4double chopper_Pu240_abundance;
 G4String IntObj_Selection;
 G4double intObjDensity;
 G4double chopperDensity;

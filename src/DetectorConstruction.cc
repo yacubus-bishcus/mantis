@@ -154,12 +154,22 @@ G4Material* intObjMat = new G4Material("IntObjMaterial", intObjDensity, 1);
 intObjMat->SetName(IntObj_Selection);
 if(IntObj_Selection == "Uranium")
 {
+  if(intObj_radio_abundance <= 0.0)
+  {
+    std::cout << "Fatal Error: User must input interrogation object isotope abundance for Uranium 235" << std::endl;
+    exit(100);
+  }
   Uranium_interrogation->AddIsotope(Uranium235, intObj_U235_abundance);
   Uranium_interrogation->AddIsotope(Uranium238, intObj_U238_abundance);
   intObjMat->AddElement(Uranium_interrogation,1);
 }
 else if(IntObj_Selection == "Plutonium")
 {
+  if(intObj_radio_abundance <= 0.0)
+  {
+    std::cout << "Fatal Error: User must input interrogation object isotope abundance for Plutonium 239" << std::endl;
+    exit(100);
+  }
   Plutonium_interrogation->AddIsotope(Plutonium239, intObj_Pu239_abundance);
   Plutonium_interrogation->AddIsotope(Plutonium240, intObj_Pu240_abundance);
   intObjMat->AddElement(Plutonium_interrogation,1);
@@ -295,6 +305,12 @@ physWater = new G4PVPlacement(0,         //no rotation
 
 // ******************************** Set up Chopper Wheel ************************************** //
 
+if(chopper_radio_abundance <= 0.0)
+{
+  std::cout << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << std::endl;
+  exit(100);
+}
+        
 if(chopperOn)
 {
   chopper_U235_abundance = chopper_radio_abundance;

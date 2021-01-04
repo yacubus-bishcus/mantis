@@ -190,7 +190,7 @@ std::cout << "The User's Interogation Object Material: "
           << intObjMat->GetName() << std::endl;
         
 G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObjLogicVolume");
-setEndIntObj(container_z_pos, container_z);
+setEndIntObj(container_z_pos, 2.4384*m);
 
 physIntObj = new G4PVPlacement(0,
                                G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos),

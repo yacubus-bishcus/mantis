@@ -40,6 +40,7 @@ private:
   G4UIcmdWithADouble* CmdChopthick;
   G4UIcmdWithADouble* CmdChopZ;
   G4UIcmdWithAString* CmdChopperOn;
+  G4UIcmdWithADouble* CmdChopperAbundance;
   G4UIcmdWithADouble* CmdAngle;
   G4UIcmdWithAString* CmdAttenOn;
   G4bool check_atten_on = false;

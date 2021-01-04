@@ -86,7 +86,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdChopthick->SetParameterName("chopperthickness",false);
   CmdChopperOn->SetParameterName("chopperOn",false);
   CmdChopperAbundance->SetParameterName("chopperAbundance",false);
-  CmdChopperAbundance->SetParameterName("chopperAbundance > 0 && chopperAbundance < 100");
+  CmdChopperAbundance->SetRange("chopperAbundance > 0 && chopperAbundance < 100");
   CmdAngle->SetParameterName("Angle",false);
   CmdAngle->SetRange("Angle > 90 && Angle < 135");
   CmdAttenOn->SetParameterName("attenuator",false);

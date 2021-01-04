@@ -1,21 +1,38 @@
 # Comments are syntaxed by "#", remove "#" for commands 
+#################################################################################################
+## Mandatory Inputs (Do not Comment!)
+
+# Chopper Inputs 
+# Turn chopper wheel On/off
+/chopper/state On
+# Chopper base material either Uranium or Plutonium 
+/chopper/material Uranium
+# Chopper base material isotope abundance percentage (U235/238 abundance if chopper On/off Pu239/240 if chopper On/Off)
+/chopper/abundance 90
+
+# Interrogation Object Inputs 
+# Percentage of Fission isotope Input necessary for Uranium/Plutonium Only!
+/mytar/abundance 90
+# Target options Uranium Plutonium Lead Steel Plastic
+/mytar/target Uranium
+
 /control/verbose 0
 /tracking/verbose 0
 /run/verbose 0
 /event/verbose 0
-# must be called prior to run initialized
-# default is read from brems_distribution.root where any positive energy input
+
+#################################################################################################
+## OPTIONAL USER INPUTS 
+
+# Default is read from brems_distribution.root where any positive energy input
 # by user will give monoenergetic beam
 # Change following line of code for monoenergetic beam (MeV)
 #/input/energy 2
 
+#################################################################################################
 # CHOPPER WHEEL OPTIONS 
-# Turn chopper wheel On/off
-#/chopper/state On
-# Chopper base material either Uranium or Plutonium 
-#/chopper/material Uranium
 #units mm
-#/chopper/thickness 5
+#/chopper/thickness 3
 #units cm
 #/chopper/distance
 
@@ -24,17 +41,19 @@
 #/mytar/IntObjXPos
 # units cm
 #/mytar/IntObjRad
-#percentage of Fission isotope
-#/mytar/fAbundance 90
-#Target options Uranium Plutonium Lead Steel Plastic
-#/mytar/target Uranium
 
+#################################################################################################
 # DETECTOR OPTIONS 
-#units cm WaterX, WaterY, WaterZ sets the cherenkov detector size 
+
+# Detector Location 
+
+# Units cm WaterX, WaterY, WaterZ sets the cherenkov detector size 
 #/mydet/WaterX
-#units degrees *Backscatter angle
+# Units degrees Backscatter angle
 #/mydet/Angle 120
+
 # Attenuator Settings Surrounding Cherenkov Detector (optional)
+
 #/mydet/attenuator On
 # Attenuator Thickness in cm
 #/mydet/attenuatorThickness 1
@@ -47,6 +66,9 @@
 #/mydet/attenuatorThickness2 1 
 # Second Attenuator Layer (second material to be impacted by particles after first layer 
 #/mydet/attenuatorMaterial2 G4_POLYETHYLENE
+
+# Photocathode Options
+
 # units cm for photocathode radius (also adjust PMT radius accordingly)
 #/mydet/PCrad
 # Photocathode material options (GaAsP, Bialkali)
@@ -56,11 +78,16 @@
 
 /run/initialize
 
+#################################################################################################
 # OUTPUT OPTIONS 
+
 #/output/myoutput ChopperData
 #/output/myoutput WaterIncidentData
 #/output/myoutput DetIncidentData
 #/output/myoutput DetData
 #/output/myoutput IntObjData
+
+#################################################################################################
+# RUN OPTIONS 
 
 /run/beamOn 10

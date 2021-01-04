@@ -120,12 +120,16 @@ void SetIntObjZ_pos(G4double val)
         intObj_z_pos = val;
         intObj_z_pos = intObj_z_pos*cm;
 }
-void SetAbundance(G4double val)
+void SetIntObjAbundance(G4double val)
 {
-        radio_abundance = val;
-        radio_abundance = radio_abundance*perCent;
+        intObj_radio_abundance = val;
+        intObj_radio_abundance = intObj_radio_abundance*perCent;
 }
-
+void SetChopperAbundance(G4double val)
+{
+  chopper_radio_abundance = val;
+  chopper_radio_abundance = chopper_radioabundance*perCent;
+}
 void SetIntObj(G4String val)
 {
         if(val == "Uranium")

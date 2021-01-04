@@ -1,5 +1,10 @@
 # Mantis
-This program allows the user to run calorimetric NRF Cherenkov Detector cargo screening simulations. This simulation provides visualization tools in addition to root histogramming data. Visualization tools can be utilized in both batch and interactive modes. The final output provided can be manipulated by the user through the "mantis.in" input. Available histograms include: 
+This program allows the user to run calorimetric NRF Cherenkov Detector cargo screening simulations. This simulation provides visualization tools in addition to root histogramming data. Visualization tools can be utilized in both batch and interactive modes. The final output provided can be manipulated by the user through the "mantis.in" input. 
+
+Mantis Output
+==
+
+Available histograms include: 
 
 1. Interrogation Object Incident Data
 2. Incident Energy Water Tank Data
@@ -11,7 +16,35 @@ Additionally, two ntuples are available upon user request:
 1. Incident Chopper Energy Data
 2. Detector Process at PC Data
 
-This simulation allows the user to track particles at each phase in the experimental set up while manipulating the geometries, materials, and Chopper On/Off State through the "mantis.in" macro. 
+Mantis Input
+==
+
+The User can manipulate the simulation in various ways through the mantis.in macro input file. For example the following line of code:
+`> ./mantis -m mantis.in -o test.root -s 1`
+would run mantis with the inputs found in mantis.in located in the mantis executable directory. The ouput would be found in test.root and would have a seed of 1. 
+
+__Mandatory Inputs for mantis.in__
+
+mantis.in has the following MANDATORY inputs that the user must not comment:
+
+1. Chopper State (On/Off)
+2. Chopper Material (Uranium/Plutonium)
+3. Chopper Material Isotopic Composition 
+4. Interrogation Object Material
+5. Interrogation Object Material Isotopic Composition if Interrogation Object is Uranium/Plutonium
+
+The user also has several optional commands available in mantis.in:
+
+1. Input Energy/Spectrum
+2. Chopper Thickness
+3. Chopper Distance from Source
+4. Interrogation Object Location 
+5. Interrogation Object Size (radius)
+6. Detector Location
+7. Attenuating Layers (state, material, thickness)
+8. Photocathode (Size, number, material)
+9. Output Desired 
+10. Number of MC Particles to Simulate 
 
 Author: Jacob E Bickus
 

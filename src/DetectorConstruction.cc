@@ -2,9 +2,9 @@
 
 DetectorConstruction::DetectorConstruction(G4bool brem)
         : G4VUserDetectorConstruction(), IntObj_rad(4.5*cm),
-        radio_abundance(90*perCent), IntObj_Selection("Uranium"), intObjDensity(19.1*g/cm3),
+        chopper_radio_abundance(0*perCent), intObj_radio_abundance(0*perCent), IntObj_Selection("Uranium"), intObjDensity(19.1*g/cm3),
         chopperDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm), 
-        chopperOn(false), chopper_thick(1*mm), chopper_z(5*cm), theAngle(120.0), 
+        chopperOn(false), chopper_thick(3*mm), chopper_z(5*cm), theAngle(120.0), 
         water_size_x(60*cm), water_size_y(2.5908*m), water_size_z(40*cm),
         PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), attenuatorState(false), 
         attenThickness(0.1*mm), attenuatorMat("G4_AIR"), attenuatorState2(false), attenThickness2(0.1*mm), 
@@ -24,7 +24,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // Get nist material manager
 G4NistManager* nist = G4NistManager::Instance();
 
-// Set materials
+// Set general materials
 G4Material *air = nist->FindOrBuildMaterial("G4_AIR");
 G4Material *steel = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
 G4Material *poly = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
@@ -46,15 +46,18 @@ myVacuum->AddMaterial(air,1);
 // technically PMT glass is a special borosilicate glass calle k-free glass
 // but pyrex is close enough as a borosilicate glass
 G4Material* PMT_mat = nist->FindOrBuildMaterial("G4_Pyrex_Glass");
+
 // Setting up weapons grade materials
 G4Isotope* Uranium235 = new G4Isotope("Uranium235", 92, 235, 235.04393*g/mole); // atomicnumber, number of nucleons, mass of mole
 G4Isotope* Uranium238 = new G4Isotope("Uranium238", 92, 238, 238.02891*g/mole);
 G4Isotope* Plutonium239 = new G4Isotope("Plutonium239",94, 239, 239.0521634*g/mole);
 G4Isotope* Plutonium240 = new G4Isotope("Plutonium240", 94, 240, 240.05381*g/mole);
-G4Element* U = new G4Element("WGU", "U", 2); // name, element symbol, #isotopes
-G4Element* WGPu = new G4Element("WGPu","Pu",2);
-G4Element* natU = new G4Element("NaturalU", "U",2);
-G4Element* Pu = new G4Element("Plutonium240","Pu",2);
+G4Element* Uranium_chopper = new G4Element("Chopper_Uranium", "U", 2); // name, element symbol, #isotopes
+G4Element* Plutonium_chopper = new G4Element("Chopper_Plutonium","Pu",2);
+G4Element* Uranium_interrogation = new G4Element("Interrogation_Uranium","U",2);
+G4Element* Plutonium_interrogation = new G4Element("Interrogation_Plutonium","Pu",2);
+G4Material* natural_uranium = nist->FindOrBuildMaterial("G4_U");
+G4Material* natural_plutonium = nist->FindOrBuildMaterial("G4_Pu");
 
 // Set up Photocathode materials
 G4Element* elGa = new G4Element("Gallium", "Ga", 31, 69.723*g/mole);
@@ -139,31 +142,35 @@ G4LogicalVolume *logicHollowC = new G4LogicalVolume(hollowContainer, air, "hollo
 new G4PVPlacement(0, G4ThreeVector(),
                   logicHollowC, "HollowContainer",logicContainer, false,0,checkOverlaps);
 
-
-std::cout << "The Interogation Object Radius was set to: " << IntObj_rad/(cm)<< " cm" << std::endl;
+// ************************************* Set up Interrogation Object ************************************** //
 
 G4Sphere* solidIntObj = new G4Sphere("InterogationObject", 0, IntObj_rad, 0, 2*pi, 0, pi);
 
-G4float U238_abundance = 100*perCent - radio_abundance;
-U->AddIsotope(Uranium235, radio_abundance);
-U->AddIsotope(Uranium238, U238_abundance);
-natU->AddIsotope(Uranium235, 0.0072);
-natU->AddIsotope(Uranium238, 1 - 0.0072);
-G4float Pu240_abundance = 100*perCent - radio_abundance;
-WGPu->AddIsotope(Plutonium239, radio_abundance);
-WGPu->AddIsotope(Plutonium240, Pu240_abundance);
-Pu->AddIsotope(Plutonium240, 0.9999);
-Pu->AddIsotope(Plutonium239, 1 - 0.9999);
-
+intObj_U235_abundance = intObj_radio_abundance;
+intObj_U238_abundance = 100*perCent - intObj_radio_abundance;
+intObj_Pu239_abundance = intObj_radio_abundance;
+intObj_Pu240_abundance = 100*perCent - intObj_radio_abundance;
 G4Material* intObjMat = new G4Material("IntObjMaterial", intObjDensity, 1);
 intObjMat->SetName(IntObj_Selection);
 if(IntObj_Selection == "Uranium")
 {
-  intObjMat->AddElement(U,1);
+  Uranium_interrogation->AddIsotope(Uranium235, intObj_U235_abundance);
+  Uranium_interrogation->AddIsotope(Uranium238, intObj_U238_abundance);
+  intObjMat->AddElement(Uranium_interrogation,1);
 }
 else if(IntObj_Selection == "Plutonium")
 {
-  intObjMat->AddElement(WGPu,1);
+  Plutonium_interrogation->AddIsotope(Plutonium239, intObj_Pu239_abundance);
+  Plutonium_interrogation->AddIsotope(Plutonium240, intObj_Pu240_abundance);
+  intObjMat->AddElement(Plutonium_interrogation,1);
+}
+else if(IntObj_Selection == "Natural Uranium")
+{
+  intObjMat->AddMaterial(natural_uranium,1);
+}
+else if(IntObj_Selection == "Natural Plutonium")
+{
+  intObjMat->AddMaterial(natural_plutonium,1);
 }
 else if(IntObj_Selection == "Lead")
 {
@@ -286,17 +293,27 @@ physWater = new G4PVPlacement(0,         //no rotation
                                   0, //copy number
                                   checkOverlaps); //overlaps checking
 
-// Set up chopper wheel
+// ******************************** Set up Chopper Wheel ************************************** //
+
 if(chopperOn)
 {
-  std::cout << "The Chopper State was set to: " << "On!" << std::endl;
+  chopper_U235_abundance = chopper_radio_abundance;
+  chopper_U238_abundance = 100*perCent - chopper_radio_abundance;
+  chopper_Pu239_abundance = chopper_radio_abundance;
+  chopper_Pu240_abundance = 100*perCent - chopper_radio_abundance;
 }
 else
 {
-  std::cout << "The Chopper State was set to: " << "Off!" << std::endl;      
+  chopper_U235_abundance = 100*perCent - chopper_radio_abundance;
+  chopper_U238_abundance = chopper_radio_abundance;
+  chopper_Pu239_abundance = 100*perCent - chopper_radio_abundance;
+  chopper_Pu240_abundance = chopper_radio_abundance;
 }
-G4cout << "The Chopper Thickness was set to: " << chopper_thick/(cm) << " cm" << G4endl;
-G4cout << "The Chopper distance from beam was set to: " << chopper_z/(cm) << " cm" << G4endl;
+Uranium_chopper->AddIsotope(Uranium235, chopper_U235_abundance);
+Uranium_chopper->AddIsotope(Uranium238, chopper_U238_abundance);
+Plutonium_chopper->AddIsotope(Plutonium239, chopper_Pu239_abundance);
+Plutonium_chopper->AddIsotope(Plutonium240, chopper_Pu240_abundance);
+        
 if(chopper_z > water_z_pos)
 {
         std::cerr << "ERROR: Chopper wheel location should be behind water detectors, exiting." << std::endl;
@@ -304,34 +321,17 @@ if(chopper_z > water_z_pos)
 }
 G4Tubs *solidChopper = new G4Tubs("Chopper", 0*cm, 10*cm, chopper_thick, 0.*deg, 180.*deg);
 G4Material *chopperMat = new G4Material("chopperMaterial", chopperDensity, 1);
-if(chopperOn)
+
+if(chopperDensity == 19.1*g/cm3)
 {
-  if(chopperDensity == 19.1*g/cm3)
-  {
-    chopperMat->AddElement(U,1);
-    std::cout << "Weapons grade Uranium set as Chopper Wheel material." << std::endl;
-  }
-  else if(chopperDensity == 19.6*g/cm3)
-  {
-    chopperMat->AddElement(WGPu, 1);
-    std::cout << "Weapons grade Plutonium set as Chopper Wheel material." << std::endl;
-  }
-  else{std::cerr << "ERROR chopperDensity not found!" << std::endl; exit(100);}
+  chopperMat->AddElement(Uranium_chopper,1);
 }
-else
+else if(chopperDensity == 19.6*g/cm3)
 {
-  if(chopperDensity == 19.1*g/cm3)
-  {
-    chopperMat->AddElement(natU,1);
-    std::cout << "Chopper Material set to Natural Uranium" << std::endl;
-  }
-  else if(chopperDensity == 19.6*g/cm3)
-  {
-    chopperMat->AddElement(Pu,1);
-    std::cout << "Chopper Material set to Plutonium-240" << std::endl;
-  }
-  else{std::cerr << "ERROR: Chopper Density not found." << std::endl; exit(100);}
+  chopperMat->AddElement(Plutonium_chopper, 1);
 }
+else{std::cerr << "ERROR Chopper Density not found!" << std::endl; exit(100);}
+
 logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chopper");
 new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,chopper_z),
                   logicChopper, "Chopper", logicWorld, false,

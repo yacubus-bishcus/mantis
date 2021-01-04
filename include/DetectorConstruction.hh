@@ -142,6 +142,16 @@ void SetIntObj(G4String val)
                 IntObj_Selection = val;
                 intObjDensity = 19.6*g/cm3;
         }
+        else if(val == "NaturalU")
+        {
+          IntObj_Selection = "Natural Uranium";
+          intObjDensity = 19.1*g/cm3;
+        }
+        else if(val == "NaturalPu")
+        {
+          IntObj_Selection = "Natural Plutonium";
+          intObjDensity = 19.6*g/cm3;
+        }
         else if(val == "Lead")
         {
           IntObj_Selection = "Lead";

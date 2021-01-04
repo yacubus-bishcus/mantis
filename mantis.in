@@ -39,7 +39,7 @@
 # INTERROGATION TARGET OPTIONS 
 #units cm for XPos,YPos, ZPos
 #/mytar/IntObjXPos
-# units cm
+# units cm Default set to 4.5cm 
 #/mytar/IntObjRad
 
 #################################################################################################
@@ -69,7 +69,7 @@
 
 # Photocathode Options
 
-# units cm for photocathode radius Default is 4.5cm (also adjusts PMT radius accordingly)
+# units cm for photocathode radius Default is 25.4*cm (also adjusts PMT radius accordingly)
 #/mydet/PCrad
 # Photocathode material options (GaAsP, Bialkali) Default is GaAsP
 #/mydet/PCmat

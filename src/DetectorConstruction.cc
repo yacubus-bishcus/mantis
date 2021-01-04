@@ -129,7 +129,7 @@ new G4PVPlacement(0, G4ThreeVector(container_x, 0, 0),
                   false, 0, checkOverlaps);
 // Set up shipping container environment (8ft wide and 8.5ft high)
 G4double c_thick = 0.1905*cm; // approx 0.075 inch thick
-G4Box *solidContainer = new G4Box("Container", container_x, container_y, 2.4384*m);
+G4Box *solidContainer = new G4Box("Container", container_x, 2.5908*m, 2.4384*m);
 G4LogicalVolume *logicContainer = new G4LogicalVolume(solidContainer, steel, "Container");
 new G4PVPlacement(0,
                   G4ThreeVector(0, 0, container_z_pos),
@@ -137,7 +137,7 @@ new G4PVPlacement(0,
                   false,0,checkOverlaps);
 
 // make container hollow
-G4Box *hollowContainer = new G4Box("ContainerAir", container_x -c_thick, container_y -c_thick, 2.4384*m -c_thick);
+G4Box *hollowContainer = new G4Box("ContainerAir", container_x -c_thick, 2.5908*m -c_thick, 2.4384*m -c_thick);
 G4LogicalVolume *logicHollowC = new G4LogicalVolume(hollowContainer, air, "hollowContainer");
 new G4PVPlacement(0, G4ThreeVector(),
                   logicHollowC, "HollowContainer",logicContainer, false,0,checkOverlaps);

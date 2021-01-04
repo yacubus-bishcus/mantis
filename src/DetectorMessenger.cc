@@ -174,20 +174,17 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     DetectorA->SetIntObj_radius(theCommandtX);
     std::cout << "The Interrogation Object Radius manually set to: " << theCommandtX << " cm" << std::endl;
   }
-
   else if(command == Cmdtrad)
   {
     G4double theCommandtrad = Cmdtrad->GetNewDoubleValue(newValue);
     DetectorA->SetIntObjAbundance(theCommandtrad);
     std::cout << "The Interrogation Object fissionable radioisotope abundance manually set to: " << theCommandtrad << " percent" << std::endl;
-    
   }
   else if(command == Cmdtsel)
   {
     G4String theCommandtsel = newValue;
     DetectorA->SetIntObj(theCommandtsel);
     std::cout << "The Interrogation Object manually set to: " << theCommandtsel << " material!" << std::endl;
-
   }
   else if(command == CmdtXpos)
   {

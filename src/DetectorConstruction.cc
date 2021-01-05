@@ -196,8 +196,8 @@ else if(IntObj_Selection == "Plastic")
 }
 else{std::cerr << "ERROR: Interogation Material not found."<<std::endl;}
 
-std::cout << "The User's Interogation Object Material: "
-          << intObjMat->GetName() << std::endl;
+G4cout << "The User's Interogation Object Material: "
+          << intObjMat->GetName() << G4endl;
         
 G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObjLogicVolume");
 setEndIntObj(container_z_pos, 2.4384*m);
@@ -216,15 +216,14 @@ G4Box* solidAttenuator = new G4Box("Attenuator", water_size_x + attenThickness +
 G4LogicalVolume* logicAttenuator = new G4LogicalVolume(solidAttenuator, attenuator, "Attenuator");
 if(attenuatorState)
 {
-  std::cout << "Attenuator Thickness set to: " << attenThickness << " cm of " << attenuator->GetName() << std::endl;
+  G4cout << "Attenuator Thickness set to: " << attenThickness << " cm of " << attenuator->GetName() << G4endl;
 }
 else
 {
   attenuatorState2 = false;
   attenThickness2 = 0*cm;
-  std::cout<< "Second Attenuator Thickness automatically set to Off." << std::endl;
-}
-G4cout << "Attenuator Thickness set to: " << attenThickness << " cm of " << attenuator->GetName() << std::endl;        
+  G4cout<< "Second Attenuator Thickness automatically set to Off." << G4endl;
+}       
 
 G4double water_z_pos = container_z_pos - 2.4384*m;
 G4double myangle = (180. - theAngle)*pi/180.;
@@ -249,9 +248,8 @@ G4LogicalVolume* logicSecondAttenuator = new G4LogicalVolume(solidSecondAttenuat
 new G4PVPlacement(0,G4ThreeVector(0,0,0), logicSecondAttenuator, "LowZAttenuator", logicAttenuator, false, 0, checkOverlaps);
 if(attenuatorState2)
 {
-  std::cout << "Second Attenuator set to: " << attenThickness2 << " cm of " << low_z_attenuator->GetName() << std::endl;
+  G4cout << "Second Attenuator set to: " << attenThickness2 << " cm of " << low_z_attenuator->GetName() << G4endl;
 }
-G4cout << "Second Attenuator set to: " <<attenThickness2 << " cm of " << low_z_attenuator->GetName() << std::endl;
 // Make Water Casing (Plexiglass)
 
 G4Box* solidCasing = new G4Box("Encasing", water_size_x, water_size_y, water_size_z);
@@ -260,7 +258,7 @@ new G4PVPlacement(0,G4ThreeVector(0,0,0), logicCasing, "Encasing", logicSecondAt
         
 if(plexiThickness != 0.18*mm)
 {
-  std::cout << "Plexiglass Thickness Changed to: " << plexiThickness << " mm" << std::endl;
+  G4cout << "Plexiglass Thickness Changed to: " << plexiThickness << " mm" << G4endl;
 }
 else
 {
@@ -268,7 +266,7 @@ else
 }
 if(tapeThick != 0.01*cm)
 {
-  std::cout << "Optical Tape Thickness Changed to: " << tapeThick << " cm" << std::endl;
+  G4cout << "Optical Tape Thickness Changed to: " << tapeThick << " cm" << G4endl;
 }
 else
 {
@@ -307,7 +305,7 @@ physWater = new G4PVPlacement(0,         //no rotation
 
 if(chopper_radio_abundance <= 0.0)
 {
-  std::cout << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << std::endl;
+  std::cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << std::endl;
   exit(100);
 }
         
@@ -790,6 +788,7 @@ new G4LogicalSkinSurface("PMT_surf", logicPMT, PMT_opsurf);
         airMPT->AddProperty("RINDEX", photonEnergy, refractiveIndex2, nEntries);
 
         air->SetMaterialPropertiesTable(airMPT);
+        airMPT->DumpTable();
 //
 //always return the physical World!!!
 //

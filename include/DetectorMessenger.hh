@@ -58,6 +58,7 @@ private:
   G4UIdirectory *myDir2;
   G4UIdirectory *myDir3;
   G4UIdirectory *myDir4;
+  G4UIdirectory *myDir5;
 };
 
 #endif

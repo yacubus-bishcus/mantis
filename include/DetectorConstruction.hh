@@ -235,6 +235,10 @@ void SetDetectorViewOnly(G4bool val)
 {
   DetectorViewOnly = val;
 }
+void SetMaterialVerbose(G4bool val)
+{
+  material_verbose = val;
+}
 
 private:
 G4bool bremTest;
@@ -283,6 +287,7 @@ G4String attenuatorMat2;
 G4double plexiThickness;
 G4double tapeThick;
 G4bool DetectorViewOnly;
+G4bool material_verbose;
 DetectorMessenger* detectorM;
 
 };

@@ -235,7 +235,7 @@ void SetDetectorViewOnly(G4bool val)
 {
   DetectorViewOnly = val;
 }
-void SetMaterialVerbose(G4bool val)
+void SetMaterialVerbosity(G4bool val)
 {
   material_verbose = val;
 }

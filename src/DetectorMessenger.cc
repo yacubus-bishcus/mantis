@@ -8,10 +8,12 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   myDir2 = new G4UIdirectory("/mytar/");
   myDir3 = new G4UIdirectory("/chopper/");
   myDir4 = new G4UIdirectory("/myvisualization/");
+  myDir5 = new G4UIdirectory("/material/");
   myDir2->SetGuidance("Target Setup Commands");
   myDir->SetGuidance("Detector Setup Commands");
   myDir3->SetGuidance("Chopper Setup Commands");
   myDir4->SetGuidance("Customized Visualization Commands");
+  myDir5->SetGuidance("Material Table Verbosity");
   Cmd = new G4UIcmdWithADouble("/mydet/PCrad",this);
   CmdX = new G4UIcmdWithADouble("/mydet/WaterX",this);
   CmdY = new G4UIcmdWithADouble("/mydet/WaterY",this);
@@ -39,6 +41,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdPlexi = new G4UIcmdWithADouble("/mydet/PlexiglassThickness",this);
   CmdTape = new G4UIcmdWithADouble("/mydet/OpticalTapeThickness",this);
   CmdVis = new G4UIcmdWithAString("/myvisualization/DetectorViewOnly", this);
+  CmdVerbose = new G4UIcmdWithAString("/material/verbose",this);
 
 
   Cmd->SetGuidance("Choose Desired PhotoCathode Radius");
@@ -98,6 +101,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdPlexi->SetParameterName("PlexiThickness",false);
   CmdTape->SetParameterName("TapeThickness",false);
   CmdVis->SetParameterName("visualization",false);
+  CmdVerbose->SetParameterName("verbosity",false);
 
   Cmdtsel->SetCandidates("Uranium NaturalU Plutonium NaturalPu Lead Steel Plastic");
   Cmdpcmat->SetCandidates("GaAsP Bialkali");
@@ -107,6 +111,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdAttenMat->SetCandidates("G4_Pb G4_Cu G4_Zn G4_Ag G4_Cd G4_Th G4_U G4_Au G4_W G4_Fe");
   CmdAttenMat2->SetCandidates("G4_POLYETHYLENE G4_POLYPROPYLENE G4_POLYSTYRENE G4_POLYVINYL_CHLORIDE G4_POLYCARBONATE");
   CmdVis->SetCandidates("True true False false");
+  CmdVerbose->SetCandidates("True true False false On on Off off");
 
 }
 
@@ -139,6 +144,7 @@ DetectorMessenger::~DetectorMessenger()
   delete CmdTape;
   delete CmdVis;
   delete CmdChopMaterial;
+  delete CmdVerbose;
 }
 
 
@@ -345,6 +351,16 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     G4String theCmdChopMaterial = newValue;
     DetectorA->SetChopperMaterial(theCmdChopMaterial);
     std::cout << "The chopper material manually set to: " << theCmdChopMaterial << std::endl;
+  }
+  else if(command == CmdVerbose)
+  {
+    G4String theVerbosity = newValue;
+    G4bool theVerbositybool = false;
+    if(theVerbosity == "On" || theVerbosity == "on" || theVerbosity == "True" || theVerbosity == "true")
+    {
+      theVerbositybool = true;
+    }
+    DetectorA->SetMaterialVerbosity(theVerbositybool);
   }
   else
   {

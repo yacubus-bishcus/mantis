@@ -799,7 +799,7 @@ new G4LogicalSkinSurface("PMT_surf", logicPMT, PMT_opsurf);
           photocath_mt->DumpTable();
           G4cout << "Material Properties Table for: " << Water->GetName() << G4endl;
           waterMPT->DumpTable();
-          G4cout << "Material Properties Table for: " << plexiGlass->GetName() << G4endl;
+          G4cout << "Material Properties Table for: " << plexiglass->GetName() << G4endl;
           casingOPMPT->DumpTable();
         }
 //

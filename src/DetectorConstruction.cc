@@ -7,7 +7,8 @@ DetectorConstruction::DetectorConstruction(G4bool brem)
         chopperOn(false), chopper_thick(3*mm), chopper_z(5*cm), theAngle(120.0), 
         water_size_x(60*cm), water_size_y(2.5908*m), water_size_z(40*cm),
         PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), attenuatorState(false), 
-        attenThickness(0.1*mm), attenuatorMat("G4_AIR"), attenuatorState2(false), attenThickness2(0.1*mm), 
+        attenThickness(0.1*mm), attenuatorMat("G4_
+                                              "), attenuatorState2(false), attenThickness2(0.1*mm), 
         attenuatorMat2("G4_AIR"), plexiThickness(0.18*mm), tapeThick(0.01*cm), DetectorViewOnly(false), detectorM(NULL)
 {
         detectorM = new DetectorMessenger(this);
@@ -715,9 +716,9 @@ new G4LogicalBorderSurface("tape_surf", physWater, physTape, tape_opsurf);
 // PMT Surface Properties
         G4double reflectivity[] = {0.03822, 0.0392,  0.040,  0.041,
                                    0.0415,  0.0428,  0.0433,  0.0440, 0.0451, 0.0469 };
-G4double transmittance[] = {0.962, 0.961, 0.96, 0.959, 0.959, 0.958, 0.957,0.956,0.955, 0.954};
+        G4double transmittance[] = {0.962, 0.961, 0.96, 0.959, 0.959, 0.958, 0.957,0.956,0.955, 0.954};
         assert(sizeof(reflectivity) == sizeof(ephotonPMT));
-assert(sizeof(transmittance) == sizeof(ephotonPMT2));
+        assert(sizeof(transmittance) == sizeof(ephotonPMT2));
         G4double efficiency[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
         assert(sizeof(efficiency) == sizeof(ephotonPMT));
         G4double pmt_iof[] = {1.486, 1.4945, 1.5013, 1.5075, 1.5118, 1.5214, 1.5253, 1.5308, 1.5392, 1.5528};
@@ -728,7 +729,7 @@ assert(sizeof(transmittance) == sizeof(ephotonPMT2));
         G4MaterialPropertiesTable* PMTopt = new G4MaterialPropertiesTable();
         G4MaterialPropertiesTable* PMTphysabs = new G4MaterialPropertiesTable();
         PMTopt->AddProperty("REFLECTIVITY", ephotonPMT, reflectivity, num)->SetSpline(true);
-PMTopt->AddProperty("TRANSMITTANCE", ephotonPMT2, transmittance, num2);
+        PMTopt->AddProperty("TRANSMITTANCE", ephotonPMT2, transmittance, num2);
         PMTopt->AddProperty("EFFICIENCY", ephotonPMT, efficiency, num);
         PMTopt->AddProperty("RINDEX", ephotonPMT, pmt_iof, num)->SetSpline(true);
         PMTphysabs->AddProperty("RINDEX", ephotonPMT, pmt_iof, num)->SetSpline(true);
@@ -788,7 +789,19 @@ new G4LogicalSkinSurface("PMT_surf", logicPMT, PMT_opsurf);
         airMPT->AddProperty("RINDEX", photonEnergy, refractiveIndex2, nEntries);
 
         air->SetMaterialPropertiesTable(airMPT);
-        airMPT->DumpTable();
+        if(material_verbose)
+        {
+          G4cout << "Material Properties Table for: " << air->GetName() << G4endl;
+          airMPT->DumpTable();
+          G4cout << "Material Properties Table for: " << teflonTape->GetName() << G4endl;
+          tapeOPMPT->DumpTable();
+          G4cout << "Material Properties Table for: " << pc_mat << G4endl;
+          photocath_mt->DumpTable();
+          G4cout << "Material Properties Table for: " << water->GetName() << G4endl;
+          waterMPT->DumpTable();
+          G4cout << "Material Properties Table for: " << plexiGlass->GetName() << G4endl;
+          casingOPMPT->DumpTable();
+        }
 //
 //always return the physical World!!!
 //

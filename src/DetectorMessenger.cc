@@ -274,7 +274,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     {
       G4double theCmdAttendThickness = CmdAttenThick->GetNewDoubleValue(newValue);
       DetectorA->SetAttenuatorThickness(theCmdAttendThickness);
-      std::cout << "The first attenuation layer thickness manually set to: " << CmdAttenThick << " cm" << std::endl;
+      std::cout << "The first attenuation layer thickness manually set to: " << theCmdAttendThickness << " cm" << std::endl;
     }
   }
   else if(command == CmdAttenMat)

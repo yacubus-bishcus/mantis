@@ -27,6 +27,8 @@ echo "Sourcing $VARGEANTMAKE"
 source $VARGEANTMAKE
 
 echo Building Mantis...
-cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis && make -j4
+cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis && make -j4 && cd ../mantis_run
+
+./mantis -m mantis.in -o test.root -s 1 
 
 echo mantis Configured! Good Luck and try the README.md!

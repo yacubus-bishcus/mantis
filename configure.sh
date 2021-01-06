@@ -3,7 +3,8 @@ echo Please Enter CERN ROOT build directory
 read -p "The ROOT Directory: " INVAR1
 echo Please Enter Geant4 install directory 
 read -p "The Geant4 Directory: " INVAR2
-cd ../ && mkdir MANTIS && mv mantis MANTIS && cd MANTIS/mantis 
+current_dir="$(pwd)"
+cd ~ && mkdir MANTIS_MAIN_DIR && mv $current_dir MANTIS_MAIN_DIR && cd MANTIS_MAIN_DIR/mantis
 tar xfz NRF_Database.tar.gz && mv Database1.1 ../ && cd ../Database1.1
 database_working_dir="$(pwd)"
 echo "Exporting the Database working directory path: $database_working_dir"

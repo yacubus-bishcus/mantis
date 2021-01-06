@@ -76,12 +76,12 @@
 # Number of PMTs in each Cherenkov Detector so total = input*2 Default is 4 
 #/mydet/nPMT 4
 
-/run/initialize
-
 #################################################################################################
 # OUTPUT OPTIONS 
 
 #/material/verbose false
+
+/run/initialize
 #/output/myoutput ChopperData
 #/output/myoutput WaterIncidentData
 #/output/myoutput DetIncidentData

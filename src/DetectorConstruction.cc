@@ -1,14 +1,15 @@
 #include "DetectorConstruction.hh"
 
 DetectorConstruction::DetectorConstruction(G4bool brem)
-        : G4VUserDetectorConstruction(), IntObj_rad(4.5*cm),
-        chopper_radio_abundance(0*perCent), intObj_radio_abundance(0*perCent), IntObj_Selection("Uranium"), intObjDensity(19.1*g/cm3),
-        chopperDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm), 
-        chopperOn(false), chopper_thick(3*mm), chopper_z(5*cm), theAngle(120.0), 
-        water_size_x(60*cm), water_size_y(2.5908*m), water_size_z(40*cm),
-        PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), attenuatorState(false), 
-        attenThickness(0.1*mm), attenuatorMat("G4_AIR"), attenuatorState2(false), attenThickness2(0.1*mm), 
-        attenuatorMat2("G4_AIR"), plexiThickness(0.18*mm), tapeThick(0.01*cm), DetectorViewOnly(false), material_verbose(false), 
+        : G4VUserDetectorConstruction(), // chopper properties 
+        chopperDensity(19.1*g/cm3), chopper_thick(3*mm), chopper_z(5*cm), chopperOn(false), // interrogation object properties 
+        IntObj_rad(4.5*cm), intObjDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm), IntObj_Selection("Uranium"), // radio abundances
+        chopper_radio_abundance(0*perCent), intObj_radio_abundance(0*perCent), // Attenuator Properties 
+        attenuatorState(false), attenuatorState2(false), attenThickness(0.1*mm), attenThickness2(0.1*mm), attenuatorMat("G4_AIR"), attenuatorMat2("G4_AIR"), // Water Tank properties 
+        theAngle(120.0), water_size_x(60*cm), water_size_y(2.5908*m), water_size_z(40*cm), // plexi/tape properties 
+        plexiThickness(0.18*mm), tapeThick(0.01*cm), // PMT Properties 
+        PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), // Output Properties 
+        DetectorViewOnly(false), material_verbose(false), // Messenger 
         detectorM(NULL)
 {
         detectorM = new DetectorMessenger(this);

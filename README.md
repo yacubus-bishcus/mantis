@@ -62,6 +62,14 @@ Dependencies
   
 __Version__:  Mantis and been built against and tested with Geant4 10.3 and 10.5, ROOT 6.14 and ROOT 6.16. Geant4 10.6 has important modifications that require changes in the code.
 
+EASY SETUP WITH CONFIGURE FILE 
+==
+
+For Easy Set up run the following line of code:
+`> git clone https://github.com/jacobbickus/mantis.git && cd mantis && chmod u+x configure.sh && ./configure.sh`
+
+The terminal will ask first for the path to the CERN ROOT Directory where the user built ROOT. Then the Terminal will ask for the Geant4 install directory where the user has geant4 libraries installed. Once the user inputs these variables the configure file will build mantis and execute a test run with outputs: test_error.log, test.log, and test.root. 
+
 The Following Instructions should work once the Geant4 and CERN ROOT are installed:
 
 Be sure to untar the NRF Database using 

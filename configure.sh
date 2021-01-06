@@ -12,7 +12,7 @@ export G4NRFGAMMADATA=$database_working_dir
 VAR1="/etc/cmake"
 VARCMAKEPATH=$INVAR1$VAR1
 echo "Exporting the ROOT CERN Cmake path: $VARCMAKEPATH"
-export ROOTCMAKEPATH=$VARCMAKEPATH"
+export ROOTCMAKEPATH=$VARCMAKEPATH
 VAR2="/bin/thisroot.sh"
 VARROOTBIN=$INVAR1$VAR2
 echo "Sourcing $VARROOTBIN"

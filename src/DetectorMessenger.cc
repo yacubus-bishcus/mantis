@@ -240,10 +240,12 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     if(thecmdchopperon == "On" || thecmdchopperon == "on")
     {
       DetectorA->SetChopperOn(true);
+      std::cout << "The Chopper state set to On!" << std::endl;
     }
     else
     {
       DetectorA->SetChopperOn(false);
+      std::cout << "The Chopper state set to Off!" << std::endl;
     }
   }
   else if(command == CmdChopperAbundance)

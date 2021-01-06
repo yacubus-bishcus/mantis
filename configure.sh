@@ -8,21 +8,25 @@ cd ~ && mkdir MANTIS_MAIN_DIR && mv $current_dir MANTIS_MAIN_DIR && cd MANTIS_MA
 tar xfz NRF_Database.tar.gz && mv Database1.1 ../ && cd ../Database1.1
 database_working_dir="$(pwd)"
 echo "Exporting the Database working directory path: $database_working_dir"
-
+export G4NRFGAMMADATA=$database_working_dir
 VAR1="/etc/cmake"
 VARCMAKEPATH=$INVAR1$VAR1
 echo "Exporting the ROOT CERN Cmake path: $VARCMAKEPATH"
+export ROOTCMAKEPATH=$VARCMAKEPATH"
 VAR2="/bin/thisroot.sh"
 VARROOTBIN=$INVAR1$VAR2
 echo "Sourcing $VARROOTBIN"
+source $VARROOTBIN
 VAR3="/geant4.sh"
 VARGEANTBIN=$INVAR2$VAR3
 echo "Sourcing $VARGEANTBIN"
+source $VARGEANTBIN
 VAR4="/share/Geant4-10.5.1/geant4make/geant4make.sh"
 VARGEANTMAKE=$INVAR2$VAR4
 echo "Sourcing $VARGEANTMAKE"
+source $VARGEANTMAKE
 
 echo Building Mantis...
 cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis && make -j4
 
-echo mantis configured. Good Luck and try the README.md!
+echo mantis Configured! Good Luck and try the README.md!

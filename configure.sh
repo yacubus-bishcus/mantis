@@ -23,4 +23,4 @@ VARGEANTMAKE=$INVAR2$VAR4
 echo "Sourcing $VARGEANTMAKE"
 
 echo Building Mantis...
-cd ../ && mkdir mantis_run && cd mantis_run
+cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis && make -j4

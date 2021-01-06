@@ -31,4 +31,4 @@ cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis && make -j4 && cd
 
 ./mantis -m mantis.in -o test.root -s 1 
 
-echo mantis Configured! Good Luck and try the README.md!
+echo "Mantis Configured and Test Run Complete. Test results can be found in test_error.log and test.log. Good Luck and try the README.md!"

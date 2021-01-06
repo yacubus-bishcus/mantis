@@ -243,18 +243,21 @@ void SetMaterialVerbosity(G4bool val)
 private:
 G4bool bremTest;
 
+// Chopper Properties 
+G4double chopperDensity, chopper_thick, chopper_z;
+G4bool chopperOn;
+G4double chopper_U235_abundance, chopper_U238_abundance, chopper_Pu239_abundance, chopper_Pu240_abundance;
+
+// Interrogation Object Properties 
 G4double EndIntObj, IntObj_rad, intObjDensity, intObj_x_pos, intObj_y_pos, intObj_z_pos;
 G4String IntObj_Selection;
 G4VPhysicalVolume* physIntObj;
+G4double intObj_U235_abundance, intObj_U238_abundance, intObj_Pu239_abundance, intObj_Pu240_abundance;
 
 G4double chopper_radio_abundance, intObj_radio_abundance;
-G4double intObj_U235_abundance, intObj_U238_abundance, intObj_Pu239_abundance, intObj_Pu240_abundance;
-G4double chopper_U235_abundance, chopper_U238_abundance, chopper_Pu239_abundance, chopper_Pu240_abundance;
 
-G4double chopperDensity, chopper_thick, chopper_z;
-G4bool chopperOn;
+// Material, Logical and Physical Volumes 
 G4Material* PC_mat;
-
 G4LogicalVolume *logicalLinac;
 G4LogicalVolume *logicalVacuum;
 G4LogicalVolume *logicBremTarget;
@@ -266,19 +269,28 @@ G4LogicalVolume* logicChopper;
 G4VPhysicalVolume* physWater;
 G4VPhysicalVolume* physTape;
 
-G4double theAngle, water_size_x, water_size_y, water_size_z, PMT_rmax;
+// Detector Properties 
 
-G4int nPMT;
-G4String pc_mat;
-
+// Attenuator Properties 
 G4bool attenuatorState, attenuatorState2;
 G4double attenThickness, attenThickness2;
 G4String attenuatorMat, attenuatorMat2;
 
+// Water Tank Properties 
+G4double theAngle, water_size_x, water_size_y, water_size_z;
+
+// Plexi/Tape Properties 
 G4double plexiThickness, tapeThick;
 
+// PMT Properties 
+G4double PMT_rmax;
+G4int nPMT;
+G4String pc_mat;
+
+// Output Properties 
 G4bool DetectorViewOnly, material_verbose;
 
+// Messenger 
 DetectorMessenger* detectorM;
 
 };

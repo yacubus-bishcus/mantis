@@ -791,6 +791,7 @@ new G4LogicalSkinSurface("PMT_surf", logicPMT, PMT_opsurf);
         air->SetMaterialPropertiesTable(airMPT);
         if(material_verbose)
         {
+          G4cout << "Material Verbose set to True/On!" << G4endl;
           G4cout << "Material Properties Table for: " << air->GetName() << G4endl;
           airMPT->DumpTable();
           G4cout << "Material Properties Table for: " << teflonTape->GetName() << G4endl;

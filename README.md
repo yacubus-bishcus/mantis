@@ -70,6 +70,9 @@ For Easy Set up run the following line of code:
 
 The terminal will ask first for the path to the CERN ROOT Directory where the user built ROOT. Then the Terminal will ask for the Geant4 install directory where the user has geant4 libraries installed. Once the user inputs these variables the configure file will build mantis and execute a test run with outputs: test_error.log, test.log, and test.root. 
 
+INSTALLATION WITHOUT CONFIGURE FILE 
+==
+
 The Following Instructions should work once the Geant4 and CERN ROOT are installed:
 
 Be sure to untar the NRF Database using 

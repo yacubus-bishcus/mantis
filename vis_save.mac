@@ -1,15 +1,19 @@
+/chopper/state On
+/chopper/material Uraniun
+/chopper/abundance 90
+/mytar/abundance 90
+/mytar/target Uranium
 /control/verbose 0
+/tracking/verbose 0
 /run/verbose 0
-#/mydet/nPMT 4
-#/chopper/state On
-#/mydet/attenuator On
-#/mydet/attenuatorThickness 1
-#/mydet/attenuatorMaterial G4_Pb
-#/mydet/attenuator2 On
-#/mydet/attenuatorThickness2 1
-#/mydet/attenuatorMaterial2 G4_POLYETHYLENE
-#/mydet/PlexiglassThickness 1
-#/mydet/OpticalTapeThickness 1
+/event/verbose 0
+/chopper/thickness 3
+/mytar/IntObjRad 10 
+/mydet/Angle 120
+/mydet/attenuator Off
+/mydet/attenuator2 Off
+/mydet/nPMT 4
+
 /run/initialize
 
 /vis/open VRML2FILE

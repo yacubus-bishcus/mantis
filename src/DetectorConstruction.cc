@@ -25,7 +25,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // Get nist material manager
 G4NistManager* nist = G4NistManager::Instance();
 
-// Set general materials
+// ************************************* Set up Materials ***************************************** // 
+        
 G4Material *air = nist->FindOrBuildMaterial("G4_AIR");
 G4Material *steel = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
 G4Material *poly = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
@@ -99,7 +100,7 @@ G4VPhysicalVolume* physWorld =
                           0, //copy number
                           false); //overlaps checking
 
-// ********************World and Materials Complete ***********************//
+// ************************************ World and Materials Complete ***************************************//
 
 // Set up Linac configuration
 if(bremTest)
@@ -116,7 +117,7 @@ if(bremTest)
         new G4PVPlacement(0, G4ThreeVector(0, 0, 0),logicBremTarget,"Brem", logicalVacuum, false, 0, checkOverlaps);
 }
 
-// *************************** End of Brem Test Materials ************************//
+// ***************************************** End of Brem Test Materials ***************************************** //
 
 // Set up Collimator
 G4double container_z_pos = 2.4384*m +water_size_x + 1.0*m;
@@ -142,6 +143,8 @@ G4Box *hollowContainer = new G4Box("ContainerAir", 0.6096*m -c_thick, 2.5908*m -
 G4LogicalVolume *logicHollowC = new G4LogicalVolume(hollowContainer, air, "hollowContainer");
 new G4PVPlacement(0, G4ThreeVector(),
                   logicHollowC, "HollowContainer",logicContainer, false,0,checkOverlaps);
+        
+// ************************** End of Shipping Container and Collimator Geometries **************************** //
 
 // ************************************* Set up Interrogation Object ************************************** //
 
@@ -207,10 +210,12 @@ physIntObj = new G4PVPlacement(0,
                                G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos),
                                logicIntObj, "IntObjPhysical", logicHollowC, false,
                                0, checkOverlaps);
+        
+// *************************** Interrogation Object Setup Complete ***************************** // 
 
-// ************************** Begin Detector Construction **************************//
+// ********************************** Begin Detector Construction ********************************** //
 
-// Make Plate Attenuator in front of glass 
+// First Attenuation Layer 
 
 G4Box* solidAttenuator = new G4Box("Attenuator", water_size_x + attenThickness + attenThickness2, water_size_y + attenThickness + attenThickness2, 
                                    water_size_z + attenThickness + attenThickness2);
@@ -243,6 +248,7 @@ G4ThreeVector(-1*water_x_pos,0,water_z_pos), logicAttenuator,
 "AttenuatorRight", logicWorld, false, 0, checkOverlaps);
 
 // Option to add second layer of low Z attenuation material 
+        
 G4Box* solidSecondAttenuator = new G4Box("LowZAttenuator", water_size_x + attenThickness2, water_size_y+attenThickness2,
                                          water_size_z+attenThickness2);
 G4LogicalVolume* logicSecondAttenuator = new G4LogicalVolume(solidSecondAttenuator, low_z_attenuator, "LowZAttenuator");
@@ -251,6 +257,7 @@ if(attenuatorState2)
 {
   G4cout << "Second Attenuator set to: " << attenThickness2 << " cm of " << low_z_attenuator->GetName() << G4endl;
 }
+
 // Make Water Casing (Plexiglass)
 
 G4Box* solidCasing = new G4Box("Encasing", water_size_x, water_size_y, water_size_z);
@@ -275,12 +282,14 @@ else
 }
         
 // Make Teflon tape wrap
+        
 G4VSolid* solidTape = new G4Box("Tape", water_size_x-plexiThickness, water_size_y-plexiThickness, water_size_z-plexiThickness);
 G4Material *teflonTape = nist->FindOrBuildMaterial("G4_TEFLON");
 G4LogicalVolume* logicTape = new G4LogicalVolume(solidTape, teflonTape, "Tape");
 physTape = new G4PVPlacement(0,G4ThreeVector(0,0,0), logicTape, "Tape", logicCasing, false, 0, checkOverlaps);
 
 // Tub of water
+        
 G4cout << "The Water Tank X was set to: " << water_size_x/(cm)<< " cm" << G4endl;
 G4cout << "The Water Tank Y was set to: " << water_size_y/(cm)<< " cm" << G4endl;
 G4cout << "The Water Tank Z was set to: " << water_size_z/(cm) << " cm" << G4endl << G4endl;
@@ -301,8 +310,10 @@ physWater = new G4PVPlacement(0,         //no rotation
                                   false, //no boolean operation
                                   0, //copy number
                                   checkOverlaps); //overlaps checking
+        
+// ******************************* End of Detector Construction Setup ********************************* // 
 
-// ******************************** Set up Chopper Wheel ************************************** //
+// ************************************* Set up Chopper Wheel ************************************** //
 
 if(chopper_radio_abundance <= 0.0)
 {
@@ -393,7 +404,8 @@ for(G4int k=1; k<=nPMT; k++)
                           checkOverlaps);
 }
 
-// Make Solid PhotoCathode
+// ************************************** Construct Photocathode *********************************** // 
+        
 G4double PC_z = 20*nm;
 G4cout << "The Photocathode material was set as: " << pc_mat << G4endl;
 if(pc_mat == "GaAsP")
@@ -418,7 +430,8 @@ physPC = new G4PVPlacement(0,
                            0,
                            checkOverlaps);
 
-// Visualization Attributes
+// ****************************** Visualization Handler ******************************** // 
+        
 G4VisAttributes *yellow= new G4VisAttributes( G4Colour(255/255.,255/255.,51/255. ));
 G4VisAttributes *red= new G4VisAttributes( G4Colour(255/255., 0/255., 0/255. ));
 G4VisAttributes *blue= new G4VisAttributes( G4Colour(0/255., 0/255.,  255/255. ));
@@ -474,6 +487,7 @@ else
 //
 
 // ************************** WATER ********************************//
+        
         G4double photonEnergy[] =
         { 2.034*eV, 2.068*eV, 2.103*eV, 2.139*eV,
           2.177*eV, 2.216*eV, 2.256*eV, 2.298*eV,
@@ -499,7 +513,7 @@ else
         };
 
 // Water need to add rayleigh scattering! -- added automatically if material name = Water
-//
+        
         G4double refractiveIndex1[] =
         { 1.3435, 1.344,  1.3445, 1.345,  1.3455,
           1.346,  1.3465, 1.347,  1.3475, 1.348,
@@ -639,9 +653,10 @@ else
 // Set the Birks Constant for the Water scintillator
         Water->GetIonisation()->SetBirksConstant(0.126*mm/MeV);
 
-// APPLY OPTICAL QUALITIES
+// ********************** APPLY OPTICAL QUALITIES ********************** //
 
 /* ************************************************************************* */
+        
 // Water Tank Properties
 
 G4MaterialPropertiesTable* casingMPT = new G4MaterialPropertiesTable();
@@ -673,6 +688,7 @@ casing_opsurf->SetMaterialPropertiesTable(casingOPMPT);
 new G4LogicalSkinSurface("casing_surf", logicCasing, casing_opsurf);
 
 // Add properties for Teflon Tape
+        
 G4MaterialPropertiesTable* tapeMPT = new G4MaterialPropertiesTable();
 G4MaterialPropertiesTable* tapeOPMPT = new G4MaterialPropertiesTable();
 G4double ephotonTape[] = {1.1427161*eV,1.2915073*eV,1.4586435*eV,1.6984206*eV,2.0160114*eV,2.5303*eV,3.262755*eV, 4.0*eV};
@@ -698,6 +714,7 @@ teflonTape->SetMaterialPropertiesTable(tapeMPT);
 new G4LogicalBorderSurface("tape_surf", physWater, physTape, tape_opsurf);
 
 // *************************** Detector (PMT and PC) ***************************//
+        
 // PMT
 // wavelengths 2.5, 2.0,1.5 1, .75, .5 ,.45, .4, .35, .30
         G4double ephotonPMT[] = {0.4959388*eV, 0.6199*eV, 0.8265*eV, 1.239*eV, 1.653*eV, 2.480*eV,
@@ -789,6 +806,8 @@ new G4LogicalSkinSurface("PMT_surf", logicPMT, PMT_opsurf);
         airMPT->AddProperty("RINDEX", photonEnergy, refractiveIndex2, nEntries);
 
         air->SetMaterialPropertiesTable(airMPT);
+        
+        // Material Verbosity to print materials properties tables 
         if(material_verbose)
         {
           G4cout << "Material Verbose set to True/On!" << G4endl;
@@ -803,9 +822,9 @@ new G4LogicalSkinSurface("PMT_surf", logicPMT, PMT_opsurf);
           G4cout << "Material Properties Table for: " << plexiglass->GetName() << G4endl;
           casingOPMPT->DumpTable();
         }
-//
+
 //always return the physical World!!!
-//
+
         return physWorld;
 }
 

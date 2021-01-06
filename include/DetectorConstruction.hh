@@ -242,52 +242,43 @@ void SetMaterialVerbosity(G4bool val)
 
 private:
 G4bool bremTest;
-//G4double container_x = 0.6096*m;     // 2ft cross section
-//G4double container_y = 2.5908*m;     // 8.5 ft in height
-//G4double container_z = 2.4384*m;     // 8 ft width
-G4double EndIntObj;
-G4double IntObj_rad;
-G4double chopper_radio_abundance;
-G4double intObj_radio_abundance;
-G4double intObj_U235_abundance;
-G4double intObj_U238_abundance;
-G4double intObj_Pu239_abundance;
-G4double intObj_Pu240_abundance;
-G4double chopper_U235_abundance;
-G4double chopper_U238_abundance;
-G4double chopper_Pu239_abundance;
-G4double chopper_Pu240_abundance;
+
+G4double EndIntObj, IntObj_rad, intObjDensity, intObj_x_pos, intObj_y_pos, intObj_z_pos;
 G4String IntObj_Selection;
-G4double intObjDensity;
-G4double chopperDensity;
-G4double intObj_x_pos, intObj_y_pos, intObj_z_pos;
 G4VPhysicalVolume* physIntObj;
+
+G4double chopper_radio_abundance, intObj_radio_abundance;
+G4double intObj_U235_abundance, intObj_U238_abundance, intObj_Pu239_abundance, intObj_Pu240_abundance;
+G4double chopper_U235_abundance, chopper_U238_abundance, chopper_Pu239_abundance, chopper_Pu240_abundance;
+
+G4double chopperDensity, chopper_thick, chopper_z;
+G4bool chopperOn;
 G4Material* PC_mat;
+
 G4LogicalVolume *logicalLinac;
 G4LogicalVolume *logicalVacuum;
 G4LogicalVolume *logicBremTarget;
+
 G4LogicalVolume* logicPC;
 G4LogicalVolume* logicPMT;
 G4VPhysicalVolume* physPC;
 G4LogicalVolume* logicChopper;
 G4VPhysicalVolume* physWater;
 G4VPhysicalVolume* physTape;
-G4bool chopperOn;
-G4double chopper_thick, chopper_z;
-G4double theAngle;
-G4double water_size_x, water_size_y, water_size_z, PMT_rmax;
+
+G4double theAngle, water_size_x, water_size_y, water_size_z, PMT_rmax;
+
 G4int nPMT;
 G4String pc_mat;
-G4bool attenuatorState;
-G4double attenThickness;
-G4String attenuatorMat;
-G4bool attenuatorState2;
-G4double attenThickness2;
-G4String attenuatorMat2;
-G4double plexiThickness;
-G4double tapeThick;
-G4bool DetectorViewOnly;
-G4bool material_verbose;
+
+G4bool attenuatorState, attenuatorState2;
+G4double attenThickness, attenThickness2;
+G4String attenuatorMat, attenuatorMat2;
+
+G4double plexiThickness, tapeThick;
+
+G4bool DetectorViewOnly, material_verbose;
+
 DetectorMessenger* detectorM;
 
 };

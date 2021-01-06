@@ -358,6 +358,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     G4bool theVerbositybool = false;
     if(theVerbosity == "On" || theVerbosity == "on" || theVerbosity == "True" || theVerbosity == "true")
     {
+      std::cout << "The Material Verbosity Setting manually set to: " << theVerbosity << std::endl;
       theVerbositybool = true;
     }
     DetectorA->SetMaterialVerbosity(theVerbositybool);

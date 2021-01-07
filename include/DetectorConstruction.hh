@@ -123,12 +123,10 @@ void SetIntObjZ_pos(G4double val)
 void SetIntObjAbundance(G4double val)
 {
         intObj_radio_abundance = val;
-        intObj_radio_abundance = intObj_radio_abundance*perCent;
 }
 void SetChopperAbundance(G4double val)
 {
   chopper_radio_abundance = val;
-  chopper_radio_abundance = chopper_radio_abundance*perCent;
 }
 void SetIntObj(G4String val)
 {

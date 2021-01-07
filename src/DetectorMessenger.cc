@@ -232,7 +232,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   {
     G4double thecmdchopthick = CmdChopthick->GetNewDoubleValue(newValue);
     DetectorA->SetChopperThick(thecmdchopthick);
-    std::cout << "The Chopper thickness manually set to: " << thecmdchopthick << " cm" <<std::endl;
+    std::cout << "The Chopper thickness manually set to: " << thecmdchopthick << " mm" <<std::endl;
   }
   else if(command == CmdChopperOn)
   {

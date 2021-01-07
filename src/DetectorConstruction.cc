@@ -4,7 +4,7 @@ DetectorConstruction::DetectorConstruction(G4bool brem)
         : G4VUserDetectorConstruction(), // chopper properties 
         chopperDensity(19.1*g/cm3), chopper_thick(3*mm), chopper_z(5*cm), chopperOn(false), // interrogation object properties 
         IntObj_rad(4.5*cm), intObjDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm), IntObj_Selection("Uranium"), // radio abundances
-        chopper_radio_abundance(0*perCent), intObj_radio_abundance(0*perCent), // Attenuator Properties 
+        chopper_radio_abundance(0), intObj_radio_abundance(0), // Attenuator Properties 
         attenuatorState(false), attenuatorState2(false), attenThickness(0.1*mm), attenThickness2(0.1*mm), attenuatorMat("G4_AIR"), attenuatorMat2("G4_AIR"), // Water Tank properties 
         theAngle(120.0), water_size_x(60*cm), water_size_y(2.5908*m), water_size_z(40*cm), // plexi/tape properties 
         plexiThickness(0.18*mm), tapeThick(0.01*cm), // PMT Properties 
@@ -152,9 +152,9 @@ new G4PVPlacement(0, G4ThreeVector(),
 G4Sphere* solidIntObj = new G4Sphere("InterogationObject", 0, IntObj_rad, 0, 2*pi, 0, pi);
 
 intObj_U235_abundance = intObj_radio_abundance;
-intObj_U238_abundance = 100*perCent - intObj_radio_abundance;
+intObj_U238_abundance = 100. - intObj_radio_abundance;
 intObj_Pu239_abundance = intObj_radio_abundance;
-intObj_Pu240_abundance = 100*perCent - intObj_radio_abundance;
+intObj_Pu240_abundance = 100. - intObj_radio_abundance;
 G4Material* intObjMat = new G4Material("IntObjMaterial", intObjDensity, 1);
 intObjMat->SetName(IntObj_Selection);
 if(IntObj_Selection == "Uranium")
@@ -164,8 +164,8 @@ if(IntObj_Selection == "Uranium")
     std::cout << "Fatal Error: User must input interrogation object isotope abundance for Uranium 235" << std::endl;
     exit(100);
   }
-  Uranium_interrogation->AddIsotope(Uranium235, intObj_U235_abundance);
-  Uranium_interrogation->AddIsotope(Uranium238, intObj_U238_abundance);
+  Uranium_interrogation->AddIsotope(Uranium235, intObj_U235_abundance*perCent);
+  Uranium_interrogation->AddIsotope(Uranium238, intObj_U238_abundance*perCent);
   intObjMat->AddElement(Uranium_interrogation,1);
 }
 else if(IntObj_Selection == "Plutonium")
@@ -175,8 +175,8 @@ else if(IntObj_Selection == "Plutonium")
     std::cout << "Fatal Error: User must input interrogation object isotope abundance for Plutonium 239" << std::endl;
     exit(100);
   }
-  Plutonium_interrogation->AddIsotope(Plutonium239, intObj_Pu239_abundance);
-  Plutonium_interrogation->AddIsotope(Plutonium240, intObj_Pu240_abundance);
+  Plutonium_interrogation->AddIsotope(Plutonium239, intObj_Pu239_abundance*perCent);
+  Plutonium_interrogation->AddIsotope(Plutonium240, intObj_Pu240_abundance*perCent);
   intObjMat->AddElement(Plutonium_interrogation,1);
 }
 else if(IntObj_Selection == "Natural Uranium")
@@ -203,6 +203,10 @@ else{std::cerr << "ERROR: Interogation Material not found."<<std::endl;}
 
 G4cout << "The User's Interogation Object Material: "
           << intObjMat->GetName() << G4endl;
+G4cout << "The User's Interrogation Object Abundance: " << intObj_radio_abundance << " %" << G4endl;
+G4cout << "The User's Interrogation Object Radius: " << IntObj_rad << " cm" << G4endl;
+G4cout << "The User's Interrogation Object Density: " << intObjDensity << " g/cm3" << G4endl;
+G4cout << "The User's Interrogation Object Location: (" << intObj_x_pos << ", " << intObj_y_pos << ", " << intObj_z_pos << ")" << " cm" << G4endl;
         
 G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObjLogicVolume");
 setEndIntObj(container_z_pos, 2.4384*m);
@@ -325,21 +329,21 @@ if(chopper_radio_abundance <= 0.0)
 if(chopperOn)
 {
   chopper_U235_abundance = chopper_radio_abundance;
-  chopper_U238_abundance = 100*perCent - chopper_radio_abundance;
+  chopper_U238_abundance = 100. - chopper_radio_abundance;
   chopper_Pu239_abundance = chopper_radio_abundance;
-  chopper_Pu240_abundance = 100*perCent - chopper_radio_abundance;
+  chopper_Pu240_abundance = 100. - chopper_radio_abundance;
 }
 else
 {
-  chopper_U235_abundance = 100*perCent - chopper_radio_abundance;
+  chopper_U235_abundance = 100. - chopper_radio_abundance;
   chopper_U238_abundance = chopper_radio_abundance;
-  chopper_Pu239_abundance = 100*perCent - chopper_radio_abundance;
+  chopper_Pu239_abundance = 100. - chopper_radio_abundance;
   chopper_Pu240_abundance = chopper_radio_abundance;
 }
-Uranium_chopper->AddIsotope(Uranium235, chopper_U235_abundance);
-Uranium_chopper->AddIsotope(Uranium238, chopper_U238_abundance);
-Plutonium_chopper->AddIsotope(Plutonium239, chopper_Pu239_abundance);
-Plutonium_chopper->AddIsotope(Plutonium240, chopper_Pu240_abundance);
+Uranium_chopper->AddIsotope(Uranium235, chopper_U235_abundance*perCent);
+Uranium_chopper->AddIsotope(Uranium238, chopper_U238_abundance*perCent);
+Plutonium_chopper->AddIsotope(Plutonium239, chopper_Pu239_abundance*perCent);
+Plutonium_chopper->AddIsotope(Plutonium240, chopper_Pu240_abundance*perCent);
         
 if(chopper_z > water_z_pos)
 {
@@ -348,17 +352,24 @@ if(chopper_z > water_z_pos)
 }
 G4Tubs *solidChopper = new G4Tubs("Chopper", 0*cm, 10*cm, chopper_thick, 0.*deg, 180.*deg);
 G4Material *chopperMat = new G4Material("chopperMaterial", chopperDensity, 1);
-
+G4cout << "The Chopper State was set to: " << chopperOn << G4endl;
 if(chopperDensity == 19.1*g/cm3)
 {
   chopperMat->AddElement(Uranium_chopper,1);
+  G4cout << "The Chopper material selected was: Uranium" << G4endl;
 }
 else if(chopperDensity == 19.6*g/cm3)
 {
   chopperMat->AddElement(Plutonium_chopper, 1);
+  G4cout << "The Chopper material selected was: Plutonium" << G4endl;
 }
 else{std::cerr << "ERROR Chopper Density not found!" << std::endl; exit(100);}
 
+G4cout << "The Chopper material density selected was: " << chopperDensity << " g/cm3" << G4endl;
+G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
+
+G4cout << "The Chopper thickness was: " << chopper_thick << " mm" << G4endl;
+G4cout << "The Chopper distance from the source was set as: " << chopper_z << " cm" << G4endl;
 logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chopper");
 new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,chopper_z),
                   logicChopper, "Chopper", logicWorld, false,

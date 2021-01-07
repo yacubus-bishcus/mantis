@@ -154,25 +154,25 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   {
     G4double theCommand = Cmd->GetNewDoubleValue(newValue);
     DetectorA->SetPC_radius(theCommand);
-    std::cout << "The Photocathode Radius manually set to: " << theCommand << std::endl;
+    std::cout << "The Photocathode Radius manually set to: " << theCommand << " cm" << std::endl;
   }
   else if(command == CmdX)
   {
     G4double theCommandX = CmdX->GetNewDoubleValue(newValue);
     DetectorA->SetWaterX(theCommandX);
-    std::cout << "The Water X-Dimension Size manually set to: " << theCommandX << std::endl;
+    std::cout << "The Water X-Dimension Size manually set to: " << theCommandX << " cm" << std::endl;
   }
   else if(command == CmdY)
   {
     G4double theCommandY = CmdY->GetNewDoubleValue(newValue);
     DetectorA->SetWaterY(theCommandY);
-    std::cout << "The Water Y-Dimension Size manually set to: " << theCommandY << std::endl;
+    std::cout << "The Water Y-Dimension Size manually set to: " << theCommandY << " cm" << std::endl;
   }
   else if(command == CmdZ)
   {
     G4double theCommandZ = CmdZ->GetNewDoubleValue(newValue);
     DetectorA->SetWaterZ(theCommandZ);
-    std::cout << "The Water Z-Dimension Size manually set to: " << theCommandZ << std::endl;
+    std::cout << "The Water Z-Dimension Size manually set to: " << theCommandZ << " cm" << std::endl;
   }
   else if(command == Cmdtr)
   {
@@ -196,19 +196,19 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   {
     G4double theCommandtXpos = CmdtXpos->GetNewDoubleValue(newValue);
     DetectorA->SetIntObjX_pos(theCommandtXpos);
-    std::cout << "The Interrogation Object X Position manually set to: " << theCommandtXpos << std::endl;
+    std::cout << "The Interrogation Object X Position manually set to: " << theCommandtXpos << " cm" << std::endl;
   }
   else if(command == CmdtYpos)
   {
     G4double theCommandtYpos = CmdtYpos->GetNewDoubleValue(newValue);
     DetectorA->SetIntObjY_pos(theCommandtYpos);
-    std::cout << "The Interrogation Object Y Position manually set to: " << theCommandtYpos << std::endl;
+    std::cout << "The Interrogation Object Y Position manually set to: " << theCommandtYpos << " cm" << std::endl;
   }
   else if(command == CmdtZpos)
   {
     G4double theCommandtZpos = CmdtZpos->GetNewDoubleValue(newValue);
     DetectorA->SetIntObjZ_pos(theCommandtZpos);
-    std::cout << "The Interrogation Object Z Position manually set to: " << theCommandtZpos << std::endl;
+    std::cout << "The Interrogation Object Z Position manually set to: " << theCommandtZpos << " cm" << std::endl;
   }
   else if(command == Cmdpcmat)
   {
@@ -226,7 +226,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   {
     G4double thecmdchopz = CmdChopZ->GetNewDoubleValue(newValue);
     DetectorA->SetChopper_z(thecmdchopz);
-    std::cout << "The Chopper distance from the source manually set to: " << " cm" << std::endl;
+    std::cout << "The Chopper distance from the source manually set to: " << thecmdchopz << " cm" << std::endl;
   }
   else if(command == CmdChopthick)
   {

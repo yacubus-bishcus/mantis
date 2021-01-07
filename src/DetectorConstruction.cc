@@ -365,11 +365,11 @@ else if(chopperDensity == 19.6*g/cm3)
 }
 else{std::cerr << "ERROR Chopper Density not found!" << std::endl; exit(100);}
 
-G4cout << "The Chopper material density selected was: " << chopperDensity << " g/cm3" << G4endl;
-G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
+G4cout << "The Chopper material density selected was: " << chopperDensity/(g/cm3) << " g/cm3" << G4endl;
+G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance/perCent << " %" << G4endl;
 
-G4cout << "The Chopper thickness was: " << chopper_thick << " mm" << G4endl;
-G4cout << "The Chopper distance from the source was set as: " << chopper_z << " cm" << G4endl;
+G4cout << "The Chopper thickness was: " << chopper_thick/(mm) << " mm" << G4endl;
+G4cout << "The Chopper distance from the source was set as: " << chopper_z/(cm) << " cm" << G4endl;
 logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chopper");
 new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,chopper_z),
                   logicChopper, "Chopper", logicWorld, false,

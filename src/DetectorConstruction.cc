@@ -203,7 +203,10 @@ else{std::cerr << "ERROR: Interogation Material not found."<<std::endl;}
 
 G4cout << "The User's Interogation Object Material: "
           << intObjMat->GetName() << G4endl;
-G4cout << "The User's Interrogation Object Abundance: " << intObj_radio_abundance << " %" << G4endl;
+if(IntObj_Selection == "Uranium" || IntObj_Selection == "Plutonium")
+{       
+  G4cout << "The User's Interrogation Object Abundance: " << intObj_radio_abundance << " %" << G4endl;
+}
 G4cout << "The User's Interrogation Object Radius: " << IntObj_rad/(cm) << " cm" << G4endl;
 G4cout << "The User's Interrogation Object Density: " << intObjDensity/(g/cm3) << " g/cm3" << G4endl;
 G4cout << "The User's Interrogation Object Location: (" << intObj_x_pos/(cm) << ", " << intObj_y_pos/(cm) << ", " << intObj_z_pos/(cm) << ")" << " cm" << G4endl;

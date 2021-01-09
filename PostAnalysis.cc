@@ -8,12 +8,10 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     TFile *chopOn = new TFile(ChopOn);
     TFile *chopOff = new TFile(ChopOff);
     bool confirmation = chopOn->cd();
-    double chopOn_entries;
-    double chopOn_sum;
+    double chopOn_entries, intObjOn_entries, chopOn_sum, intObjOn_sum;
     double chopOn_inc_sum = 0;
     
-    double chopOff_entries;
-    double chopOff_sum;
+    double chopOff_entries, intObjOff_entries, chopOff_sum, intObjOff_sum;
     double chopOff_inc_sum = 0;
     
     // Variables Set, Complete Calculations 
@@ -21,9 +19,11 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     if(confirmation)
     {
         TH1D *Detected;
+        TH1D *IntObj;
         TH1D *NRFIncWater;
         TH1D *IncWater; // for processing earlier runs 
         chopOn->GetObject("Detected",Detected);
+        chopOn->GetObject("IncObj", IntObj);
         try
         {
             chopOn->GetObject("NRFIncWater",NRFIncWater);

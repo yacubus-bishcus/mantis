@@ -8,10 +8,10 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     TFile *chopOn = new TFile(ChopOn);
     TFile *chopOff = new TFile(ChopOff);
     bool confirmation = chopOn->cd();
-    double chopOn_entries, intObjOn_entries, chopOn_sum, intObjOn_sum;
+    double chopOn_entries, intObjOn_entries, chopOn_sum, intObjOn_sum, detectedOn_entries, detectedOn_sum;
     double chopOn_inc_sum = 0;
     
-    double chopOff_entries, intObjOff_entries, chopOff_sum, intObjOff_sum;
+    double chopOff_entries, intObjOff_entries, chopOff_sum, intObjOff_sum, detectedOff_entries, detectedOff_sum;
     double chopOff_inc_sum = 0;
     
     // Variables Set, Complete Calculations 
@@ -21,9 +21,11 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         TH1D *Detected;
         TH1D *IntObj;
         TH1D *NRFIncWater;
+        TTree *IncChopper;
         TH1D *IncWater; // for processing earlier runs 
         chopOn->GetObject("Detected",Detected);
         chopOn->GetObject("IncObj", IntObj);
+        chopOn->GetObject("ChopperData",IncChopper);
         try
         {
             chopOn->GetObject("NRFIncWater",NRFIncWater);
@@ -41,10 +43,12 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
             std::cout << "Older Chopper On File Processed." << std::endl;
         }
             
-        chopOn_entries = Detected->GetEntries();
+        chopOn_entries = IncChopper->GetEntries();
         intObjOn_entries = IntObj->GetEntries();
-        chopOn_sum = Detected->Integral();
+        detectedOn_entries = Detected->GetEntries();
+        chopOn_sum = IncChopper->Integral();
         intObjOn_sum = IntObj->Integral();
+        detectedOn_sum = Detected->Integral();
     }
     else
     {
@@ -58,9 +62,11 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         TH1D *Detected2;
         TH1D *NRFIncWater2;
         TH1D *IntObj2;
+        TTree *IncChopper2;
         TH1D *IncWater2; // for processing earlier runs 
         chopOff->GetObject("Detected",Detected2);
         chopOff->GetObject("IncObj", IntObj2);
+        chopOff->GetObject("ChopperData", IncChopper2);
         try
         {
             chopOff->GetObject("NRFIncWater",NRFIncWater2);
@@ -78,10 +84,12 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
             std::cout << "Older Chopper Off File Processed." << std::endl;
         }
             
-        chopOff_entries = Detected2->GetEntries();
+        chopOff_entries = IncChopper2->GetEntries();
         intObjOff_entries = IntObj2->GetEntries();
-        chopOff_sum = Detected2->Integral();
+        detectedOff_entries = Detected2->GetEntries();
+        chopOff_sum = IncChopper2->Integral();
         intObjOff_sum = IntObj2->Integral();
+        detectedOff_sum = Detected2->Integral();
         
     }
     else

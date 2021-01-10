@@ -101,8 +101,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         // inside Interogation Object for first time
         if(drawIntObjDataFlag && !bremTest)
         {
-                if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14,"IntObjPhysical") != 0
-                   && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14, "IntObjPhysical") == 0)
+                if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14,"IntObjPhysical") == 0
+                   && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14, "IntObjPhysical") != 0)
                 {
                         G4double energy_IntObj = theTrack->GetKineticEnergy()/(MeV);
                         manager->FillH1(0, energy_IntObj, weight);

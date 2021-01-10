@@ -42,7 +42,9 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         }
             
         chopOn_entries = Detected->GetEntries();
+        intObjOn_entries = IntObj->GetEntries();
         chopOn_sum = Detected->Integral();
+        intObjOn_sum = IntObj->Integral();
     }
     else
     {
@@ -55,8 +57,10 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     {
         TH1D *Detected2;
         TH1D *NRFIncWater2;
+        TH1D *IntObj2;
         TH1D *IncWater2; // for processing earlier runs 
         chopOff->GetObject("Detected",Detected2);
+        chopOff->GetObject("IncObj", IntObj2);
         try
         {
             chopOff->GetObject("NRFIncWater",NRFIncWater2);
@@ -75,7 +79,9 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         }
             
         chopOff_entries = Detected2->GetEntries();
+        intObjOff_entries = IntObj2->GetEntries();
         chopOff_sum = Detected2->Integral();
+        intObjOff_sum = IntObj2->Integral();
         
     }
     else
@@ -86,9 +92,13 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     
     std::cout << "Files Read. Printing Results..." << std::endl;
     
-    double z = abs(chopOn_sum - chopOff_sum)/(sqrt(pow(sqrt(chopOn_sum),2) + pow(sqrt(chopOff_sum),2)));
+    double intObj_z = abs(intObjOn_sum - intObjOff_sum)/(sqrt(pow(sqrt(intObjOn_sum),2) + pow(sqrt(intObjOff_sum,2)));
+    double detected_z = abs(chopOn_sum - chopOff_sum)/(sqrt(pow(sqrt(chopOn_sum),2) + pow(sqrt(chopOff_sum),2)));
     
-    std::cout << "On Entries: " << chopOn_entries << " On Sum: " << chopOn_sum << " On NRF: " << chopOn_inc_sum << std::endl;
-    std::cout << "Off Entries: " << chopOff_entries << " Off Sum: " << chopOff_sum << " Off NRF: " << chopOff_inc_sum << std::endl;
-    std::cout << "Z-test result: " << z << std::endl;
+    std::cout << "Chopper On Interrogation Object Entries: " << intObjOn_entries << " On Sum: " << intObjOn_sum << std::endl;
+    std::cout << "Chopper Off Interrogation Object Entries: " << intObjOff_entries << " Off Sum: " << intObjOff_sum << std::endl;
+    std::cout << "Interrogation Object Z-test result: " << intObj_z << std::endl;
+    std::cout << "Chopper On Detected Entries: " << chopOn_entries << " On Sum: " << chopOn_sum << " On NRF: " << chopOn_inc_sum << std::endl;
+    std::cout << "Chopper Off Detected Entries: " << chopOff_entries << " Off Sum: " << chopOff_sum << " Off NRF: " << chopOff_inc_sum << std::endl;
+    std::cout << "Detected Z-test result: " << detected_z << std::endl;
 }

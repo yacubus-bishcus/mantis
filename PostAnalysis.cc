@@ -92,7 +92,7 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     
     std::cout << "Files Read. Printing Results..." << std::endl;
     
-    double intObj_z = abs(intObjOn_sum - intObjOff_sum)/(sqrt(pow(sqrt(intObjOn_sum),2) + pow(sqrt(intObjOff_sum,2)));
+    double intObj_z = abs(intObjOn_sum - intObjOff_sum)/(sqrt(pow(sqrt(intObjOn_sum),2) + pow(sqrt(intObjOff_sum),2)));
     double detected_z = abs(chopOn_sum - chopOff_sum)/(sqrt(pow(sqrt(chopOn_sum),2) + pow(sqrt(chopOff_sum),2)));
     
     std::cout << "Chopper On Interrogation Object Entries: " << intObjOn_entries << " On Sum: " << intObjOn_sum << std::endl;

@@ -69,11 +69,13 @@ class G4NRF : public G4VDiscreteProcess {
  public:
   G4NRF(const G4String& processName = "NRF", G4bool Verbose_in = false,
         G4bool use_xsec_tables_in = true, G4bool use_xsec_integration_in = true,
-        G4bool force_isotropic_in = false);
+        G4bool force_isotropic_in = false, G4bool standalone_in = false);
 
   ~G4NRF();
 
   G4bool IsApplicable(const G4ParticleDefinition&);
+ 
+ G4bool standalone = false;
 
   void PrintInfoDefinition();
 

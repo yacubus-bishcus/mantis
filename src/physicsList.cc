@@ -34,13 +34,14 @@
 #include "G4Positron.hh"
 
 
-physicsList::physicsList(G4bool addNRF_in, G4bool use_xsec_tables_in, G4bool use_xsec_integration_in, G4bool force_isotropic_in)
+physicsList::physicsList(G4bool addNRF_in, G4bool use_xsec_tables_in, G4bool use_xsec_integration_in, G4bool force_isotropic_in, G4bool standalone_in)
         : addNRF(addNRF_in),
         use_xsec_tables(use_xsec_tables_in),
         use_xsec_integration(use_xsec_integration_in),
-        force_isotropic(force_isotropic_in) {
+        force_isotropic(force_isotropic_in),
+        standalone(standalone_in)
+        {
         defaultCutValue = 0.05*mm;
-        //cutForGamma = defaultCutValue;
         cutForElectron = defaultCutValue;
         cutForPositron = defaultCutValue;
         cutForProton = defaultCutValue;
@@ -75,7 +76,7 @@ void physicsList::ConstructPhysics() {
         // Add NRF to the physicsList
         if(addNRF)
         {
-                RegisterPhysics(new G4NRFPhysics("NRF", use_xsec_tables, use_xsec_integration, force_isotropic));
+                RegisterPhysics(new G4NRFPhysics("NRF", use_xsec_tables, use_xsec_integration, force_isotropic, standalone));
                 G4cout << "\nAdded NRF to the physicsList.\n" << G4endl;
         }
 

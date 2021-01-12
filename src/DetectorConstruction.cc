@@ -117,7 +117,7 @@ if(bremTest)
 // Make Brem target
         G4Box *solidBremTarget = new G4Box("Brem", 2*mm, 2*mm, 0.102*mm);
         logicBremTarget = new G4LogicalVolume(solidBremTarget, gold, "Brem");
-        new G4PVPlacement(0, G4ThreeVector(0, 0, -1.2*cm),logicBremTarget,"Brem", logicalVacuum, false, 0, checkOverlaps);
+        new G4PVPlacement(0, G4ThreeVector(0, 0, -1.1*cm),logicBremTarget,"Brem", logicalVacuum, false, 0, checkOverlaps);
         G4Box *solidBremTargetBacking = new G4Box("BremBacking", 3*mm, 3*mm, 1*cm);
         logicBremTargetBacking = new G4LogicalVolume(solidBremTargetBacking, copper, "BremBacking");
         new G4PVPlacement(0, G4ThreeVector(0, 0, 0*cm), logicBremTargetBacking, "BremBacking", logicalVacuum, false, 0, checkOverlaps);

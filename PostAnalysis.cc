@@ -14,8 +14,8 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     double chopOff_entries, intObjOff_entries, chopOff_sum, intObjOff_sum, detectedOff_entries, detectedOff_sum;
     double chopOff_NRF_inc_sum = 0;
     
-    TH1D *chopHist = new TH1D("chopHist","chopHist",1e6, 0, 2.3,"MeV");
-    TH1D *chopHist2 = new TH1D("chopHist2","chopHist2",1e6,0,2.3,"MeV");
+    TH1D *chopHist = new TH1D("chopHist","chopHist",1e6, 0, 2.3);
+    TH1D *chopHist2 = new TH1D("chopHist2","chopHist2",1e6,0,2.3);
     
     // Variables Set, Complete Calculations 
     

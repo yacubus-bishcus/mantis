@@ -31,7 +31,7 @@ G4String root_output_name;
 G4String gOutName;
 G4bool output;
 G4String bremTest; 
-G4String standalone;
+G4String standalone_in;
 
 namespace
 {
@@ -77,7 +77,7 @@ int main(int argc,char **argv)
                 else if (G4String(argv[i]) == "-s") seed = atoi(argv[i+1]);
                 else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];
                 else if (G4String(argv[i]) == "-t") bremTest = argv[i+1];
-                else if (G4String(argv[i]) == "-p") standalone = argv[i+1];
+                else if (G4String(argv[i]) == "-p") standalone_in = argv[i+1];
                 else
                 {
                         PrintUsage();
@@ -85,6 +85,11 @@ int main(int argc,char **argv)
                 }
         }
 
+        if(standalone_in == "True" || standalone_in == "true")
+        {
+          std::cout << "Standalone File Requested." << std::endl;
+          standalone = true;
+        }
         std::string RootOutputFile = (std::string)root_output_name;
         if(RootOutputFile.find(".root")<RootOutputFile.length()) {
                 gOutName=(std::string)RootOutputFile.substr(0, RootOutputFile.find(".root"));

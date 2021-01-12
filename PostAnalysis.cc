@@ -21,6 +21,7 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         TH1D *Detected;
         TH1D *IntObj;
         TH1D *NRFIncWater;
+        TH1D *chopHist;
         TTree *IncChopper;
         TH1D *IncWater; // for processing earlier runs 
         chopOn->GetObject("Detected",Detected);
@@ -63,6 +64,7 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         TH1D *Detected2;
         TH1D *NRFIncWater2;
         TH1D *IntObj2;
+        TH1D *chopHist2;
         TTree *IncChopper2;
         TH1D *IncWater2; // for processing earlier runs 
         chopOff->GetObject("Detected",Detected2);

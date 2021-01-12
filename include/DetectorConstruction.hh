@@ -259,6 +259,7 @@ G4Material* PC_mat;
 G4LogicalVolume *logicalLinac;
 G4LogicalVolume *logicalVacuum;
 G4LogicalVolume *logicBremTarget;
+G4LogicalVolume *logicBremTargetBacking;
 
 G4LogicalVolume* logicPC;
 G4LogicalVolume* logicPMT;

@@ -30,14 +30,15 @@ G4long seed;
 G4String root_output_name;
 G4String gOutName;
 G4bool output;
-G4String bremTest;
+G4String bremTest; 
+G4String standalone;
 
 namespace
 {
 void PrintUsage()
 {
         std::cerr << "Usage: " << std::endl;
-        std::cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false]" << std::endl;
+        std::cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false] [-p standalone=false]" << std::endl;
 }
 }
 
@@ -48,6 +49,7 @@ int main(int argc,char **argv)
   G4bool use_xsec_tables = true;
   G4bool use_xsec_integration = true;
   G4bool force_isotropic = false;
+  G4bool standalone = false;
   G4bool addNRF = true;
   macro = "mantis.in";
   seed = 1;
@@ -64,7 +66,7 @@ int main(int argc,char **argv)
         }
 
         // Evaluate Arguments
-        if ( argc > 9 )
+        if ( argc > 11 )
         {
                 PrintUsage();
                 return 1;
@@ -75,6 +77,7 @@ int main(int argc,char **argv)
                 else if (G4String(argv[i]) == "-s") seed = atoi(argv[i+1]);
                 else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];
                 else if (G4String(argv[i]) == "-t") bremTest = argv[i+1];
+                else if (G4String(argv[i]) == "-p") standalone = argv[i+1];
                 else
                 {
                         PrintUsage();
@@ -112,7 +115,7 @@ int main(int argc,char **argv)
         runManager->SetUserInitialization(det);
 
         // Set up Physics List
-        physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic);
+        physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone);
         runManager->SetUserInitialization(thePL);
         runManager->SetUserInitialization(new ActionInitialization(det, brem));
 

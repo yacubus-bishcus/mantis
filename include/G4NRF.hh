@@ -74,8 +74,6 @@ class G4NRF : public G4VDiscreteProcess {
   ~G4NRF();
 
   G4bool IsApplicable(const G4ParticleDefinition&);
- 
- G4bool standalone = false;
 
   void PrintInfoDefinition();
 
@@ -152,6 +150,7 @@ class G4NRF : public G4VDiscreteProcess {
   const G4bool use_xsec_tables;
   const G4bool use_xsec_integration;
   const G4bool force_isotropic_ang_corr;
+  const G4bool standalone;
 
   G4double param_x;
   G4double param_t;

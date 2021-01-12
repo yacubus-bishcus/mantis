@@ -34,6 +34,8 @@ G4Material *poly = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
 G4Material *Water = nist->FindOrBuildMaterial("G4_WATER");
 G4Material *tungsten = nist->FindOrBuildMaterial("G4_W");
 G4Material *lead = nist->FindOrBuildMaterial("G4_Pb");
+G4Material *gold = nist->FindOrBuildMaterial("G4_Au");
+G4Material *copper = nist->FindOrBuildMaterial("G4_Cu");
 G4Material *attenuator = nist->FindOrBuildMaterial(attenuatorMat);
 G4Material *low_z_attenuator = nist->FindOrBuildMaterial(attenuatorMat2);
 G4Element *elPb = new G4Element("Lead", "Pb", 82, 207.2*g/mole);
@@ -113,9 +115,12 @@ if(bremTest)
         logicalVacuum = new G4LogicalVolume(solidVacuum, myVacuum, "Vacuum");
         new G4PVPlacement(0, G4ThreeVector(0,0,0), logicalVacuum, "Vacuum", logicalLinac, false,0,checkOverlaps);
 // Make Brem target
-        G4Box *solidBremTarget = new G4Box("Brem", 2*mm, 2*mm, 0.5*mm);
-        logicBremTarget = new G4LogicalVolume(solidBremTarget, tungsten, "Brem");
+        G4Box *solidBremTarget = new G4Box("Brem", 2*mm, 2*mm, 0.102*mm);
+        logicBremTarget = new G4LogicalVolume(solidBremTarget, gold, "Brem");
         new G4PVPlacement(0, G4ThreeVector(0, 0, 0),logicBremTarget,"Brem", logicalVacuum, false, 0, checkOverlaps);
+        G4Box *solidBremTargetBacking = new G4Box("BremBacking", 2*mm, 2*mm, 1*cm);
+        logicBremTargetBacking = new G4LogicalVolume(solidBremTargetBacking, copper, "BremBacking");
+        new G4PVPlacement(0, G4ThreeVector(0, 0, 1*cm), logicBremTargetBacking, "BremBacking", logicalVacuum, false, 0, checkOverlaps);
 }
 
 // ***************************************** End of Brem Test Materials ***************************************** //
@@ -478,6 +483,7 @@ if(bremTest)
         grayc->SetForceWireframe(true);
         logicalVacuum->SetVisAttributes(grayc);
         logicBremTarget->SetVisAttributes(red);
+        logicBremTargetBacking->SetVisAttributes(blue);
 }
 if(DetectorViewOnly)
 {

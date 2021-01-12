@@ -6,7 +6,7 @@
 
 class physicsList: public G4VModularPhysicsList {
  public:
-  physicsList(G4bool, G4bool, G4bool, G4bool);
+  physicsList(G4bool, G4bool, G4bool, G4bool, G4bool);
   ~physicsList();
 
   void ConstructParticle();
@@ -24,6 +24,7 @@ class physicsList: public G4VModularPhysicsList {
   G4bool use_xsec_tables;
   G4bool use_xsec_integration;
   G4bool force_isotropic;
+  G4bool standalone;
 };
 
 #endif

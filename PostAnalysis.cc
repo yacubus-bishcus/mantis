@@ -14,9 +14,6 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     double chopOff_entries, intObjOff_entries, chopOff_sum, intObjOff_sum, detectedOff_entries, detectedOff_sum;
     double chopOff_NRF_inc_sum = 0;
     
-    TH1D *chopHist = new TH1D("chopHist","chopHist",1e6, 0, 2.3);
-    TH1D *chopHist2 = new TH1D("chopHist2","chopHist2",1e6,0,2.3);
-    
     // Variables Set, Complete Calculations 
     
     if(confirmation)
@@ -49,8 +46,6 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         chopOn_entries = IncChopper->GetEntries();
         intObjOn_entries = IntObj->GetEntries();
         detectedOn_entries = Detected->GetEntries();
-        IncChopper->Draw("ChopperData>>chopHist", "", "goff");
-        chopOn_sum = chopHist->Integral();
         intObjOn_sum = IntObj->Integral();
         detectedOn_sum = Detected->Integral();
     }
@@ -91,8 +86,6 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         chopOff_entries = IncChopper2->GetEntries();
         intObjOff_entries = IntObj2->GetEntries();
         detectedOff_entries = Detected2->GetEntries();
-        IncChopper2->Draw("ChopperData>>chopHist2", "", "goff");
-        chopOff_sum = chopHist2->Integral();
         intObjOff_sum = IntObj2->Integral();
         detectedOff_sum = Detected2->Integral();
         
@@ -104,14 +97,11 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     }
     
     std::cout << "Files Read. Printing Results..." << std::endl;
-    
-    double chopper_z = abs(chopOn_sum - chopOff_sum)/(sqrt(pow(sqrt(chopOn_sum),2) + pow(sqrt(chopOff_sum),2)));
     double intObj_z = abs(intObjOn_sum - intObjOff_sum)/(sqrt(pow(sqrt(intObjOn_sum),2) + pow(sqrt(intObjOff_sum),2)));
-    double detected_z = abs(chopOn_sum - chopOff_sum)/(sqrt(pow(sqrt(chopOn_sum),2) + pow(sqrt(chopOff_sum),2)));
+    double detected_z = abs(detectedOn_sum - detectedOff_sum)/(sqrt(pow(sqrt(detectedOn_sum),2) + pow(sqrt(detectedOff_sum),2)));
     
-    std::cout << "Chopper On Incident Chopper Wheel Entries: " << chopOn_entries << " On Sum: " << chopOn_sum << std::endl;
-    std::cout << "Chopper Off Incident Chopper Wheel Entries: " << chopOff_entries << " Off Sum: " << chopOff_sum << std::endl;
-    std::cout << "Chopper Wheel Z-test result: " << chopper_z << std::endl;
+    std::cout << "Chopper On Incident Chopper Wheel Entries: " << chopOn_entries << std::endl;
+    std::cout << "Chopper Off Incident Chopper Wheel Entries: " << chopOff_entries << std::endl;
     
     std::cout << "Chopper On Interrogation Object Entries: " << intObjOn_entries << " On Sum: " << intObjOn_sum << std::endl;
     std::cout << "Chopper Off Interrogation Object Entries: " << intObjOff_entries << " Off Sum: " << intObjOff_sum << std::endl;

@@ -25,6 +25,7 @@ void PrimaryGenActionMessenger::SetNewValue(G4UIcommand* command, G4String newVa
   if(command == Cmd)
   {
     G4double theCommand = Cmd->GetNewDoubleValue(newValue);
+    std::cout << "Input Energy for Brem Test set to: " << theCommand << " MeV" << std::endl;
     genA->SetEnergyValue(theCommand);
 
   }

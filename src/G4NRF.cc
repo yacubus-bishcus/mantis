@@ -156,12 +156,14 @@ const bool interrupt = false;
 // ****************************************************************************************************
 // constructor
 G4NRF::G4NRF(const G4String& processName, G4bool Verbose_in, G4bool use_xsec_tables_in,
-  G4bool use_xsec_integration_in, G4bool force_isotropic_in)
+  G4bool use_xsec_integration_in, G4bool force_isotropic_in, G4bool standalone_in)
   : G4VDiscreteProcess(processName),
     Verbose(Verbose_in),
     use_xsec_tables(use_xsec_tables_in),
     use_xsec_integration(use_xsec_integration_in),
-    force_isotropic_ang_corr(force_isotropic_in) {
+    force_isotropic_ang_corr(force_isotropic_in),
+    standalone(standalone_in)
+    {
   if (Verbose) {
     G4cout << "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" << G4endl;
     G4cout << "G4NRF Constructor is being called. "      << G4endl;
@@ -179,7 +181,7 @@ G4NRF::G4NRF(const G4String& processName, G4bool Verbose_in, G4bool use_xsec_tab
   G4cout << "G4NRF settings:" << G4endl;
   G4cout << "  use_xsec_tables      = " << use_xsec_tables      << G4endl;
   G4cout << "  use_xsec_integration = " << use_xsec_integration << G4endl;
-  G4cout << "  force_isotropic      = " << force_isotropic_ang_corr << G4endl << G4endl;;
+  G4cout << "  force_isotropic      = " << force_isotropic_ang_corr << G4endl << G4endl;
 
   pAngular_Correlation = new Angular_Correlation;
 
@@ -188,8 +190,8 @@ G4NRF::G4NRF(const G4String& processName, G4bool Verbose_in, G4bool use_xsec_tab
 
   // print gamma info to a datafile and disable some error checking in G4NRFNuclearLevelManager
   // user may change this manually to activate output
-  const bool standalone = false;
   if (standalone) {
+    std::cout << "User requesting print gamma info to a datafile!" << std::endl;
     ofstream standaloneFile("standalone.dat");
     print_to_standalone(standaloneFile);
     standaloneFile.close();

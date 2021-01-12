@@ -14,6 +14,9 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     double chopOff_entries, intObjOff_entries, chopOff_sum, intObjOff_sum, detectedOff_entries, detectedOff_sum;
     double chopOff_NRF_inc_sum = 0;
     
+    TH1D *chopHist = new TH1D("chopHist","chopHist",1e6, 0, 2.3,"MeV");
+    TH1D *chopHist2 = new TH1D("chopHist2","chopHist2",1e6,0,2.3,"MeV");
+    
     // Variables Set, Complete Calculations 
     
     if(confirmation)
@@ -21,7 +24,6 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         TH1D *Detected;
         TH1D *IntObj;
         TH1D *NRFIncWater;
-        TH1D *chopHist;
         TTree *IncChopper;
         TH1D *IncWater; // for processing earlier runs 
         chopOn->GetObject("Detected",Detected);
@@ -64,7 +66,6 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
         TH1D *Detected2;
         TH1D *NRFIncWater2;
         TH1D *IntObj2;
-        TH1D *chopHist2;
         TTree *IncChopper2;
         TH1D *IncWater2; // for processing earlier runs 
         chopOff->GetObject("Detected",Detected2);

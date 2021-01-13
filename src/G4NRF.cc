@@ -164,12 +164,6 @@ G4NRF::G4NRF(const G4String& processName, G4bool Verbose_in, G4bool use_xsec_tab
     force_isotropic_ang_corr(force_isotropic_in),
     standalone(standalone_in)
     {
-  if (Verbose) {
-    G4cout << "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" << G4endl;
-    G4cout << "G4NRF Constructor is being called. "      << G4endl;
-    G4cout << "Process name: " << processName            << G4endl;
-    G4cout << "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" << G4endl;
-  }
 
   if (use_xsec_tables && !use_xsec_integration) {
     G4cout << "Error! Table interpolation with Gaussian xsec approx not currently supported." << G4endl;
@@ -222,13 +216,6 @@ G4double G4NRF::GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize
   const G4ElementVector* theElementVector = aMaterial->GetElementVector();
   const G4double* NbOfAtomsPerVolume      = aMaterial->GetVecNbOfAtomsPerVolume();
 
-  if (Verbose) {
-    G4cout << "In G4NRF::GetMeanFreePath." << G4endl;
-    G4cout << "Name of current material: " << aMaterial->GetName() << G4endl;
-    G4cout << "Number of elements: " << NumberOfElements << G4endl;
-    G4cout << "List of element names: " << G4endl;
-  }
-
   // Search for nearest level for NRF excitation from ground
   // state.  Search terminates at first (element, isotope, level)
   // such that the level energy is within E_TOL of the incoming
@@ -252,14 +239,6 @@ G4double G4NRF::GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize
 
     G4int num_isotopes = pElement->GetNumberOfIsotopes();
 
-    if (Verbose) {
-      G4cout << pElement->GetName() << G4endl;
-      G4cout << "G4NRF::GetMeanFreePath -- Atomic number density (#/cm^3): "
-       << Atom_number_density /(1.0/cm3) << G4endl;
-      G4cout << "Number of isotopes in this element: "
-       << num_isotopes << G4endl;
-    }
-
 
     A_excited      = -1;
     Z_excited      = -1;
@@ -274,23 +253,8 @@ G4double G4NRF::GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize
       G4int A = pIsotope->GetN();  // n.b. N is # of nucleons, NOT neutrons!
       G4int Z = pIsotope->GetZ();
 
-      if (Verbose) {
-        G4cout << "G4NRF::GetMeanFreePath -- Isotope " << pIsotope->GetName()
-         << " Z= " << Z << " A= " << A << G4endl;
-        G4cout << "Fetching level manager from G4NuclearLevelStore." << G4endl;
-      }
-
       pNuclearLevelManager =
         G4NRFNuclearLevelStore::GetInstance()->GetManager(Z, A);
-
-      // Can the incoming gamma excite a level in this isotope
-      // (kinematic constraint only)?
-
-      if (Verbose) {
-        //pNuclearLevelManager->PrintAll();  // this is really verbose
-        G4cout << "G4NRFGetMeanFreePath -- Searching for nearby level to E_gamma= " << GammaEnergy
-       << G4endl;
-      }
 
       G4NRFNuclearLevel* pLevel = pNuclearLevelManager->NearestLevelRecoilAbsorb(GammaEnergy, E_TOL);
 
@@ -318,11 +282,6 @@ G4double G4NRF::GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize
         // Calculate isotope number density
         const G4double* pIsotopeAbundance = pElement->GetRelativeAbundanceVector();
         G4double frac_abundance = pIsotopeAbundance[jisotope];
-
-        if (Verbose) {
-          G4cout << "G4NRF::GetMeanFreePath -- Fractional abundance: " << frac_abundance
-                 << G4endl;
-        }
 
         G4double Isotope_number_density = Atom_number_density * frac_abundance;
 
@@ -423,26 +382,14 @@ G4double G4NRF::NRF_xsec_calc_gaus(G4double GammaEnergy, const G4NRFNuclearLevel
 
   const G4double xsec = fac1 * stat_fac * fac2 * fac3;
 
-  if (Verbose) {
+  if (Verbose && Z == 92) {
     G4cout << std::setprecision(12);
     G4cout << "------------------------------------"    << G4endl;
     G4cout << "In G4NRF::NRF_xsec_calc_gaus.     "    << G4endl;
     G4cout << "GammaEnergy (MeV):  " << GammaEnergy/MeV << G4endl;
-    G4cout << "J0:                 " << J0              << G4endl;
-    G4cout << "J1:                 " << J1              << G4endl;
-    G4cout << "A:                  " << A               << G4endl;
     G4cout << "Level energy (MeV): " << E1/MeV          << G4endl;
-    G4cout << "Tau0 (eV):          " << Tau0/eV         << G4endl;
-    G4cout << "lambda_bar (fm):    " << lamda_bar/fermi << G4endl;
-    G4cout << "Delta (eV):         " << Delta/eV        << G4endl;
-    G4cout << "fac1:               " << fac1            << G4endl;
-    G4cout << "fac2:               " << fac2            << G4endl;
-    G4cout << "fac3:               " << fac3            << G4endl;
-    G4cout << "stat_fac:           " << stat_fac        << G4endl;
     G4cout << "E (MeV):            " << E/MeV           << G4endl;
     G4cout << "E_r (MeV):          " << E_r/MeV         << G4endl;
-    G4cout << "tmp:                " << tmp             << G4endl;
-    G4cout << "E_recoil (keV):     " << E_recoil/keV    << G4endl;
     G4cout << "xsec (barn):        " << xsec/barn       << G4endl;
     G4cout << "------------------------------------"    << G4endl;
   }

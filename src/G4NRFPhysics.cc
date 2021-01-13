@@ -38,12 +38,6 @@ void G4NRFPhysics::ConstructProcess() {
     G4ParticleDefinition       *particle = aParticleIterator->value();
     G4ProcessManager *particleProcessMgr = particle->GetProcessManager();
     G4String                particleName = particle->GetParticleName();
-    /*
-    G4cout << " G4NRFPhysics: particle = "           << particle << G4endl;
-    G4cout << " G4NRFPhysics: particleProcessMgr = " << particleProcessMgr << G4endl;
-    G4cout << " G4NRFPhysics: particleName = "       << particleName << G4endl;
-    G4cout << G4endl;
-    */
     if (particleName == "gamma") {
       particleProcessMgr->AddDiscreteProcess(nrf);
     }

@@ -576,10 +576,6 @@ void G4NRFNuclearLevel::RefreshGammas() {
 
   std::ifstream GammaTableFile(gamma_table_filename, std::ios::in);
   if (!GammaTableFile) {
-    G4cout << "Error in G4NRFNuclearLevel::RefreshGammas()" << G4endl;
-    G4cout << "Could not open file "<< gamma_table_filename << G4endl;
-    G4cout << "Expected to find this file in directory" << G4endl;
-    G4cout << dir << G4endl;
     G4cout << "Aborting." << G4endl;
     exit(32);
   }
@@ -825,10 +821,6 @@ void G4NRFNuclearLevel::RefreshWidth() {
 
   std::ifstream LevelsFile(levels_filename, std::ios::in);
   if (!LevelsFile) {
-    G4cout << "Error in G4NRFNuclearLevel::RefreshWidth()" << G4endl;
-    G4cout << "Could not open file "<< levels_filename << G4endl;
-    G4cout << "Expected to find this file in directory" << G4endl;
-    G4cout << dir << G4endl;
     G4cout << "Aborting." << G4endl;
     exit(36);
   }
@@ -864,7 +856,6 @@ void G4NRFNuclearLevel::RefreshWidth() {
 
       // the actual check on energy matching; we can be less strict if we know spins match
       if (Ediff <= EDIFF_TOL_level) {
-        //G4cout << "spin = " << spin << " am = " << _angularMomentum << G4endl;
         found_level = true; // only place found_level is set in RefreshWidth()
         E_width *= eV;
         T_half  *= second;
@@ -884,11 +875,6 @@ void G4NRFNuclearLevel::RefreshWidth() {
         if (spin == -999) this->SetInvalidLevel();
 
         if (spin != _angularMomentum && !this->GetInvalidLevel()) {
-          //G4cout << "Mismatch in angular momentum at E_level = " << E_level << "." << G4endl;
-          //G4cout << "_angularMomentum = " << _angularMomentum << G4endl;
-          //G4cout << "spin = " << spin << G4endl;
-          //G4cout << "Setting invalid level at E_level =" << E_level << G4endl;
-          //G4cout << G4endl;
           this->SetInvalidLevel();
         } else {
           if (_Verbose) {
@@ -914,7 +900,6 @@ void G4NRFNuclearLevel::RefreshWidth() {
       G4cout << "Setting invalid level" << G4endl;
       G4cout << G4endl;
     }
-    //G4cout << "Setting invalid level at E/MeV = " << _energy/MeV << G4endl;
     this->SetInvalidLevel();
   }
 }
@@ -962,8 +947,6 @@ void G4NRFNuclearLevel::MakeWidth0() {
       } else {     // Level width incompatible with EM transition & nothing known
                    // about gamma width -- don't permit NRF excitation
         _Tau0 = 0.0;
-        //  G4cout << "Level width of " << _Tau/eV << " eV falls outside NRF tau cut."
-        //         << G4endl;
       }
     }
   }
@@ -1038,10 +1021,6 @@ G4bool G4NRFNuclearLevel::Identify_GS_Transition() {
 
 
   G4bool gamma_to_gs = false;  // Default: NOT a transition to gs
-
-  // Use CLHEP::amu rather than the following:
-  // const G4double amu = 931.5016 * MeV;
-  // G4cout << "Using CLHEP::amu_c2 (MeV) = " << amu_c2/MeV << G4endl;
 
   G4double E_level = _energy;
   G4double E_1st   = _E_1stExcitedState;

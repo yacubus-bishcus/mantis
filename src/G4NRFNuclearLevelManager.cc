@@ -47,9 +47,6 @@
 //              Moderate to major bug fixes plus enhanced documentation.
 //
 //
-// -------------------------------------------------------------------
-
-// -------------------------------------------------------------------
 //
 // Description:
 //
@@ -508,7 +505,10 @@ void G4NRFNuclearLevelManager::MakeLevels() {
 
   std::ifstream inFile(_fileName, std::ios::in);
   if (!inFile) {
-    if (_nucleusZ > 10) return;
+    if (_nucleusZ > 10) G4cout << " G4NRFNuclearLevelManager: nuclide ("
+                               << _nucleusZ << "," << _nucleusA
+                               << ") does not have a gamma levels file" << G4endl;
+    return;
   }
 
   if (_levels != 0) {

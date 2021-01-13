@@ -137,14 +137,6 @@ void G4NRFNuclearLevelManager::SetNucleus(const G4int Z, const G4int A, const G4
       G4cout << "G4NRFNuclearLevelManager::SetNucleus Initializing (Z, A) = ("
              << Z << ","
              << A << ")" << G4endl;
-
-      G4cout << "G4NRFNuclearLevelManager::SetNucleus Calling ReadGroundStateProperties"
-             << G4endl;
-    }
-
-    if (_Verbose) {
-      G4cout << "G4NRFNuclearLevelManager::SetNucleus Calling MakeLevels"
-             << G4endl;
     }
 
     MakeLevels();
@@ -152,10 +144,6 @@ void G4NRFNuclearLevelManager::SetNucleus(const G4int Z, const G4int A, const G4
     ReadTDebyeData(standalone);
     const G4double Teff = CalcTeff(_TDebye);
     SetTeff(Teff);
-
-    if (_Verbose) {
-      G4cout << "G4NRFNuclearLevelManager::SetNucleus Back from MakeLevels" << G4endl;
-    }
   }
 }
 
@@ -210,10 +198,6 @@ void G4NRFNuclearLevelManager::ReadGroundStateProperties(G4bool standalone) {
                  << spin << G4endl;
         }
       } else {
-        G4cout << "WARNING from G4NRFNuclearLevelManager::ReadGroundStateProperties."
-               << G4endl;
-        G4cout << "Ground state spin is unknown, setting to 0..."
-               << G4endl;
         _gsAngularMomentum = 0.0;
       }
 
@@ -224,10 +208,6 @@ void G4NRFNuclearLevelManager::ReadGroundStateProperties(G4bool standalone) {
                  << parity << G4endl;
         }
       } else {
-        G4cout << "WARNING from G4NRFNuclearLevelManager::ReadGroundStateProperties."
-               << G4endl;
-        G4cout << "Ground state parity is unknown, setting to +"
-               << G4endl;
         _gsParity = 1.0;
       }
     }
@@ -236,11 +216,8 @@ void G4NRFNuclearLevelManager::ReadGroundStateProperties(G4bool standalone) {
   gsFile.close();
 
   if (!found_gs) {
-    G4cout << "ERROR in G4NRFNuclearLevelManager::ReadGroundStateProperties." << G4endl;
-    G4cout << "Could not find g.s. for Z = " << _nucleusZ << " A = " << _nucleusA << G4endl;
     if (!standalone) G4cout << "Aborting." << G4endl;
     if (!standalone) exit(4);
-    if (standalone) G4cout << "Skipping ground state for standalone code" << G4endl;
   }
 }
 
@@ -259,9 +236,6 @@ void G4NRFNuclearLevelManager::ReadTDebyeData(G4bool standalone) {
   std::ifstream TDFile(TD_filename, std::ios::in);
   if (!TDFile) {
     G4cout << "Error in G4NRFNuclearLevelManager::ReadGroundStateProperties." << G4endl;
-    G4cout << "Could not open file TDebye_data.dat" << G4endl;
-    G4cout << "Expected to find this file in directory" << G4endl;
-    G4cout << dir << G4endl;
     G4cout << "Aborting." << G4endl;
     exit(6);
   }
@@ -303,11 +277,7 @@ void G4NRFNuclearLevelManager::ReadTDebyeData(G4bool standalone) {
   TDFile.close();
 
   if (!found_TD) {
-    G4cout << "ERROR in G4NRFNuclearLevelManager::ReadTDebyeData." << G4endl;
-    G4cout << "Could not find T_Debye for Z = " << Z << G4endl;
-    if (!standalone) G4cout << "Aborting." << G4endl;
     if (!standalone) exit(8);
-    if (standalone) G4cout << "Skipping ground state for standalone code" << G4endl;
   } else {
     SetTDebye(TDebye_tmp*kelvin);
   }
@@ -540,10 +510,7 @@ void G4NRFNuclearLevelManager::MakeLevels() {
 
   std::ifstream inFile(_fileName, std::ios::in);
   if (!inFile) {
-    if (_nucleusZ > 10) G4cout << " G4NRFNuclearLevelManager: nuclide ("
-                               << _nucleusZ << "," << _nucleusA
-                               << ") does not have a gamma levels file" << G4endl;
-    return;
+    if (_nucleusZ > 10) return;
   }
 
   if (_levels != 0) {
@@ -634,9 +601,6 @@ void G4NRFNuclearLevelManager::MakeLevels() {
   for (i = 0; i < nData; i++) {
     e = eLevel[i];
     if (e != thisLevelEnergy) {
-      //    G4cout << "Making a new level... " << e << G4endl;
-      //     << thisLevelEnergies.entries() << " "
-      //     << thisLevelWeights.entries() << G4endl;
 
       // DJ 8/29/06  Added E_1stExcitedState to G4NRFNuclearLevel
       // constructor to aid in identifying gamma transitions
@@ -825,26 +789,15 @@ G4NRFNuclearLevelManager::G4NRFNuclearLevelManager(const G4NRFNuclearLevelManage
 }
 
 void G4NRFNuclearLevelManager::delete_bad_levels() {
-  //G4cout << "Calling delete_bad_levels() on Z = " << _nucleusZ << ", A = " << _nucleusA << G4endl;
-  //G4cout << "Initial # of levels = " << _levels->size() << G4endl;
   G4int badcounter = 0;
   for (unsigned int i = 0; i < _levels->size(); i++) {
     G4NRFNuclearLevel *checkLevel = _levels->operator[](i);
     G4bool invalidLevel = checkLevel->GetInvalidLevel(); // check whether the level is invalid
     if (invalidLevel) {
-      //G4cout << "Deleting bad level " << i << " at " << checkLevel->Energy()/MeV << " MeV." << G4endl;
       _levels->erase(_levels->begin()+i); // if so, delete it
-      //G4cout << "New levels size = " << _levels->size() << G4endl;
       ++badcounter;
     }
   }
-  //G4cout << "# of bad levels = " << badcounter << G4endl;
-  //G4cout << "New # of levels = " << _levels->size() << G4endl;
-  //G4cout << G4endl;
-
-  //G4cout << "New list of levels = " << G4endl;
-  //for (int i = 0; i < _levels->size(); i++)
-    //G4cout << "Level energy = " << (_levels->operator[](i))->Energy()/MeV << " MeV." << G4endl;
 }
 
 

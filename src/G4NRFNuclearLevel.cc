@@ -759,21 +759,9 @@ void G4NRFNuclearLevel::RefreshGammas() {
       }
     } else {
      if (false) { // may be useful later
-      G4cout << "Error in G4NRFNuclearLevel::RefreshGammas." << G4endl;
-      G4cout << "Could not locate gamma in table." << G4endl;
-      G4cout << "Looking for gamma (keV): " << E_g/keV << G4endl;
-      G4cout << "Nucleus A: " << _nucleusA << " Z: " << _nucleusZ << G4endl;
-      G4cout << "From level E (keV) = " << _energy/keV << G4endl;
 
-      G4cout << "There are " << num_gammas << " candidates in table "
-             << gamma_table_filename << " as follows: " << G4endl;
       for (jgamma = 0; jgamma < num_gammas; jgamma++)
         G4cout << jgamma << " " << Egamma_arr[jgamma]/keV << G4endl;
-
-      G4cout << "Minimum difference occurs for gamma #" << jgamma_min << G4endl;
-      G4cout << "Ediff_min (keV): " << Ediff_min/keV << G4endl;
-      //G4cout << "Setting invalid level at E = " << _energy << G4endl;
-      //G4cout << G4endl;
      }
      //G4cout << "Setting invalid level at E = " << _energy << G4endl;
      this->SetInvalidLevel();
@@ -792,8 +780,6 @@ void G4NRFNuclearLevel::RefreshWidth() {
 
   char* env = getenv("G4NRFGAMMADATA");
   if (!env) {
-    G4cout << "G4NRFNuclearLevel: please set the G4NRFGAMMADATA environment variable" << G4endl;
-    G4cout << "Aborting." << G4endl;
     exit(35);
   }
 
@@ -821,7 +807,6 @@ void G4NRFNuclearLevel::RefreshWidth() {
 
   std::ifstream LevelsFile(levels_filename, std::ios::in);
   if (!LevelsFile) {
-    G4cout << "Aborting." << G4endl;
     exit(36);
   }
 
@@ -895,9 +880,6 @@ void G4NRFNuclearLevel::RefreshWidth() {
 
   if (!found_level) {
     if (false) {
-      G4cout << "RefreshWidth: Could not find level " << _energy/keV << " keV. " << G4endl;
-      G4cout << "  no such level in " << levels_filename << G4endl;
-      G4cout << "Setting invalid level" << G4endl;
       G4cout << G4endl;
     }
     this->SetInvalidLevel();

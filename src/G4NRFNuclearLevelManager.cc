@@ -101,12 +101,6 @@ G4NRFNuclearLevelManager::G4NRFNuclearLevelManager(const G4int Z, const G4int A,
 
   _levels = 0;
 
-  if (_Verbose) {
-    G4cout << "G4NRFNuclearLevelManager: Initializing (Z, A) = ("
-     << Z << ","
-     << A << ")" << G4endl;
-  }
-
   ReadGroundStateProperties(); // never gets called
 
   MakeLevels(); // never happens because this particular constructor never gets called
@@ -130,12 +124,6 @@ void G4NRFNuclearLevelManager::SetNucleus(const G4int Z, const G4int A, const G4
     _nucleusZ = Z;
     _fileName = filename;
 
-    if (_Verbose) {
-      G4cout << "G4NRFNuclearLevelManager::SetNucleus Initializing (Z, A) = ("
-             << Z << ","
-             << A << ")" << G4endl;
-    }
-
     MakeLevels();
     ReadGroundStateProperties(standalone); // this is the only place ReadGroundStateProperties ever gets called
     ReadTDebyeData(standalone);
@@ -152,9 +140,6 @@ void G4NRFNuclearLevelManager::ReadGroundStateProperties(G4bool standalone) {
 
   char* env = getenv("G4NRFGAMMADATA");
   if (!env) {
-    G4cout << "G4NRFNuclearLevelManager: please set the G4NRFGAMMADATA environment variable"
-           << G4endl;
-    G4cout << "Aborting." << G4endl;
     exit(2);
   }
 
@@ -164,10 +149,6 @@ void G4NRFNuclearLevelManager::ReadGroundStateProperties(G4bool standalone) {
 
   std::ifstream gsFile(gs_filename, std::ios::in);
   if (!gsFile) {
-    G4cout << "Could not open file ground_state_properties.dat" << G4endl;
-    G4cout << "Expected to find this file in directory" << G4endl;
-    G4cout << dir << G4endl;
-    G4cout << "Aborting." << G4endl;
     exit(3);
   }
 
@@ -188,21 +169,12 @@ void G4NRFNuclearLevelManager::ReadGroundStateProperties(G4bool standalone) {
       found_gs = true;
       if (spin >= 0.0) {
         _gsAngularMomentum = spin;
-
-        if (_Verbose) {
-          G4cout << "G4NRFNuclearLevelManager::ReadGroundStateProperties -- Found valid g.s. spin = "
-                 << spin << G4endl;
-        }
       } else {
         _gsAngularMomentum = 0.0;
       }
 
       if (parity != 0.0) {
         _gsParity = parity;
-        if (_Verbose) {
-          G4cout << "G4NRFNuclearLevelManager::ReadGroundStateProperties -- Found valid g.s. parity = "
-                 << parity << G4endl;
-        }
       } else {
         _gsParity = 1.0;
       }
@@ -220,8 +192,6 @@ void G4NRFNuclearLevelManager::ReadGroundStateProperties(G4bool standalone) {
 void G4NRFNuclearLevelManager::ReadTDebyeData(G4bool standalone) {
   char* env = getenv("G4NRFGAMMADATA");
   if (!env) {
-    G4cout << "G4NRFNuclearLevelManager: please set the G4NRFGAMMADATA environment variable" << G4endl;
-    G4cout << "Aborting." << G4endl;
     exit(5);
   }
 
@@ -231,7 +201,6 @@ void G4NRFNuclearLevelManager::ReadTDebyeData(G4bool standalone) {
 
   std::ifstream TDFile(TD_filename, std::ios::in);
   if (!TDFile) {
-    G4cout << "Aborting." << G4endl;
     exit(6);
   }
 
@@ -569,10 +538,6 @@ void G4NRFNuclearLevelManager::MakeLevels() {
 
   G4int nData = eLevel.size();
 
-  if (_Verbose) {
-    G4cout << " ==== MakeLevels ===== " << nData << " data read " << G4endl;
-  }
-
   G4double thisLevelEnergy = eLevel[0];
   G4double E_1stExcitedState = eLevel[0];  // Added DJ 8/29/06
   G4double thisLevelHalfLife = 0.;
@@ -703,8 +668,6 @@ void G4NRFNuclearLevelManager::MakeLevels() {
   delete_bad_levels();
 
   G4PtrSort<G4NRFNuclearLevel>(_levels);
-
-  //PrintLevelEnergies();
 
   return;
 }

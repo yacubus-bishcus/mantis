@@ -702,7 +702,6 @@ void G4NRFNuclearLevel::RefreshGammas() {
       G4double Ediff = fabs(E_g - Egamma_arr[jgamma]);
       if (Ediff < Ediff_min) {
         Ediff_min = Ediff;
-        jgamma_min = jgamma;
       }
 
       // added relative tolerance of 0.1% - solves gamma errors in Pu but not level errors

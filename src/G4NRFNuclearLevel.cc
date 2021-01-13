@@ -692,7 +692,6 @@ void G4NRFNuclearLevel::RefreshGammas() {
     G4double E_g = _energies[i];
 
     G4double Ediff_min = DBL_MAX; // fixed the placements of these (were outside of the for loop before)
-    G4int jgamma_min = 0;
 
     if (_Verbose)
       G4cout << "  Trying to locate gamma of energy E_g (keV) = " << E_g/keV << G4endl;

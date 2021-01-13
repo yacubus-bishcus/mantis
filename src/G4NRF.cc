@@ -177,12 +177,6 @@ G4NRF::G4NRF(const G4String& processName, G4bool Verbose_in, G4bool use_xsec_tab
     exit(48);
   }
 
-  G4cout << std::boolalpha;
-  G4cout << "G4NRF settings:" << G4endl;
-  G4cout << "  use_xsec_tables      = " << use_xsec_tables      << G4endl;
-  G4cout << "  use_xsec_integration = " << use_xsec_integration << G4endl;
-  G4cout << "  force_isotropic      = " << force_isotropic_ang_corr << G4endl << G4endl;
-
   pAngular_Correlation = new Angular_Correlation;
 
   SetProcessType(fHadronic);
@@ -340,9 +334,6 @@ G4double G4NRF::GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize
           G4cout << "G4NRF::GetMeanFreePath: sigma (cm^-1): " << sigma/(1.0/cm) << G4endl;
         }
       } else {
-        if (Verbose) {
-          G4cout << "G4NRF::GetMeanFreePath -- Could not find nearby level." << G4endl;
-        }
         jisotope++;   // move on to next isotope in current element
       }
     }  // loop over isotopes (terminate if nearby level found)
@@ -656,16 +647,10 @@ G4VParticleChange* G4NRF::PostStepDoIt(const G4Track& trackData,
           Level_energy_next = pLevel_next->Energy();
           if (Verbose) G4cout << "Found excited state at lower energy than current state" << G4endl;
         } else {              // could not find next excited state, so must be g.s. transition
-          if (Verbose) {
-            G4cout << "Did not find deexcitation to excited state.  Assume gs transition." << G4endl;
-          }
           continue_cascade = false;
         }
       } else {             // i.e. currently at 1st excited state, so g.s. transition is only possibility
         continue_cascade = false;
-        if (Verbose) {
-          G4cout << "Terminating cascade." << G4endl;
-        }
       }
 
       // (3) For gamma emission, sample gamma direction and generate it (i.e.
@@ -718,21 +703,12 @@ G4VParticleChange* G4NRF::PostStepDoIt(const G4Track& trackData,
 
             emitted_gamma_direction = SampleCorrelation(J0, J, Jf, L1, L2, Delta1, Delta2);
 
-            if (Verbose) {
-              G4cout << "emitted_gamma_direction after SampleCorrelation call: "
-                     <<  emitted_gamma_direction << G4endl;
-            }
-
             emitted_gamma_direction.rotateUz(IncidentGammaDirection);
           } else {  // User has chosen to disable angular correlations
             emitted_gamma_direction = SampleIsotropic();
           }
         } else {  // angular correlations not included after first pass (i.e., after first (gamma, gamma) pair)
           emitted_gamma_direction = SampleIsotropic();
-        }
-
-        if (Verbose) {
-          G4cout << "G4NRF::PostStepDoIt -- Creating new gamma, direction = " << emitted_gamma_direction << G4endl;
         }
 
         // Create G4DynamicParticle object for the emitted gamma and add it to the tracking stack.
@@ -931,7 +907,6 @@ void G4NRF::AssignMultipoles(const G4NRFNuclearLevel* pLevel,
   default:
     // Shouldn't get to this default case if ENSDF data parsing went as expected.
     G4cout << "ERROR in G4NRF::AssignMultipoles." << G4endl;
-    G4cout << "Unexpected value of Gamma_num_mult:  " << Gamma_num_mult << G4endl;
     G4cout << "Aborting." << G4endl;
     exit(15);
     break;
@@ -1020,7 +995,6 @@ G4double G4NRF::MixingRatio_WeisskopfEstimate(char transition, const G4int L_j,
     break;
   default:
     G4cout << "Error in G4NRF::MixingRatio_WeisskopfEstimate." << G4endl;
-    G4cout << "Unrecognized transition: " << transition << G4endl;
     G4cout << "Aborting." << G4endl;
     exit(16);
   }
@@ -1296,7 +1270,6 @@ void G4NRF::MakeCrossSectionTable(G4NRFNuclearLevel* pLevel, G4double Teff) {
   G4double Er = E1 + E1*E1/(2.0*M); // small approximation to use E1 instead of E, but it makes it constant for the table
   G4double Delta_eff = Er * sqrt(2.0*k_Boltzmann*Teff/M);
 
-  //G4cout << "Building cross section table for Z = " << Z << ", A = " << A << ", Er/MeV = " << Er << G4endl;
   std::vector<G4double> cross_sec_tab;
   std::vector<G4double> E_tab;
 
@@ -1317,7 +1290,6 @@ void G4NRF::MakeCrossSectionTable(G4NRFNuclearLevel* pLevel, G4double Teff) {
   interpolating_function_p<G4double> *cross_sec_interp_func = new interpolating_function_p<G4double>();
   cross_sec_interp_func->load(E_tab, cross_sec_tab, true, 0, true, 0, true);
   pLevel->SetCrossSectionTable(cross_sec_interp_func);
-  //G4cout << "...built" << G4endl;
 }
 
 
@@ -1333,7 +1305,6 @@ G4double G4NRF::InterpolateCrossSection(const G4NRFNuclearLevel* pLevel, G4doubl
 // print cross section data to a standalone data file for later analysis by standalone.py
 // runs fairly quickly for small Z, A ranges of interest; takes ~15 minutes for entire database
 void G4NRF::print_to_standalone(ofstream& file) {
-  G4cout << G4endl;
   G4cout << "Calling G4NRF::print_to_standalone()" << G4endl;
 
   for (int z = 4; z <= 100; ++z) {
@@ -1342,5 +1313,4 @@ void G4NRF::print_to_standalone(ofstream& file) {
       if (pManager) pManager->PrintAllTabular(file);
     }
   }
-  G4cout << G4endl;
 }

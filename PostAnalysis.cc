@@ -10,6 +10,7 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     bool confirmation = chopOn->cd();
     double chopOn_entries, intObjOn_entries, chopOn_sum, intObjOn_sum, detectedOn_entries, detectedOn_sum;
     double chopOn_NRF_inc_sum = 0;
+    double chopOn_NRF_inc_entries, chopOff_NRF_inc_entries;
     
     double chopOff_entries, intObjOff_entries, chopOff_sum, intObjOff_sum, detectedOff_entries, detectedOff_sum;
     double chopOff_NRF_inc_sum = 0;
@@ -33,7 +34,11 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
             {
                 throw response;
             }
-            else chopOn_NRF_inc_sum = NRFIncWater->Integral();
+            else
+            {
+              chopOn_NRF_inc_sum = NRFIncWater->Integral();
+              chopOn_NRF_inc_entries = NRFIncWater->GetEntries();
+            }
         }
         catch(string response)
         {
@@ -73,7 +78,11 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
             {
                 throw response;
             }
-            else chopOff_NRF_inc_sum = NRFIncWater2->Integral();
+            else
+            {
+              chopOff_NRF_inc_sum = NRFIncWater2->Integral();
+              chopOff_NRF_inc_entries = NRFIncWater2->GetEntries();
+            }
         }
         catch(string response)
         {
@@ -107,7 +116,7 @@ void PostAnalysis(const char *ChopOn, const char *ChopOff)
     std::cout << "Chopper Off Interrogation Object Entries: " << intObjOff_entries << " Off Sum: " << intObjOff_sum << std::endl;
     std::cout << "Interrogation Object Z-test result: " << intObj_z << std::endl;
     
-    std::cout << "Chopper On Detected Entries: " << detectedOn_entries << " On Sum: " << detectedOn_sum << " On NRF: " << chopOn_NRF_inc_sum << std::endl;
-    std::cout << "Chopper Off Detected Entries: " << detectedOff_entries << " Off Sum: " << detectedOff_sum << " Off NRF: " << chopOff_NRF_inc_sum << std::endl;
+    std::cout << "Chopper On Detected Entries: " << detectedOn_entries << " On Sum: " << detectedOn_sum << "On NRF Entries: " << chopOn_NRF_inc_entries << " On NRF sum: " << chopOn_NRF_inc_sum << std::endl;
+    std::cout << "Chopper Off Detected Entries: " << detectedOff_entries << " Off Sum: " << detectedOff_sum << "Off NRF Entries: " << chopOff_NRF_inc_entries << " Off NRF sum: " << chopOff_NRF_inc_sum << std::endl;
     std::cout << "Detected Z-test result: " << detected_z << std::endl;
 }

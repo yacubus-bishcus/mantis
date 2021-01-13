@@ -9,16 +9,19 @@ void Sampling(const char *bremInputFilename, double Emax)
 	vector<double> Evec;
 	vector<double> Evec_above_threshold;
 	// U-238
-	Evec.push_back(2.17601067909);
-	Evec.push_back(2.20901100546);
-	Evec.push_back(2.24501136709);
-	Evec.push_back(1.78200716196);
-	Evec.push_back(1.84600768563);
+	Evec.push_back(1.78200716196); // 33
+	Evec.push_back(1.793); // 80
+	Evec.push_back(1.84600768563); // 31
+	Evec.push_back(2.17601067909); // 24e-3
+	Evec.push_back(2.20901100546); // 18e-3
+	Evec.push_back(2.24501136709); // 14.2e-3
+	Evec.push_back(2.468); // 48e-3
 
 	// U-235
-	Evec.push_back(1.73354686425);
-	Evec.push_back(1.81525753275);
-	Evec.push_back(2.00336916735);
+	Evec.push_back(1.73354686425); //22.4
+	Evec.push_back(1.81525753275); // 8.9
+	Evec.push_back(1.862); // 9.6
+	Evec.push_back(2.00336916735); // 6.7
 
 	// Pu-239
 	Evec.push_back(2.13501023737);

@@ -167,7 +167,6 @@ void G4NRFNuclearLevelManager::ReadGroundStateProperties(G4bool standalone) {
 
   std::ifstream gsFile(gs_filename, std::ios::in);
   if (!gsFile) {
-    G4cout << "Error in G4NRFNuclearLevelManager::ReadGroundStateProperties." << G4endl;
     G4cout << "Could not open file ground_state_properties.dat" << G4endl;
     G4cout << "Expected to find this file in directory" << G4endl;
     G4cout << dir << G4endl;
@@ -235,7 +234,6 @@ void G4NRFNuclearLevelManager::ReadTDebyeData(G4bool standalone) {
 
   std::ifstream TDFile(TD_filename, std::ios::in);
   if (!TDFile) {
-    G4cout << "Error in G4NRFNuclearLevelManager::ReadGroundStateProperties." << G4endl;
     G4cout << "Aborting." << G4endl;
     exit(6);
   }

@@ -4,10 +4,10 @@
 HistoManagerMessenger::HistoManagerMessenger(HistoManager* hist)
 :histoManager(hist)
 {
-  myDir = new G4UIdirectory("/input/");
+  myDir = new G4UIdirectory("/histo/");
   myDir->SetGuidance("Input Commands");
-  Cmd = new G4UIcmdWithADouble("/input/energy",this);
-  Cmd->SetGuidance("Choose Desired Energy Input");
+  Cmd = new G4UIcmdWithADouble("/histo/energy",this);
+  Cmd->SetGuidance("Choose Desired Histogram Energy Input");
   Cmd->SetParameterName("energy",false);
   Cmd->SetDefaultValue(-1);
 
@@ -26,7 +26,6 @@ void HistoManagerMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   {
     G4double theCommand = Cmd->GetNewDoubleValue(newValue);
     histoManager->SetEnergyValue(theCommand);
-
   }
   else
   {

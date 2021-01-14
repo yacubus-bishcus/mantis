@@ -1,9 +1,12 @@
 #include "HistoManager.hh"
+#include "HistoManagerMessenger.hh"
 
 extern G4String gOutName;
 extern G4bool output;
-HistoManager::HistoManager(): fFactoryOn(false)
-{}
+HistoManager::HistoManager(): fFactoryOn(false), histM(NULL)
+{
+  histM = new HistoManagerMessenger(this);
+}
 
 HistoManager::~HistoManager()
 {}
@@ -15,14 +18,14 @@ void HistoManager::Book(G4bool bremTest)
 
     G4AnalysisManager* manager = G4AnalysisManager::Instance();
 #if defined (G4ANALYSIS_USE_ROOT)
-    if(!bremTest){
+    if(!bremTest && chosen_energy < 0){
         TFile *fin = TFile::Open("brems_distributions.root");
         hBrems  = (TH1D*) fin->Get("hBrems");
         if (hBrems)
         {
             G4cout << "Imported brems from " << fin->GetName() << G4endl << G4endl;
             xmax = hBrems->GetXaxis()->GetXmax();
-            std::cout << "Found Input Max Energy: " << xmax << "MeV" << std::endl;
+            std::cout << "Found Input Max Energy: " << xmax << " MeV" << std::endl;
             G4cout << "Found Input Max Energy: " << xmax << " MeV" << G4endl;
             fin->Close();
         }
@@ -32,6 +35,11 @@ void HistoManager::Book(G4bool bremTest)
                 exit(1);
         }
     }
+    else if(chosen_energy > 0)
+    {
+      std::cout << "Input Energy: " << chosen_energy << " MeV" << std::endl;
+    }
+    
 #endif
     G4int nbins = 100000;
     manager->SetVerboseLevel(0);

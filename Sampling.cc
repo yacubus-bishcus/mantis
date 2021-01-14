@@ -1,5 +1,5 @@
 // to Run in root: root -b -q 'Sampling.cc("brem.root", Emax)'
-void Sampling(const char *bremInputFilename, double Emax, const char *sample_element)
+void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 {
 	const double pi = TMath::Pi();
 	double Emin = 0.0; // spectrum min energy in MeV
@@ -8,15 +8,10 @@ void Sampling(const char *bremInputFilename, double Emax, const char *sample_ele
 	// resonance energies in MeV as calculated by G4NRF
 	vector<double> Evec;
 	vector<double> Evec_above_threshold;
-	// U-238
-	//Evec.push_back(1.793); // 80
-	//Evec.push_back(2.4680); // 48e-3
-
-	// U-235
-	//Evec.push_back(1.86231); // 9.6
 	
 	if(sample_element == "U")
 	{
+		std::cout << "Sampling for Uranium!" << std::endl;
 		// U-238
 		Evec.push_back(1.78200716196); // 33
 		Evec.push_back(1.79300725065); // 6.21
@@ -34,6 +29,7 @@ void Sampling(const char *bremInputFilename, double Emax, const char *sample_ele
 	}
 	else if(sample_element == "Pu")
 	{
+		std::cout << "Sampling for Plutonium!" << std::endl;
 		// Pu-239
 		Evec.push_back(2.13501023737);
 		Evec.push_back(2.14357031961);

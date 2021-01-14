@@ -39,7 +39,7 @@ void HistoManager::Book(G4bool bremTest)
     }
     else if(chosen_energy > 0)
     {
-      std::cout << "HistoManager::Input Energy: " << chosen_energy << " MeV" << std::endl;
+      std::cout << "HistoManager::Input Energy: " << std::setprecision(10) << chosen_energy << " MeV" << std::endl;
     }
     
 #endif

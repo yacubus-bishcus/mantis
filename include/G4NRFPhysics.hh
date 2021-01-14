@@ -33,6 +33,7 @@ class G4NRFPhysics : public G4VPhysicsConstructor {
   G4bool use_xsec_integration;
   G4bool force_isotropic;
   G4bool standalone;
+  G4bool Verbose;
 };
 
 #endif

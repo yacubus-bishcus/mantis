@@ -1,28 +1,28 @@
-#ifndef PrimaryGenActionMessenger_h
-#define PrimaryGenActionMessenger_h 1
+#ifndef HistoManagerMessenger_h
+#define HistoManagerMessenger_h 1
 
 #include "globals.hh"
 #include "G4UImessenger.hh"
 #include "G4ApplicationState.hh"
 #include "G4UIcmdWithADouble.hh"
-#include "PrimaryGeneratorAction.hh"
+#include "HistoManager.hh"
 #include "G4UIdirectory.hh"
 
-class PrimaryGeneratorAction;
+class HistoManager;
 class G4UIcmdWithADouble;
 class G4UIdirectory;
 
-class PrimaryGenActionMessenger: public G4UImessenger
+class HistoManagerMessenger: public G4UImessenger
 {
 public:
-  PrimaryGenActionMessenger(PrimaryGeneratorAction*);
-  ~PrimaryGenActionMessenger();
+  HistoManagerMessenger(HistoManager*);
+  ~HistoManagerMessenger();
 
   void SetNewValue(G4UIcommand*, G4String);
 private:
-  PrimaryGeneratorAction* genA;
-  G4UIcmdWithADouble* Cmd;
-  G4UIdirectory *myDir;
+    HistoManager* histoManager;
+    G4UIcmdWithADouble* Cmd;
+    G4UIdirectory *myDir;
 };
 
 #endif

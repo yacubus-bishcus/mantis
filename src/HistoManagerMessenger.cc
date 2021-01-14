@@ -1,8 +1,8 @@
 #include "HistoManagerMessenger.hh"
 
 
-PrimaryGenActionMessenger::PrimaryGenActionMessenger(PrimaryGeneratorAction* genAction)
-:genA(genAction)
+HistoManagerMessenger::HistoManagerMessenger(HistoManager* hist)
+:histoManager(hist)
 {
   myDir = new G4UIdirectory("/input/");
   myDir->SetGuidance("Input Commands");
@@ -13,24 +13,23 @@ PrimaryGenActionMessenger::PrimaryGenActionMessenger(PrimaryGeneratorAction* gen
 
 }
 
-PrimaryGenActionMessenger::~PrimaryGenActionMessenger()
+HistoManagerMessenger::~HistoManagerMessenger()
 {
   delete Cmd;
 }
 
 
-void PrimaryGenActionMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
+void HistoManagerMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 { // this function only works if named SetNewValue
 
   if(command == Cmd)
   {
     G4double theCommand = Cmd->GetNewDoubleValue(newValue);
-    std::cout << "Input Energy for Brem Test set to: " << theCommand << " MeV" << std::endl;
     genA->SetEnergyValue(theCommand);
 
   }
   else
   {
-    G4cerr << "ERROR PrimaryGenActionMessenger :: SetStepInputValue command != Cmd" << G4endl;
+    G4cerr << "ERROR HistoManagerMessenger :: SetStepInputValue command != Cmd" << G4endl;
   }
 }

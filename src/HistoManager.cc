@@ -9,7 +9,9 @@ HistoManager::HistoManager(): fFactoryOn(false), histM(NULL)
 }
 
 HistoManager::~HistoManager()
-{}
+{
+  delete histM;
+}
 
 void HistoManager::Book(G4bool bremTest)
 {

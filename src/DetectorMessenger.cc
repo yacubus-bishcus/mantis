@@ -184,7 +184,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   {
     G4double theCommandtrad = Cmdtrad->GetNewDoubleValue(newValue);
     DetectorA->SetIntObjAbundance(theCommandtrad);
-    std::cout << "The Interrogation Object fissionable radioisotope abundance manually set to: " << theCommandtrad << " percent" << std::endl;
+    std::cout << "The Interrogation Object fissile radioisotope abundance manually set to: " << theCommandtrad << " percent" << std::endl;
   }
   else if(command == Cmdtsel)
   {

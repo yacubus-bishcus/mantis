@@ -98,12 +98,6 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
                 std::cout << " Average Scintillation Photon energy emitted in the Water: " << (fScintEnergy/eV)/fScintCount << " eV." << std::endl;
         }
 
-        std::cout << "Average number of OpRayleigh per event:   " << fRayleighCount/TotNbofEvents << std::endl;
-        std::cout << "Average number of OpAbsorption per event: " << fOpAbsorption/TotNbofEvents << std::endl;
-
-        //G4double bdry = G4double(fBoundaryAbsorptionCount)/TotNbofEvents;
-        //std::cout  << "Number of photons absorbed at boundary per event: " << bdry << std::endl;
-
         std::cout <<   "---------------------------------" << std::endl;
 
 if(output)

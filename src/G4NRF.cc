@@ -817,7 +817,7 @@ G4double G4NRF::InterpolateCrossSection(const G4NRFNuclearLevel* pLevel, G4doubl
 void G4NRF::print_to_standalone(ofstream& file) {
   G4cout << "Calling G4NRF::print_to_standalone()" << G4endl;
 
-  for (int z = 90; z <= 93; ++z) {
+  for (int z = 92; z <= 93; ++z) {
     for (int a = z; a <= 3*z; ++a) {
       G4NRFNuclearLevelManager* pManager = G4NRFNuclearLevelStore::GetInstance()->GetManager(z, a, true);
       if (pManager) pManager->PrintAllTabular(file);

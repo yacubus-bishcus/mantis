@@ -25,7 +25,7 @@ void HistoManagerMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   if(command == Cmd)
   {
     G4double theCommand = Cmd->GetNewDoubleValue(newValue);
-    genA->SetEnergyValue(theCommand);
+    histoManager->SetEnergyValue(theCommand);
 
   }
   else

@@ -1,5 +1,5 @@
 // to Run in root: root -b -q 'Sampling.cc("brem.root", Emax)'
-void Sampling(const char *bremInputFilename, double Emax)
+void Sampling(const char *bremInputFilename, double Emax, const char *sample_element)
 {
 	const double pi = TMath::Pi();
 	double Emin = 0.0; // spectrum min energy in MeV
@@ -9,30 +9,44 @@ void Sampling(const char *bremInputFilename, double Emax)
 	vector<double> Evec;
 	vector<double> Evec_above_threshold;
 	// U-238
-	Evec.push_back(1.7820); // 33
-	Evec.push_back(1.793); // 80
-	Evec.push_back(1.8460); // 31
-	Evec.push_back(2.1760); // 24e-3
-	Evec.push_back(2.2090); // 18e-3
-	Evec.push_back(2.2450); // 14.2e-3
-	Evec.push_back(2.4680); // 48e-3
+	//Evec.push_back(1.793); // 80
+	//Evec.push_back(2.4680); // 48e-3
 
 	// U-235
-	Evec.push_back(1.73354); //22.4
-	Evec.push_back(1.81525); // 8.9
-	Evec.push_back(1.86231); // 9.6
-	Evec.push_back(2.00619); // 6.7
+	//Evec.push_back(1.86231); // 9.6
+	
+	if(sample_element == "U")
+	{
+		// U-238
+		Evec.push_back(1.78200716196); // 33
+		Evec.push_back(1.84600768563); // 31
+		Evec.push_back(2.17601067909); // 24e-3
+		Evec.push_back(2.20901100546); // 18e-3
+		Evec.push_back(2.24501136709); // 14.2e-3
 
-	// Pu-239
-	Evec.push_back(2.13501023737);
-	Evec.push_back(2.14357031961);
-	Evec.push_back(2.15101039142);
-	Evec.push_back(2.43171328004);
+		// U-235
+		Evec.push_back(1.73354686425); //22.4
+		Evec.push_back(1.81525753275); // 8.9
+		Evec.push_back(2.00336916735); // 6.7
+	}
+	else if(sample_element == "Pu")
+	{
+		// Pu-239
+		Evec.push_back(2.13501023737);
+		Evec.push_back(2.14357031961);
+		Evec.push_back(2.15101039142);
+		Evec.push_back(2.43171328004);
 
-	// Pu-240
-	Evec.push_back(2.43321324158);
-	Evec.push_back(2.57751485869);
-	Evec.push_back(2.56641473101);
+		// Pu-240
+		Evec.push_back(2.43321324158);
+		Evec.push_back(2.57751485869);
+		Evec.push_back(2.56641473101);
+	}
+	else
+	{
+		std::cout << "Sample element not found. Exiting..." << std::endl;
+		exit(100);
+	}
 	for(int i=0;i<Evec.size();i++)
 	{
 	  if(Evec[i] < Emax)

@@ -6,7 +6,7 @@
 
 class physicsList: public G4VModularPhysicsList {
  public:
-  physicsList(G4bool, G4bool, G4bool, G4bool, G4bool);
+  physicsList(G4bool, G4bool, G4bool, G4bool, G4bool, G4bool);
   ~physicsList();
 
   void ConstructParticle();
@@ -15,16 +15,8 @@ class physicsList: public G4VModularPhysicsList {
   void SetCuts();
 
  private:
-  G4double cutForGamma;
-  G4double cutForElectron;
-  G4double cutForPositron;
-  G4double cutForProton;
-
-  G4bool addNRF;
-  G4bool use_xsec_tables;
-  G4bool use_xsec_integration;
-  G4bool force_isotropic;
-  G4bool standalone;
+  G4double cutForGamma, cutForElectron, cutForPositron, cutForProton;
+  G4bool addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose;
 };
 
 #endif

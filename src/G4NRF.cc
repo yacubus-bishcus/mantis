@@ -265,7 +265,7 @@ G4double G4NRF::NRF_xsec_calc(G4double GammaEnergy, G4NRFNuclearLevel* pLevel,
     xsec = fac1 * fac2 * fac3 * fac4;
   }
 
-  if (Verbose || (interrupt && xsec/barn > 1.0) && Z == 92) {
+  if (Verbose || (interrupt && xsec/barn > 1.0)) {
     G4cout << std::setprecision(12);
     G4cout << "Z:                  " << Z               << G4endl;
     G4cout << "A:                  " << A               << G4endl;

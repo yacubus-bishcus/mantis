@@ -24,21 +24,16 @@
 #include "G4UIsession.hh"
 
 // declare global variables
-
-G4String macro;
 G4long seed;
-G4String root_output_name;
-G4String gOutName;
 G4bool output;
-G4String bremTest; 
-G4String standalone_in;
+G4String macro, root_output_name, gOutName, bremTest, standalone_in, verbose_in; 
 
 namespace
 {
 void PrintUsage()
 {
         std::cerr << "Usage: " << std::endl;
-        std::cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false] [-p standalone=false]" << std::endl;
+        std::cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false] [-p standalone=false] [-v NRF_Verbose=false]" << std::endl;
 }
 }
 
@@ -50,6 +45,7 @@ int main(int argc,char **argv)
   G4bool use_xsec_integration = true;
   G4bool force_isotropic = false;
   G4bool standalone = false;
+  G4bool NRF_Verbose = false;
   G4bool addNRF = true;
   macro = "mantis.in";
   seed = 1;
@@ -66,7 +62,7 @@ int main(int argc,char **argv)
         }
 
         // Evaluate Arguments
-        if ( argc > 11 )
+        if ( argc > 13 )
         {
                 PrintUsage();
                 return 1;
@@ -78,6 +74,7 @@ int main(int argc,char **argv)
                 else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];
                 else if (G4String(argv[i]) == "-t") bremTest = argv[i+1];
                 else if (G4String(argv[i]) == "-p") standalone_in = argv[i+1];
+                else if (G4String(argv[i]) == "-v") verbose_in = argv[i+1];
                 else
                 {
                         PrintUsage();
@@ -89,6 +86,11 @@ int main(int argc,char **argv)
         {
           std::cout << "Standalone File Requested." << std::endl;
           standalone = true;
+        }
+        if(verbose_in == "True" || verbose_in == "true")
+        {
+          std::cout << "NRF Verbose set to: " << verbose_in << std::endl;
+          NRF_Verbose = true;
         }
         std::string RootOutputFile = (std::string)root_output_name;
         if(RootOutputFile.find(".root")<RootOutputFile.length()) {
@@ -120,7 +122,7 @@ int main(int argc,char **argv)
         runManager->SetUserInitialization(det);
 
         // Set up Physics List
-        physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone);
+        physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
         runManager->SetUserInitialization(thePL);
         runManager->SetUserInitialization(new ActionInitialization(det, brem));
 

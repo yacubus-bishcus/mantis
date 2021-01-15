@@ -7,6 +7,7 @@
 #include "G4ThreeVector.hh"
 #include "G4OpBoundaryProcess.hh"
 #include "RunAction.hh"
+#include "EventAction.hh"
 #include "StackingAction.hh"
 #include "HistoManager.hh"
 #include "StepMessenger.hh"
@@ -34,7 +35,7 @@ class StepMessenger;
 class SteppingAction : public G4UserSteppingAction
 {
 public:
-SteppingAction(const DetectorConstruction*, RunAction*, G4bool);
+SteppingAction(const DetectorConstruction*, RunAction*, EventAction*, G4bool);
 virtual ~SteppingAction();
 
 // method from the base class
@@ -58,6 +59,10 @@ void SetIntObjDataFlag(G4int val){
 void SetIncWatDataFlag(G4int val){
         drawWaterIncDataFlag = val;
 };
+void SetCherenkovDataFlag(G4int val)
+{
+        drawCherenkovFlag = val;
+};
 
 private:
 G4bool bremTest;
@@ -70,11 +75,13 @@ G4ThreeVector Xdet, Xdetected;
 G4ThreeVector incX;
 const DetectorConstruction* local_det;
 RunAction* run;
+EventAction* event;
 G4OpBoundaryProcessStatus fExpectedNextStatus;
 G4String procCount;
 G4int drawChopperDataFlag;
 G4int drawIntObjDataFlag;
 G4int drawIncFlag;
+G4int drawCherenkovFlag;
 G4int drawDetFlag;
 G4int drawWaterIncDataFlag;
 G4double det_energy;

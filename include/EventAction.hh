@@ -8,6 +8,7 @@
 #include "G4Types.hh"
 #include "G4EventManager.hh"
 #include "EventMessenger.hh"
+#include "eventInformation.hh"
 #include "G4RunManager.hh"
 #include "G4Event.hh"
 #include "G4ios.hh"

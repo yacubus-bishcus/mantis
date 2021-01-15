@@ -19,7 +19,7 @@ public:
 HistoManager();
 ~HistoManager();
 
-void finish();     // close root file
+void finish(G4bool);     // close root file
 void Book(G4bool);
 void SetChosenEnergy(G4double val)
 {

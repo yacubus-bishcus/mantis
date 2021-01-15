@@ -9,7 +9,7 @@ EventMessenger::EventMessenger(EventAction* eventAction)
         Cmd = new G4UIcmdWithAString("/userevent/myoutput",this);
         Cmd->SetGuidance("Choose Desired Outputs");
         Cmd->SetGuidance("Choice: CherData, none (default)");
-        Cmd->SetParameterName("choice",false);
+        Cmd->SetParameterName("event_choice",false);
         Cmd->SetDefaultValue("none");
         Cmd->SetCandidates("CherData none");
 }

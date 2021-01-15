@@ -261,7 +261,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                 } // for if opProc
                                 if(drawDetFlag && !bremTest)
                                 {
-                                        manager->FillNtupleSColumn(1,0,procCount);
+                                        manager->FillNtupleSColumn(2,0,procCount);
                                         manager->AddNtupleRow(1);
                                 }
                         } // for for loop

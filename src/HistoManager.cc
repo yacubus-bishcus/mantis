@@ -2,7 +2,6 @@
 #include "HistoManagerMessenger.hh"
 
 extern G4String gOutName;
-extern G4bool output;
 HistoManager::HistoManager(): fFactoryOn(false)
 {
 }
@@ -11,7 +10,7 @@ HistoManager::~HistoManager()
 {
 }
 
-void HistoManager::Book(G4bool bremTest, G4double chosen_energy)
+void HistoManager::Book(G4bool bremTest, G4bool output)
 {
   if(output)
   {

@@ -11,7 +11,8 @@
 #include "TROOT.h"
 #include "TH1D.h"
 #endif
-class HistoManagerMessenger;
+
+
 class HistoManager
 {
 public:
@@ -20,14 +21,13 @@ HistoManager();
 
 void finish();     // close root file
 void Book(G4bool);
-void SetEnergyValue(G4double val)
+void SetChosenEnergy(G4double val)
 {
   chosen_energy = val;
 }
 
 private:
 G4bool fFactoryOn;
-HistoManagerMessenger* histM;
 G4double chosen_energy;
 G4double xmax;
 #if defined (G4ANALYSIS_USE_ROOT)

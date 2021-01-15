@@ -59,7 +59,7 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateH1("IncWaterLow","Incident Water Low Energy Spectrum", nbins, 0.,1E-5,"MeV");
       manager->CreateH1("IncWaterHigh", "Incident Water High Energy Spectrum", nbins,1E-5, xmax, "MeV");
       // Create 0 2D Histogram for cherenkov in water 
-      //manager->CreateH2("Cherenkov","Number of Cherenkov Photons Emitted vs Photon Energy",nbins, 0., xmax, nbins,0.,1000.);
+      manager->CreateH2("Cherenkov","Number of Cherenkov Photons Emitted vs Photon Energy",nbins, 0., xmax, nbins,0.,1000.);
 
       // Create 4 and 5 histogram for incident Photocathode
       manager->CreateH1("IncDetLow","Low Energy Photons Incident Photocathode",nbins,0.,1E-5,"MeV");

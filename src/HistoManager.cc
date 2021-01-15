@@ -58,8 +58,16 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateH1("NRFIncWater","NRF Incident Water", nbins, 0., xmax, "MeV");
       manager->CreateH1("IncWaterLow","Incident Water Low Energy Spectrum", nbins, 0.,1E-5,"MeV");
       manager->CreateH1("IncWaterHigh", "Incident Water High Energy Spectrum", nbins,1E-5, xmax, "MeV");
-      // Create 0 2D Histogram for cherenkov in water 
-      manager->CreateH2("Cherenkov","Number of Cherenkov Photons Emitted vs Photon Energy",nbins, 0., xmax, nbins,0.,1000.);
+    
+      // Create 0 Ntuple for Brem Test Chop Data 
+      manager->CreateNtuple("ChopperData", "Chopper Ntuple Data");
+      manager->CreateNtupleDColumn("ChopperData");
+      manager->FinishNtuple();
+      // Create 1 Ntuple for cherenkov in water 
+      manager->CreateNtuple("Cherenkov","Cherenkov Data");
+      manager->CreateNtupleDColumn("BeamEnergy");
+      manager->CreateNtupleIColumn("NumPhotons");
+      manager->FinishNtuple();
 
       // Create 4 and 5 histogram for incident Photocathode
       manager->CreateH1("IncDetLow","Low Energy Photons Incident Photocathode",nbins,0.,1E-5,"MeV");
@@ -68,12 +76,7 @@ void HistoManager::Book(G4bool bremTest)
       // Create 6 Histogram for Energy if detected
       manager->CreateH1("Detected","Detected Spectrum", nbins, 0., 1E-5, "MeV");
 
-      // Create 0 Ntuple for Brem Test Chop Data 
-      manager->CreateNtuple("ChopperData", "Chopper Ntuple Data");
-      manager->CreateNtupleDColumn("ChopperData");
-      manager->FinishNtuple();
-
-      // Create 1 Ntuple for Reactions within detector
+      // Create 2 Ntuple for Reactions within detector
       manager->CreateNtuple("DetPro","Detector Processes");
       manager->CreateNtupleSColumn("Process");
       manager->FinishNtuple();

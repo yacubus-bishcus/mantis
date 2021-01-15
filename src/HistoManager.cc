@@ -1,5 +1,4 @@
 #include "HistoManager.hh"
-#include "HistoManagerMessenger.hh"
 
 extern G4String gOutName;
 HistoManager::HistoManager(): fFactoryOn(false)

@@ -3,17 +3,15 @@
 
 extern G4String gOutName;
 extern G4bool output;
-HistoManager::HistoManager(): fFactoryOn(false), histM(NULL)
+HistoManager::HistoManager(): fFactoryOn(false)
 {
-  histM = new HistoManagerMessenger(this);
 }
 
 HistoManager::~HistoManager()
 {
-  delete histM;
 }
 
-void HistoManager::Book(G4bool bremTest)
+void HistoManager::Book(G4bool bremTest, G4double chosen_energy)
 {
   if(output)
   {
@@ -36,10 +34,6 @@ void HistoManager::Book(G4bool bremTest)
                 std::cerr << "Error reading from file " << fin->GetName() << std::endl;
                 exit(1);
         }
-    }
-    else if(chosen_energy > 0)
-    {
-      std::cout << "HistoManager::Input Energy: " << std::setprecision(10) << chosen_energy << " MeV" << std::endl;
     }
     
 #endif

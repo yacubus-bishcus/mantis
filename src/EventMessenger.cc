@@ -4,9 +4,9 @@
 EventMessenger::EventMessenger(EventAction* eventAction)
         : eventA(eventAction)
 {
-        myDir = new G4UIdirectory("/userevent/");
-        myDir->SetGuidance("Event Output Commands");
-        Cmd = new G4UIcmdWithAString("/userevent/myoutput",this);
+        theDir = new G4UIdirectory("/uevent/");
+        theDir->SetGuidance("Event Output Commands");
+        Cmd = new G4UIcmdWithAString("/uevent/myoutput",this);
         Cmd->SetGuidance("Choose Desired Outputs");
         Cmd->SetGuidance("Choice: CherData, none (default)");
         Cmd->SetParameterName("event_choice",false);

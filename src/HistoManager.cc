@@ -15,6 +15,7 @@ void HistoManager::Book(G4bool bremTest)
   G4int nbins = 100000;
   manager->SetVerboseLevel(0);
   manager->SetNtupleMerging(true);
+  xmax = chosen_energy;
   #if defined (G4ANALYSIS_USE_ROOT)
       if(!bremTest && chosen_energy < 0)
       {
@@ -50,13 +51,15 @@ void HistoManager::Book(G4bool bremTest)
   }
   if(!bremTest)
   {
-      // Create 0 Histogram for Interogation Object
+      // Create 0 1DHistogram for Interogation Object
       manager->CreateH1("IncObj","Incident Interrogation Obj", nbins, 0., xmax, "MeV");
 
-      // Create 1,2,3 Histogram for incident water data
+      // Create 1,2,3 1D Histogram for incident water data
       manager->CreateH1("NRFIncWater","NRF Incident Water", nbins, 0., xmax, "MeV");
       manager->CreateH1("IncWaterLow","Incident Water Low Energy Spectrum", nbins, 0.,1E-5,"MeV");
       manager->CreateH1("IncWaterHigh", "Incident Water High Energy Spectrum", nbins,1E-5, xmax, "MeV");
+      // Create 0 2D Histogram for cherenkov in water 
+      manager->CreateH2("Cherenkov","Number of Cherenkov Photons Emitted vs Photon Energy",nbins, 0., xmax, nbins,0.,1000., "MeV","Number of Photons");
 
       // Create 4 and 5 histogram for incident Photocathode
       manager->CreateH1("IncDetLow","Low Energy Photons Incident Photocathode",nbins,0.,1E-5,"MeV");

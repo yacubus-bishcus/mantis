@@ -8,10 +8,11 @@
 #include "HistoManager.hh"
 
 
-ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool brem_check)
+ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool brem_check, G4bool output_in)
         : G4VUserActionInitialization(), fDetector(det)
 {
    bremTest = brem_check;
+   output = output_in;
 }
 
 ActionInitialization::~ActionInitialization()
@@ -22,7 +23,7 @@ void ActionInitialization::Build() const
 {
         HistoManager* histo = new HistoManager();
         SetUserAction(new PrimaryGeneratorAction(bremTest));
-        RunAction* run = new RunAction(histo, bremTest);
+        RunAction* run = new RunAction(histo, bremTest, chosen_energy, output);
         SetUserAction(run);
         SetUserAction(new SteppingAction(fDetector, run, bremTest));
         SetUserAction(new EventAction());

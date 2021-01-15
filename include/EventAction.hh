@@ -30,7 +30,7 @@ EventAction();
 public:
 void BeginOfEventAction(const G4Event*);
 void EndOfEventAction(const G4Event*);
-void AddCherenkov();
+void AddCherenkov()
 {
   cherenkov_counter++;
 }

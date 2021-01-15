@@ -48,7 +48,7 @@ int main(int argc,char **argv)
   G4bool addNRF = true;
   macro = "mantis.in";
   seed = 1;
-  output = false;
+  G4bool output = false;
   bremTest = "false";
   G4bool brem = false;
 

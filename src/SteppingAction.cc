@@ -1,12 +1,13 @@
 #include "SteppingAction.hh"
 
-SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun, G4bool brem)
+SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun, , EventAction* localEvent, G4bool brem)
         : G4UserSteppingAction(), drawChopperDataFlag(0), drawIntObjDataFlag(0),
         drawIncFlag(0), drawDetFlag(0), drawWaterIncDataFlag(0), stepM(NULL)
 {
         stepM = new StepMessenger(this);
         local_det = det;
         fExpectedNextStatus = Undefined;
+        event = localEvent;
         run = localrun;
         bremTest = brem;
 }
@@ -146,6 +147,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                         G4double en = secondaries->at(i)->GetKineticEnergy();
                                                         run->AddCerenkovEnergy(en);
                                                         run->AddCerenkov();
+                                                        event->AddCherenkov();
                                                 }
                                         }
                                 }

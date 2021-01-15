@@ -262,7 +262,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                 if(drawDetFlag && !bremTest)
                                 {
                                         manager->FillNtupleSColumn(2,0,procCount);
-                                        manager->AddNtupleRow(1);
+                                        manager->AddNtupleRow(2);
                                 }
                         } // for for loop
                 } // for if statement if first time in photocathode

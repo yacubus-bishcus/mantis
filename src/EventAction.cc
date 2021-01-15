@@ -1,10 +1,14 @@
 #include "EventAction.hh"
 
-EventAction::EventAction(): drawCherenkovDataFlag(0)
-{}
+EventAction::EventAction(): drawCherenkovDataFlag(0), eventM(NULL)
+{
+  eventM = new EventMessenger(this);
+}
 
 EventAction::~EventAction()
-{}
+{
+  delete eventM;
+}
 
 
 void EventAction::BeginOfEventAction(const G4Event*)

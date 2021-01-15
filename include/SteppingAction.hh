@@ -59,10 +59,6 @@ void SetIntObjDataFlag(G4int val){
 void SetIncWatDataFlag(G4int val){
         drawWaterIncDataFlag = val;
 };
-void SetCherenkovDataFlag(G4int val)
-{
-        drawCherenkovFlag = val;
-};
 
 private:
 G4bool bremTest;
@@ -81,7 +77,6 @@ G4String procCount;
 G4int drawChopperDataFlag;
 G4int drawIntObjDataFlag;
 G4int drawIncFlag;
-G4int drawCherenkovFlag;
 G4int drawDetFlag;
 G4int drawWaterIncDataFlag;
 G4double det_energy;

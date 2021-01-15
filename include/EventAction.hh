@@ -31,10 +31,15 @@ void AddCherenkov()
 {
   cherenkov_counter++
 }
+void SetCherenkovDataFlag(G4int val)
+{
+        drawCherenkovFlag = val;
+};
 
 private:
 G4int tEvents;
 G4int cherenkov_counter;
+G4int drawCherenkovFlag;
 };
 
 #endif

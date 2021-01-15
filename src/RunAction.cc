@@ -1,11 +1,10 @@
 #include "RunAction.hh"
-extern G4bool output;
-RunAction::RunAction(HistoManager* histoAnalysis, G4bool brem)
+RunAction::RunAction(HistoManager* histoAnalysis, G4bool brem, G4bool output_in)
         : G4UserRunAction(),fTimer(nullptr), fHistoManager(histoAnalysis)
 {
-
-        fTimer = new G4Timer;
-        bremTest = brem;
+    fTimer = new G4Timer;
+    bremTest = brem;
+    output = output_in;       
 }
 
 RunAction::~RunAction()
@@ -16,21 +15,17 @@ RunAction::~RunAction()
 
 void RunAction::BeginOfRunAction(const G4Run* aRun)
 {
-  if(output)
-  {
-    fHistoManager->Book(bremTest);
-  }
-        fTotalSurface = 0;
-        fCerenkovCount = 0;
-        fScintCount = 0;
-        fRayleighCount = 0;
-        fOpAbsorption = 0;
-        fCerenkovEnergy = 0;
-        fScintEnergy = 0;
-        fNRF = 0;
-        fStatusKilled = 0;
-
-        fTimer->Start();
+    fHistoManager->Book(bremTest, chosen_energy, output);
+    fTotalSurface = 0;
+    fCerenkovCount = 0;
+    fScintCount = 0;
+    fRayleighCount = 0;
+    fOpAbsorption = 0;
+    fCerenkovEnergy = 0;
+    fScintEnergy = 0;
+    fNRF = 0;
+    fStatusKilled = 0;
+    fTimer->Start();
 }
 
 void RunAction::EndOfRunAction(const G4Run* aRun)

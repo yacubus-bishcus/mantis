@@ -1,6 +1,6 @@
 #include "SteppingAction.hh"
 
-SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun, , EventAction* localEvent, G4bool brem)
+SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun, EventAction* localEvent, G4bool brem)
         : G4UserSteppingAction(), drawChopperDataFlag(0), drawIntObjDataFlag(0),
         drawIncFlag(0), drawDetFlag(0), drawWaterIncDataFlag(0), stepM(NULL)
 {

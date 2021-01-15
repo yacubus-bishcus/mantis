@@ -25,7 +25,6 @@
 
 // declare global variables
 G4long seed;
-G4bool output;
 G4String macro, root_output_name, gOutName, bremTest, standalone_in, verbose_in; 
 
 namespace
@@ -124,7 +123,7 @@ int main(int argc,char **argv)
         // Set up Physics List
         physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
         runManager->SetUserInitialization(thePL);
-        runManager->SetUserInitialization(new ActionInitialization(det, brem));
+        runManager->SetUserInitialization(new ActionInitialization(det, brem, output));
 
         // Run manager initialized in macros
 #ifdef G4VIS_USE

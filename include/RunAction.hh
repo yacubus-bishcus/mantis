@@ -16,7 +16,7 @@ class G4Timer;
 class RunAction : public G4UserRunAction
 {
   public:
-    RunAction(HistoManager* histoAnalysis, G4bool);
+    RunAction(HistoManager* histoAnalysis, G4bool, G4bool);
     virtual ~RunAction();
 
   public:
@@ -36,6 +36,7 @@ class RunAction : public G4UserRunAction
 
   private:
     G4bool bremTest;
+    G4bool output;
     G4Timer* fTimer;
     HistoManager* fHistoManager;
     G4double fCerenkovEnergy;

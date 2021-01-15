@@ -7,6 +7,7 @@
 #include <fstream>
 #include "G4Types.hh"
 #include "G4EventManager.hh"
+#include "EventMessenger.hh"
 #include "G4RunManager.hh"
 #include "G4Event.hh"
 #include "G4ios.hh"
@@ -17,6 +18,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 class G4Event;
+class EventMessenger;
 
 class EventAction : public G4UserEventAction
 {
@@ -40,6 +42,7 @@ private:
 G4int tEvents;
 G4int cherenkov_counter;
 G4int drawCherenkovFlag;
+EventMessenger* eventM;
 };
 
 #endif

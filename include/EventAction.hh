@@ -27,9 +27,14 @@ EventAction();
 public:
 void BeginOfEventAction(const G4Event*);
 void EndOfEventAction(const G4Event*);
+void AddCherenkov()
+{
+  cherenkov_counter++
+}
 
 private:
 G4int tEvents;
+G4int cherenkov_counter;
 };
 
 #endif

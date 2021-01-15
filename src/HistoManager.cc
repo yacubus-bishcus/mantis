@@ -1,7 +1,7 @@
 #include "HistoManager.hh"
 
 extern G4String gOutName;
-HistoManager::HistoManager(): fFactoryOn(false)
+HistoManager::HistoManager(): fFactoryOn(false), chosen_energy(-1)
 {
 }
 

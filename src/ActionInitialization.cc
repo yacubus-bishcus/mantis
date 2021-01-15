@@ -23,7 +23,7 @@ void ActionInitialization::Build() const
 {
         HistoManager* histo = new HistoManager();
         SetUserAction(new PrimaryGeneratorAction(bremTest));
-        RunAction* run = new RunAction(histo, bremTest, chosen_energy, output);
+        RunAction* run = new RunAction(histo, bremTest, output);
         SetUserAction(run);
         SetUserAction(new SteppingAction(fDetector, run, bremTest));
         SetUserAction(new EventAction());

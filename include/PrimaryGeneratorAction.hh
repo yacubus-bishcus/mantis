@@ -22,6 +22,7 @@
 
 class G4Event;
 class PrimaryGenActionMessenger;
+class HistoManager;
 
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
@@ -44,6 +45,7 @@ G4bool bremTest;
 G4double chosen_energy;
 PrimaryGenActionMessenger* genM;
 G4ParticleGun* fParticleGun;
+HistoManager* histo;
 #if defined (G4ANALYSIS_USE_ROOT)
 TRandom1 Random;
 TH1D *hBrems;

@@ -95,7 +95,7 @@ else
 
 }
 
-void HistoManager::finish()
+void HistoManager::finish(G4bool output)
 {
   if(output)
   {

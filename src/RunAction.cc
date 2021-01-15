@@ -15,7 +15,10 @@ RunAction::~RunAction()
 
 void RunAction::BeginOfRunAction(const G4Run* aRun)
 {
-    fHistoManager->Book(bremTest, chosen_energy, output);
+    if(output)
+    {
+      fHistoManager->Book(bremTest);
+    }
     fTotalSurface = 0;
     fCerenkovCount = 0;
     fScintCount = 0;

@@ -24,7 +24,7 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
           G4AnalysisManager* manager = G4AnalysisManager::Instance();
           eventInformation *anInfo = new eventInformation(anEvent);
           G4double beam_energy = anInfo->GetBeamEnergy();
-          manager->FillH2(0, beam_energy/(MeV), cherenkov_counter);
+          //manager->FillH2(0, beam_energy/(MeV), cherenkov_counter);
         }
         
         if(anEvent->GetEventID() != 0 && anEvent->GetEventID() % 1000000 == 0)

@@ -44,6 +44,12 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest) : G4VUserPrimary
                 exit(1);
            }
         }
+        else if(!bremTest && chosen_energy > 0)
+        {
+           std::cout << "PrimaryGeneratorAction::PrimaryGeneratorAction Chosen Energy set to: " << chosen_energy << " MeV" << std::endl;
+           HistoManager* histo = new HistoManager;
+           histo->SetChosenEnergy(chosen_energy);
+        }
 
 #endif
         // Set Beam Position

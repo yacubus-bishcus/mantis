@@ -23,7 +23,7 @@ public:
 private:
   EventAction* eventA;
   G4UIcmdWithAString* Cmd;
-  G4UIdirectory *myDir;
+  G4UIdirectory *theDir;
 };
 
 #endif

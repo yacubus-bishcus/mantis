@@ -11,7 +11,7 @@ EventMessenger::EventMessenger(EventAction* eventAction)
         Cmd->SetGuidance("Choice: CherenkovData, none (default)");
         Cmd->SetParameterName("event_choice",false);
         Cmd->SetDefaultValue("none");
-        Cmd->SetCandidates("CherData none");
+        Cmd->SetCandidates("CherenkovData none");
 }
 
 EventMessenger::~EventMessenger()

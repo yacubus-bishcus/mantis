@@ -47,7 +47,7 @@ void HistoManager::Book(G4bool bremTest)
   }
   else
   {
-    std::cout << "HistoManager::Book() Opened!" << std::endl;
+    G4cout << "HistoManager::Book() Opened!" << G4endl;
   }
   if(!bremTest)
   {

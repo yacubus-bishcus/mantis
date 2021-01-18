@@ -51,15 +51,9 @@ target_link_libraries(mantis ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 # relies on these scripts being in the current working directory.
 #
 set(mantis_SCRIPTS
-    mantis.in
-    brems_distributions.root
-    vis.mac
-    init_vis.mac
-    vis_save.mac
-    PostAnalysis.cc
-    submit_geant4.slurm
-    runBatch.sh
-    stitch.sh
+  Input_Files
+  Run_Analysis
+  Slurm_Run_Files
   )
 
 foreach(_script ${mantis_SCRIPTS})

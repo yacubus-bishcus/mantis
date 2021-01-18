@@ -91,8 +91,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                    && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 7, "Chopper") != 0
                    && theTrack->GetParticleDefinition() == G4Gamma::Definition())
                 {
-                        G4double energy_chopper = theTrack->GetKineticEnergy()/(MeV);
-                        manager->FillNtupleDColumn(0,0, energy_chopper); // not weighting chopper
+                        manager->FillNtupleDColumn(0,0, theTrack->GetKineticEnergy()/(MeV)); // not weighting chopper
                         manager->AddNtupleRow(0);
                 }
         }
@@ -103,8 +102,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14,"IntObjPhysical") == 0
                    && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14, "IntObjPhysical") != 0)
                 {
-                        G4double energy_IntObj = theTrack->GetKineticEnergy()/(MeV);
-                        manager->FillH1(0, energy_IntObj, weight);
+                        manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
                 }
         }
 

@@ -29,6 +29,7 @@ void RunAction::BeginOfRunAction(const G4Run* aRun)
     fNRF = 0;
     fStatusKilled = 0;
     fTimer->Start();
+    std::cout << "Beginning Run..." << std::endl;
 }
 
 void RunAction::EndOfRunAction(const G4Run* aRun)

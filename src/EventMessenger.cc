@@ -4,11 +4,11 @@
 EventMessenger::EventMessenger(EventAction* eventAction)
         : eventA(eventAction)
 {
-        theDir = new G4UIdirectory("/uevent/");
+        theDir = new G4UIdirectory("/cherenkov/");
         theDir->SetGuidance("Event Output Commands");
-        Cmd = new G4UIcmdWithAString("/uevent/myoutput",this);
+        Cmd = new G4UIcmdWithAString("/cherenkov/myoutput",this);
         Cmd->SetGuidance("Choose Desired Outputs");
-        Cmd->SetGuidance("Choice: CherData, none (default)");
+        Cmd->SetGuidance("Choice: CherenkovData, none (default)");
         Cmd->SetParameterName("event_choice",false);
         Cmd->SetDefaultValue("none");
         Cmd->SetCandidates("CherData none");
@@ -25,7 +25,7 @@ void EventMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
         if(command == Cmd)
         {
                 G4String theCommand = newValue;
-                if(theCommand == "CherData")
+                if(theCommand == "CherenkovData")
                 {
                         eventA->SetCherenkovDataFlag(1);
                         std::cout << "User Selected Cherenkov Data." << std::endl;

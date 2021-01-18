@@ -6,7 +6,7 @@
 void QuickAnalysis(const char *ChopOn, const char *ChopOff)
 {
     std::cout << "Setting Chop On File: " << ChopOn << std::endl;
-    std::cout << "Setting Chop Off File: " << ChopOff << std::endl;
+    std::cout << "Setting Chop Off File: " << ChopOff << std::endl << std::endl;
     string response = "Processing an older file structure...";
     
     TFile *chopOn = new TFile(ChopOn);

@@ -51,7 +51,7 @@ target_link_libraries(mantis ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 # relies on these scripts being in the current working directory.
 #
 set(Input_SCRIPTS
-  brem_distributions.root
+  brems_distributions.root
   mantis.in
   )
 
@@ -62,7 +62,7 @@ stitch.sh
 
 set(Slurm_Run_Files_SCRIPTS
 runBatch.sh
-submit_geant4.sh
+submit_geant4.slurm
 )
 
 foreach(_script ${Input_SCRIPTS})

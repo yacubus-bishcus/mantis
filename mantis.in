@@ -85,6 +85,7 @@
 
 /run/initialize
 #/output/myoutput ChopperData
+#/cherenkov/myoutput CherenkovData
 #/output/myoutput WaterIncidentData
 #/output/myoutput DetIncidentData
 #/output/myoutput DetData
@@ -93,4 +94,4 @@
 #################################################################################################
 # RUN OPTIONS 
 
-/run/beamOn 10
+/run/beamOn 100

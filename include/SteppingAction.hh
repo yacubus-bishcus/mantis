@@ -45,20 +45,24 @@ public: // for now set to public until I can figure out how to work with protect
 
 void SetChopperDataFlag(G4int val)
 {
-        drawChopperDataFlag = val;
+  drawChopperDataFlag = val;
+}
+void SetNRFDataFlag(G4int val)
+{
+  drawNRFFlag = val;
 }
 void SetIncidentDataFlag(G4int val){
-        drawIncFlag = val;
-};
+  drawIncFlag = val;
+}
 void SetDetDataFlag(G4int val){
-        drawDetFlag = val;
-};
+  drawDetFlag = val;
+}
 void SetIntObjDataFlag(G4int val){
-        drawIntObjDataFlag = val;
-};
+  drawIntObjDataFlag = val;
+}
 void SetIncWatDataFlag(G4int val){
-        drawWaterIncDataFlag = val;
-};
+  drawWaterIncDataFlag = val;
+}
 
 private:
 G4bool bremTest;
@@ -74,12 +78,13 @@ RunAction* run;
 EventAction* event;
 G4OpBoundaryProcessStatus fExpectedNextStatus;
 G4String procCount;
+
 G4int drawChopperDataFlag;
+G4int drawNRFFlag;
 G4int drawIntObjDataFlag;
 G4int drawIncFlag;
 G4int drawDetFlag;
 G4int drawWaterIncDataFlag;
-G4double det_energy;
 StepMessenger* stepM;
 
 };

@@ -54,57 +54,37 @@ void HistoManager::Book(G4bool bremTest)
     G4cout << "HistoManager::Book() Opened!" << G4endl;
   }
   
-  // ************************ Histograms and Ntuples **************************** // 
-  // The user will have the option to output 4 histograms and 5 ntuples 
+  // Create ID 0 Ntuple for Chopper Data 
+  manager->CreateNtuple("ChopperData", "Chopper Wheel Incident Unweighted Energy Spectrum");
+  manager->CreateNtupleDColumn("ChopperData");
+  manager->FinishNtuple();
   
   if(!bremTest)
   {
-    // Histograms 
-    // ************************************************************************* //
-      // Create ID 0 1DHistogram for Interogation Object
+      // Create ID 0,1 1D Histogram for Interogation Object Data
       manager->CreateH1("IncObj","Interrogation Object Incident Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
-    
-      // Create ID 1 1D Histogram for NRF Incident Interrogation Object 
-      manager->CreateH1("NRFIncObject", "Interrogation Object NRF Photons Incident Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
-      // Create ID 2 1D Histogram for NRF Incident Water Tank 
+      manager->CreateH1("NRFIncObj", "Interrogation Object NRF Photons Incident Weighted Energy Spectrum",nbins,0.,xmax, "MeV");
+      // Create 2,3,4 1D Histogram for incident water data
       manager->CreateH1("NRFIncWater","Water Tank NRF Photons Incident Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
+      manager->CreateH1("IncWaterLow","Water Tank Incident Weighted Energy Spectrum < 1E-5 MeV", nbins, 0.,1E-5,"MeV");
+      manager->CreateH1("IncWaterHigh", "Water Tank Incident Weighted Energy Spectrum > 1E-5 MeV", nbins,1E-5, xmax, "MeV");
     
-    // Ntuples (TTrees)
-    // ************************************************************************* //
-      // Create ID 0 Ntuple for Brem Test Chop Data 
-      manager->CreateNtuple("ChopperData", "Chopper Ntuple Data");
-      manager->CreateNtupleDColumn("ChopperData");
-      manager->FinishNtuple();
-      // Create ID 1 Ntuple for cherenkov in water 
+      // Create 1 Ntuple for cherenkov in water 
       manager->CreateNtuple("Cherenkov","Cherenkov Data");
       manager->CreateNtupleDColumn("BeamEnergy");
       manager->CreateNtupleIColumn("NumPhotons");
       manager->FinishNtuple();
-    
-      // Create ID 2 Ntuple for Incident Water Tank Data
-      manager->CreateNtuple("IncWater", "Incident Water Tank Weighted Energy Spectrum");
-      manager->CreateNtupleDColumn("IncidentEnergy");
-      manager->FinishNtuple();
-    
-      // Create ID 3 Ntuple for Incident Photocathode Data
-      manager->CreateNtuple("IncPC", "Incident Photocathode Weighted Energy Spectrum");
-      manager->CreateNtupleDColumn("IncidentEnergy");
-      manager->FinishNtuple();
-    
-      // Create ID 4 Ntuple for Photons Detected Data
-      manager->CreateNtuple("Detected", "Photons Detected on Photocathode Weighted Energy Spectrum");
-      manager->CreateNtupleDColumn("Energy");
-  
-      // Create ID 5 Ntuple for Reactions within Detector
-      manager->CreateNtuple("DetPro","Detector Processes");
+
+      // Create 5 and 6 histogram for incident Photocathode
+      manager->CreateH1("IncDetLow","Photocathode Incident Weighted Energy Spectrum < 1E-5 MeV",nbins,0.,1E-5,"MeV");
+      manager->CreateH1("IncDetHigh", "Photocathode Incident Weighted Energy Spectrum > 1E-5 MeV",nbins,1E-5, xmax, "MeV");
+
+      // Create 7 Histogram for Energy if detected
+      manager->CreateH1("Detected","Photons Detected by Photocathode Weighted Energy Spectrum < 1E-5 MeV", nbins, 0., 1E-5, "MeV");
+
+      // Create 2 Ntuple for Reactions within detector
+      manager->CreateNtuple("DetPro","Processes that Occur at Photocathode Optical Surface");
       manager->CreateNtupleSColumn("Process");
-      manager->FinishNtuple();
-  }
-  else
-  {
-      // Create 0 Ntuple for Brem Test Chop Data 
-      manager->CreateNtuple("ChopperData", "Chopper Ntuple Data");
-      manager->CreateNtupleDColumn("ChopperData");
       manager->FinishNtuple();
   }
 
@@ -125,3 +105,4 @@ void HistoManager::finish()
     delete manager;
     fFactoryOn = false;
 }
+

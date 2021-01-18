@@ -21,6 +21,7 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
         tEvents = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
         if(drawCherenkovDataFlag)
         {
+          std::cout << "Cherenkov flag set to: " << drawCherenkovDataFlag << std::endl;
           G4AnalysisManager* manager = G4AnalysisManager::Instance();
           eventInformation *anInfo = new eventInformation(anEvent);
           G4double beam_energy = anInfo->GetBeamEnergy();

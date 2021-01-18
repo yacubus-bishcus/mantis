@@ -14,19 +14,17 @@ EventAction::~EventAction()
 void EventAction::BeginOfEventAction(const G4Event*)
 {
   cherenkov_counter = 0;
-  std::cout << "EventAction::BeginOfEventAction." << std::endl;
 }
 
 void EventAction::EndOfEventAction(const G4Event* anEvent)
 {
         tEvents = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
-        std::cout << "EventAction::EndOfEventAction - > Cherenkov flag set to: " << drawCherenkovDataFlag << std::endl;
         if(drawCherenkovDataFlag)
         {
           G4AnalysisManager* manager = G4AnalysisManager::Instance();
           eventInformation *anInfo = new eventInformation(anEvent);
           G4double beam_energy = anInfo->GetBeamEnergy();
-          manager->FillNtupleDColumn(1,0, beam_energy);
+          manager->FillNtupleDColumn(1,0, beam_energy/(MeV));
           manager->FillNtupleIColumn(1,1, cherenkov_counter);
           manager->AddNtupleRow(1);
         }

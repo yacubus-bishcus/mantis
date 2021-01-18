@@ -49,7 +49,7 @@ void SetChopperDataFlag(G4int val)
 }
 void SetNRFDataFlag(G4int val)
 {
-  drawNRFFlag = val;
+  drawNRFDataFlag = val;
 }
 void SetIncidentDataFlag(G4int val){
   drawIncFlag = val;
@@ -80,7 +80,7 @@ G4OpBoundaryProcessStatus fExpectedNextStatus;
 G4String procCount;
 
 G4int drawChopperDataFlag;
-G4int drawNRFFlag;
+G4int drawNRFDataFlag;
 G4int drawIntObjDataFlag;
 G4int drawIncFlag;
 G4int drawDetFlag;

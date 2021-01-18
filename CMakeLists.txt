@@ -50,15 +50,38 @@ target_link_libraries(mantis ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 # build mantis. This is so that we can run the executable directly because it
 # relies on these scripts being in the current working directory.
 #
-set(mantis_SCRIPTS
-  Input_Files
-  Run_Analysis
-  Slurm_Run_Files
+set(Input_SCRIPTS
+  brem_distributions.root
+  mantis.in
   )
 
-foreach(_script ${mantis_SCRIPTS})
+set(Run_Analysis_SCRIPTS
+QuickAnalysis.cc
+stitch.sh
+)
+
+set(Slurm_Run_Files_SCRIPTS
+runBatch.sh
+submit_geant4.sh
+)
+
+foreach(_script ${Input_SCRIPTS})
   configure_file(
-    ${PROJECT_SOURCE_DIR}/${_script}
+    ${PROJECT_SOURCE_DIR}/Input_Files/${_script}
+    ${PROJECT_BINARY_DIR}/${_script}
+    COPYONLY
+    )
+endforeach()
+foreach(_script ${Run_Analysis_SCRIPTS})
+  configure_file(
+    ${PROJECT_SOURCE_DIR}/Run_Analysis/${_script}
+    ${PROJECT_BINARY_DIR}/${_script}
+    COPYONLY
+    )
+endforeach()
+foreach(_script ${Slurm_Run_Files_SCRIPTS})
+  configure_file(
+    ${PROJECT_SOURCE_DIR}/Slurm_Run_Files/${_script}
     ${PROJECT_BINARY_DIR}/${_script}
     COPYONLY
     )

@@ -1,7 +1,7 @@
 #include "SteppingAction.hh"
 
 SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun, EventAction* localEvent, G4bool brem)
-        : G4UserSteppingAction(), drawChopperDataFlag(0), drawIntObjDataFlag(0),
+        : G4UserSteppingAction(), drawChopperDataFlag(0), drawNRFDataFlag(0), drawIntObjDataFlag(0),
         drawIncFlag(0), drawDetFlag(0), drawWaterIncDataFlag(0), stepM(NULL)
 {
         stepM = new StepMessenger(this);
@@ -103,7 +103,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                    && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14, "IntObjPhysical") != 0)
                 {
                    manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
-                   if(isNRF)
+                   
+                   if(isNRF && drawNRFDataFlag)
                    {
                      manager->FillH1(1, theTrack->GetKineticEnergy()/(MeV), weight);
                    }
@@ -117,7 +118,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5,"Water") == 0
                    && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5, "Water") != 0)
                 {
-                  if(isNRF)
+                  if(isNRF && drawNRFDataFlag)
                   {
                     manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
                   }

@@ -173,15 +173,15 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
     
     // Calculate z-score
    
-    cherenkov_z = abs(cherenkov - cherenkovOff)/sqrt(pow(sqrt(cherenkov),2) + pow(sqrt(cherenkovOff),2)));
-    intObj_z = abs(intObj_sum - intObj_sum_off)/sqrt(pow(sqrt(intObj_sum),2) + pow(sqrt(intObj_sum_off),2)));
-    nrfIntObj_z = abs(nrf_intObj_sum - nrf_intObj_sum_off)/sqrt(pow(sqrt(nrf_intObj_sum),2) + pow(sqrt(nrf_intObj_sum_off),2)));
-    waterl_z = abs(waterl_sum - waterl_sum_off)/sqrt(pow(sqrt(waterl_sum),2) + pow(sqrt(waterl_sum_off),2)));
-    waterh_z = abs(waterh_sum - waterh_sum_off)/sqrt(pow(sqrt(waterh_sum),2) + pow(sqrt(waterh_sum_off),2)));
-    nrf_water_z = abs(nrf_water_sum - nrf_water_sum_off)/sqrt(pow(sqrt(nrf_water_sum),2) + pow(sqrt(nrf_water_sum_off),2)));
-    pcl_z = abs(pcl_sum - pcl_sum_off)/sqrt(pow(sqrt(pcl_sum),2) + pow(sqrt(pcl_sum_off),2)));
-    pch_z = abs(pch_sum - pch_sum_off)/sqrt(pow(sqrt(pch_sum),2) + pow(sqrt(pch_sum_off),2)));
-    det_z = abs(det_sum - det_sum_off)/sqrt(pow(sqrt(det_sum),2) + pow(sqrt(det_sum_off),2)));
+    cherenkov_z = abs(cherenkov - cherenkovOff)/(sqrt(pow(sqrt(cherenkov),2) + pow(sqrt(cherenkovOff),2)));
+    intObj_z = abs(intObj_sum - intObj_sum_off)/(sqrt(pow(sqrt(intObj_sum),2) + pow(sqrt(intObj_sum_off),2)));
+    nrfIntObj_z = abs(nrf_intObj_sum - nrf_intObj_sum_off)/(sqrt(pow(sqrt(nrf_intObj_sum),2) + pow(sqrt(nrf_intObj_sum_off),2)));
+    waterl_z = abs(waterl_sum - waterl_sum_off)/(sqrt(pow(sqrt(waterl_sum),2) + pow(sqrt(waterl_sum_off),2)));
+    waterh_z = abs(waterh_sum - waterh_sum_off)/(sqrt(pow(sqrt(waterh_sum),2) + pow(sqrt(waterh_sum_off),2)));
+    nrf_water_z = abs(nrf_water_sum - nrf_water_sum_off)/(sqrt(pow(sqrt(nrf_water_sum),2) + pow(sqrt(nrf_water_sum_off),2)));
+    pcl_z = abs(pcl_sum - pcl_sum_off)/(sqrt(pow(sqrt(pcl_sum),2) + pow(sqrt(pcl_sum_off),2)));
+    pch_z = abs(pch_sum - pch_sum_off)/(sqrt(pow(sqrt(pch_sum),2) + pow(sqrt(pch_sum_off),2)));
+    det_z = abs(det_sum - det_sum_off)/(sqrt(pow(sqrt(det_sum),2) + pow(sqrt(det_sum_off),2)));
     
     
     // Print Results 

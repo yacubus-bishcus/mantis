@@ -8,10 +8,10 @@ StepMessenger::StepMessenger(SteppingAction* stepAction)
         myDir->SetGuidance("Output Commands");
         Cmd = new G4UIcmdWithAString("/output/myoutput",this);
         Cmd->SetGuidance("Choose Desired Outputs");
-        Cmd->SetGuidance("Choice: ChopperData, WaterIncidentData DetIncidentData, DetData, IntObjData, none (default)");
+        Cmd->SetGuidance("Choice: ChopperData, NRFData, WaterIncidentData, DetIncidentData, DetData, IntObjData, none (default)");
         Cmd->SetParameterName("choice",false);
         Cmd->SetDefaultValue("none");
-        Cmd->SetCandidates("ChopperData WaterIncidentData DetIncidentData DetData IntObjData none");
+        Cmd->SetCandidates("ChopperData NRFData WaterIncidentData DetIncidentData DetData IntObjData none");
 }
 
 StepMessenger::~StepMessenger()
@@ -29,6 +29,11 @@ void StepMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
                 {
                         stepA->SetChopperDataFlag(1);
                         std::cout << "User Selected Chopper Data." << std::endl;
+                }
+                else if(theCommand == "NRFData")
+                {
+                        stepA->SetNRFDataFlag(1);
+                        std::cout << "User Selected NRF Data." << std::endl;
                 }
                 else if(theCommand == "IntObjData")
                 {

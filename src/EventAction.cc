@@ -14,6 +14,7 @@ EventAction::~EventAction()
 void EventAction::BeginOfEventAction(const G4Event*)
 {
   cherenkov_counter = 0;
+  std::cout << "EventAction::BeginOfEventAction." << std::endl;
 }
 
 void EventAction::EndOfEventAction(const G4Event* anEvent)

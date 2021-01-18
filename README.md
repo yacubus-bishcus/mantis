@@ -4,17 +4,30 @@ This program allows the user to run calorimetric NRF Cherenkov Detector cargo sc
 Mantis Output
 ==
 
-Available histograms include: 
+Four(4) histograms are available upon user request: 
 
-1. Interrogation Object Incident Data
-2. Incident Energy Water Tank Data
-3. Incident Energy Photocathode Data 
-4. Detected Energy Spectrum Data 
+1. Interrogation Object Incident Data -> /output/myoutput IntObjData must be uncommented!
+2. NRF Photons Incident Interrogation Object -> /output/myouput NRFData must be uncommented!
+3. NRF Photons Incident Water Tank Data -> /output/myouput NRFData must be uncommented!
+4. Detected Energy Spectrum Data -> /output/myoutput DetData must be uncommented!
 
-Additionally, two ntuples are available upon user request:
+Additionally, five(5) ntuples are available upon user request:
 
-1. Incident Chopper Energy Data
-2. Detector Process at PC Data
+1. Incident Chopper Energy Data -> /output/myoutput ChopperData must be uncommented!
+ - Unweighted Incident Chopper Energies 
+
+2. Cherenkov Data -> /cherenkov/myoutput CherenkovData must be uncommented!
+ - Event Beam Energy
+ - Number of Photons Emitted in Event
+
+3. Incident Water Tank Energy Data -> /output/myoutput WaterIncidentData must be uncommented!
+ - Weighted energy of photons incident water tank includes non NRF photons 
+
+4. Incident Photocathode Data -> /output/myoutput DetData must be uncommented!
+ - Weighted energy spectrum of photons incident photocathode 
+
+5. Detector Process at PC Data -> /output/myoutput DetData must be uncommented!
+ - Process that occurs at PC surface (absorbed, detected, reflected, etc.)
 
 Mantis Input
 ==
@@ -153,7 +166,7 @@ Adding the -t flag tells mantis that it should only output the Chopper Data TTre
 Output
 ==
 
-The Code will generate a .log and _error.log file in addition to a root file. All G4cout is sent to .log and all G4cerr is sent to _error.log. The Root File will consist of 4 histograms and 2 TTree. The user must select output in "mantis.in" for the histograms/TTree to be filled during the simulation. 
+The Code will generate a .log and _error.log file in addition to a root file. All G4cout is sent to .log and all G4cerr is sent to _error.log. The user must select output in "mantis.in" for the histograms/TTree to be filled during the simulation. 
 
 Analysis
 ==

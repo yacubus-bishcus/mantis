@@ -94,9 +94,6 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
         chopOn->GetObject("IncDetLow",IncDetLow);
         chopOn->GetObject("IncDetHigh", IncDetHigh);
         chopOn->GetObject("Detected",Detected);
-        chopOn->GetObject("Detected",Detected);
-        chopOn->GetObject("IncObj", IntObj);
-        chopOn->GetObject("ChopperData",IncChopper);
         
         // Get Entries and Sums 
         // Cherenkov 
@@ -144,9 +141,6 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
         chopOff->GetObject("IncDetLow",IncDetLowOff);
         chopOff->GetObject("IncDetHigh", IncDetHighOff);
         chopOff->GetObject("Detected",DetectedOff);
-        chopOff->GetObject("Detected",DetectedOff);
-        chopOff->GetObject("IncObj", IntObjOff);
-        chopOff->GetObject("ChopperData",IncChopperOff);
         
         // Get Entries and Sums 
         // Cherenkov 

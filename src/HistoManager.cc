@@ -1,3 +1,7 @@
+// User histogram manager action class for the Cargo Container NRF simulations
+// Jacob E Bickus, MIT, 2020
+// jbickus@mit.edu
+
 #include "HistoManager.hh"
 
 extern G4String gOutName;
@@ -49,34 +53,49 @@ void HistoManager::Book(G4bool bremTest)
   {
     G4cout << "HistoManager::Book() Opened!" << G4endl;
   }
+  
+  // ************************ Histograms and Ntuples **************************** // 
+  // The user will have the option to output 4 histograms and 5 ntuples 
+  
   if(!bremTest)
   {
-      // Create 0 1DHistogram for Interogation Object
-      manager->CreateH1("IncObj","Incident Interrogation Obj", nbins, 0., xmax, "MeV");
-
-      // Create 1,2,3 1D Histogram for incident water data
-      manager->CreateH1("NRFIncWater","NRF Incident Water", nbins, 0., xmax, "MeV");
-      manager->CreateH1("IncWaterLow","Incident Water Low Energy Spectrum", nbins, 0.,1E-5,"MeV");
-      manager->CreateH1("IncWaterHigh", "Incident Water High Energy Spectrum", nbins,1E-5, xmax, "MeV");
+    // Histograms 
+    // ************************************************************************* //
+      // Create ID 0 1DHistogram for Interogation Object
+      manager->CreateH1("IncObj","Interrogation Object Incident Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
     
-      // Create 0 Ntuple for Brem Test Chop Data 
+      // Create ID 1 1D Histogram for NRF Incident Interrogation Object 
+      manager->CreateH1("NRFIncObject", "Interrogation Object NRF Photons Incident Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
+      // Create ID 2 1D Histogram for NRF Incident Water Tank 
+      manager->CreateH1("NRFIncWater","Water Tank NRF Photons Incident Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
+    
+    // Ntuples (TTrees)
+    // ************************************************************************* //
+      // Create ID 0 Ntuple for Brem Test Chop Data 
       manager->CreateNtuple("ChopperData", "Chopper Ntuple Data");
       manager->CreateNtupleDColumn("ChopperData");
       manager->FinishNtuple();
-      // Create 1 Ntuple for cherenkov in water 
+      // Create ID 1 Ntuple for cherenkov in water 
       manager->CreateNtuple("Cherenkov","Cherenkov Data");
       manager->CreateNtupleDColumn("BeamEnergy");
       manager->CreateNtupleIColumn("NumPhotons");
       manager->FinishNtuple();
-
-      // Create 4 and 5 histogram for incident Photocathode
-      manager->CreateH1("IncDetLow","Low Energy Photons Incident Photocathode",nbins,0.,1E-5,"MeV");
-      manager->CreateH1("IncDetHigh", "High Energy Photons Incident Photocathode",nbins,1E-5, xmax, "MeV");
-
-      // Create 6 Histogram for Energy if detected
-      manager->CreateH1("Detected","Detected Spectrum", nbins, 0., 1E-5, "MeV");
-
-      // Create 2 Ntuple for Reactions within detector
+    
+      // Create ID 2 Ntuple for Incident Water Tank Data
+      manager->CreateNtuple("IncWater", "Incident Water Tank Weighted Energy Spectrum");
+      manager->CreateNtupleDColumn("IncidentEnergy");
+      manager->FinishNtuple();
+    
+      // Create ID 3 Ntuple for Incident Photocathode Data
+      manager->CreateNtuple("IncPC", "Incident Photocathode Weighted Energy Spectrum");
+      manager->CreateNtupleDColumn("IncidentEnergy");
+      manager->FinishNtuple();
+    
+      // Create ID 4 Ntuple for Photons Detected Data
+      manager->CreateNtuple("Detected", "Photons Detected on Photocathode Weighted Energy Spectrum");
+      manager->CreateNtupleDColumn("Energy");
+  
+      // Create ID 5 Ntuple for Reactions within Detector
       manager->CreateNtuple("DetPro","Detector Processes");
       manager->CreateNtupleSColumn("Process");
       manager->FinishNtuple();

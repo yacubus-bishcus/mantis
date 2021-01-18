@@ -4,14 +4,13 @@ This program allows the user to run calorimetric NRF Cherenkov Detector cargo sc
 Mantis Output
 ==
 
-Four(4) histograms are available upon user request: 
+Three(3) histograms are available upon user request: 
 
 1. Interrogation Object Incident Data -> /output/myoutput IntObjData must be uncommented!
 2. NRF Photons Incident Interrogation Object -> /output/myouput NRFData must be uncommented!
 3. NRF Photons Incident Water Tank Data -> /output/myouput NRFData must be uncommented!
-4. Detected Energy Spectrum Data -> /output/myoutput DetData must be uncommented!
 
-Additionally, five(5) ntuples are available upon user request:
+Additionally, Six(6) ntuples(TTrees) are available upon user request:
 
 1. Incident Chopper Energy Data -> /output/myoutput ChopperData must be uncommented!
  - Unweighted Incident Chopper Energies 
@@ -25,8 +24,11 @@ Additionally, five(5) ntuples are available upon user request:
 
 4. Incident Photocathode Data -> /output/myoutput DetData must be uncommented!
  - Weighted energy spectrum of photons incident photocathode 
+ 
+5. Photons Detected on Photocathode Data -> /output/myoutput DetData must be uncommented!
+ - Weighted energy spectrum of photons "detected" on photocathode includes Quantum efficiency!
 
-5. Detector Process at PC Data -> /output/myoutput DetData must be uncommented!
+6. Detector Process at PC Data -> /output/myoutput DetData must be uncommented!
  - Process that occurs at PC surface (absorbed, detected, reflected, etc.)
 
 Mantis Input

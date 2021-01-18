@@ -102,7 +102,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14,"IntObjPhysical") == 0
                    && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14, "IntObjPhysical") != 0)
                 {
-                        manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
+                   manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
+                   if(isNRF)
+                   {
+                     manager->FillH1(1, theTrack->GetKineticEnergy()/(MeV), weight);
+                   }
                 }
         }
 
@@ -115,13 +119,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 {
                   if(isNRF)
                   {
-                    manager->FillH1(1, theTrack->GetKineticEnergy()/(MeV), weight);
+                    manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
                   }
                   if(theTrack->GetKineticEnergy()/(MeV) < 1E-5)
                   {
-                    manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
+                    manager->FillH1(3, theTrack->GetKineticEnergy()/(MeV), weight);
                   }
-                  else{manager->FillH1(3, theTrack->GetKineticEnergy()/(MeV), weight);}
+                  else{manager->FillH1(4, theTrack->GetKineticEnergy()/(MeV), weight);}
                 }
         }
 
@@ -136,14 +140,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                 if(secondaries->at(i)->GetParentID()>0) {
                                         if(secondaries->at(i)->GetDynamicParticle()->GetParticleDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
                                                 if(secondaries->at(i)->GetCreatorProcess()->GetProcessName() == "Scintillation") {
-                                                        G4double en = secondaries->at(i)->GetKineticEnergy();
-                                                        run->AddScintillationEnergy(en);
+                                                        run->AddScintillationEnergy(secondaries->at(i)->GetKineticEnergy());
                                                         run->AddScintillation();
                                                 }
                                                 if(secondaries->at(i)->GetCreatorProcess()->GetProcessName() == "Cerenkov") {
                                                         // for total run
-                                                        G4double en = secondaries->at(i)->GetKineticEnergy();
-                                                        run->AddCerenkovEnergy(en);
+                                                        run->AddCerenkovEnergy(secondaries->at(i)->GetKineticEnergy());
                                                         run->AddCerenkov();
                                                         event->AddCherenkov();
                                                 }
@@ -182,11 +184,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         {
                           if(theParticle->GetKineticEnergy()/(MeV) < 1E-5)
                           {
-                            manager->FillH1(4, theParticle->GetKineticEnergy()/(MeV), weight);
+                            manager->FillH1(5, theParticle->GetKineticEnergy()/(MeV), weight);
                           }
                           else
                           {
-                            manager->FillH1(5,theParticle->GetKineticEnergy()/(MeV),weight);
+                            manager->FillH1(6,theParticle->GetKineticEnergy()/(MeV),weight);
                           }
                         }
 
@@ -236,8 +238,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                         else if (theStatus == Detection) {
                                                 //run->AddDetection();
                                                 procCount = "Det";
-                                                det_energy = theParticle->GetKineticEnergy()/(MeV);
-                                                manager->FillH1(6, det_energy, weight);
+                                                manager->FillH1(7, theParticle->GetKineticEnergy()/(MeV), weight);
                                         }
                                         else if (theStatus == NotAtBoundary) {
                                                 procCount = "NotAtBoundary";

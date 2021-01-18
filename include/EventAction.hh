@@ -38,6 +38,7 @@ void AddCherenkov()
 void SetCherenkovDataFlag(G4int val)
 {
         drawCherenkovDataFlag = val;
+        std::cout << "Recording Cherenkov Data..." << std::endl;
 };
 
 private:

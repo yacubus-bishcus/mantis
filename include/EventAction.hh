@@ -34,6 +34,7 @@ void EndOfEventAction(const G4Event*);
 void AddCherenkov()
 {
   cherenkov_counter++;
+  std::cout << "Cherenkov Added" << std::endl;
 }
 void SetCherenkovDataFlag(G4int val)
 {

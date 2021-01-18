@@ -86,6 +86,7 @@
 /run/initialize
 #/output/myoutput ChopperData
 #/cherenkov/myoutput CherenkovData
+#/output/myoutput NRFData
 #/output/myoutput WaterIncidentData
 #/output/myoutput DetIncidentData
 #/output/myoutput DetData

@@ -20,7 +20,7 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
 {
         tEvents = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
         eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
-        if(drawCherenkovDataFlag)
+        if(drawCherenkovDataFlag && cherenkov_counter != 0)
         {
           G4AnalysisManager* manager = G4AnalysisManager::Instance();
           G4double beam_energy = info->GetBeamEnergy();

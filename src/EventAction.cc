@@ -3,8 +3,6 @@
 EventAction::EventAction(): drawCherenkovDataFlag(0), eventM(NULL)
 {
   eventM = new EventMessenger(this);
-  eventInformation *anInfo = new eventInformation(anEvent);
-  G4AnalysisManager* manager = G4AnalysisManager::Instance();
 }
 
 EventAction::~EventAction()
@@ -21,8 +19,10 @@ void EventAction::BeginOfEventAction(const G4Event*)
 void EventAction::EndOfEventAction(const G4Event* anEvent)
 {
         tEvents = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
+        eventInformation *anInfo = new eventInformation(anEvent);
         if(drawCherenkovDataFlag)
         {
+          G4AnalysisManager* manager = G4AnalysisManager::Instance();
           G4double beam_energy = anInfo->GetBeamEnergy();
           std::cout << beam_energy << std::endl;
           std::cout << cherenkov_counter << std::endl;

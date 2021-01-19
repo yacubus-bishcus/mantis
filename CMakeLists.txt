@@ -53,6 +53,7 @@ target_link_libraries(mantis ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 set(Input_SCRIPTS
   brems_distributions.root
   mantis.in
+  vis_save.mac
   )
 
 set(Run_Analysis_SCRIPTS

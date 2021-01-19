@@ -135,6 +135,9 @@ new G4PVPlacement(0, G4ThreeVector(-0.6096*m, 0, 0),
 new G4PVPlacement(0, G4ThreeVector(0.6096*m, 0, 0),
                   logicCollimator, "CollimatorRight", logicWorld,
                   false, 0, checkOverlaps);
+new G4PVPlacement(0, G4ThreeVector(0,0,-10*cm),
+                  logicCollimator, "CollimatorRear", logicWorld,
+                  false, 0, checkOverlaps);
 // Set up shipping container environment (8ft wide and 8.5ft high)
 G4double c_thick = 0.1905*cm; // approx 0.075 inch thick
 G4Box *solidContainer = new G4Box("Container", 0.6096*m, 2.5908*m, 2.4384*m);

@@ -55,7 +55,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest) : G4VUserPrimary
         // Set Beam Position
         beam_offset_x = 0*cm;
         beam_offset_y = 0*cm;
-        z0 = 50*cm;
+        z0 = 100*cm;
         beam_size = 1.3*mm;
         source_width=0; //by default the width along Z is zero
 

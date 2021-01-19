@@ -34,9 +34,9 @@
 #################################################################################################
 # CHOPPER WHEEL OPTIONS 
 #units mm
-#/chopper/thickness 3
+#/chopper/thickness 10
 #units cm
-#/chopper/distance
+#/chopper/distance 50
 
 # INTERROGATION TARGET OPTIONS 
 #units cm for XPos,YPos, ZPos

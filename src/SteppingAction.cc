@@ -34,7 +34,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
         // Run Cuts
         if(theTrack->GetPosition().z()/(cm) > EndIntObj/(cm))
-        //if(theTrack->GetPosition().z()/(cm) > 20.*cm) // for testing brem beam
         {
                 // kill photons that go beyond the interrogation object
                 theTrack->SetTrackStatus(fStopAndKill);
@@ -46,7 +45,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 theTrack->SetTrackStatus(fStopAndKill);
                 run->AddStatusKilled();
         }
-        else if(theTrack->GetPosition().z()/(cm) < -10.*cm)
+        else if(theTrack->GetPosition().z()/(cm) < -1.*cm)
         {
                 // Kill photons that go in behind beam origin
                 theTrack->SetTrackStatus(fStopAndKill);

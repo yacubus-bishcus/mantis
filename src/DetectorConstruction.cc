@@ -127,18 +127,18 @@ if(bremTest)
 
 // Set up Collimator
 G4double container_z_pos = 2.4384*m +water_size_x + 1.0*m;
-G4RotationMatrix* collimatorRot = new G4RotationMatrix;
-collimatorRot->rotateY(90*deg);
 G4Box *solidCollimator = new G4Box("Collimator", 1*cm, water_size_y, container_z_pos - 2.4384*m);
-G4LogicalVolume * logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
+G4Box *solidCollimatorRear = new G4Box("Collimator",0.6096*m, 2.5908*m, 1*cm);
+G4LogicalVolume *logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
+G4LogicalVolume *logicCollimatorRear = new G4LogicalVolume(solidCollimator, lead, "Collimator");
 new G4PVPlacement(0, G4ThreeVector(-0.6096*m, 0, 0),
                   logicCollimator, "CollimatorLeft", logicWorld,
                   false, 0, checkOverlaps);
 new G4PVPlacement(0, G4ThreeVector(0.6096*m, 0, 0),
                   logicCollimator, "CollimatorRight", logicWorld,
                   false, 0, checkOverlaps);
-new G4PVPlacement(collimatorRot, G4ThreeVector(0,0,-10*cm),
-                  logicCollimator, "CollimatorRear", logicWorld,
+new G4PVPlacement(0, G4ThreeVector(0,0,-(container_z_pos - 2.4384*m)/2),
+                  logicCollimatorRear, "CollimatorRear", logicWorld,
                   false, 0, checkOverlaps);
 // Set up shipping container environment (8ft wide and 8.5ft high)
 G4double c_thick = 0.1905*cm; // approx 0.075 inch thick

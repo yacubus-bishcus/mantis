@@ -86,7 +86,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
   CmdnPMT->SetParameterName("numberPMT", false);
   CmdChopMaterial->SetParameterName("ChopperMaterial",false);
   CmdChopZ->SetParameterName("chopperZ", false);
-  CmdChopZ->SetRange("chopperZ > 101 && chopperZ < 151");
+  CmdChopZ->SetRange("chopperZ > 1 && chopperZ < 51");
   CmdChopthick->SetParameterName("chopperthickness",false);
   CmdChopperOn->SetParameterName("chopperOn",false);
   CmdChopperAbundance->SetParameterName("chopperAbundance",false);

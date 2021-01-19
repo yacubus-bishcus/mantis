@@ -2,7 +2,7 @@
 
 DetectorConstruction::DetectorConstruction(G4bool brem)
         : G4VUserDetectorConstruction(), // chopper properties 
-        chopperDensity(19.1*g/cm3), chopper_thick(3*mm), chopper_z(5*cm), chopperOn(false), // interrogation object properties 
+        chopperDensity(19.1*g/cm3), chopper_thick(10*mm), chopper_z(10*cm), chopperOn(false), // interrogation object properties 
         IntObj_rad(4.5*cm), intObjDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm), IntObj_Selection("Uranium"), // radio abundances
         chopper_radio_abundance(0), intObj_radio_abundance(0), // Attenuator Properties 
         attenuatorState(false), attenuatorState2(false), attenThickness(0.1*mm), attenThickness2(0.1*mm), attenuatorMat("G4_AIR"), attenuatorMat2("G4_AIR"), // Water Tank properties 
@@ -128,7 +128,7 @@ if(bremTest)
 // Set up Collimator
 G4double container_z_pos = 2.4384*m +water_size_x + 1.0*m;
 G4Box *solidCollimator = new G4Box("Collimator", 1*cm, water_size_y, container_z_pos - 2.4384*m);
-G4Box *solidCollimatorRear = new G4Box("Collimator",0.6096*m, 2.5908*m, 1*cm);
+G4Box *solidCollimatorRear = new G4Box("Collimator",0.6096*m - 2*cm, 2.5908*m, 1*cm);
 G4LogicalVolume *logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
 G4LogicalVolume *logicCollimatorRear = new G4LogicalVolume(solidCollimatorRear, lead, "Collimator");
 new G4PVPlacement(0, G4ThreeVector(-0.6096*m, 0, 0),

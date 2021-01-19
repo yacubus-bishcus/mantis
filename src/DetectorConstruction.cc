@@ -384,7 +384,7 @@ G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_
 G4cout << "The Chopper thickness was: " << chopper_thick/(mm) << " mm" << G4endl;
 G4cout << "The Chopper distance from the source was set as: " << chopper_z/(cm) << " cm" << G4endl;
 logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chopper");
-new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,chopper_z),
+new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,100*cm + chopper_z),
                   logicChopper, "Chopper", logicWorld, false,
                   0, checkOverlaps);
 

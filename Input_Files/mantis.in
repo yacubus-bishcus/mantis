@@ -35,8 +35,8 @@
 # CHOPPER WHEEL OPTIONS 
 #units mm
 #/chopper/thickness 10
-#units cm must be between 101 && 150
-#/chopper/distance 150
+# This is the distance from the Chopper wheel to the source units cm must be between 1 and 50
+#/chopper/distance 50
 
 # INTERROGATION TARGET OPTIONS 
 #units cm for XPos,YPos, ZPos

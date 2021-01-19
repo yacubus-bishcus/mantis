@@ -45,7 +45,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 theTrack->SetTrackStatus(fStopAndKill);
                 run->AddStatusKilled();
         }
-        else if(theTrack->GetPosition().z()/(cm) < -1.*cm)
+        else if(theTrack->GetPosition().z()/(cm) < -1.0)
         {
                 // Kill photons that go in behind beam origin
                 theTrack->SetTrackStatus(fStopAndKill);

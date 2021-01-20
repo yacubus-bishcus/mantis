@@ -20,11 +20,13 @@ SteppingAction::~SteppingAction()
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
 
+        G4StepPoint* endPoint   = aStep->GetPostStepPoint();
+        G4StepPoint* startPoint = aStep->GetPreStepPoint();
         // Run Logical Checks
-        if(aStep->GetPostStepPoint()==NULL) {
+        if(endPoint == NULL) {
                 return; // at the end of the world
         }
-        else if(aStep->GetPostStepPoint()->GetPhysicalVolume()==NULL) {
+        else if(endPoint->GetPhysicalVolume()==NULL) {
                 return;
         }
 
@@ -39,7 +41,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 theTrack->SetTrackStatus(fStopAndKill);
                 run->AddStatusKilled();
         }
-        else if(aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 10, "Collimator") == 0)
+        else if(startPoint->GetPhysicalVolume()->GetName().compare(0, 10, "Collimator") == 0)
         {
                 // kill photons in collimator
                 theTrack->SetTrackStatus(fStopAndKill);
@@ -48,40 +50,33 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
 // *********************** Checks and Cuts Complete ************************ //
 
-        G4int isNRF = 0;
+        G4bool isNRF = false;
         eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
         weight = info->GetWeight();
-        G4String particleName = aStep->GetTrack()->GetDynamicParticle()
-                                ->GetParticleDefinition()->GetParticleName();
         G4AnalysisManager* manager = G4AnalysisManager::Instance();
 
-        if (particleName == "opticalphoton") {
-                const G4VProcess* pds = aStep->GetPostStepPoint()->
-                                        GetProcessDefinedStep();
-                if (pds->GetProcessName() == "OpAbsorption") {
-                        run->AddOpAbsorption();
-
-                }
-                else if (pds->GetProcessName() == "OpRayleigh") {
-                        run->AddRayleigh();
-                }
+        const G4VProcess* process = endPoint->GetProcessDefinedStep();
+        if(process->GetProcessName() == "NRF")
+        {
+          run->AddNRF();
+          manager->FillNtupleDColumn(2,0,theTrack->GetKineticEnergy()/(MeV));
+          manager->FillNtupleSColumn(2,1,endPoint->GetPhysicalVolume()->GetName());
+          manager->AddNtupleRow(2);
         }
-
         if(theTrack->GetCreatorProcess() !=0)
         {
                 G4String CPName = theTrack->GetCreatorProcess()->GetProcessName();
                 if(CPName == "NRF")
                 {
-                        run->AddNRF();
-                        isNRF = 1;
+                        isNRF = true;
                 }
         }
 
         // Testing Brem Beam Analysis
         if(drawChopperDataFlag)
         {
-                if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 7,"Chopper") == 0
-                   && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 7, "Chopper") != 0
+                if(endPoint->GetPhysicalVolume()->GetName().compare(0, 7,"Chopper") == 0
+                   && startPoint->GetPhysicalVolume()->GetName().compare(0, 7, "Chopper") != 0
                    && theTrack->GetParticleDefinition() == G4Gamma::Definition())
                 {
                         manager->FillNtupleDColumn(0,0, theTrack->GetKineticEnergy()/(MeV)); // not weighting chopper
@@ -92,8 +87,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         // inside Interogation Object for first time
         if(drawIntObjDataFlag && !bremTest)
         {
-                if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14,"IntObjPhysical") == 0
-                   && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 14, "IntObjPhysical") != 0)
+                if(endPoint->GetPhysicalVolume()->GetName().compare(0, 14,"IntObjPhysical") == 0
+                   && startPoint->GetPhysicalVolume()->GetName().compare(0, 14, "IntObjPhysical") != 0)
                 {
                    manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
                    
@@ -108,8 +103,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         // first time in detector determine incident water energies
         if(drawWaterIncDataFlag && !bremTest)
         {
-                if(aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5,"Water") == 0
-                   && aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0, 5, "Water") != 0)
+                if(endPoint->GetPhysicalVolume()->GetName().compare(0, 5,"Water") == 0
+                   && startPoint->GetPhysicalVolume()->GetName().compare(0, 5, "Water") != 0)
                 {
                   if(isNRF && drawNRFDataFlag)
                   {
@@ -124,7 +119,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         }
 
         // Here I am inside the water
-        if(aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName().compare(0,5,"Water")==0) {
+        if(startPoint->GetPhysicalVolume()->GetName().compare(0,5,"Water")==0) {
 
                 // only care about secondaries that occur in water volume
                 const std::vector<const G4Track*>* secondaries = aStep->GetSecondaryInCurrentStep();
@@ -151,9 +146,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         } // end of if loop while inside water
 
         // PMT Analysis
-
-        G4StepPoint* endPoint   = aStep->GetPostStepPoint();
-        G4StepPoint* startPoint = aStep->GetPreStepPoint();
 
         if(endPoint->GetStepStatus() == fGeomBoundary) {
 
@@ -254,8 +246,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                 } // for if opProc
                                 if(drawDetFlag && !bremTest)
                                 {
-                                        manager->FillNtupleSColumn(2,0,procCount);
-                                        manager->AddNtupleRow(2);
+                                        manager->FillNtupleSColumn(3,0,procCount);
+                                        manager->AddNtupleRow(3);
                                 }
                         } // for for loop
                 } // for if statement if first time in photocathode

@@ -78,7 +78,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         if(chosen_energy < 0 && !bremTest)
         {
                 energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
-                std::cout << "Beam Energy: " << energy << " MeV" << std::endl;
+                //std::cout << "Beam Energy: " << energy << " MeV" << std::endl;
         }
 #else
         if(chosen_energy < 0)

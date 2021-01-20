@@ -81,8 +81,14 @@ void HistoManager::Book(G4bool bremTest)
 
       // Create 7 Histogram for Energy if detected
       manager->CreateH1("Detected","Photons Detected by Photocathode Weighted Energy Spectrum < 1E-5 MeV", nbins, 0., 1E-5, "MeV");
-
-      // Create 2 Ntuple for Reactions within detector
+      
+      // Create 2 Ntuple for NRF Materials 
+      manager->CreateNtuple("NRFMatData","NRF Material vs Energy");
+      manager->CreateNtupleDColumn("Energy");
+      manager->CreateNtupleSColumn("Material");
+      manager->FinishNtuple();
+    
+      // Create 3 Ntuple for Reactions within detector
       manager->CreateNtuple("DetPro","Processes that Occur at Photocathode Optical Surface");
       manager->CreateNtupleSColumn("Process");
       manager->FinishNtuple();

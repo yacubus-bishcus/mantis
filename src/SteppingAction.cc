@@ -54,15 +54,19 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
         weight = info->GetWeight();
         G4AnalysisManager* manager = G4AnalysisManager::Instance();
-
-        const G4VProcess* process = endPoint->GetProcessDefinedStep();
-        if(process->GetProcessName() == "NRF")
+        
+        if(drawNRFDataFlag)
         {
-          run->AddNRF();
-          manager->FillNtupleDColumn(2,0,theTrack->GetKineticEnergy()/(MeV));
-          manager->FillNtupleSColumn(2,1,endPoint->GetPhysicalVolume()->GetName());
-          manager->AddNtupleRow(2);
+          const G4VProcess* process = endPoint->GetProcessDefinedStep();
+          if(process->GetProcessName() == "NRF")
+          {
+            run->AddNRF();
+            manager->FillNtupleDColumn(2,0,theTrack->GetKineticEnergy()/(MeV));
+            manager->FillNtupleSColumn(2,1,endPoint->GetPhysicalVolume()->GetName());
+            manager->AddNtupleRow(2);
+          }
         }
+        
         if(theTrack->GetCreatorProcess() !=0)
         {
                 G4String CPName = theTrack->GetCreatorProcess()->GetProcessName();

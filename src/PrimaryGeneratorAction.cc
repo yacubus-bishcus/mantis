@@ -1,6 +1,6 @@
 #include "PrimaryGeneratorAction.hh"
 #include "PrimaryGenActionMessenger.hh"
-
+extern G4long seed;
 
 PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest) : G4VUserPrimaryGeneratorAction(),
         chosen_energy(-1), genM(NULL), fParticleGun(0)
@@ -31,6 +31,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest) : G4VUserPrimary
         // and binary 0/1 for off/on resonance useful in weighting
         if(!bremTest && chosen_energy < 0)
         {
+           gRandom->SetSeed(seed);
            TFile *fin = TFile::Open("brems_distributions.root");
            hBrems  = (TH1D*) fin->Get("hBrems");
            hSample = (TH1D*) fin->Get("hSample");

@@ -237,12 +237,18 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
     
     // Conduct NRFMaterial and Cherenkov Comparison Analysis
     std::cout << "NRF and Cherenkov Tracking Analysis..." << std::endl;
+    std::cout << "*************************************" << std::endl << std::endl;
     bool confirmation3 = chopOn->cd();
     if(confirmation3)
     {
         chopOn->GetObject("NRFMatData", NRFMatData);
         Cherenkov->AddFriend("NRFMatData");
         Int_t OnComp = Cherenkov->Draw("EventID","EventID == NRFMatData.EventID","goff");
+        std::cout << "Total number of ON NRF Entries: " << NRFMatData->GetEntries() << std::endl;
+        Int_t OnchopNRFEntries = NRFMatData->Draw("Energy", "strstr(\"Chop\",Material)","goff");
+        Int_t OnintObjNRFEntries = NRFMatData->Draw("Energy", "strstr(\"IntObj\",Material)","goff");
+        std::cout << "ON NRF Created in Chopper: " << OnchopNRFEntries << std::endl;
+        std::cout << "ON NRF Created in Interrogation Object: " << OnintObjNRFEntries << std::endl;
         if(OnComp > 0)
         {
             std::cout << "ON NRF Events that caused Cherenkov: " << OnComp << std::endl;
@@ -258,6 +264,11 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
         chopOff->GetObject("NRFMatData", NRFMatDataOff);
         CherenkovOff->AddFriend("NRFMatDataOff");
         Int_t OffComp = CherenkovOff->Draw("EventID","EventID == NRFMatDataOff.EventID","goff");
+        std::cout << "Total number of OFF NRF Entries: " << NRFMatDataOff->GetEntries() << std::endl;
+        Int_t OffchopNRFEntries = NRFMatDataOff->Draw("Energy", "strstr(\"Chop\",Material)","goff");
+        Int_t OffintObjNRFEntries = NRFMatDataOff->Draw("Energy", "strstr(\"IntObj\",Material)","goff");
+        std::cout << "OFF NRF Created in Chopper: " << OffchopNRFEntries << std::endl;
+        std::cout << "OFF NRF Created in Interrogation Object: " << OffintObjNRFEntries << std::endl;
         if(OffComp > 0)
         {
             std::cout << "OFF NRF Events that caused Cherenkov: " << OffComp << std::endl;

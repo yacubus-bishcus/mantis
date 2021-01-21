@@ -41,7 +41,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 theTrack->SetTrackStatus(fStopAndKill);
                 run->AddStatusKilled();
         }
-        else if(startPoint->GetPhysicalVolume()->GetName().compare(0, 10, "Collimator") == 0)
+        else if(startPoint->GetPhysicalVolume()->GetName().compare(0, 3, "Col") == 0)
         {
                 // kill photons in collimator
                 theTrack->SetTrackStatus(fStopAndKill);
@@ -81,8 +81,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         // Testing Brem Beam Analysis
         if(drawChopperDataFlag)
         {
-                if(endPoint->GetPhysicalVolume()->GetName().compare(0, 7,"Chopper") == 0
-                   && startPoint->GetPhysicalVolume()->GetName().compare(0, 7, "Chopper") != 0
+                if(endPoint->GetPhysicalVolume()->GetName().compare(0, 4,"Chop") == 0
+                   && startPoint->GetPhysicalVolume()->GetName().compare(0, 4, "Chop") != 0
                    && theTrack->GetParticleDefinition() == G4Gamma::Definition())
                 {
                         manager->FillNtupleDColumn(0,0, theTrack->GetKineticEnergy()/(MeV)); // not weighting chopper
@@ -93,8 +93,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         // inside Interogation Object for first time
         if(drawIntObjDataFlag && !bremTest)
         {
-                if(endPoint->GetPhysicalVolume()->GetName().compare(0, 14,"IntObjPhysical") == 0
-                   && startPoint->GetPhysicalVolume()->GetName().compare(0, 14, "IntObjPhysical") != 0)
+                if(endPoint->GetPhysicalVolume()->GetName().compare(0, 6,"IntObj") == 0
+                   && startPoint->GetPhysicalVolume()->GetName().compare(0, 6, "IntObj") != 0)
                 {
                    manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
                    

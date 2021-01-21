@@ -73,6 +73,7 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtuple("Cherenkov","Cherenkov Data");
       manager->CreateNtupleDColumn("BeamEnergy");
       manager->CreateNtupleIColumn("NumPhotons");
+      manager->CreateNtupleIColumn("EventID");
       manager->FinishNtuple();
 
       // Create 5 and 6 histogram for incident Photocathode
@@ -86,6 +87,7 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtuple("NRFMatData","NRF Material vs Energy");
       manager->CreateNtupleDColumn("Energy");
       manager->CreateNtupleSColumn("Material");
+      manager->CreateNtupleIColumn("EventID");
       manager->FinishNtuple();
     
       // Create 3 Ntuple for Reactions within detector

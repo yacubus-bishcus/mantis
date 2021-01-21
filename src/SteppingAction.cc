@@ -51,10 +51,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 // *********************** Checks and Cuts Complete ************************ //
 
         G4bool isNRF = false;
+        // Grab Weights from PrimaryGenerator
         eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
         weight = info->GetWeight();
         G4AnalysisManager* manager = G4AnalysisManager::Instance();
         
+        // Keep track of the materials where NRF originates 
         if(drawNRFDataFlag)
         {
           const G4VProcess* process = endPoint->GetProcessDefinedStep();
@@ -104,7 +106,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         }
 
         // Water Analysis
-        // first time in detector determine incident water energies
+        // First time incident Water keep track of NRF hitting water, low energy and high energy photons hitting water 
         if(drawWaterIncDataFlag && !bremTest)
         {
                 if(endPoint->GetPhysicalVolume()->GetName().compare(0, 5,"Water") == 0
@@ -122,7 +124,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 }
         }
 
-        // Here I am inside the water
+        // While in water keep track of cherenkov and pass number of cherenkov to EventAction
         if(startPoint->GetPhysicalVolume()->GetName().compare(0,5,"Water")==0) {
 
                 // only care about secondaries that occur in water volume
@@ -149,7 +151,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
         } // end of if loop while inside water
 
-        // PMT Analysis
+        // Photocathode Analysis
 
         if(endPoint->GetStepStatus() == fGeomBoundary) {
 
@@ -167,7 +169,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         OpManager->GetPostStepProcessVector()->entries();
                 G4ProcessVector* postStepDoItVector =
                         OpManager->GetPostStepProcessVector(typeDoIt);
-                // incident photocathode
+                // incident photocathode Keep track of low and high energy photons incident Photocathode volume 
                 if(endPoint->GetPhysicalVolume()->GetName().compare(0,2,"PC")==0 && startPoint->GetPhysicalVolume()->GetName().compare(0,2,"PC")!=0) { // first time in photocathode
                         run->AddTotalSurface();
                         if(drawIncFlag && !bremTest)
@@ -225,6 +227,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                 //run->AddAbsorption();
                                                 procCount = "Abs";
                                         }
+                                        // Keep track of detected photons 
                                         else if (theStatus == Detection) {
                                                 //run->AddDetection();
                                                 procCount = "Det";
@@ -248,6 +251,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                 procCount = "noStatus";
                                         }
                                 } // for if opProc
+                                // Keep track of Detector processes 
                                 if(drawDetFlag && !bremTest)
                                 {
                                         manager->FillNtupleSColumn(3,0,procCount);

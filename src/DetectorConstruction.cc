@@ -165,7 +165,7 @@ intObj_U235_abundance = intObj_radio_abundance;
 intObj_U238_abundance = 100. - intObj_radio_abundance;
 intObj_Pu239_abundance = intObj_radio_abundance;
 intObj_Pu240_abundance = 100. - intObj_radio_abundance;
-G4Material* intObjMat = new G4Material("IntObjMaterial", intObjDensity, 1);
+G4Material* intObjMat = new G4Material("IntObj", intObjDensity, 1);
 intObjMat->SetName(IntObj_Selection);
 if(IntObj_Selection == "Uranium")
 {
@@ -221,12 +221,12 @@ G4cout << "The User's Interrogation Object Radius: " << IntObj_rad/(cm) << " cm"
 G4cout << "The User's Interrogation Object Density: " << intObjDensity/(g/cm3) << " g/cm3" << G4endl;
 G4cout << "The User's Interrogation Object Location: (" << intObj_x_pos/(cm) << ", " << intObj_y_pos/(cm) << ", " << intObj_z_pos/(cm) << ")" << " cm" << G4endl;
         
-G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObjLogicVolume");
+G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObj");
 setEndIntObj(container_z_pos, 2.4384*m);
 
 physIntObj = new G4PVPlacement(0,
                                G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos),
-                               logicIntObj, "IntObjPhysical", logicHollowC, false,
+                               logicIntObj, "IntObj", logicHollowC, false,
                                0, checkOverlaps);
         
 // *************************** Interrogation Object Setup Complete ***************************** // 

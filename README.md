@@ -20,7 +20,7 @@ Eight(8) histograms are available upon user request:
 8. Weighted Detected Energy Data -> /output/myoutput DetData must be uncommented!
  - Weighted energy spectrum of photons "detected" on photocathode includes Quantum efficiency!
 
-Additionally, three(3) ntuples(TTrees) are available upon user request:
+Additionally, four(4) ntuples(TTrees) are available upon user request:
 
 1. Incident Chopper Energy Data -> /output/myoutput ChopperData must be uncommented!
  - Unweighted Incident Chopper Energies 
@@ -28,8 +28,12 @@ Additionally, three(3) ntuples(TTrees) are available upon user request:
 2. Cherenkov Data -> /cherenkov/myoutput CherenkovData must be uncommented!
  - Event Beam Energy (unweighted)
  - Number of Photons Emitted in Event
+ 
+3. NRF Material Data -> /output/myouput/NRFData must be uncommented!
+ - Particle NRF Energy (unweighted)
+ - Name of Creation Physical Volume (chopper, IntObj, etc...)
 
-3. Detector Process at PC Data -> /output/myoutput DetData must be uncommented!
+4. Detector Process at PC Data -> /output/myoutput DetData must be uncommented!
  - Process that occurs at PC surface (absorbed, detected, reflected, etc.)
 
 Mantis Input

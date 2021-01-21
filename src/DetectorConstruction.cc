@@ -132,13 +132,13 @@ G4Box *solidCollimatorRear = new G4Box("Collimator",0.6096*m - 2*cm, 2.5908*m, 1
 G4LogicalVolume *logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
 G4LogicalVolume *logicCollimatorRear = new G4LogicalVolume(solidCollimatorRear, lead, "Collimator");
 new G4PVPlacement(0, G4ThreeVector(-0.6096*m, 0, 0),
-                  logicCollimator, "CollimatorLeft", logicWorld,
+                  logicCollimator, "CollimatorLeft-Lead", logicWorld,
                   false, 0, checkOverlaps);
 new G4PVPlacement(0, G4ThreeVector(0.6096*m, 0, 0),
-                  logicCollimator, "CollimatorRight", logicWorld,
+                  logicCollimator, "CollimatorRight-Lead", logicWorld,
                   false, 0, checkOverlaps);
 new G4PVPlacement(0, G4ThreeVector(0,0,-(container_z_pos - 2.4384*m)/2),
-                  logicCollimatorRear, "CollimatorRear", logicWorld,
+                  logicCollimatorRear, "CollimatorRear-Lead", logicWorld,
                   false, 0, checkOverlaps);
 // Set up shipping container environment (8ft wide and 8.5ft high)
 G4double c_thick = 0.1905*cm; // approx 0.075 inch thick
@@ -146,14 +146,14 @@ G4Box *solidContainer = new G4Box("Container", 0.6096*m, 2.5908*m, 2.4384*m);
 G4LogicalVolume *logicContainer = new G4LogicalVolume(solidContainer, steel, "Container");
 new G4PVPlacement(0,
                   G4ThreeVector(0, 0, container_z_pos),
-                  logicContainer, "Container",logicWorld,
+                  logicContainer, "Container-Steel",logicWorld,
                   false,0,checkOverlaps);
 
 // make container hollow
 G4Box *hollowContainer = new G4Box("ContainerAir", 0.6096*m -c_thick, 2.5908*m -c_thick, 2.4384*m -c_thick);
 G4LogicalVolume *logicHollowC = new G4LogicalVolume(hollowContainer, air, "hollowContainer");
 new G4PVPlacement(0, G4ThreeVector(),
-                  logicHollowC, "HollowContainer",logicContainer, false,0,checkOverlaps);
+                  logicHollowC, "Container-Air",logicContainer, false,0,checkOverlaps);
         
 // ************************** End of Shipping Container and Collimator Geometries **************************** //
 
@@ -260,17 +260,17 @@ waterRot2->rotateY((180. + theAngle)*deg);
 
 new G4PVPlacement(waterRot,
 G4ThreeVector(water_x_pos,0,water_z_pos), logicAttenuator,
-"AttenuatorLeft", logicWorld, false, 0, checkOverlaps);
+"1stLayerL", logicWorld, false, 0, checkOverlaps);
 new G4PVPlacement(waterRot2,
 G4ThreeVector(-1*water_x_pos,0,water_z_pos), logicAttenuator,
-"AttenuatorRight", logicWorld, false, 0, checkOverlaps);
+"1stLayerR", logicWorld, false, 0, checkOverlaps);
 
 // Option to add second layer of low Z attenuation material 
         
 G4Box* solidSecondAttenuator = new G4Box("LowZAttenuator", water_size_x + attenThickness2, water_size_y+attenThickness2,
                                          water_size_z+attenThickness2);
 G4LogicalVolume* logicSecondAttenuator = new G4LogicalVolume(solidSecondAttenuator, low_z_attenuator, "LowZAttenuator");
-new G4PVPlacement(0,G4ThreeVector(0,0,0), logicSecondAttenuator, "LowZAttenuator", logicAttenuator, false, 0, checkOverlaps);
+new G4PVPlacement(0,G4ThreeVector(0,0,0), logicSecondAttenuator, "2ndLayer", logicAttenuator, false, 0, checkOverlaps);
 if(attenuatorState2)
 {
   G4cout << "Second Attenuator set to: " << attenThickness2 << " cm of " << low_z_attenuator->GetName() << G4endl;
@@ -278,9 +278,9 @@ if(attenuatorState2)
 
 // Make Water Casing (Plexiglass)
 
-G4Box* solidCasing = new G4Box("Encasing", water_size_x, water_size_y, water_size_z);
-G4LogicalVolume* logicCasing = new G4LogicalVolume(solidCasing, plexiglass, "Encasing");
-new G4PVPlacement(0,G4ThreeVector(0,0,0), logicCasing, "Encasing", logicSecondAttenuator, false, 0, checkOverlaps);
+G4Box* solidCasing = new G4Box("Plexiglass", water_size_x, water_size_y, water_size_z);
+G4LogicalVolume* logicCasing = new G4LogicalVolume(solidCasing, plexiglass, "Plexiglass");
+new G4PVPlacement(0,G4ThreeVector(0,0,0), logicCasing, "Plexiglass", logicSecondAttenuator, false, 0, checkOverlaps);
         
 if(plexiThickness != 0.18*mm)
 {

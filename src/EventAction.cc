@@ -24,8 +24,10 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
         {
           G4AnalysisManager* manager = G4AnalysisManager::Instance();
           G4double beam_energy = info->GetBeamEnergy();
+          G4int eventID = anEvent->GetEventID();
           manager->FillNtupleDColumn(1,0, beam_energy/(MeV));
           manager->FillNtupleIColumn(1,1, cherenkov_counter);
+          manager->FillNtupleIColumn(1,2, eventID);
           manager->AddNtupleRow(1);
         }
         

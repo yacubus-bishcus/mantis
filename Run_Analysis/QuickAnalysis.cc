@@ -18,6 +18,8 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
     // TTrees 
     TTree *Cherenkov;
     TTree *CherenkovOff;
+    TTree *NRFMatData;
+    TTree *NRFMatDataOff;
     
     // Histograms 
     // Interrogation Object Analysis
@@ -232,5 +234,39 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
     std::cout << "Chopper Off Detected Entries: " << det_entries_off << " Off Sum: " << det_sum_off << std::endl;
     std::cout << "Detected Z-test result: " << det_z << std::endl;
     std::cout << "*************************************" << std::endl << std::endl;
+    
+    // Conduct NRFMaterial and Cherenkov Comparison Analysis
+    std::cout << "NRF and Cherenkov Tracking Analysis..." << std::endl;
+    bool confirmation3 = chopOn->cd();
+    if(confirmation3)
+    {
+        chopOn->GetObject("NRFMatData", NRFMatData);
+        Cherenkov->AddFriend("NRFMatData");
+        Int_t OnComp = Cherenkov->Draw("EventID","EventID == NRFMatData.EventID","goff");
+        if(OnComp > 0)
+        {
+            std::cout << "ON NRF Events that caused Cherenkov: " << OnComp << std::endl;
+        }
+        else
+        {
+            std::cout << "No ON NRF Events leading to Cherenkov Events Found." << std::endl;
+        }
+    }
+    bool confirmation4 = chopOff->cd();
+    if(confirmation4)
+    {
+        chopOff->GetObject("NRFMatData", NRFMatDataOff);
+        CherenkovOff->AddFriend("NRFMatDataOff");
+        Int_t OffComp = CherenkovOff->Draw("EventID","EventID == NRFMatDataOff.EventID","goff");
+        if(OffComp > 0)
+        {
+            std::cout << "OFF NRF Events that caused Cherenkov: " << OffComp << std::endl;
+        }
+        else
+        {
+            std::cout << "No OFF NRF Events leading to Cherenkov Events Found." << std::endl;
+        }
+    }
+    
     
 }

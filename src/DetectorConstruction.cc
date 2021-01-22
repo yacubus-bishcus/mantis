@@ -222,14 +222,14 @@ G4cout << "The User's Interrogation Object Density: " << intObjDensity/(g/cm3) <
 G4cout << "The User's Interrogation Object Location: (" << intObj_x_pos/(cm) << ", " << intObj_y_pos/(cm) << ", " << intObj_z_pos/(cm) << ")" << " cm" << G4endl;
         
 G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObj");
+G4cout << "Begin of Interrogation Object: " << container_z_pos/(cm) + intObj_z_pos/(cm) -  IntObj_rad/(cm) << " cm" << G4endl;
 setEndIntObj(container_z_pos, 2.4384*m);
 
 physIntObj = new G4PVPlacement(0,
                                G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos),
                                logicIntObj, "IntObj", logicHollowC, false,
                                0, checkOverlaps);
-        
-G4cout << "Begin of Interrogation Object: " << container_z_pos - 2.4384/2 << " cm" << G4endl;
+ 
         
 // *************************** Interrogation Object Setup Complete ***************************** // 
 

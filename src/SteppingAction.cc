@@ -68,7 +68,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             manager->FillNtupleIColumn(2,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
             G4ThreeVector NRF_loc = theTrack->GetPosition();
             G4double endChopper = local_det->getBeginChopper();
-            manager->FillNtupleDColumn(2,3, endChopper - NRF_loc.z()/(cm));
+            manager->FillNtupleDColumn(2,3, NRF_loc.z()/(cm) - endChopper);
             manager->AddNtupleRow(2);
           }
         }

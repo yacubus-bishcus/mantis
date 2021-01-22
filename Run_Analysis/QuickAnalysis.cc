@@ -287,6 +287,33 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
         
         std::cout << "Total U235 NRF Created in Chopper: " << totalchopU235 << std::endl;
         std::cout << "Total U238 NRF Create in Chopper: " << totalchopU238 << std::endl;
+        // Determine which NRF from Interrogation Object from U235 and which are from U238
+        // U235
+        // 1.65623626566
+        Int_t objU235NRF = NRFMatData->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 1.657 && Energy > 1.655","goff");
+        // 1.73354686425 
+        Int_t objU235NRF1 = NRFMatData->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 1.7336 && Energy > 1.7334","goff");
+        // 1.81525753275
+        Int_t objU235NRF2 = NRFMatData->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 1.8153 && Energy > 1.815","goff");
+        // 1.86231792191
+        Int_t objU235NRF3 = NRFMatData->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 1.863 && Energy > 1.860","goff");
+        // 2.00336916735
+        Int_t objU235NRF4 = NRFMatData->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 2.010 && Energy > 2.000","goff");
+        
+        // U238
+        // 1.78200716196
+        Int_t objU238NRF = NRFMatData->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 1.783 && Energy > 1.781","goff");
+        // 1.79300725065
+        Int_t objU238NRF1 = NRFMatData->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 1.794 && Energy > 1.792","goff");
+        // 1.84600768563
+        Int_t objU238NRF2 = NRFMatData->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 1.847 && Energy > 1.845","goff");
+        
+        // Total Tallies 
+        Int_t totalobjU235 = objU235NRF + objU235NRF1 + objU235NRF2 + objU235NRF3 + objU235NRF4;
+        Int_t totalobjU238 = objU238NRF + objU238NRF1 + objU238NRF2;
+        
+        std::cout << "Total U235 NRF Created in IntObj: " << totalobjU235 << std::endl;
+        std::cout << "Total U238 NRF Create in IntObj: " << totalobjU238 << std::endl; 
     }
     bool confirmation4 = chopOff->cd();
     if(confirmation4)
@@ -337,6 +364,35 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
         
         std::cout << "Total U235 NRF Created in Chopper OFF: " << totalchopU235Off << std::endl;
         std::cout << "Total U238 NRF Create in Chopper OFF: " << totalchopU238Off << std::endl;  
+        
+        // Determine which NRF from Interrogation Object from U235 and which are from U238
+        // U235
+        // 1.65623626566
+        Int_t objU235NRFOff = NRFMatDataOff->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 1.657 && Energy > 1.655","goff");
+        // 1.73354686425 
+        Int_t objU235NRF1Off = NRFMatDataOff->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 1.7336 && Energy > 1.7334","goff");
+        // 1.81525753275
+        Int_t objU235NRF2Off = NRFMatDataOff->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 1.8153 && Energy > 1.815","goff");
+        // 1.86231792191
+        Int_t objU235NRF3Off = NRFMatDataOff->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 1.863 && Energy > 1.860","goff");
+        // 2.00336916735
+        Int_t objU235NRF4Off = NRFMatDataOff->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 2.010 && Energy > 2.000","goff");
+        
+        // U238
+        // 1.78200716196
+        Int_t objU238NRFOff = NRFMatDataOff->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 1.783 && Energy > 1.781","goff");
+        // 1.79300725065
+        Int_t objU238NRF1Off = NRFMatDataOff->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 1.794 && Energy > 1.792","goff");
+        // 1.84600768563
+        Int_t objU238NRF2Off = NRFMatDataOff->Draw("Energy", "strstr(\"IntObj\",Material) && Energy < 1.847 && Energy > 1.845","goff");
+        
+        // Total Tallies 
+        Int_t totalobjU235Off = objU235NRFOff + objU235NRF1Off + objU235NRF2Off + objU235NRF3Off + objU235NRF4Off;
+        Int_t totalobjU238Off = objU238NRFOff + objU238NRF1Off + objU238NRF2Off;
+        
+        std::cout << "Total U235 NRF Created in IntObj OFF: " << totalobjU235Off << std::endl;
+        std::cout << "Total U238 NRF Create in IntObj OFF: " << totalobjU238Off << std::endl; 
+        
     }
     
     

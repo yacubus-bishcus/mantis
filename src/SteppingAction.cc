@@ -164,11 +164,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
                 const G4DynamicParticle* theParticle = theTrack->GetDynamicParticle();
 
-                G4ThreeVector oldMomentumDir = theParticle->GetMomentumDirection();
-
-                G4ThreeVector m0 = startPoint->GetMomentumDirection(); // don't use these yet?
-                G4ThreeVector m1 = endPoint->GetMomentumDirection();
-
                 G4OpBoundaryProcessStatus theStatus = Undefined;
                 G4ProcessManager* OpManager =
                         G4OpticalPhoton::OpticalPhoton()->GetProcessManager();

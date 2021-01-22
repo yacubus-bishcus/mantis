@@ -260,6 +260,33 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
         {
             std::cout << "No ON NRF Events leading to Cherenkov Events Found." << std::endl;
         }
+        // Determine which NRF from Chopper are from U235 and which are from U238
+        // U235
+        // 1.65623626566
+        Int_t chopU235NRF = NRFMatData->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 1.657 && Energy > 1.655","goff");
+        // 1.73354686425 
+        Int_t chopU235NRF1 = NRFMatData->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 1.7336 && Energy > 1.7334","goff");
+        // 1.81525753275
+        Int_t chopU235NRF2 = NRFMatData->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 1.8153 && Energy > 1.815","goff");
+        // 1.86231792191
+        Int_t chopU235NRF3 = NRFMatData->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 1.863 && Energy > 1.860","goff");
+        // 2.00336916735
+        Int_t chopU235NRF4 = NRFMatData->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 2.010 && Energy > 2.000","goff");
+        
+        // U238
+        // 1.78200716196
+        Int_t chopU238NRF = NRFMatData->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 1.783 && Energy > 1.781","goff");
+        // 1.79300725065
+        Int_t chopU238NRF1 = NRFMatData->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 1.794 && Energy > 1.792","goff");
+        // 1.84600768563
+        Int_t chopU238NRF2 = NRFMatData->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 1.847 && Energy > 1.845","goff");
+        
+        // Total Tallies 
+        Int_t totalchopU235 = chopU235NRF + chopU235NRF1 + chopU235NRF2 + chopU235NRF3 + chopU235NRF4;
+        Int_t totalchopU238 = chopU238NRF + chopU238NRF1 + chopU238NRF2;
+        
+        std::cout << "Total U235 NRF Created in Chopper: " << totalchopU235 << std::endl;
+        std::cout << "Total U238 NRF Create in Chopper: " << totalchopU238 << std::endl;
     }
     bool confirmation4 = chopOff->cd();
     if(confirmation4)
@@ -283,6 +310,33 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
         {
             std::cout << "No OFF NRF Events leading to Cherenkov Events Found." << std::endl;
         }
+        // Determine which NRF from Chopper are from U235 and which are from U238
+        // U235
+        // 1.65623626566
+        Int_t chopU235NRFOff = NRFMatDataOff->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 1.657 && Energy > 1.655","goff");
+        // 1.73354686425 
+        Int_t chopU235NRF1Off = NRFMatDataOff->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 1.7336 && Energy > 1.7334","goff");
+        // 1.81525753275
+        Int_t chopU235NRF2Off = NRFMatDataOff->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 1.8153 && Energy > 1.815","goff");
+        // 1.86231792191
+        Int_t chopU235NRF3Off = NRFMatDataOff->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 1.863 && Energy > 1.860","goff");
+        // 2.00336916735
+        Int_t chopU235NRF4Off = NRFMatDataOff->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 2.010 && Energy > 2.000","goff");
+        
+        // U238
+        // 1.78200716196
+        Int_t chopU238NRFOff = NRFMatDataOff->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 1.783 && Energy > 1.781","goff");
+        // 1.79300725065
+        Int_t chopU238NRF1Off = NRFMatDataOff->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 1.794 && Energy > 1.792","goff");
+        // 1.84600768563
+        Int_t chopU238NRF2Off = NRFMatDataOff->Draw("Energy", "strstr(\"Chop\",Material) && Energy < 1.847 && Energy > 1.845","goff");
+        
+        // Total Tallies 
+        Int_t totalchopU235Off = chopU235NRFOff + chopU235NRF1Off + chopU235NRF2Off + chopU235NRF3Off + chopU235NRF4Off;
+        Int_t totalchopU238Off = chopU238NRFOff + chopU238NRF1Off + chopU238NRF2Off;
+        
+        std::cout << "Total U235 NRF Created in Chopper OFF: " << totalchopU235Off << std::endl;
+        std::cout << "Total U238 NRF Create in Chopper OFF: " << totalchopU238Off << std::endl;  
     }
     
     

@@ -229,6 +229,8 @@ physIntObj = new G4PVPlacement(0,
                                logicIntObj, "IntObj", logicHollowC, false,
                                0, checkOverlaps);
         
+G4cout << "Begin of Interrogation Object: " << container_z_pos - 2.4384/2 << " cm" << G4endl;
+        
 // *************************** Interrogation Object Setup Complete ***************************** // 
 
 // ********************************** Begin Detector Construction ********************************** //
@@ -388,7 +390,7 @@ new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,100*cm + chopper_z),
                   logicChopper, "Chop", logicWorld, false,
                   0, checkOverlaps);
 setBeginChopper((100 + chopper_z/(cm)) - chopper_thick/(cm)/2.);
-G4cout << "Beginning of Chopper set to: " << (100 + chopper_z/(cm)) - chopper_thick/(cm)/2. << G4endl;
+G4cout << "Beginning of Chopper set to: " << (100 + chopper_z/(cm)) - chopper_thick/(cm)/2. << " cm" << G4endl;
 
 G4double PMT_rmin = 0*cm;
 G4cout << G4endl << "The PC Radius was set to " << PMT_rmax/(cm) << " cm" << G4endl;

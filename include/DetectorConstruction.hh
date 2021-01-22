@@ -183,6 +183,7 @@ void SetChopperMaterial(G4String val)
 void setEndIntObj(G4double z_pos_con, G4double con_z_size)
 {
         EndIntObj = z_pos_con + con_z_size/2;
+        G4cout << "End of Interrogation Object set to: " << EndIntObj << " cm" << G4endl;
 }
 
 void setBeginChopper(G4double z_pos)

@@ -74,6 +74,7 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtupleDColumn("BeamEnergy");
       manager->CreateNtupleIColumn("NumPhotons");
       manager->CreateNtupleIColumn("EventID");
+      manager->CreateNtupleIColumn("NRF");
       manager->FinishNtuple();
 
       // Create 5 and 6 histogram for incident Photocathode

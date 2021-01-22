@@ -363,7 +363,7 @@ if(chopper_z > water_z_pos)
         std::cerr << "ERROR: Chopper wheel location should be behind water detectors, exiting." << std::endl;
         exit(100);
 }
-G4Tubs *solidChopper = new G4Tubs("Chop", 0*cm, 10*cm, chopper_thick, 0.*deg, 180.*deg);
+G4Tubs *solidChopper = new G4Tubs("Chop", 0*cm, 10*cm, chopper_thick/2, 0.*deg, 180.*deg);
 G4Material *chopperMat = new G4Material("chopperMaterial", chopperDensity, 1);
 G4cout << "The Chopper State was set to: " << chopperOn << G4endl;
 if(chopperDensity == 19.1*g/cm3)

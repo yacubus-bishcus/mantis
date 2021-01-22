@@ -89,6 +89,7 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtupleDColumn("Energy");
       manager->CreateNtupleSColumn("Material");
       manager->CreateNtupleIColumn("EventID");
+      manager->CreateNtupleDColumn("location");
       manager->FinishNtuple();
     
       // Create 3 Ntuple for Reactions within detector

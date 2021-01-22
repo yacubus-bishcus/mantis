@@ -388,6 +388,7 @@ new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,100*cm + chopper_z),
                   logicChopper, "Chop", logicWorld, false,
                   0, checkOverlaps);
 setBeginChopper((100*cm + chopper_z/(cm)) - chopper_thick/(cm)/2.);
+G4cout << "Beginning of Chopper set to: " << (100*cm + chopper_z/(cm)) - chopper_thick/(cm)/2. << G4endl;
 
 G4double PMT_rmin = 0*cm;
 G4cout << G4endl << "The PC Radius was set to " << PMT_rmax/(cm) << " cm" << G4endl;

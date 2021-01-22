@@ -144,6 +144,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                         run->AddCerenkovEnergy(secondaries->at(i)->GetKineticEnergy());
                                                         run->AddCerenkov();
                                                         event->AddCherenkov();
+                                                        if(isNRF)
+                                                        {
+                                                            event->AddNRF();    
+                                                        }
                                                 }
                                         }
                                 }

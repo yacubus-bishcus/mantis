@@ -66,6 +66,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             manager->FillNtupleDColumn(2,0,theTrack->GetKineticEnergy()/(MeV));
             manager->FillNtupleSColumn(2,1,endPoint->GetPhysicalVolume()->GetName());
             manager->FillNtupleIColumn(2,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+            NRF_loc = theTrack->GetPosition();
+            manager->FillNtupleDColumn(2,3, NRF_loc.z()/(cm));
             manager->AddNtupleRow(2);
           }
         }

@@ -78,6 +78,7 @@ RunAction* run;
 EventAction* event;
 G4OpBoundaryProcessStatus fExpectedNextStatus;
 G4String procCount;
+G4ThreeVector NRF_loc;
 
 G4int drawChopperDataFlag;
 G4int drawNRFDataFlag;

@@ -262,8 +262,8 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
     if(confirmation4)
     {
         chopOff->GetObject("NRFMatData", NRFMatDataOff);
-        CherenkovOff->AddFriend("NRFMatDataOff");
-        Int_t OffComp = CherenkovOff->Draw("EventID","EventID == NRFMatDataOff.EventID","goff");
+        CherenkovOff->AddFriend("NRFMatData");
+        Int_t OffComp = CherenkovOff->Draw("EventID","EventID == NRFMatData.EventID","goff");
         std::cout << "Total number of OFF NRF Entries: " << NRFMatDataOff->GetEntries() << std::endl;
         Int_t OffchopNRFEntries = NRFMatDataOff->Draw("Energy", "strstr(\"Chop\",Material)","goff");
         Int_t OffintObjNRFEntries = NRFMatDataOff->Draw("Energy", "strstr(\"IntObj\",Material)","goff");

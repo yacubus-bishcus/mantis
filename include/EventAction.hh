@@ -35,6 +35,12 @@ void AddCherenkov()
 {
   cherenkov_counter++;
 }
+
+void AddNRF()
+{
+  isNRF = 1;
+}
+
 void SetCherenkovDataFlag(G4int val)
 {
         drawCherenkovDataFlag = val;
@@ -43,6 +49,7 @@ void SetCherenkovDataFlag(G4int val)
 private:
 G4int tEvents;
 G4int cherenkov_counter;
+G4int isNRF;
 G4int drawCherenkovDataFlag;
 EventMessenger* eventM;
 };

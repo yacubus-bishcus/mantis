@@ -14,6 +14,7 @@ EventAction::~EventAction()
 void EventAction::BeginOfEventAction(const G4Event*)
 {
   cherenkov_counter = 0;
+  isNRF = 0;
 }
 
 void EventAction::EndOfEventAction(const G4Event* anEvent)
@@ -28,6 +29,7 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
           manager->FillNtupleDColumn(1,0, beam_energy/(MeV));
           manager->FillNtupleIColumn(1,1, cherenkov_counter);
           manager->FillNtupleIColumn(1,2, eventID);
+          manager->FillNtupleIColumn(1,3, isNRF);
           manager->AddNtupleRow(1);
         }
         

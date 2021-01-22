@@ -243,15 +243,18 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
     {
         chopOn->GetObject("NRFMatData", NRFMatData);
         Cherenkov->AddFriend("NRFMatData");
+        NRFMatData->AddFriend("Cherenkov");
         Int_t OnComp = Cherenkov->Draw("EventID","EventID == NRFMatData.EventID","goff");
+        Int_t OnComp2 = NRFMatData->Draw("EventID", "EventID == Cherenkov.EventID","goff");
         std::cout << "Total number of ON NRF Entries: " << NRFMatData->GetEntries() << std::endl;
         Int_t OnchopNRFEntries = NRFMatData->Draw("Energy", "strstr(\"Chop\",Material)","goff");
         Int_t OnintObjNRFEntries = NRFMatData->Draw("Energy", "strstr(\"IntObj\",Material)","goff");
         std::cout << "ON NRF Created in Chopper: " << OnchopNRFEntries << std::endl;
         std::cout << "ON NRF Created in Interrogation Object: " << OnintObjNRFEntries << std::endl;
-        if(OnComp > 0)
+        if(OnComp > 0 || OnComp2 > 0)
         {
             std::cout << "ON NRF Events that caused Cherenkov: " << OnComp << std::endl;
+            std::cout << "ON NRF Events that caused Cherenkov: " << OnComp2 << std::endl;
         }
         else
         {
@@ -263,15 +266,18 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
     {
         chopOff->GetObject("NRFMatData", NRFMatDataOff);
         CherenkovOff->AddFriend("NRFMatData");
+        NRFMatDataOff->AddFriend("Cherenkov");
         Int_t OffComp = CherenkovOff->Draw("EventID","EventID == NRFMatData.EventID","goff");
+        Int_t OffComp2 = NRFMatDataOff->Draw("EventID","EventID == Cherenkov.EventID","goff");
         std::cout << "Total number of OFF NRF Entries: " << NRFMatDataOff->GetEntries() << std::endl;
         Int_t OffchopNRFEntries = NRFMatDataOff->Draw("Energy", "strstr(\"Chop\",Material)","goff");
         Int_t OffintObjNRFEntries = NRFMatDataOff->Draw("Energy", "strstr(\"IntObj\",Material)","goff");
         std::cout << "OFF NRF Created in Chopper: " << OffchopNRFEntries << std::endl;
         std::cout << "OFF NRF Created in Interrogation Object: " << OffintObjNRFEntries << std::endl;
-        if(OffComp > 0)
+        if(OffComp > 0 || OffComp2 > 0)
         {
             std::cout << "OFF NRF Events that caused Cherenkov: " << OffComp << std::endl;
+            std::cout << "OFF NRF Events that caused Cherenkov: " << OffComp2 << std::endl;
         }
         else
         {

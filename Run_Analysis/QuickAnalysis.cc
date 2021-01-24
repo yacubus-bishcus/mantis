@@ -11,7 +11,6 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
     
     TFile *chopOn = new TFile(ChopOn);
     TFile *chopOff = new TFile(ChopOff);
-    bool confirmation = chopOn->cd();
     
     // Declare Variables 
     
@@ -52,7 +51,18 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
     // Interrogation Object Analysis
     double intObj_entries, intObj_sum, intObj_entries_off, intObj_sum_off;
     double nrf_intObj_entries, nrf_intObj_sum, nrf_intObj_entries_off, nrf_intObj_sum_off;
+    Int_t xmin, xmax;
+    std::vector<double> U235_min_resonances, U238_min_resonances;
+    U235_min_resonances.push_back(1.6562);
+    U235_min_resonances.push_back(1.7335);
+    U235_min_resonances.push_back(1.8152);
+    U235_min_resonances.push_back(1.8623);
+    U235_min_resonances.push_back(2.0033);
     
+    U238_min_resonances.push_back(1.7820);
+    U238_min_resonances.push_back(1.7930);
+    U238_min_resonances.push_back(1.8460);
+
     // Water Tank Analysis 
     double waterl_entries, waterl_sum, waterl_entries_off, waterl_sum_off;
     double waterh_entries, waterh_sum, waterh_entries_off, waterh_sum_off;
@@ -79,7 +89,7 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
     double det_z;
     
     // Variables Set, Complete Calculations 
-    
+    bool confirmation = chopOn->cd();
     if(confirmation)
     {
         // Get Objects from ON File 
@@ -105,6 +115,22 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
         intObj_sum = IncObj->Integral();
         nrf_intObj_entries = NRFIncObj->GetEntries();
         nrf_intObj_sum = NRFIncObj->Integral();
+        // Determine which Isotope NRF Energies are 
+        TAxis* xAxis = NRFIncObj->GetXaxis();
+        double nrf_intObjU235 = 0;
+        double nrf_intObjU238 = 0;
+        for(int i=0;i<U235_min_resonances.size();i++)
+        {
+          xmin = xAxis->FindBin(U235_min_resonances[i]);
+          xmax = xAxis->FindBin(U235_min_resonances[i] + 0.0001);
+          nrf_intObjU235 = nrf_intObjU235 + NRFIncObj->Integral(xmin,xmax);
+        }
+        for(int i=0;i<U238_min_resonances.size();i++)
+        {
+          xmin = xAxis->FindBin(U238_min_resonances[i]);
+          xmax = xAxis->FindBin(U238_min_resonances[i] + 0.0001);
+          nrf_intObjU238 = nrf_intObjU238 + NRFIncObj->Integral(xmin,xmax);
+        }      
         // Water Tank 
         waterl_entries = IncWaterLow->GetEntries();
         waterl_sum = IncWaterLow->Integral();
@@ -152,6 +178,21 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
         intObj_sum_off = IncObjOff->Integral();
         nrf_intObj_entries_off = NRFIncObjOff->GetEntries();
         nrf_intObj_sum_off = NRFIncObjOff->Integral();
+        TAxis* xAxisOff = NRFIncObjOff->GetXaxis();
+        double nrf_intObjU235Off = 0;
+        double nrf_intObjU238Off = 0;
+        for(int i=0;i<U235_min_resonances.size();i++)
+        {
+          xmin = xAxisOff->FindBin(U235_min_resonances[i]);
+          xmax = xAxisOff->FindBin(U235_min_resonances[i] + 0.0001);
+          nrf_intObjU235Off = nrf_intObjU235Off + NRFIncObjOff->Integral(xmin,xmax);
+        }
+        for(int i=0;i<U238_min_resonances.size();i++)
+        {
+          xmin = xAxisOff->FindBin(U238_min_resonances[i]);
+          xmax = xAxisOff->FindBin(U238_min_resonances[i] + 0.0001);
+          nrf_intObjU238Off = nrf_intObjU238Off + NRFIncObjOff->Integral(xmin,xmax);
+        } 
         // Water Tank 
         waterl_entries_off = IncWaterLowOff->GetEntries();
         waterl_sum_off = IncWaterLowOff->Integral();
@@ -199,12 +240,16 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
     // Interrogation Object Analysis 
     std::cout << "Interrogation Object Analysis..." << std::endl;
     std::cout << "*************************************" << std::endl << std::endl;
-    std::cout << "Chopper On Interrogation Object Entries: " << intObj_entries << " On Sum: " << intObj_sum << std::endl;
-    std::cout << "Chopper Off Interrogation Object Entries: " << intObj_entries_off << " Off Sum: " << intObj_sum_off << std::endl;
+    std::cout << "Chopper ON Interrogation Object Entries: " << intObj_entries << " On Sum: " << intObj_sum << std::endl;
+    std::cout << "Chopper OFF Interrogation Object Entries: " << intObj_entries_off << " Off Sum: " << intObj_sum_off << std::endl;
     std::cout << "Interrogation Object Z-test result: " << intObj_z << std::endl;
-    std::cout << "Chopper On Interrogation Object NRF Entries: " << nrf_intObj_entries << " On Sum: " << nrf_intObj_sum << std::endl;
-    std::cout << "Chopper Off Interrogation Object NRF Entries: " << nrf_intObj_entries_off << " Off Sum: " << nrf_intObj_sum_off << std::endl;
+    std::cout << "Chopper ON Interrogation Object NRF Entries: " << nrf_intObj_entries << " On Sum: " << nrf_intObj_sum << std::endl;
+    std::cout << "Chopper OFF Interrogation Object NRF Entries: " << nrf_intObj_entries_off << " Off Sum: " << nrf_intObj_sum_off << std::endl;
     std::cout << "Interrogation Object NRF Z-test result: " << nrfIntObj_z << std::endl;
+    std::cout << "Chopper ON Interrogation Object Incident U235 NRF sum: " << nrf_intObjU235 << std::endl;
+    std::cout << "Chopper ON Interrogation Object Incident U238 NRF sum: " << nrf_intObjU238 << std::endl;
+    std::cout << "Chopper OFF Interrogation Object Incident U235 NRF sum: " << nrf_intObjU235Off << std::endl;
+    std::cout << "Chopper OFF Interrogation Object Incident U238 NRF sum: " << nrf_intObjU238Off << std::endl;
     std::cout << "*************************************" << std::endl << std::endl;
     
     // Water Tank Analysis

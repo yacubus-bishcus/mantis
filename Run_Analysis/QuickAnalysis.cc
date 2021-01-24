@@ -52,6 +52,10 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
     double intObj_entries, intObj_sum, intObj_entries_off, intObj_sum_off;
     double nrf_intObj_entries, nrf_intObj_sum, nrf_intObj_entries_off, nrf_intObj_sum_off;
     Int_t xmin, xmax;
+    double nrf_intObjU235 = 0;
+    double nrf_intObjU238 = 0;
+    double nrf_intObjU235Off = 0;
+    double nrf_intObjU238Off = 0;
     std::vector<double> U235_min_resonances, U238_min_resonances;
     U235_min_resonances.push_back(1.6562);
     U235_min_resonances.push_back(1.7335);
@@ -117,8 +121,7 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
         nrf_intObj_sum = NRFIncObj->Integral();
         // Determine which Isotope NRF Energies are 
         TAxis* xAxis = NRFIncObj->GetXaxis();
-        double nrf_intObjU235 = 0;
-        double nrf_intObjU238 = 0;
+ 
         for(int i=0;i<U235_min_resonances.size();i++)
         {
           xmin = xAxis->FindBin(U235_min_resonances[i]);
@@ -179,8 +182,6 @@ void QuickAnalysis(const char *ChopOn, const char *ChopOff)
         nrf_intObj_entries_off = NRFIncObjOff->GetEntries();
         nrf_intObj_sum_off = NRFIncObjOff->Integral();
         TAxis* xAxisOff = NRFIncObjOff->GetXaxis();
-        double nrf_intObjU235Off = 0;
-        double nrf_intObjU238Off = 0;
         for(int i=0;i<U235_min_resonances.size();i++)
         {
           xmin = xAxisOff->FindBin(U235_min_resonances[i]);

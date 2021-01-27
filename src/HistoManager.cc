@@ -56,7 +56,8 @@ void HistoManager::Book(G4bool bremTest)
   
   // Create ID 0 Ntuple for Chopper Data 
   manager->CreateNtuple("ChopperData", "Chopper Wheel Incident Unweighted Energy Spectrum");
-  manager->CreateNtupleDColumn("ChopperData");
+  manager->CreateNtupleDColumn("Energy");
+  manager->CreateNtupleDColumn("Weight");
   manager->FinishNtuple();
   
   if(!bremTest)
@@ -64,37 +65,36 @@ void HistoManager::Book(G4bool bremTest)
       // Create ID 0,1 1D Histogram for Interogation Object Data
       manager->CreateH1("IncObj","Interrogation Object Incident Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
       manager->CreateH1("NRFIncObj", "Interrogation Object NRF Photons Incident Weighted Energy Spectrum",nbins,0.,xmax, "MeV");
-      // Create 2,3,4 1D Histogram for incident water data
+      // Create 2,3 1D Histogram for incident water data
       manager->CreateH1("NRFIncWater","Water Tank NRF Photons Incident Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
-      manager->CreateH1("IncWaterLow","Water Tank Incident Weighted Energy Spectrum < 1E-5 MeV", nbins, 0.,1E-5,"MeV");
-      manager->CreateH1("IncWaterHigh", "Water Tank Incident Weighted Energy Spectrum > 1E-5 MeV", nbins,1E-5, xmax, "MeV");
+      manager->CreateH1("IncWater", "Water Tank Incident Weighted Energy Spectrum", nbins,0., xmax, "MeV");
     
       // Create 1 Ntuple for cherenkov in water 
       manager->CreateNtuple("Cherenkov","Cherenkov Data");
       manager->CreateNtupleDColumn("BeamEnergy");
       manager->CreateNtupleIColumn("NumPhotons");
-      manager->CreateNtupleIColumn("EventID");
-      manager->CreateNtupleIColumn("NRF");
       manager->FinishNtuple();
 
-      // Create 5 and 6 histogram for incident Photocathode
-      manager->CreateH1("IncDetLow","Photocathode Incident Weighted Energy Spectrum < 1E-5 MeV",nbins,0.,1E-5,"MeV");
-      manager->CreateH1("IncDetHigh", "Photocathode Incident Weighted Energy Spectrum > 1E-5 MeV",nbins,1E-5, xmax, "MeV");
+      // Create 4 histogram for incident Photocathode
+      manager->CreateH1("IncDet", "Photocathode Incident Weighted Energy Spectrum",nbins,0., xmax, "MeV");
 
-      // Create 7 Histogram for Energy if detected
+      // Create 5 Histogram for Energy if detected
       manager->CreateH1("Detected","Photons Detected by Photocathode Weighted Energy Spectrum < 1E-5 MeV", nbins, 0., 1E-5, "MeV");
       
       // Create 2 Ntuple for NRF Materials 
       manager->CreateNtuple("NRFMatData","NRF Material vs Energy");
       manager->CreateNtupleDColumn("Energy");
       manager->CreateNtupleSColumn("Material");
-      manager->CreateNtupleIColumn("EventID");
       manager->CreateNtupleDColumn("location");
       manager->FinishNtuple();
     
       // Create 3 Ntuple for Reactions within detector
-      manager->CreateNtuple("DetPro","Processes that Occur at Photocathode Optical Surface");
-      manager->CreateNtupleSColumn("Process");
+      manager->CreateNtuple("DetInfo","Detected Information");
+      manager->CreateNtupleIColumn("EventID");
+      manager->CreateNtupleDcolumn("Energy");
+      manager->CreateNtupleDcolumn("Weight");
+      manager->CreateNtupleSColumn("CreatorProcess");
+      manager->CreateNtupleSColumn("DetectionProcess");
       manager->FinishNtuple();
   }
 

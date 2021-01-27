@@ -70,12 +70,11 @@ void SetDetDataFlag(G4int val)
 private:
 G4bool bremTest;
 G4double weight;
-int EventGeneratorParticle;
 float LowEnergyCutoff;
 const DetectorConstruction* local_det;
 RunAction* run;
 G4OpBoundaryProcessStatus fExpectedNextStatus;
-G4String procCount;
+G4String procCount, CPName;
 G4int drawChopperDataFlag, drawNRFDataFlag, drawIntObjDataFlag, drawWaterIncDataFlag, drawCherenkovDataFlag, drawDetDataFlag;
 StepMessenger* stepM;
 };

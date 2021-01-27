@@ -55,7 +55,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 // ************************************************* Checks and Cuts Complete ************************************************** //
 
   G4int isNRF = 0;
-  const G4String CPName = "none";
+  G4String CPName = "none";
   // Grab Weights from PrimaryGenerator
   eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
   weight = info->GetWeight();

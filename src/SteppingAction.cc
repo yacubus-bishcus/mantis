@@ -68,7 +68,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if(process->GetProcessName() == "NRF")
     {
       run->AddNRF();
-      std::cout << "trying to run NRF data" << std::endl;
       manager->FillNtupleIColumn(2,0, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
       manager->FillNtupleIColumn(2,1, theTrack->GetTrackID());
       manager->FillNtupleDColumn(2,2,theTrack->GetKineticEnergy()/(MeV));
@@ -90,7 +89,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   }
 
 // *********************************************** Track Chopper Interactions **************************************************** //
-  //std::cout << "Line 98" << std::endl;      
+   
   // Chopper Analysis
   if(drawChopperDataFlag)
   {
@@ -302,7 +301,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
               procCount = "noStatus";
             }
           } // for if opProc
-          std::cout << "line 321" << std::endl;
           // Keep track of Detector Data 
           if(drawDetDataFlag && !bremTest)
           {

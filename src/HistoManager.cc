@@ -106,8 +106,8 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtuple("DetInfo","Detected Information");
       manager->CreateNtupleIColumn("EventID");
       manager->CreateNtupleIColumn("TrackID");
-      manager->CreateNtupleDcolumn("Energy");
-      manager->CreateNtupleDcolumn("Weight");
+      manager->CreateNtupleDColumn("Energy");
+      manager->CreateNtupleDColumn("Weight");
       manager->CreateNtupleSColumn("CreatorProcess");
       manager->CreateNtupleSColumn("DetectionProcess");
       manager->CreateNtupleDColumn("Time");

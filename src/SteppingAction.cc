@@ -21,8 +21,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   G4StepPoint* endPoint   = aStep->GetPostStepPoint();
   G4StepPoint* startPoint = aStep->GetPreStepPoint();
-  G4String nextStep_VolumeName = endPoint->GetPhysicalVolume()->GetName();
-  G4String previousStep_VolumeName = startPoint->GetPhysicalVolume()->GetName();
   G4Track* theTrack = aStep->GetTrack();
      
   // Run Logical Checks
@@ -34,7 +32,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   {
     return;
   }
-
+        
+  G4String nextStep_VolumeName = endPoint->GetPhysicalVolume()->GetName();
+  G4String previousStep_VolumeName = startPoint->GetPhysicalVolume()->GetName();
   // kill photons past IntObj
   G4double EndIntObj = local_det->getEndIntObj();
 

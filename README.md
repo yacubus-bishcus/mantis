@@ -41,7 +41,16 @@ Mantis Input
 
 The User can manipulate the simulation in various ways through the mantis.in macro input file. For example the following line of code:
 `> ./mantis -m mantis.in -o test.root -s 1`
-would run mantis with the inputs found in mantis.in located in the mantis executable directory. The ouput would be found in test.root and would have a seed of 1. 
+would run mantis with the inputs found in mantis.in located in the mantis executable directory. The ouput would be found in test.root and would have a seed of 1.
+
+The command line input options and flags include:
+-m macro file
+-n addNRF -> IF set to false NRF Physics will be removed from physicsList! The default is set to true.
+-o output filename
+-p print standalone.dat file -> Calls G4NRF to print a file of NRF Energies (takes up to 15 min) not recommended for non-developers
+-s seed 
+-t testBrem -> For creating a bremsstrahlung beam to run Sampling.cc on for importance sampling input distribution  
+-v NRF Verbose 
 
 __Mandatory Inputs for mantis.in__
 

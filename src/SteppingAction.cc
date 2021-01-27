@@ -54,7 +54,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   std::cout << "Line 54" << std::endl;
 // ************************************************* Checks and Cuts Complete ************************************************** //
 
-  G4bool isNRF = false;
+  G4int isNRF = 0;
+  G4String CPName = "none";
   // Grab Weights from PrimaryGenerator
   eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
   weight = info->GetWeight();
@@ -89,7 +90,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if(CPName == "NRF")
     {
       std::cout << "trying to add isNRF" << std::endl;
-      isNRF = true;
+      isNRF = 1;
       //std::cout << "added nrf" << std::endl;
     }
   }

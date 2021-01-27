@@ -48,15 +48,17 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	}
 	for(int i=0;i<Evec.size();i++)
 	{
-	  if(Evec[i] < Emax)
+	  if(Evec[i] <= Emax)
 	  {
 	    Evec_above_threshold.push_back(Evec[i]);
 	  }
+	  std::cout << "Keeping energy: " << Evec_above_threshold[i] << std::endl;
 	}
 	
 	double maxNRF = *std::max_element(Evec_above_threshold.begin(), Evec_above_threshold.end());
 	double minNRF = *std::min_element(Evec_above_threshold.begin(), Evec_above_threshold.end());
-
+	std::cout << "Minimum NRF: " << minNRF << std::endl;
+	std::cout << "Maximum NRF Energy: " << maxNRF << std::endl;
 	double deltaE = 10.0e-6; // width of each important sampling region in MeV
 
 	Int_t nbins = (Emax-Emin)/(deltaE/2.0);

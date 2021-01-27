@@ -7,7 +7,6 @@
 #include "G4ThreeVector.hh"
 #include "G4OpBoundaryProcess.hh"
 #include "RunAction.hh"
-#include "EventAction.hh"
 #include "StackingAction.hh"
 #include "HistoManager.hh"
 #include "StepMessenger.hh"
@@ -35,7 +34,7 @@ class StepMessenger;
 class SteppingAction : public G4UserSteppingAction
 {
 public:
-SteppingAction(const DetectorConstruction*, RunAction*, EventAction*, G4bool);
+SteppingAction(const DetectorConstruction*, RunAction*, G4bool);
 virtual ~SteppingAction();
 
 // method from the base class
@@ -51,17 +50,21 @@ void SetNRFDataFlag(G4int val)
 {
   drawNRFDataFlag = val;
 }
-void SetIncidentDataFlag(G4int val){
-  drawIncFlag = val;
-}
-void SetDetDataFlag(G4int val){
-  drawDetFlag = val;
-}
-void SetIntObjDataFlag(G4int val){
+void SetIntObjDataFlag(G4int val)
+{
   drawIntObjDataFlag = val;
 }
-void SetIncWatDataFlag(G4int val){
+void SetWaterIncDataFlag(G4int val)
+{
   drawWaterIncDataFlag = val;
+}
+void SetCherenkovDataFlag(G4int val)
+{
+  drawCherenkovDataFlag = val;
+}
+void SetDetDataFlag(G4int val)
+{
+  drawDetDataFlag = val;
 }
 
 private:
@@ -69,21 +72,12 @@ G4bool bremTest;
 G4double weight;
 int EventGeneratorParticle;
 float LowEnergyCutoff;
-G4ThreeVector Xdet, Xdetected;
 const DetectorConstruction* local_det;
 RunAction* run;
-EventAction* event;
 G4OpBoundaryProcessStatus fExpectedNextStatus;
 G4String procCount;
-
-G4int drawChopperDataFlag;
-G4int drawNRFDataFlag;
-G4int drawIntObjDataFlag;
-G4int drawIncFlag;
-G4int drawDetFlag;
-G4int drawWaterIncDataFlag;
+G4int drawChopperDataFlag, drawNRFDataFlag, drawIntObjDataFlag, drawWaterIncDataFlag, drawCherenkovDataFlag, drawDetDataFlag;
 StepMessenger* stepM;
-
 };
 
 #endif

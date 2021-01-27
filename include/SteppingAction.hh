@@ -73,7 +73,7 @@ G4double weight;
 const DetectorConstruction* local_det;
 RunAction* run;
 G4OpBoundaryProcessStatus fExpectedNextStatus;
-G4String procCount, CPName;
+G4String procCount;
 G4int drawChopperDataFlag, drawNRFDataFlag, drawIntObjDataFlag, drawWaterIncDataFlag, drawCherenkovDataFlag, drawDetDataFlag;
 StepMessenger* stepM;
 };

@@ -326,16 +326,7 @@ std::cout << "line 227" << std::endl;
             manager->FillNtupleIColumn(4,1, theTrack->GetTrackID());
             manager->FillNtupleDColumn(4,2, theParticle->GetKineticEnergy()/(MeV));
             manager->FillNtupleDColumn(4,3, weight);
-            G4String creatorProcess;
-            if(theTrack->GetCreatorProcess() !=0)
-            {
-              creatorProcess = theTrack->GetCreatorProcess()->GetProcessName();     
-            }
-            else
-            {
-               creatorProcess = "none";     
-            }
-            manager->FillNtupleSColumn(4,4, creatorProcess);
+            manager->FillNtupleSColumn(4,4, "swag");
             manager->FillNtupleSColumn(4,5, procCount);
             manager->FillNtupleDColumn(4,6, theTrack->GetGlobalTime()); // time units is nanoseconds 
             manager->AddNtupleRow(4);

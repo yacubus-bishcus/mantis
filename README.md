@@ -51,8 +51,11 @@ The command line input options and flags include:
 `-o output filename`
 
 `-p print standalone.dat file` -> Calls G4NRF to print a file of NRF Energies (takes up to 15 min) not recommended for non-developers
+
 `-s seed` 
-`-t testBrem -> For creating a bremsstrahlung beam to run Sampling.cc on for importance sampling input distribution`
+
+`-t testBrem` -> For creating a bremsstrahlung beam to run Sampling.cc on for importance sampling input distribution
+
 `-v NRF Verbose` 
 
 __Mandatory Inputs for mantis.in__

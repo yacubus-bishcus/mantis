@@ -4,37 +4,56 @@ This program allows the user to run calorimetric NRF Cherenkov Detector cargo sc
 Mantis Output
 ==
 
-Eight(8) histograms are available upon user request: 
+Seven(7) histograms are available upon user request: 
 
-1. Weighted Interrogation Object Incident Data -> /output/myoutput IntObjData must be uncommented!
-2. Weighted NRF Photons Incident Interrogation Object -> /output/myouput NRFData must be uncommented!
-3. Weighted NRF Photons Incident Water Tank Data -> /output/myouput NRFData must be uncommented!
-4. Weighted Low Energy Incident Water Tank Data -> /output/myoutput WaterIncidentData must be uncommented!
- - Weighted energy spectrum of photons incident Water Tank < 1E-5 MeV
-5. Weighted High Energy Incident Water Tank Data -> /output/myoutput WaterIncidentData must be uncommented!
- - Weighted energy spectrum of photons incident Water Tank > 1E-5 MeV
-6. Weighted Low Energy Incident Photocathode Data -> /output/myoutput DetData must be uncommented!
- - Weighted energy spectrum of photons incident photocathode < 1E-5 MeV
-7. Weighted High Energy Incident Photocathode Data -> /output/myoutput DetData must be uncommented!
- - Weighted energy spectrum of photons incident photocathode > 1E-5 MeV
-8. Weighted Detected Energy Data -> /output/myoutput DetData must be uncommented!
+1. Weighted Interrogation Object Incident Energy Spectrum -> /output/myoutput IntObjData must be uncommented!
+2. Weighted NRF Photons Incident Interrogation Object Energy Spectrum -> /output/myouput NRFData must be uncommented!
+3. Weighted Interrogation Object Emission Energy Spectrum -> /output/myoutput IntObjData must be uncommented!
+4. Weighted Emitted NRF Photons from Interrogation Object Energy Spectrum -> /output/myoutput IntObjData must be uncommented!
+5. Weighted Incident Water Tank Energy Spectrum -> /output/myoutput WaterIncData must be uncommented!
+6. Weighted NRF Photons Incident Water Tank Data -> /output/myouput NRFData must be uncommented!
+7. Weighted Detected Energy Data -> /output/myoutput DetData must be uncommented!
  - Weighted energy spectrum of photons "detected" on photocathode includes Quantum efficiency!
 
-Additionally, four(4) ntuples(TTrees) are available upon user request:
+Additionally, five(5) ntuples(TTrees) are available upon user request:
 
-1. Incident Chopper Energy Data -> /output/myoutput ChopperData must be uncommented!
- - Unweighted Incident Chopper Energies 
+1. Incident Chopper Data -> /output/myoutput ChopData must be uncommented!
+ - Unweighted Incident Chopper Energies
+ - Weights 
+ - Event IDs
 
-2. Cherenkov Data -> /cherenkov/myoutput CherenkovData must be uncommented!
- - Event Beam Energy (unweighted)
- - Number of Photons Emitted in Event
+2. Emission Chopper Data -> /output/myoutput ChopData must be uncommented!
+ - Unweighted Incident Chopper Energies
+ - Weights 
+ - Event IDs
+ - isNRF 
+
+3. NRF Data -> /output/myoutput/ NRFData must be uncommented!
+ - Energy
+ - Weight
+ - Creation Material
+ - Z position 
  
-3. NRF Material Data -> /output/myouput/NRFData must be uncommented!
- - Particle NRF Energy (unweighted)
- - Name of Creation Physical Volume (chopper, IntObj, etc...)
+4. Cherenkov Data -> /output/myouput/ CherenkovData must be uncommented!
+ - Energy
+ - Weight
+ - Event IDs
+ - Track IDs
+ - Number of Secondaries in Step (Cherenkov and Scintillation)
+ - X Position 
+ - Y Position
+ - Z Position 
+ - Time
 
-4. Detector Process at PC Data -> /output/myoutput DetData must be uncommented!
- - Process that occurs at PC surface (absorbed, detected, reflected, etc.)
+5. Incident Photocathode Data -> /output/myoutput DetData must be uncommented!
+ - Event IDs
+ - Track IDs 
+ - Energy
+ - Weight
+ - Creator Process
+ - Detection Process
+ - Time 
+ 
 
 Mantis Input
 ==

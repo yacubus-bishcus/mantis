@@ -18,7 +18,7 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
-  std::cout << "Beginning stepping action..." << std::endl;
+  //std::cout << "Beginning stepping action..." << std::endl;
   G4StepPoint* endPoint   = aStep->GetPostStepPoint();
   G4StepPoint* startPoint = aStep->GetPreStepPoint();
   G4String nextStep_VolumeName = endPoint->GetPhysicalVolume()->GetName();
@@ -59,7 +59,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
   weight = info->GetWeight();
   G4AnalysisManager* manager = G4AnalysisManager::Instance();
-  std::cout << "Checks and cuts complete." << std::endl;
+  //std::cout << "Checks and cuts complete." << std::endl;
 // **************************************************** Track NRF Materials **************************************************** //
         
   // Keep track of Any NRF Created  
@@ -88,7 +88,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       isNRF = true;
     }
   }
-  std::cout << "checked nrf..." << std::endl;
+  //std::cout << "checked nrf..." << std::endl;
 // *********************************************** Track Chopper Interactions **************************************************** //
         
   // Chopper Analysis
@@ -103,6 +103,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             manager->FillNtupleDColumn(0,1, weight);
             manager->FillNtupleIColumn(0,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
             manager->AddNtupleRow(0);
+            std::cout << "added chopIn" << std::endl;
           }
           // Gammas Exiting Chopper Wheel 
           if(nextStep_VolumeName.compare(0,4,"Chop") != 0
@@ -114,6 +115,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             manager->FillNtupleIColumn(1,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
             manager->FillNtupleIColumn(1,3,isNRF);
             manager->AddNtupleRow(1);
+            std::cout << "added chopOut" << std::endl;
           }
   }
 
@@ -128,10 +130,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
        && theTrack->GetParticleDefinition() == G4Gamma::Definition())
     {
        manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
+       std::cout << "added intObjin" << std::endl;
        // NRF Incident Interrogation Object
        if(isNRF && drawNRFDataFlag)
        {
          manager->FillH1(1, theTrack->GetKineticEnergy()/(MeV), weight);
+         std::cout << "added NRF intObj" << std::endl;
        }
     }
     // Exiting Interrogation Object
@@ -140,10 +144,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
        && theTrack->GetParticleDefinition() == G4Gamma::Definition())
     {
       manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
+      std::cout << "Added intObjOut" << std::endl;
       // NRF Exiting Interrogation Object
       if(isNRF && drawNRFDataFlag)
       {
-        manager->FillH1(3, theTrack->GetKineticEnergy()/(MeV), weight);      
+        manager->FillH1(3, theTrack->GetKineticEnergy()/(MeV), weight);
+        std::cout << "added nrf emission intObj" << std::endl;
       }
     }
   }

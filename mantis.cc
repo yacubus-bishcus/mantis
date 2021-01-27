@@ -25,15 +25,16 @@
 
 // declare global variables
 G4long seed;
-G4String macro, root_output_name, gOutName, bremTest, standalone_in, verbose_in; 
+G4String macro, root_output_name, gOutName, bremTest, standalone_in, verbose_in, addNRF_in; 
 
 namespace
 {
-void PrintUsage()
-{
-        std::cerr << "Usage: " << std::endl;
-        std::cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false] [-p standalone=false] [-v NRF_Verbose=false]" << std::endl;
-}
+  void PrintUsage()
+  {
+    std::cerr << "Usage: " << std::endl;
+    std::cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true]" 
+              << std::endl;
+  }
 }
 
 int main(int argc,char **argv)
@@ -54,110 +55,106 @@ int main(int argc,char **argv)
 
   // Detect interactive mode (if no arguments) and define UI session
   //
-        G4UIExecutive* ui = 0;
+  G4UIExecutive* ui = 0;
 
-        if ( argc == 1 ) {
-          ui = new G4UIExecutive(argc, argv);
-        }
+  if ( argc == 1 ) {
+    ui = new G4UIExecutive(argc, argv);
+  }
 
-        // Evaluate Arguments
-        if ( argc > 13 )
-        {
-                PrintUsage();
-                return 1;
-        }
+  // Evaluate Arguments
+  if ( argc > 15 )
+  {
+    PrintUsage();
+    return 1;
+  }
 
-        for (G4int i=1; i<argc; i=i+2) {
-                if (G4String(argv[i]) == "-m") macro = argv[i+1];
-                else if (G4String(argv[i]) == "-s") seed = atoi(argv[i+1]);
-                else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];
-                else if (G4String(argv[i]) == "-t") bremTest = argv[i+1];
-                else if (G4String(argv[i]) == "-p") standalone_in = argv[i+1];
-                else if (G4String(argv[i]) == "-v") verbose_in = argv[i+1];
-                else
-                {
-                        PrintUsage();
-                        return 1;
-                }
-        }
+  for (G4int i=1; i<argc; i=i+2) 
+  {
+    if (G4String(argv[i]) == "-m") macro = argv[i+1];
+    else if (G4String(argv[i]) == "-s") seed = atoi(argv[i+1]);
+    else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];
+    else if (G4String(argv[i]) == "-t") bremTest = argv[i+1];
+    else if (G4String(argv[i]) == "-p") standalone_in = argv[i+1];
+    else if (G4String(argv[i]) == "-v") verbose_in = argv[i+1];
+    else if (G4String(argv[i]) == "-n") addNRF_in = argv[i+1];
+    else
+    {
+      PrintUsage();
+      return 1;
+    }
+  }
 
-        if(standalone_in == "True" || standalone_in == "true")
-        {
-          std::cout << "Standalone File Requested." << std::endl;
-          standalone = true;
-        }
-        if(verbose_in == "True" || verbose_in == "true")
-        {
-          std::cout << "NRF Verbose set to: " << verbose_in << std::endl;
-          NRF_Verbose = true;
-        }
-        std::string RootOutputFile = (std::string)root_output_name;
-        if(RootOutputFile.find(".root")<RootOutputFile.length()) {
-                gOutName=(std::string)RootOutputFile.substr(0, RootOutputFile.find(".root"));
-        }
-        else gOutName=(std::string)root_output_name;
+  if(standalone_in == "True" || standalone_in == "true")
+  {
+    std::cout << "Standalone File Requested." << std::endl;
+    standalone = true;
+  }
+  if(verbose_in == "True" || verbose_in == "true")
+  {
+    std::cout << "NRF Verbose set to: " << verbose_in << std::endl;
+    NRF_Verbose = true;
+  }
+  if(addNRF_in == "False" || addNRF_in == "false")
+  {
+    std::cout << "NRF Physics turned OFF!" << std::endl;
+  }
+  std::string RootOutputFile = (std::string)root_output_name;
+  if(RootOutputFile.find(".root")<RootOutputFile.length()) {
+          gOutName=(std::string)RootOutputFile.substr(0, RootOutputFile.find(".root"));
+  }
+  else gOutName=(std::string)root_output_name;
 
-        G4UImanager* UI = G4UImanager::GetUIpointer();
-        MySession* LoggedSession = new MySession;
-        if(! ui && macro != "vis_save.mac")
-        {
-          output = true;
-          UI->SetCoutDestination(LoggedSession);
-        }
-        // choose the Random engine
-        CLHEP::HepRandom::setTheEngine(new CLHEP::RanluxEngine);
-        CLHEP::HepRandom::setTheSeed(seed);
-        std::cout << "Seed set to: " << seed << std::endl;
+  G4UImanager* UI = G4UImanager::GetUIpointer();
+  MySession* LoggedSession = new MySession;
+  if(! ui && macro != "vis_save.mac")
+  {
+    output = true;
+    UI->SetCoutDestination(LoggedSession);
+  }
+  // choose the Random engine
+  CLHEP::HepRandom::setTheEngine(new CLHEP::RanluxEngine);
+  CLHEP::HepRandom::setTheSeed(seed);
+  std::cout << "Seed set to: " << seed << std::endl;
 
-        // construct the default run manager
-        G4RunManager* runManager = new G4RunManager;
-        if(bremTest == "True" || bremTest == "true")
-        {
-           std::cout << "Conducting Brem Test!" << std::endl;
-           brem = true;
-        }
-        // set mandatory initialization classes
-        DetectorConstruction* det = new DetectorConstruction(brem);
-        runManager->SetUserInitialization(det);
+  // construct the default run manager
+  G4RunManager* runManager = new G4RunManager;
+  if(bremTest == "True" || bremTest == "true")
+  {
+     std::cout << "Conducting Brem Test!" << std::endl;
+     brem = true;
+  }
+  // set mandatory initialization classes
+  DetectorConstruction* det = new DetectorConstruction(brem);
+  runManager->SetUserInitialization(det);
 
-        // Set up Physics List
-        physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
-        runManager->SetUserInitialization(thePL);
-        runManager->SetUserInitialization(new ActionInitialization(det, brem, output));
+  // Set up Physics List
+  physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
+  runManager->SetUserInitialization(thePL);
+  runManager->SetUserInitialization(new ActionInitialization(det, brem, output));
 
-        // Run manager initialized in macros
+  // Run manager initialized in macros
 #ifdef G4VIS_USE
-        G4VisManager* visManager = new G4VisExecutive();
-        visManager->Initialize();
-
-        G4TrajectoryDrawByParticleID *colorModel = new G4TrajectoryDrawByParticleID;
-        colorModel->Set("neutron", "cyan");
-        colorModel->Set("gamma", "green");
-        colorModel->Set("e-", "red");
-        colorModel->Set("e+", "blue");
-        colorModel->Set("proton", "yellow");
-        colorModel->SetDefault("gray");
-        visManager->RegisterModel(colorModel);
-        visManager->SelectTrajectoryModel(colorModel->Name());
+  G4VisManager* visManager = new G4VisExecutive();
+  visManager->Initialize();
 #endif
 
-if(! ui)
-{
-  G4String command = "/control/execute ";
-  UI->ApplyCommand(command+macro);
-}
-else
-{
-  // interactive mode
-  UI->ApplyCommand("/control/execute init_vis.mac");
-  ui->SessionStart();
-  delete ui;
-}
+  if(! ui)
+  {
+    G4String command = "/control/execute ";
+    UI->ApplyCommand(command+macro);
+  }
+  else
+  {
+    // interactive mode
+    UI->ApplyCommand("/control/execute init_vis.mac");
+    ui->SessionStart();
+    delete ui;
+  }
 
-if(ui || macro == "vis_save.mac")
-{
-  delete visManager;
-}
+  if(ui || macro == "vis_save.mac")
+  {
+    delete visManager;
+  }
 
   G4int stop_time = time(0);
   G4cout << "The MC took:\t\t" << stop_time - start_time << "s" <<G4endl;

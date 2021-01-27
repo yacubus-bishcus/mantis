@@ -77,7 +77,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       G4ThreeVector NRF_loc = theTrack->GetPosition();
       manager->FillNtupleDColumn(2,5, NRF_loc.z()/(cm));
       manager->AddNtupleRow(2);
-      std::cout << "added NRF data" << std::endl;
     }
   }
   // Check if Track is created by NRF 

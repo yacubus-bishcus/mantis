@@ -45,9 +45,12 @@ would run mantis with the inputs found in mantis.in located in the mantis execut
 
 The command line input options and flags include:
 `-m macro file`
-`-n addNRF -> IF set to false NRF Physics will be removed from physicsList! The default is set to true.`
+
+`-n addNRF` -> IF set to false NRF Physics will be removed from physicsList! The default is set to true.
+
 `-o output filename`
-`-p print standalone.dat file -> Calls G4NRF to print a file of NRF Energies (takes up to 15 min) not recommended for non-developers`
+
+`-p print standalone.dat file` -> Calls G4NRF to print a file of NRF Energies (takes up to 15 min) not recommended for non-developers
 `-s seed` 
 `-t testBrem -> For creating a bremsstrahlung beam to run Sampling.cc on for importance sampling input distribution`
 `-v NRF Verbose` 

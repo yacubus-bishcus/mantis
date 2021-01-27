@@ -51,7 +51,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     theTrack->SetTrackStatus(fStopAndKill);
     run->AddStatusKilled();
   }
-  std::cout << "Line 54" << std::endl;
+  //std::cout << "Line 54" << std::endl;
 // ************************************************* Checks and Cuts Complete ************************************************** //
 
   G4int isNRF = 0;
@@ -84,18 +84,18 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // Check if Track is created by NRF 
   if(theTrack->GetCreatorProcess() !=0)
   {
-    std::cout << "Trying CPName" << std::endl;
+    //std::cout << "Trying CPName" << std::endl;
     G4String CPName = theTrack->GetCreatorProcess()->GetProcessName();
     if(CPName == "NRF")
     {
-      std::cout << "trying to add isNRF" << std::endl;
+      //std::cout << "trying to add isNRF" << std::endl;
       isNRF = 1;
       //std::cout << "added nrf" << std::endl;
     }
   }
   //std::cout << "checked nrf..." << std::endl;
 // *********************************************** Track Chopper Interactions **************************************************** //
-  std::cout << "Line 98" << std::endl;      
+  //std::cout << "Line 98" << std::endl;      
   // Chopper Analysis
   if(drawChopperDataFlag)
   {
@@ -322,6 +322,7 @@ std::cout << "line 227" << std::endl;
           // Keep track of Detector Data 
           if(drawDetDataFlag && !bremTest)
           {
+            std::cout << "trying detected" << std::endl;
             manager->FillNtupleIColumn(4,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
             manager->FillNtupleIColumn(4,1, theTrack->GetTrackID());
             manager->FillNtupleDColumn(4,2, theParticle->GetKineticEnergy()/(MeV));
@@ -330,6 +331,7 @@ std::cout << "line 227" << std::endl;
             manager->FillNtupleSColumn(4,5, procCount);
             manager->FillNtupleDColumn(4,6, theTrack->GetGlobalTime()); // time units is nanoseconds 
             manager->AddNtupleRow(4);
+            std::cout << "added detected" << std::endl;
           }      
       } // for for loop
     } // for if statement if first time in photocathode

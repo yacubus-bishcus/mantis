@@ -55,7 +55,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 // ************************************************* Checks and Cuts Complete ************************************************** //
 
   G4int isNRF = 0;
-  G4String CPName = "none";
   // Grab Weights from PrimaryGenerator
   eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
   weight = info->GetWeight();
@@ -86,7 +85,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   if(theTrack->GetCreatorProcess() !=0)
   {
     std::cout << "Trying CPName" << std::endl;
-    CPName = theTrack->GetCreatorProcess()->GetProcessName();
+    G4String CPName = theTrack->GetCreatorProcess()->GetProcessName();
     if(CPName == "NRF")
     {
       std::cout << "trying to add isNRF" << std::endl;
@@ -327,7 +326,16 @@ std::cout << "line 227" << std::endl;
             manager->FillNtupleIColumn(4,1, theTrack->GetTrackID());
             manager->FillNtupleDColumn(4,2, theParticle->GetKineticEnergy()/(MeV));
             manager->FillNtupleDColumn(4,3, weight);
-            manager->FillNtupleSColumn(4,4, CPName);
+            G4String creatorProcess;
+            if(theTrack->GetCreatorProcess() !=0)
+            {
+              creatorProcess = theTrack->GetCreatorProcess()->GetProcessName();     
+            }
+            else
+            {
+               creatorProcess = "none";     
+            }
+            manager->FillNtupleSColumn(4,4, creatorProcess);
             manager->FillNtupleSColumn(4,5, procCount);
             manager->FillNtupleDColumn(4,6, theTrack->GetGlobalTime()); // time units is nanoseconds 
             manager->AddNtupleRow(4);

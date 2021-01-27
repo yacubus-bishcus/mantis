@@ -44,6 +44,7 @@ The User can manipulate the simulation in various ways through the mantis.in mac
 would run mantis with the inputs found in mantis.in located in the mantis executable directory. The ouput would be found in test.root and would have a seed of 1.
 
 The command line input options and flags include:
+
 `-m macro file`
 
 `-n addNRF` -> IF set to false NRF Physics will be removed from physicsList! The default is set to true.

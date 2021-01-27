@@ -48,7 +48,7 @@ void StepMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     else if(theCommand == "CherenkovData")
     {
       stepA->SetCherenkovDataFlag(1);
-      std::cout << "User Selected Incident Photocathode Data." <<std::endl;
+      std::cout << "User Selected Cherenkov Data." <<std::endl;
     }
     else if(theCommand == "DetData")
     {

@@ -81,6 +81,8 @@ void HistoManager::Book(G4bool bremTest)
       
       // Create ID 2 Ntuple for NRF Materials 
       manager->CreateNtuple("NRFMatData","NRF Material vs Energy");
+      manager->CreateNtupleIColumn("EventID");
+      manager->CreateNtupleIColumn("TrackID");
       manager->CreateNtupleDColumn("Energy");
       manager->CreateNtupleDColumn("Weight");
       manager->CreateNtupleSColumn("Material");

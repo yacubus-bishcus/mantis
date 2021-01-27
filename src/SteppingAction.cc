@@ -22,6 +22,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
         G4StepPoint* endPoint   = aStep->GetPostStepPoint();
         G4StepPoint* startPoint = aStep->GetPreStepPoint();
+        G4String nextStep_VolumeName = endPoint->GetPhysicalVolume()->GetName();
+        G4String previousStep_VolumeName = startPoint->GetPhysicalVolume()->GetName();
+        
         // Run Logical Checks
         if(endPoint == NULL) {
                 return; // at the end of the world
@@ -41,20 +44,22 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 theTrack->SetTrackStatus(fStopAndKill);
                 run->AddStatusKilled();
         }
-        else if(startPoint->GetPhysicalVolume()->GetName().compare(0, 3, "Col") == 0)
+        else if(nextStep_VolumeName.compare(0, 3, "Col") == 0)
         {
                 // kill photons in collimator
                 theTrack->SetTrackStatus(fStopAndKill);
                 run->AddStatusKilled();
         }
 
-// *********************** Checks and Cuts Complete ************************ //
+// ************************************************* Checks and Cuts Complete ************************************************** //
 
         G4bool isNRF = false;
         // Grab Weights from PrimaryGenerator
         eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
         weight = info->GetWeight();
         G4AnalysisManager* manager = G4AnalysisManager::Instance();
+
+// **************************************************** Track NRF Materials **************************************************** //
         
         // Keep track of the materials where NRF originates 
         if(drawNRFDataFlag)
@@ -65,13 +70,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             run->AddNRF();
             manager->FillNtupleDColumn(2,0,theTrack->GetKineticEnergy()/(MeV));
             manager->FillNtupleSColumn(2,1,endPoint->GetPhysicalVolume()->GetName());
-            manager->FillNtupleIColumn(2,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
             G4ThreeVector NRF_loc = theTrack->GetPosition();
-            manager->FillNtupleDColumn(2,3, NRF_loc.z()/(cm));
+            manager->FillNtupleDColumn(2,2, NRF_loc.z()/(cm));
             manager->AddNtupleRow(2);
           }
         }
-        
+        // Check if Track is created by NRF 
         if(theTrack->GetCreatorProcess() !=0)
         {
                 G4String CPName = theTrack->GetCreatorProcess()->GetProcessName();
@@ -81,52 +85,86 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 }
         }
 
-        // Testing Brem Beam Analysis
+// *********************************************** Track Chopper Interactions **************************************************** //
+        
+        // Chopper Analysis
         if(drawChopperDataFlag)
         {
-                if(endPoint->GetPhysicalVolume()->GetName().compare(0, 4,"Chop") == 0
-                   && startPoint->GetPhysicalVolume()->GetName().compare(0, 4, "Chop") != 0
+                // Gammas Incident Chopper Wheel 
+                if(nextStep_VolumeName.compare(0, 4,"Chop") == 0
+                   && previousStep_VolumeName.compare(0, 4, "Chop") != 0
                    && theTrack->GetParticleDefinition() == G4Gamma::Definition())
                 {
-                        manager->FillNtupleDColumn(0,0, theTrack->GetKineticEnergy()/(MeV)); // not weighting chopper
-                        manager->AddNtupleRow(0);
+                  manager->FillNtupleDColumn(0,0, theTrack->GetKineticEnergy()/(MeV)); // not weighting chopper
+                  manager->FillNtupleDColumn(0,1, weight);
+                  manager->FillNtupleIColumn(0,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+                  manager->AddNtupleRow(0);
+                }
+                // Gammas Exiting Chopper Wheel 
+                if(nextStep_VolumeName.compare(0,4,"Chop") != 0
+                   && previousStep_VolumeName.compare(0,4,"Chop") == 0
+                   && theTrack->GetParticleDefinition() == G4Gamma::Definition())
+                {
+                  manager->FillNtupleDColumn(1,0, theTrack->GetKineticEnergy()/(MeV));
+                  manager->FillNtupleDColumn(1,1, weight);
+                  manager->FillNtupleIColumn(1,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+                  manager->FillNtupleIColumn(1,3,isNRF);
+                  manager->AddNtupleRow(1);
                 }
         }
-        // Testing NRF Analysis
-        // inside Interogation Object for first time
+
+// *********************************************** Track Interrogation Object Interactions **************************************************** //
+        
+        // Interrogation Object Analysis 
         if(drawIntObjDataFlag && !bremTest)
         {
-                if(endPoint->GetPhysicalVolume()->GetName().compare(0, 6,"IntObj") == 0
-                   && startPoint->GetPhysicalVolume()->GetName().compare(0, 6, "IntObj") != 0)
+                // Incident Interrogation Object
+                if(nextStep_VolumeName.compare(0, 6,"IntObj") == 0
+                   && previousStep_VolumeName.compare(0, 6, "IntObj") != 0
+                   && theTrack->GetParticleDefinition() == G4Gamma::Definition())
                 {
                    manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
-                   
+                   // NRF Incident Interrogation Object
                    if(isNRF && drawNRFDataFlag)
                    {
                      manager->FillH1(1, theTrack->GetKineticEnergy()/(MeV), weight);
                    }
                 }
-        }
-
-        // Water Analysis
-        // First time incident Water keep track of NRF hitting water, low energy and high energy photons hitting water 
-        if(drawWaterIncDataFlag && !bremTest)
-        {
-                if(endPoint->GetPhysicalVolume()->GetName().compare(0, 5,"Water") == 0
-                   && startPoint->GetPhysicalVolume()->GetName().compare(0, 5, "Water") != 0)
+                // Exiting Interrogation Object
+                if(nextStep_VolumeName.compare(0, 6,"IntObj") != 0
+                   && previousStep_VolumeName.compare(0,6,"IntObj") == 0
+                   && theTrack->GetParticleDefinition() == G4Gamma::Definition())
                 {
+                  manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
+                  // NRF Exiting Interrogation Object
                   if(isNRF && drawNRFDataFlag)
                   {
-                    manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
+                    manager->FillH1(3, theTrack->GetKineticEnergy()/(MeV), weight);      
                   }
-                  if(theTrack->GetKineticEnergy()/(MeV) < 1E-5)
-                  {
-                    manager->FillH1(3, theTrack->GetKineticEnergy()/(MeV), weight);
-                  }
-                  else{manager->FillH1(4, theTrack->GetKineticEnergy()/(MeV), weight);}
                 }
         }
 
+// *********************************************** Track Water Tank Interactions **************************************************** //
+        
+        // Water Analysis
+        // First time incident Water keep track of NRF hitting water 
+        if(drawWaterIncDataFlag && !bremTest)
+        {
+                if(endPoint->GetPhysicalVolume()->GetName().compare(0, 5,"Water") == 0
+                   && startPoint->GetPhysicalVolume()->GetName().compare(0, 5, "Water") != 0
+                   && theTrack->GetParticleDefinition() == G4Gamma::Definition())
+                {
+                  manager->FillH1(4, theTrack->GetKineticEnergy()/(MeV),weight);
+                  // NRF Incident Water Tank 
+                  if(isNRF && drawNRFDataFlag)
+                  {
+                    manager->FillH1(5, theTrack->GetKineticEnergy()/(MeV), weight);
+                  }
+                }
+        }
+
+// *********************************************** Track Cherenkov Interactions **************************************************** //
+        
         // While in water keep track of cherenkov and pass number of cherenkov to EventAction
         if(startPoint->GetPhysicalVolume()->GetName().compare(0,5,"Water")==0) {
 
@@ -146,10 +184,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                         run->AddCerenkovEnergy(secondaries->at(i)->GetKineticEnergy());
                                                         run->AddCerenkov();
                                                         event->AddCherenkov();
-                                                        if(isNRF)
-                                                        {
-                                                            event->AddNRF();    
-                                                        }
                                                 }
                                         }
                                 }
@@ -158,6 +192,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
         } // end of if loop while inside water
 
+// *********************************************** Track Photocathode Interactions **************************************************** //
+        
         // Photocathode Analysis
 
         if(endPoint->GetStepStatus() == fGeomBoundary) {
@@ -172,7 +208,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 G4ProcessVector* postStepDoItVector =
                         OpManager->GetPostStepProcessVector(typeDoIt);
                 // incident photocathode Keep track of low and high energy photons incident Photocathode volume 
-                if(endPoint->GetPhysicalVolume()->GetName().compare(0,2,"PC")==0 && startPoint->GetPhysicalVolume()->GetName().compare(0,2,"PC")!=0) { // first time in photocathode
+                if(nextStep_VolumeName.compare(0,2,"PC")==0 
+                   && previousStep_VolumeName.compare(0,2,"PC")!=0) { // first time in photocathode
                         run->AddTotalSurface();
                         if(drawIncFlag && !bremTest)
                         {

@@ -18,6 +18,7 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
+  std::cout << "Beginning stepping action..." << std::endl;
   G4StepPoint* endPoint   = aStep->GetPostStepPoint();
   G4StepPoint* startPoint = aStep->GetPreStepPoint();
   G4String nextStep_VolumeName = endPoint->GetPhysicalVolume()->GetName();
@@ -58,7 +59,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
   weight = info->GetWeight();
   G4AnalysisManager* manager = G4AnalysisManager::Instance();
-
+  std::cout << "Checks and cuts complete." << std::endl;
 // **************************************************** Track NRF Materials **************************************************** //
         
   // Keep track of Any NRF Created  
@@ -87,7 +88,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       isNRF = true;
     }
   }
-
+  std::cout << "checked nrf..." << std::endl;
 // *********************************************** Track Chopper Interactions **************************************************** //
         
   // Chopper Analysis

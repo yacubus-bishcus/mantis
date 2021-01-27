@@ -27,41 +27,41 @@ void StepMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     G4String theCommand = newValue;
     if(theCommand == "ChopData")
     {
-            stepA->SetChopperDataFlag(1);
-            std::cout << "User Selected Chopper Data." << std::endl;
+      stepA->SetChopperDataFlag(1);
+      std::cout << "User Selected Chopper Data." << std::endl;
     }
     else if(theCommand == "NRFData")
     {
-            stepA->SetNRFDataFlag(1);
-            std::cout << "User Selected NRF Data." << std::endl;
+      stepA->SetNRFDataFlag(1);
+      std::cout << "User Selected NRF Data." << std::endl;
     }
     else if(theCommand == "IntObjData")
     {
-            stepA->SetIntObjDataFlag(1);
-            std::cout << "User Selected Interrogation Object Incident Data." << std::endl;
+      stepA->SetIntObjDataFlag(1);
+      std::cout << "User Selected Interrogation Object Incident Data." << std::endl;
     }
     else if(theCommand == "WaterIncData")
     {
-            stepA->SetWaterIncDataFlag(1);
-            std::cout << "User Selected Incident Water Data." <<std::endl;
+      stepA->SetWaterIncDataFlag(1);
+      std::cout << "User Selected Incident Water Data." <<std::endl;
     }
     else if(theCommand == "CherenkovData")
     {
-            stepA->SetCherenkovDataFlag(1);
-            std::cout << "User Selected Incident Photocathode Data." <<std::endl;
+      stepA->SetCherenkovDataFlag(1);
+      std::cout << "User Selected Incident Photocathode Data." <<std::endl;
     }
     else if(theCommand == "DetData")
     {
-            stepA->SetDetDataFlag(1);
-            std::cout << "User Selected Detected Data."<<std::endl;
+      stepA->SetDetDataFlag(1);
+      std::cout << "User Selected Detected Data."<<std::endl;
     }
     else if(theCommand == "none")
     {
-            G4cout << "No output requested." << G4endl;
+      G4cout << "No output requested." << G4endl;
     }
     else
     {
-            G4cerr << "ERROR: StepMessenger::SetStepInputValue Command not found." << G4endl;
+      G4cerr << "ERROR: StepMessenger::SetStepInputValue Command not found." << G4endl;
     }
 
   }

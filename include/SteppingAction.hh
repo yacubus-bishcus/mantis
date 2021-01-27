@@ -70,7 +70,6 @@ void SetDetDataFlag(G4int val)
 private:
 G4bool bremTest;
 G4double weight;
-float LowEnergyCutoff;
 const DetectorConstruction* local_det;
 RunAction* run;
 G4OpBoundaryProcessStatus fExpectedNextStatus;

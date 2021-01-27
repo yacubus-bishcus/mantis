@@ -69,6 +69,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if(process->GetProcessName() == "NRF")
     {
       run->AddNRF();
+      std::cout << "trying to run NRF data" << std::endl;
       manager->FillNtupleIColumn(2,0, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
       manager->FillNtupleIColumn(2,1, theTrack->GetTrackID());
       manager->FillNtupleDColumn(2,2,theTrack->GetKineticEnergy()/(MeV));
@@ -87,7 +88,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if(CPName == "NRF")
     {
       isNRF = true;
-      std::cout << "added nrf" << std::endl;
+      //std::cout << "added nrf" << std::endl;
     }
   }
   //std::cout << "checked nrf..." << std::endl;
@@ -117,7 +118,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       manager->FillNtupleIColumn(1,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
       manager->FillNtupleIColumn(1,3,isNRF);
       manager->AddNtupleRow(1);
-      std::cout << "added chopOut" << std::endl;
+      //std::cout << "added chopOut" << std::endl;
     }
   }
 

@@ -1,13 +1,12 @@
 #include "SteppingAction.hh"
 
-SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun, EventAction* localEvent, G4bool brem)
+SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun, G4bool brem)
         : G4UserSteppingAction(), drawChopperDataFlag(0), drawNRFDataFlag(0), drawIntObjDataFlag(0),
-        drawIncFlag(0), drawDetFlag(0), drawWaterIncDataFlag(0), stepM(NULL)
+        drawWaterIncFlag(0), drawCherenkovDataFlag(0), drawDetDataFlag(0), stepM(NULL)
 {
         stepM = new StepMessenger(this);
         local_det = det;
         fExpectedNextStatus = Undefined;
-        event = localEvent;
         run = localrun;
         bremTest = brem;
 }
@@ -174,17 +173,21 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       const std::vector<const G4Track*>* secondaries = aStep->GetSecondaryInCurrentStep();
       if(secondaries->size()>0) 
       {
-        manager->FillNtupleDColumn(3,0,theTrack->GetKineticEnergy()/(MeV));
-        manager->FillNtupleDColumn(3,1,weight);
-        manager->FillNtupleIColumn(3,2, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
-        manager->FillNtupleIColumn(3,3,theTrack->GetTrackID());
-        manager->FillNtupleIColumn(3,4, secondaries->size());
-        G4ThreeVector watLoc = theTrack->GetPosition();
-        manager->FillNtupleDColumn(3,5,watLoc.x()/(cm));
-        manager->FillNtupleDColumn(3,6,watLoc.y()/(cm));
-        manager->FillNtupleDColumn(3,7,watLoc.z()/(cm));
-        manager->FillNtupleDColumn(3,8,theTrack->GetGlobalTime());
-        manager->AddNtupleRow(3);
+        if(drawCherenkovDataFlag)
+        {
+          manager->FillNtupleDColumn(3,0,theTrack->GetKineticEnergy()/(MeV));
+          manager->FillNtupleDColumn(3,1,weight);
+          manager->FillNtupleIColumn(3,2, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+          manager->FillNtupleIColumn(3,3,theTrack->GetTrackID());
+          manager->FillNtupleIColumn(3,4, secondaries->size());
+          G4ThreeVector watLoc = theTrack->GetPosition();
+          manager->FillNtupleDColumn(3,5,watLoc.x()/(cm));
+          manager->FillNtupleDColumn(3,6,watLoc.y()/(cm));
+          manager->FillNtupleDColumn(3,7,watLoc.z()/(cm));
+          manager->FillNtupleDColumn(3,8,theTrack->GetGlobalTime());
+          manager->AddNtupleRow(3);     
+        }
+
         for(unsigned int i=0; i<secondaries->size(); ++i) 
         {
             if(secondaries->at(i)->GetParentID()>0) 

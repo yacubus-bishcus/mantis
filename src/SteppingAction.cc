@@ -2,7 +2,7 @@
 
 SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun, G4bool brem)
         : G4UserSteppingAction(), drawChopperDataFlag(0), drawNRFDataFlag(0), drawIntObjDataFlag(0),
-        drawWaterIncFlag(0), drawCherenkovDataFlag(0), drawDetDataFlag(0), stepM(NULL)
+        drawWaterIncDataFlag(0), drawCherenkovDataFlag(0), drawDetDataFlag(0), stepM(NULL)
 {
         stepM = new StepMessenger(this);
         local_det = det;
@@ -80,7 +80,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // Check if Track is created by NRF 
   if(theTrack->GetCreatorProcess() !=0)
   {
-    G4String CPName = theTrack->GetCreatorProcess()->GetProcessName();
+    CPName = theTrack->GetCreatorProcess()->GetProcessName();
     if(CPName == "NRF")
     {
       isNRF = true;

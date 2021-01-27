@@ -315,7 +315,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             }
             else
             {
-              creatorProcess = "NA";     
+              creatorProcess = "Beam";     
             }
             manager->FillNtupleSColumn(4,4, creatorProcess);
             manager->FillNtupleSColumn(4,5, procCount);

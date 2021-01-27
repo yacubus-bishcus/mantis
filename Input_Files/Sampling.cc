@@ -52,6 +52,9 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	  {
 	    Evec_above_threshold.push_back(Evec[i]);
 	  }
+	}
+	for(int i=0;i<Evec_above_threshold.size();i++)
+	{
 	  std::cout << "Keeping energy: " << Evec_above_threshold[i] << std::endl;
 	}
 	

@@ -126,14 +126,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
        && previousStep_VolumeName.compare(0, 6, "IntObj") != 0
        && theTrack->GetParticleDefinition() == G4Gamma::Definition())
     {
-       std::cout << "prior to intObjin" << std::endl;
        manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
-       std::cout << "added intObjin" << std::endl;
        // NRF Incident Interrogation Object
        if(isNRF && drawNRFDataFlag)
        {
          manager->FillH1(1, theTrack->GetKineticEnergy()/(MeV), weight);
-         std::cout << "added NRF intObj" << std::endl;
        }
     }
     // Exiting Interrogation Object
@@ -142,12 +139,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
        && theTrack->GetParticleDefinition() == G4Gamma::Definition())
     {
       manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
-      std::cout << "Added intObjOut" << std::endl;
       // NRF Exiting Interrogation Object
       if(isNRF && drawNRFDataFlag)
       {
         manager->FillH1(3, theTrack->GetKineticEnergy()/(MeV), weight);
-        std::cout << "added nrf emission intObj" << std::endl;
       }
     }
   }
@@ -311,7 +306,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           // Keep track of Detector Data 
           if(drawDetDataFlag && !bremTest)
           {
-            std::cout << "trying detected" << std::endl;
             manager->FillNtupleIColumn(4,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
             manager->FillNtupleIColumn(4,1, theTrack->GetTrackID());
             manager->FillNtupleDColumn(4,2, theParticle->GetKineticEnergy()/(MeV));
@@ -320,7 +314,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             //manager->FillNtupleSColumn(4,5, procCount);
             //manager->FillNtupleDColumn(4,6, theTrack->GetGlobalTime()); // time units is nanoseconds 
             manager->AddNtupleRow(4);
-            std::cout << "added detected" << std::endl;
           }      
       } // for for loop
     } // for if statement if first time in photocathode

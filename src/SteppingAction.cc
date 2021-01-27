@@ -24,7 +24,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4String nextStep_VolumeName = endPoint->GetPhysicalVolume()->GetName();
   G4String previousStep_VolumeName = startPoint->GetPhysicalVolume()->GetName();
   G4Track* theTrack = aStep->GetTrack();
-        
+  std::cout << "Line 27" << std::endl;      
   // Run Logical Checks
   if(endPoint == NULL) 
   {
@@ -51,7 +51,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     theTrack->SetTrackStatus(fStopAndKill);
     run->AddStatusKilled();
   }
-
+  std::cout << "Line 54" << std::endl;
 // ************************************************* Checks and Cuts Complete ************************************************** //
 
   G4bool isNRF = false;
@@ -84,16 +84,18 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // Check if Track is created by NRF 
   if(theTrack->GetCreatorProcess() !=0)
   {
+    std::cout << "Trying CPName" << std::endl;
     CPName = theTrack->GetCreatorProcess()->GetProcessName();
     if(CPName == "NRF")
     {
+      std::cout << "trying to add isNRF" << std::endl;
       isNRF = true;
       //std::cout << "added nrf" << std::endl;
     }
   }
   //std::cout << "checked nrf..." << std::endl;
 // *********************************************** Track Chopper Interactions **************************************************** //
-        
+  std::cout << "Line 98" << std::endl;      
   // Chopper Analysis
   if(drawChopperDataFlag)
   {
@@ -121,7 +123,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       //std::cout << "added chopOut" << std::endl;
     }
   }
-
+std::cout << "Line 126" << std::endl;
 // *********************************************** Track Interrogation Object Interactions **************************************************** //
         
   // Interrogation Object Analysis 
@@ -157,7 +159,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       }
     }
   }
-
+std::cout << "Line 162" << std::endl;
 // *********************************************** Track Water Tank Interactions **************************************************** //
 
   // Water Analysis
@@ -176,7 +178,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       }
     }
   }
-
+std::cout << "Line 181" << std::endl;
 // *********************************************** Track Cherenkov Interactions **************************************************** //
         
   // While in water keep track of cherenkov and pass number of cherenkov to EventAction
@@ -222,7 +224,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         }
       } // end of optical photons if statement
   } // end of if loop while inside water
-
+std::cout << "line 227" << std::endl;
 // *********************************************** Track Photocathode Interactions **************************************************** //
         
     // Photocathode Analysis
@@ -316,6 +318,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
               procCount = "noStatus";
             }
           } // for if opProc
+          std::cout << "line 321" << std::endl;
           // Keep track of Detector Data 
           if(drawDetDataFlag && !bremTest)
           {
@@ -331,4 +334,5 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       } // for for loop
     } // for if statement if first time in photocathode
   } // for if at boundary
+  std::cout << "Line 337" << std::endl;
 } // end of user steepping action function

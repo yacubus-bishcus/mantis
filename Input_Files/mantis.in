@@ -84,13 +84,12 @@
 #/material/verbose false
 
 /run/initialize
-#/cherenkov/myoutput CherenkovData
-#/output/myoutput NRFData
 
-#/output/myoutput ChopperData
+#/output/myoutput ChopData
+#/output/myoutput NRFData
 #/output/myoutput IntObjData
-#/output/myoutput WaterIncidentData
-#/output/myoutput DetIncidentData
+#/output/myoutput WaterIncData
+#/output/myoutput CherenkovData
 #/output/myoutput DetData
 
 #################################################################################################

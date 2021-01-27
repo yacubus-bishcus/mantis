@@ -4,16 +4,16 @@ SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* local
         : G4UserSteppingAction(), drawChopperDataFlag(0), drawNRFDataFlag(0), drawIntObjDataFlag(0),
         drawWaterIncDataFlag(0), drawCherenkovDataFlag(0), drawDetDataFlag(0), stepM(NULL)
 {
-        stepM = new StepMessenger(this);
-        local_det = det;
-        fExpectedNextStatus = Undefined;
-        run = localrun;
-        bremTest = brem;
+  stepM = new StepMessenger(this);
+  local_det = det;
+  fExpectedNextStatus = Undefined;
+  run = localrun;
+  bremTest = brem;
 }
 
 SteppingAction::~SteppingAction()
 {
-        delete stepM;
+  delete stepM;
 }
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
@@ -77,6 +77,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       G4ThreeVector NRF_loc = theTrack->GetPosition();
       manager->FillNtupleDColumn(2,4, NRF_loc.z()/(cm));
       manager->AddNtupleRow(2);
+      std::cout << "added NRF data" << std::endl;
     }
   }
   // Check if Track is created by NRF 
@@ -86,6 +87,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if(CPName == "NRF")
     {
       isNRF = true;
+      std::cout << "added nrf" << std::endl;
     }
   }
   //std::cout << "checked nrf..." << std::endl;
@@ -94,29 +96,29 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // Chopper Analysis
   if(drawChopperDataFlag)
   {
-          // Gammas Incident Chopper Wheel 
-          if(nextStep_VolumeName.compare(0, 4,"Chop") == 0
-             && previousStep_VolumeName.compare(0, 4, "Chop") != 0
-             && theTrack->GetParticleDefinition() == G4Gamma::Definition())
-          {
-            manager->FillNtupleDColumn(0,0, theTrack->GetKineticEnergy()/(MeV)); // not weighting chopper
-            manager->FillNtupleDColumn(0,1, weight);
-            manager->FillNtupleIColumn(0,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
-            manager->AddNtupleRow(0);
-            std::cout << "added chopIn" << std::endl;
-          }
-          // Gammas Exiting Chopper Wheel 
-          if(nextStep_VolumeName.compare(0,4,"Chop") != 0
-             && previousStep_VolumeName.compare(0,4,"Chop") == 0
-             && theTrack->GetParticleDefinition() == G4Gamma::Definition())
-          {
-            manager->FillNtupleDColumn(1,0, theTrack->GetKineticEnergy()/(MeV));
-            manager->FillNtupleDColumn(1,1, weight);
-            manager->FillNtupleIColumn(1,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
-            manager->FillNtupleIColumn(1,3,isNRF);
-            manager->AddNtupleRow(1);
-            std::cout << "added chopOut" << std::endl;
-          }
+    // Gammas Incident Chopper Wheel 
+    if(nextStep_VolumeName.compare(0, 4,"Chop") == 0
+       && previousStep_VolumeName.compare(0, 4, "Chop") != 0
+       && theTrack->GetParticleDefinition() == G4Gamma::Definition())
+    {
+      manager->FillNtupleDColumn(0,0, theTrack->GetKineticEnergy()/(MeV)); // not weighting chopper
+      manager->FillNtupleDColumn(0,1, weight);
+      manager->FillNtupleIColumn(0,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+      manager->AddNtupleRow(0);
+      //std::cout << "added chopIn" << std::endl;
+    }
+    // Gammas Exiting Chopper Wheel 
+    if(nextStep_VolumeName.compare(0,4,"Chop") != 0
+       && previousStep_VolumeName.compare(0,4,"Chop") == 0
+       && theTrack->GetParticleDefinition() == G4Gamma::Definition())
+    {
+      manager->FillNtupleDColumn(1,0, theTrack->GetKineticEnergy()/(MeV));
+      manager->FillNtupleDColumn(1,1, weight);
+      manager->FillNtupleIColumn(1,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+      manager->FillNtupleIColumn(1,3,isNRF);
+      manager->AddNtupleRow(1);
+      std::cout << "added chopOut" << std::endl;
+    }
   }
 
 // *********************************************** Track Interrogation Object Interactions **************************************************** //
@@ -129,6 +131,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
        && previousStep_VolumeName.compare(0, 6, "IntObj") != 0
        && theTrack->GetParticleDefinition() == G4Gamma::Definition())
     {
+       std::cout << "prior to intObjin" << std::endl;
        manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
        std::cout << "added intObjin" << std::endl;
        // NRF Incident Interrogation Object

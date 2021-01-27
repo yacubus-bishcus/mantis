@@ -29,6 +29,8 @@ Additionally, five(5) ntuples(TTrees) are available upon user request:
  - isNRF 
 
 3. NRF Data -> /output/myoutput/ NRFData must be uncommented!
+ - Event IDs
+ - Track IDs
  - Energy
  - Weight
  - Creation Material

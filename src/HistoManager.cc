@@ -54,47 +54,63 @@ void HistoManager::Book(G4bool bremTest)
     G4cout << "HistoManager::Book() Opened!" << G4endl;
   }
   
-  // Create ID 0 Ntuple for Chopper Data 
-  manager->CreateNtuple("ChopperData", "Chopper Wheel Incident Unweighted Energy Spectrum");
+  // Create ID 0 Ntuple for Incident Chopper Data 
+  manager->CreateNtuple("ChopIn", "Chopper Wheel Incident Data");
   manager->CreateNtupleDColumn("Energy");
   manager->CreateNtupleDColumn("Weight");
+  manager->CreateNtupleIColumn("EventID");
+  manager->FinishNtuple();
+  // Create ID 1 Ntuple for Exiting Chopper Data
+  manager->CreateNtuple("ChopOut", "Chopper Wheel Exiting Radiation Data");
+  manager->CreateNtupleDColumn("Energy");
+  manager->CreateNtupleDColumn("Weight");
+  manager->CreateNtupleIColumn("EventID");
+  manager->CreateNtupleIColumn("isNRF");
   manager->FinishNtuple();
   
   if(!bremTest)
   {
-      // Create ID 0,1 1D Histogram for Interogation Object Data
-      manager->CreateH1("IncObj","Interrogation Object Incident Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
-      manager->CreateH1("NRFIncObj", "Interrogation Object NRF Photons Incident Weighted Energy Spectrum",nbins,0.,xmax, "MeV");
-      // Create 2,3 1D Histogram for incident water data
-      manager->CreateH1("NRFIncWater","Water Tank NRF Photons Incident Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
-      manager->CreateH1("IncWater", "Water Tank Incident Weighted Energy Spectrum", nbins,0., xmax, "MeV");
-    
-      // Create 1 Ntuple for cherenkov in water 
-      manager->CreateNtuple("Cherenkov","Cherenkov Data");
-      manager->CreateNtupleDColumn("BeamEnergy");
-      manager->CreateNtupleIColumn("NumPhotons");
-      manager->FinishNtuple();
-
-      // Create 4 histogram for incident Photocathode
-      manager->CreateH1("IncDet", "Photocathode Incident Weighted Energy Spectrum",nbins,0., xmax, "MeV");
-
-      // Create 5 Histogram for Energy if detected
-      manager->CreateH1("Detected","Photons Detected by Photocathode Weighted Energy Spectrum < 1E-5 MeV", nbins, 0., 1E-5, "MeV");
+      // Create ID 0,1,2,3 1D Histogram for Interogation Object Data
+      manager->CreateH1("IntObjIn","Interrogation Object Incident Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
+      manager->CreateH1("NRFIntObjIn", "Interrogation Object NRF Photons Incident Weighted Energy Spectrum",nbins,0.,xmax, "MeV");
+      manager->CreateH1("IntObjOut", "Interrogation Object Exiting Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
+      manager->CreateH1("NRFIntObjOut", "Interrogation Object NRF Photons Exiting Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
+      // Create ID 4,5 1D Histogram for incident water data
+      manager->CreateH1("WaterIn", "Water Tank Incident Weighted Energy Spectrum", nbins,0., xmax, "MeV");
+      manager->CreateH1("NRFWaterIn","Water Tank NRF Photons Incident Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
       
-      // Create 2 Ntuple for NRF Materials 
+      // Create ID 2 Ntuple for NRF Materials 
       manager->CreateNtuple("NRFMatData","NRF Material vs Energy");
       manager->CreateNtupleDColumn("Energy");
       manager->CreateNtupleSColumn("Material");
-      manager->CreateNtupleDColumn("location");
+      manager->CreateNtupleDColumn("ZPos");
       manager->FinishNtuple();
     
-      // Create 3 Ntuple for Reactions within detector
+      // Create ID 3 Ntuple for cherenkov in water 
+      manager->CreateNtuple("Cherenkov","Cherenkov in Water Data");
+      manager->CreateNtupleDColumn("BeamEnergy");
+      manager->CreateNtupleDColumn("Weight");
+      manager->CreateNtupleIColumn("EventID");
+      manager->CreateNtupleIColumn("TrackID");
+      manager->CreateNtupleIColumn("NumSecondaries");
+      manager->CreateNtupleDColumn("XPos");
+      manager->CreateNtupleDColumn("YPos");
+      manager->CreateNtupleDColumn("ZPos");
+      manager->CreateNtupleDColumn("Time");
+      manager->FinishNtuple();
+
+      // Create 6 Histogram for Energy if detected
+      manager->CreateH1("Detected","Photons Detected by Photocathode Weighted Energy Spectrum", nbins, 0., 2.1, "MeV");
+    
+      // Create ID 4 Ntuple for Reactions within detector
       manager->CreateNtuple("DetInfo","Detected Information");
       manager->CreateNtupleIColumn("EventID");
+      manager->CreateNtupleIColumn("TrackID");
       manager->CreateNtupleDcolumn("Energy");
       manager->CreateNtupleDcolumn("Weight");
       manager->CreateNtupleSColumn("CreatorProcess");
       manager->CreateNtupleSColumn("DetectionProcess");
+      manager->CreateNtupleDColumn("Time");
       manager->FinishNtuple();
   }
 

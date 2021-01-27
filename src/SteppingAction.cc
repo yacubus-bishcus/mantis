@@ -172,26 +172,39 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   if(startPoint->GetPhysicalVolume()->GetName().compare(0,5,"Water")==0) {
       // only care about secondaries that occur in water volume
       const std::vector<const G4Track*>* secondaries = aStep->GetSecondaryInCurrentStep();
-      if(secondaries->size()>0) {
-          for(unsigned int i=0; i<secondaries->size(); ++i) {
-              if(secondaries->at(i)->GetParentID()>0) {
-                  if(secondaries->at(i)->GetDynamicParticle()->GetParticleDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) 
-                  {
-                      if(secondaries->at(i)->GetCreatorProcess()->GetProcessName() == "Scintillation") 
-                      {
-                        run->AddScintillationEnergy(secondaries->at(i)->GetKineticEnergy());
-                        run->AddScintillation();
-                      }
-                      if(secondaries->at(i)->GetCreatorProcess()->GetProcessName() == "Cerenkov") 
-                      {
-                        // for total run
-                        run->AddCerenkovEnergy(secondaries->at(i)->GetKineticEnergy());
-                        run->AddCerenkov();
-                        event->AddCherenkov();
-                      }
-                  }
-              }
-          }
+      if(secondaries->size()>0) 
+      {
+        manager->FillNtupleDColumn(3,0,theTrack->GetKineticEnergy()/(MeV));
+        manager->FillNtupleDColumn(3,1,weight);
+        manager->FillNtupleIColumn(3,2, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+        manager->FillNtupleIColumn(3,3,theTrack->GetTrackID());
+        manager->FillNtupleIColumn(3,4, secondaries->size());
+        G4ThreeVector watLoc = theTrack->GetPosition();
+        manager->FillNtupleDColumn(3,5,watLoc.x()/(cm));
+        manager->FillNtupleDColumn(3,6,watLoc.y()/(cm));
+        manager->FillNtupleDColumn(3,7,watLoc.z()/(cm));
+        manager->FillNtupleDColumn(3,8,theTrack->GetGlobalTime());
+        manager->AddNtupleRow(3);
+        for(unsigned int i=0; i<secondaries->size(); ++i) 
+        {
+            if(secondaries->at(i)->GetParentID()>0) 
+            {
+                if(secondaries->at(i)->GetDynamicParticle()->GetParticleDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) 
+                {
+                    if(secondaries->at(i)->GetCreatorProcess()->GetProcessName() == "Scintillation") 
+                    {
+                      run->AddScintillationEnergy(secondaries->at(i)->GetKineticEnergy());
+                      run->AddScintillation();
+                    }
+                    if(secondaries->at(i)->GetCreatorProcess()->GetProcessName() == "Cerenkov") 
+                    {
+                      // for total run
+                      run->AddCerenkovEnergy(secondaries->at(i)->GetKineticEnergy());
+                      run->AddCerenkov();
+                    }
+                }
+            }
+        }
       } // end of optical photons if statement
   } // end of if loop while inside water
 
@@ -216,10 +229,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
        && theTrack->GetParticleDefinition() == G4Gamma::Definition()) 
       {
         run->AddTotalSurface();
-        if(drawIncDetFlag && !bremTest)
-        {
-          manager->FillH1(5, theParticle->GetKineticEnergy()/(MeV), weight);
-        }
 
         for (G4int i=0; i<MAXofPostStepLoops; ++i) 
         {
@@ -295,14 +304,14 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           // Keep track of Detector Data 
           if(drawDetDataFlag && !bremTest)
           {
-            manager->FillNtupleIColumn(3,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
-            manager->FillNtupleIColumn(3,1, theTrack->GetTrackID());
-            manager->FillNtupleDColumn(3,2, theParticle->GetKineticEnergy()/(MeV));
-            manager->FillNtupleDColumn(3,3, weight);
-            manager->FillNtupleSColumn(3,4, CPName);
-            manager->FillNtupleSColumn(3,5, procCount);
-            manager->FillNtupleDColumn(3,6, theTrack->GetGlobalTime()); // time units is nanoseconds 
-            manager->AddNtupleRow(3);
+            manager->FillNtupleIColumn(4,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+            manager->FillNtupleIColumn(4,1, theTrack->GetTrackID());
+            manager->FillNtupleDColumn(4,2, theParticle->GetKineticEnergy()/(MeV));
+            manager->FillNtupleDColumn(4,3, weight);
+            manager->FillNtupleSColumn(4,4, CPName);
+            manager->FillNtupleSColumn(4,5, procCount);
+            manager->FillNtupleDColumn(4,6, theTrack->GetGlobalTime()); // time units is nanoseconds 
+            manager->AddNtupleRow(4);
           }      
       } // for for loop
     } // for if statement if first time in photocathode

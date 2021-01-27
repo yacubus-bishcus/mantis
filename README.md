@@ -12,7 +12,7 @@ Seven(7) histograms are available upon user request:
 4. Weighted Emitted NRF Photons from Interrogation Object Energy Spectrum -> /output/myoutput IntObjData must be uncommented!
 5. Weighted Incident Water Tank Energy Spectrum -> /output/myoutput WaterIncData must be uncommented!
 6. Weighted NRF Photons Incident Water Tank Data -> /output/myouput NRFData must be uncommented!
-7. Weighted Detected Energy Data -> /output/myoutput DetData must be uncommented!
+7. Weighted Detected Energy Data
  - Weighted energy spectrum of photons "detected" on photocathode includes Quantum efficiency!
 
 Additionally, five(5) ntuples(TTrees) are available upon user request:

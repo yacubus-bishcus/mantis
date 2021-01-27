@@ -82,13 +82,14 @@ void HistoManager::Book(G4bool bremTest)
       // Create ID 2 Ntuple for NRF Materials 
       manager->CreateNtuple("NRFMatData","NRF Material vs Energy");
       manager->CreateNtupleDColumn("Energy");
+      manager->CreateNtupleDColumn("Weight");
       manager->CreateNtupleSColumn("Material");
       manager->CreateNtupleDColumn("ZPos");
       manager->FinishNtuple();
     
       // Create ID 3 Ntuple for cherenkov in water 
       manager->CreateNtuple("Cherenkov","Cherenkov in Water Data");
-      manager->CreateNtupleDColumn("BeamEnergy");
+      manager->CreateNtupleDColumn("Energy");
       manager->CreateNtupleDColumn("Weight");
       manager->CreateNtupleIColumn("EventID");
       manager->CreateNtupleIColumn("TrackID");

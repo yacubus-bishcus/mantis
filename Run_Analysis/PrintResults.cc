@@ -1,3 +1,22 @@
+//
+// ************************************************************************************************ //
+// ************************************************************************************************ //
+// To Run File:
+// root -b -q 'PrintResults.cc("test", "testOff", true)'
+// ************************************************************************************************ //
+// ************************************************************************************************ //
+// File Explanation:
+//
+// Requires 3 inputs 
+// 1. Chopper On Filename 
+// 2. Chopper Off Filename
+// 3. Check Bool if Weighted Histogram contains EventCheck Data
+// 
+// This File Scans the Weighted Histogram File. 
+// This file prints to terminal all histogram 
+// entries, weighted sums, and Z-Scores.
+//
+
 void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
 {
 

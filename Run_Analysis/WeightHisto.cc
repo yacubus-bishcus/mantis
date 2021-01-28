@@ -1,4 +1,4 @@
-void WeightHisto(const char *InputFilenameBase, const char *OutputFilenameBase, double Emax, bool chopState)
+void WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
 {
     std::string InFile = InputFilenameBase;
     std::string InFileEvent = InputFilenameBase;
@@ -153,7 +153,7 @@ void WeightHisto(const char *InputFilenameBase, const char *OutputFilenameBase, 
     // Write Weighted Histograms to File
     // ******************************************************************************************************************************** //
     
-    std::string FinalOutName = OutputFilenameBase;
+    std::string FinalOutName = InputFilenameBase;
     FinalOutName = FinalOutName + "_WeightedHistogram";
     if(chopState)
     {
@@ -176,7 +176,6 @@ void WeightHisto(const char *InputFilenameBase, const char *OutputFilenameBase, 
     wCher_NRF_to_Cher->Write();
     wNRF_NRF_to_Cher_to_Det->Write();
     wCher_NRF_to_Cher_to_Det->Write();
-    
-    std::cout << "Weighted Histograms saved to: " << OutputFilename << std::endl;
-    
+    fout->Close();
+    std::cout << "Weighted Histograms saved to: " << OutputFilename << std::endl;  
 }

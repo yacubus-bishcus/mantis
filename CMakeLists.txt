@@ -61,6 +61,7 @@ Analysis.cc
 Cherenkov.cc
 WeightHisto.cc
 EventCheck.cc
+PrintResults.cc
 stitch.sh
 )
 

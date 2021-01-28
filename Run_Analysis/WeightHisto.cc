@@ -24,14 +24,14 @@ void WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     TFile *f1 = TFile::Open(InputFilenameEvent);
     TFile *f2 = TFile::Open(InputFilenameCher);
     
-    TTree *ChopIn, *ChopOut, *NRFMatData, *Cherenkov, *DetInfo;
+    TTree *ChopIn, *ChopOut, *NRFMatData, *DetInfo;
     TTree *nrf_to_cher_tree, *nrf_to_cher_to_det_tree;
+    TH1D *Cherenkov;
     Int_t nbins = 100000;
     
     TH1D *wChopIn = new TH1D("wChopIn","Weighted Chopper Incident",nbins,0.,Emax);
     TH1D *wChopOut = new TH1D("wChopOut","Weighted Chopper Emission",nbins,0.,Emax);
     TH1D *wNRF = new TH1D("wNRF","Weighted NRF",nbins,0.,Emax);
-    TH1D *wCherenkov = new TH1D("wCherenkov","Weighted Cherenkov",nbins,0.,Emax);
     TH1D *wDet = new TH1D("wDet","Weighted Detector",nbins,0.,Emax);
     TH1D *wNRF_NRF_to_Cher = new TH1D("wNRF_NRF_to_Cher","Weighted NRF Spectrum that Lead to Cherenkov",nbins, 0., Emax);
     TH1D *wCher_NRF_to_Cher = new TH1D("wCher_NRF_to_Cher","Weighted Cherenkov Spectrum caused by NRF",nbins,0.,Emax);

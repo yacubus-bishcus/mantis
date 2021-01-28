@@ -28,7 +28,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase)
   // Histograms from Added Weighted Histograms File
   TH1D *ChopInOn, *ChopInOff, *ChopOutOn, *ChopOutOff;
   TH1D *NRFMat, *NRFMatOff;
-  TH1D *Cherenkov, *CherenkovOff;
+  TH1D *CherenkovOn, *CherenkovOff;
   TH1D *DetData, *DetDataOff;
   TH1D *wNRF_NRF_to_Cher, *wNRF_NRF_to_CherOff, *wCher_NRF_to_Cher, *wCher_NRF_to_CherOff;
   TH1D *wNRF_NRF_to_Cher_to_Det, *wNRF_NRF_to_Cher_to_DetOff, *wCher_NRF_to_Cher_to_Det, *wCher_NRF_to_Cher_to_DetOff;

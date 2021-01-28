@@ -1,4 +1,4 @@
-void WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
+bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
 {
     std::string InFile = InputFilenameBase;
     std::string InFileEvent = InputFilenameBase;
@@ -194,4 +194,5 @@ void WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     }
     fout->Close();
     std::cout << "Weighted Histograms saved to: " << OutputFilename << std::endl;  
+    return check;
 }

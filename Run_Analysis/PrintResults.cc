@@ -21,7 +21,9 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase)
   TFile *AdOffFile = new TFile(adOff);
   
   // Histograms from OG
-  TH1D *IntObjInOn, *IntObjOutOn, *IntObjInOff, *IntObjOutOff, *IntNRFInOn, *IntNRFOutOn, *IntNRFInOff, *IntNRFOutOff, *WaterInOn, *WaterInOff, *WaterNRFOn, *WaterNRFOff, *DetOn, *DetOff;
+  TH1D *IntObjInOn, *IntObjOutOn, *IntObjInOff, *IntObjOutOff, *IntNRFInOn, *IntNRFOutOn, *IntNRFInOff, *IntNRFOutOff;
+  TH1D *WaterInOn, *WaterInOff, *WaterNRFOn, *WaterNRFOff;
+  TH1D *DetOn, *DetOff;
     
   // Histograms from Added Weighted Histograms File
   TH1D *ChopInOn, *ChopInOff, *ChopOutOn, *ChopOutOff;

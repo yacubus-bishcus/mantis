@@ -14,8 +14,13 @@
 // 
 // This File takes the TTree from the input file and merges cherenkov events based on the event ID
 // The Max energy for a given event is recorded along with that energy's weight
-// The script create a new root file with a TTree with the following structure
-//
+// The script create a new root file with the Following Structure:
+// TFile**		test_CherenkovMergedOn.root	
+// TFile*		test_CherenkovMergedOn.root	
+//  KEY: TTree	Merged;1	Cherenkov Events Merged
+//  KEY: TH1D	wCher;1	Cherenkov Weighted Energy
+
+
 void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
 {
     std::string InFile = InputFilenameBase;
@@ -35,6 +40,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     TH1D *wCher = new TH1D("wCher","Cherenkov Weighted Energy",10000,0.,Emax);
     
     f->GetObject("Cherenkov",Cherenkov);
+    Cherenkov->SetEstimate(-1);
     Int_t numEntries = Cherenkov->Draw("EventID","","goff");
     Double_t *eventID = Cherenkov->GetVal(0);
     std::string theCutString;
@@ -45,6 +51,10 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     Int_t n = 0;
     Int_t nSum = 0;
     TCut c1;
+    
+    // ******************************************************************************************************************************** //
+    // Variables Declared Objects Set up
+    // ******************************************************************************************************************************** //
     
     for(int i=0;i<numEntries;i++)
     {
@@ -83,7 +93,10 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
         }
     } // end of for loop
     
-    // Fill new TTree
+    // ******************************************************************************************************************************** //
+    // Fill New Tree
+    // ******************************************************************************************************************************** //
+    
     for(int i=0;i<events.size();i++)
     {
         EventID = events[i];
@@ -96,6 +109,10 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     }
     
     std::cout << "Cherenkov Number of Merged Events: " << events.size() << std::endl;
+    
+    // ******************************************************************************************************************************** //
+    // Write Data to file 
+    // ******************************************************************************************************************************** //
     
     if(events.size() > 0)
     {

@@ -304,6 +304,8 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   }
   
   // Z Test Results
+  std::cout << std::endl << "Z-Score Summary..." << std::endl;
+  std::cout << "*************************************" << std::endl << std::endl;
   std::cout << "Cherenkov Incident Z-Score: " << cherenkov_in_z << std::endl;
   std::cout << "Cherenkov Emission Z-Score: " << cherenkov_out_z << std::endl;
   std::cout << "Interrogation Object Incident Z-Score: " << IntObj_in_z << std::endl;

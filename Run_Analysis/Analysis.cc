@@ -7,8 +7,11 @@ void Analysis(const char* InputFilenameBaseOn, const char* InputFilenameBaseOff,
 {
     std::cout << "Weighting histograms, Checking Events, and Merging Cherenkov!" << std::endl;
     std::string inFileOn = InputFilenameBaseOn;
+    std::string inFileOff = InputFilenameBaseOff;
     inFileOn = inFileOn + ".root";
+    inFileOff = inFileOff + ".root";
     const char* InputFilenameOn = inFileOn.c_str();
+    const char* InputFilenameOff = inFileOff.c_str();
     // Chopper On
     WeightHisto(InputFilenameOn, OutputFilenameBase, Emax, true);
     EventCheck(InputFilenameOn, OutputFilenameBase, true);
@@ -18,6 +21,6 @@ void Analysis(const char* InputFilenameBaseOn, const char* InputFilenameBaseOff,
     EventCheck(InputFilenameOff, OutputFilenameBase, false);
     Cherenkov(InputFilenameOff, OutputFilenameBase, Emax, false);
     
-    PrintResults(InputFilenameOn, InputFilenameOff);
+    PrintResults(InputFilenameBaseOn, InputFilenameBaseOff);
     std::cout << std::endl << "Analysis Complete" << std::endl;
 }

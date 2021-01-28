@@ -74,6 +74,8 @@ void Cherenkov(const char *InputFilename, const char *OutputFilenameBase, double
         
     }
     
+    std::cout << "Cherenkov Number of Merged Events: " << events.size() << std::endl;
+    
     if(events.size() > 0)
     {
         std::string FinalOutFilename = OutputFilenameBase;
@@ -92,5 +94,6 @@ void Cherenkov(const char *InputFilename, const char *OutputFilenameBase, double
         newCherenkov->Write();
         wCher->Write();
         std::cout << "Cherenkov Merged Event Data saved to: " << OutputFilename << std::endl;
+        fout->Close();
     }
 }

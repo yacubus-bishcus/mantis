@@ -13,6 +13,7 @@ void EventCheck(const char *InputFilenameBase, const char *OutFilenameBase, bool
     std::vector<int> cherEventv, nrfEventv, detEventv, nrf_to_cherEvents, cher_to_detEvents, nrf_to_detEvents;
     std::vector<double> cher_to_detEnergies, cher_to_detWeights, cher_to_detTimes;
     std::vector<double> nrf_to_detEnergies, nrf_to_detWeights, nrf_to_detTimes;
+    std::vector<double> nrfEnergyv, nrfWeightv, cherEnergyv, cherWeightv;
     double nrfE,nrfW, cherE, cherW, a, energyNRF, energyCher, weightNRF, weightCher, timeNRF, timeCher;
     int x, nrf_cher_EventID, index;
     
@@ -148,7 +149,7 @@ void EventCheck(const char *InputFilenameBase, const char *OutFilenameBase, bool
             cher_to_detTimes.push_back(time[index]);
         }
         // Check to see if NRF Event ID matches Det Event ID
-        auto exists = std::find(nrfEventv.begin(),nrfEventv.end(),x);
+        exists = std::find(nrfEventv.begin(),nrfEventv.end(),x);
         if(exists != nrfEventv.end())
         {
             index = exists - nrfEventv.begin();

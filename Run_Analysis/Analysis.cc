@@ -48,7 +48,7 @@ void Analysis(const char* InputFilenameBaseOn,
     std::cout << std::endl << "Off File Added Weighted Histograms!" << std::endl;
     if(checkOn && checkOff)
     {
-      tcheck = true
+      tcheck = true;
     }
     PrintResults(InputFilenameBaseOn, InputFilenameBaseOff, tcheck);
     std::cout << std::endl << "Analysis Complete" << std::endl;

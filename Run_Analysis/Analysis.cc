@@ -31,21 +31,25 @@ void Analysis(const char* InputFilenameBaseOn,
               double Emax)
 {
     std::cout << "Merging Cherenkov, Checking Events, and Writing Weighted Histograms!" << std::endl;
-
+    bool tcheck = false;
     // Chopper On
     Cherenkov(InputFilenameBaseOn, Emax, true);
     std::cout << std::endl << "On File Cherenkov Merged!" << std::endl;
     EventCheck(InputFilenameBaseOn, true);
     std::cout << std::endl << "On File Events Checked!" << std::endl;
-    WeightHisto(InputFilenameBaseOn, Emax, true);
+    bool checkOn = WeightHisto(InputFilenameBaseOn, Emax, true);
     std::cout << std::endl << "On File Added Weighted Histograms!" << std::endl;
     // Chopper Off
     Cherenkov(InputFilenameBaseOff, Emax, false);
     std::cout << std::endl << "Off File Cherenkov Merged!" << std::endl;
     EventCheck(InputFilenameBaseOff, false);
     std::cout << std::endl << "Off File Events Checked!" << std::endl;
-    WeightHisto(InputFilenameBaseOff, Emax, false);
+    bool checkOff = WeightHisto(InputFilenameBaseOff, Emax, false);
     std::cout << std::endl << "Off File Added Weighted Histograms!" << std::endl;
-    PrintResults(InputFilenameBaseOn, InputFilenameBaseOff);
+    if(checkOn && checkOff)
+    {
+      tcheck = true
+    }
+    PrintResults(InputFilenameBaseOn, InputFilenameBaseOff, tcheck);
     std::cout << std::endl << "Analysis Complete" << std::endl;
 }

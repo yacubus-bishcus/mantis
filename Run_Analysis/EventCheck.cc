@@ -47,9 +47,12 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     // Grab objects
     f1->cd();
     f1->GetObject("Merged",Cherenkov);
+    Cherenkov->Print();
     f->cd();
     f->GetObject("NRFMatData",NRF);
+    NRF->Print();
     f->GetObject("DetInfo",DetData);
+    DetData->Print();
     
     // ******************************************************************************************************************************** //
     // Variables Declared Objects Set up

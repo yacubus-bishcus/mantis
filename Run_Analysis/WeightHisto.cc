@@ -3,6 +3,7 @@ void WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     std::string InFile = InputFilenameBase;
     std::string InFileEvent = InputFilenameBase;
     std::string InFileCherMerged = InputFilenameBase;
+    bool check = true;
     
     if(chopState)
     {
@@ -44,8 +45,17 @@ void WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     f->GetObject("NRFMatData",NRFMatData);
     f->GetObject("DetInfo",DetInfo);
     f1->cd();
-    f1->GetObject("nrf_to_cher_tree",nrf_to_cher_tree);
-    f1->GetObject("nrf_to_cher_to_det_tree",nrf_to_cher_to_det_tree);
+    try
+    {
+      f1->GetObject("nrf_to_cher_tree",nrf_to_cher_tree);
+      f1->GetObject("nrf_to_cher_to_det_tree",nrf_to_cher_to_det_tree);
+      throw 100;
+    }
+    catch(int e)
+    {
+      std::cout << "Event Check File is Empty." << std::endl;
+      check = false;
+    }
     f2->cd();
     f2->GetObject("wCher",Cherenkov);
 
@@ -53,9 +63,11 @@ void WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     ChopOut->SetEstimate(-1);
     NRFMatData->SetEstimate(-1);
     DetInfo->SetEstimate(-1);
-    nrf_to_cher_tree->SetEstimate(-1);
-    nrf_to_cher_to_det_tree->SetEstimate(-1);
-    
+    if(check)
+    {
+        nrf_to_cher_tree->SetEstimate(-1);
+        nrf_to_cher_to_det_tree->SetEstimate(-1);
+    }
     // ******************************************************************************************************************************** //
     // Variables Declared Objects Set up
     // ******************************************************************************************************************************** //
@@ -112,43 +124,44 @@ void WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     // ******************************************************************************************************************************** //
     // Fill NRF that Lead to Cherenkov Weighted Histogram for NRF Energies and Cherenkov Energies
     // ******************************************************************************************************************************** //
-    
-    Int_t n5 = nrf_to_cher_tree->Draw("NRF_Energy:NRF_Weight","","goff");
-    Double_t *nrfcherNRFEnergy = nrf_to_cher_tree->GetVal(0);
-    Double_t *nrfcherNRFWeight = nrf_to_cher_tree->GetVal(1);
-    for(int i=0;i<n5;i++)
+    if(check)
     {
-        wNRF_NRF_to_Cher->Fill(nrfcherNRFEnergy[i], nrfcherNRFWeight[i]);
+        Int_t n5 = nrf_to_cher_tree->Draw("NRF_Energy:NRF_Weight","","goff");
+        Double_t *nrfcherNRFEnergy = nrf_to_cher_tree->GetVal(0);
+        Double_t *nrfcherNRFWeight = nrf_to_cher_tree->GetVal(1);
+        for(int i=0;i<n5;i++)
+        {
+            wNRF_NRF_to_Cher->Fill(nrfcherNRFEnergy[i], nrfcherNRFWeight[i]);
+        }
+
+        Int_t n6 = nrf_to_cher_tree->Draw("Cher_Energy:Cher_Weight","","goff");
+        Double_t *nrfcherCherEnergy = nrf_to_cher_tree->GetVal(0);
+        Double_t *nrfcherCherWeight = nrf_to_cher_tree->GetVal(1);
+        for(int i=0;i<n6;i++)
+        {
+            wCher_NRF_to_Cher->Fill(nrfcherCherEnergy[i], nrfcherCherWeight[i]);
+        }
+
+        // ******************************************************************************************************************************** //
+        // Fill NRF that Lead to Cherenkov that Lead to Detection Weighted Histogram for NRF Energies and Cherenkov Energies
+        // ******************************************************************************************************************************** //
+
+        Int_t n7 = nrf_to_cher_tree->Draw("EnergyNRF:WeightNRF","","goff");
+        Double_t *nrfcherdetNRFEnergy = nrf_to_cher_tree->GetVal(0);
+        Double_t *nrfcherdetNRFWeight = nrf_to_cher_tree->GetVal(1);
+        for(int i=0;i<n7;i++)
+        {
+            wNRF_NRF_to_Cher_to_Det->Fill(nrfcherdetNRFEnergy[i], nrfcherdetNRFWeight[i]);
+        }
+
+        Int_t n8 = nrf_to_cher_tree->Draw("EnergyCher:WeightCher","","goff");
+        Double_t *nrfcherdetCherEnergy = nrf_to_cher_tree->GetVal(0);
+        Double_t *nrfcherdetCherWeight = nrf_to_cher_tree->GetVal(1);
+        for(int i=0;i<n8;i++)
+        {
+            wCher_NRF_to_Cher_to_Det->Fill(nrfcherdetCherEnergy[i], nrfcherdetCherWeight[i]);
+        }
     }
-    
-    Int_t n6 = nrf_to_cher_tree->Draw("Cher_Energy:Cher_Weight","","goff");
-    Double_t *nrfcherCherEnergy = nrf_to_cher_tree->GetVal(0);
-    Double_t *nrfcherCherWeight = nrf_to_cher_tree->GetVal(1);
-    for(int i=0;i<n6;i++)
-    {
-        wCher_NRF_to_Cher->Fill(nrfcherCherEnergy[i], nrfcherCherWeight[i]);
-    }
-    
-    // ******************************************************************************************************************************** //
-    // Fill NRF that Lead to Cherenkov that Lead to Detection Weighted Histogram for NRF Energies and Cherenkov Energies
-    // ******************************************************************************************************************************** //
-    
-    Int_t n7 = nrf_to_cher_tree->Draw("EnergyNRF:WeightNRF","","goff");
-    Double_t *nrfcherdetNRFEnergy = nrf_to_cher_tree->GetVal(0);
-    Double_t *nrfcherdetNRFWeight = nrf_to_cher_tree->GetVal(1);
-    for(int i=0;i<n7;i++)
-    {
-        wNRF_NRF_to_Cher_to_Det->Fill(nrfcherdetNRFEnergy[i], nrfcherdetNRFWeight[i]);
-    }
-    
-    Int_t n8 = nrf_to_cher_tree->Draw("EnergyCher:WeightCher","","goff");
-    Double_t *nrfcherdetCherEnergy = nrf_to_cher_tree->GetVal(0);
-    Double_t *nrfcherdetCherWeight = nrf_to_cher_tree->GetVal(1);
-    for(int i=0;i<n8;i++)
-    {
-        wCher_NRF_to_Cher_to_Det->Fill(nrfcherdetCherEnergy[i], nrfcherdetCherWeight[i]);
-    }
-    
     // ******************************************************************************************************************************** //
     // Write Weighted Histograms to File
     // ******************************************************************************************************************************** //
@@ -172,10 +185,13 @@ void WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     wNRF->Write();
     Cherenkov->Write();
     wDet->Write();
-    wNRF_NRF_to_Cher->Write();
-    wCher_NRF_to_Cher->Write();
-    wNRF_NRF_to_Cher_to_Det->Write();
-    wCher_NRF_to_Cher_to_Det->Write();
+    if(check)
+    {
+        wNRF_NRF_to_Cher->Write();
+        wCher_NRF_to_Cher->Write();
+        wNRF_NRF_to_Cher_to_Det->Write();
+        wCher_NRF_to_Cher_to_Det->Write();
+    }
     fout->Close();
     std::cout << "Weighted Histograms saved to: " << OutputFilename << std::endl;  
 }

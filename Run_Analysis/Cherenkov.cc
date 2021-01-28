@@ -1,3 +1,22 @@
+//
+// ************************************************************************************************ //
+// ************************************************************************************************ //
+// To Run File:
+// root -b -q 'Cherenkov.cc("test.root","test", 2.1, true)'
+// ************************************************************************************************ //
+// ************************************************************************************************ //
+// File Explanation:
+//
+// Requires 4 inputs 
+// 1. InputFilename
+// 2. OutputFilenameBase
+// 3. Max Energy of Bremsstrahlung Interrogation Beam
+// 4. InputFile Chopper State 
+// 
+// This File takes the TTree from the input file and merges cherenkov events based on the event ID
+// The Max energy for a given event is recorded along with that energy's weight
+// The script create a new root file with a TTree with the following structure
+//
 void Cherenkov(const char *InputFilename, const char *OutputFilenameBase, double Emax, bool ChopState)
 {
     TFile *f = TFile::Open(InputFilename);

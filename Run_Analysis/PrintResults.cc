@@ -39,6 +39,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   double cherenkov_in_z, cherenkov_out_z;
   double IntObj_in_z, IntObj_out_z, IntObj_nrf_in_z, IntObj_nrf_out_z;
   double water_in_z, water_nrf_z, cher_z, det_z;
+  double wNRFCher_to_NRF_to_det_z, wCherCher_to_NRF_to_det_z, wNRFCher_to_NRF_z, wCherCher_to_NRF_z, inc_det_z;
 
   // ******************************************************************************************************************************** //
   // Variables Declared Objects Set up
@@ -191,7 +192,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   weighted_sum2 = DetDataOff->Integral();
   std::cout << "OFF Entries: " << entries << " and sum: " << weighted_sum2 << std::endl;
 
-  double inc_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
+  inc_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
 
   // ******************************************************************************************************************************** //
   // Quick Detected Analysis from Original File
@@ -245,8 +246,8 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
     entries = wCher_NRF_to_CherOff->GetEntries();
     weighted_sum4 = wCher_NRF_to_CherOff->Integral();
     std::cout << "Cherenkov OFF Entries: " << entries << " and sum: " << weighted_sum4 << std::endl;
-    double wNRFCher_to_NRF_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
-    double wCherCher_to_NRF_z = abs(weighted_sum3 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum3),2) + pow(sqrt(weighted_sum4),2)));
+    wNRFCher_to_NRF_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
+    wCherCher_to_NRF_z = abs(weighted_sum3 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum3),2) + pow(sqrt(weighted_sum4),2)));
 
   // ******************************************************************************************************************************** //
   // Quick NRF to Cherenkov to Detected Analysis from Added Histograms File
@@ -278,8 +279,8 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
     entries = wCher_NRF_to_CherOff->GetEntries();
     weighted_sum4 = wCher_NRF_to_CherOff->Integral();
     std::cout << "Cherenkov OFF Entries: " << entries << " and sum: " << weighted_sum4 << std::endl;
-    double wNRFCher_to_NRF_to_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
-    double wCherCher_to_NRF_to_det_z = abs(weighted_sum3 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum3),2) + pow(sqrt(weighted_sum4),2)));
+    wNRFCher_to_NRF_to_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
+    wCherCher_to_NRF_to_det_z = abs(weighted_sum3 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum3),2) + pow(sqrt(weighted_sum4),2)));
   }
   
   // Z Test Results

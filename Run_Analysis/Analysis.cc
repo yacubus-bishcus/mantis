@@ -3,9 +3,12 @@
 #include "Cherenkov.cc"
 #include "PrintResults.cc"
 
-void Analysis(const char* InputFilenameOn, const char* InputFilenameOff, const char* OutputFilenameBase, double Emax)
+void Analysis(const char* InputFilenameBaseOn, const char* InputFilenameBaseOff, const char* OutputFilenameBase, double Emax)
 {
     std::cout << "Weighting histograms, Checking Events, and Merging Cherenkov!" << std::endl;
+    std::string inFileOn = InputFilenameBaseOn;
+    inFileOn = inFileOn + ".root";
+    const char* InputFilenameOn = inFileOn.c_str();
     // Chopper On
     WeightHisto(InputFilenameOn, OutputFilenameBase, Emax, true);
     EventCheck(InputFilenameOn, OutputFilenameBase, true);
@@ -16,5 +19,5 @@ void Analysis(const char* InputFilenameOn, const char* InputFilenameOff, const c
     Cherenkov(InputFilenameOff, OutputFilenameBase, Emax, false);
     
     PrintResults(InputFilenameOn, InputFilenameOff);
-    std::cout << "Analysis Complete" << std::endl;
+    std::cout << std::endl << "Analysis Complete" << std::endl;
 }

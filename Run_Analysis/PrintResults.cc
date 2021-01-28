@@ -192,7 +192,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase)
   weighted_sum2 = DetDataOff->Integral();
   std::cout << "OFF Entries: " << entries << " and sum: " << weighted_sum2 << std::endl;
 
-  inc_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
+  double inc_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
 
   // ******************************************************************************************************************************** //
   // Quick Detected Analysis from Original File
@@ -242,7 +242,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase)
   // Cher Off Analysis
   AdOffFile->cd();
   AdOffFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_CherOff);
-  entries - wCher_NRF_to_CherOff->GetEntries();
+  entries = wCher_NRF_to_CherOff->GetEntries();
   weighted_sum4 = wCher_NRF_to_CherOff->Integral();
   std::cout << "Cherenkov OFF Entries: " << entries << " and sum: " << weighted_sum4 << std::endl;
   double wNRFCher_to_NRF_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
@@ -275,7 +275,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase)
   // Cher Off Analysis
   AdOffFile->cd();
   AdOffFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_CherOff);
-  entries - wCher_NRF_to_CherOff->GetEntries();
+  entries = wCher_NRF_to_CherOff->GetEntries();
   weighted_sum4 = wCher_NRF_to_CherOff->Integral();
   std::cout << "Cherenkov OFF Entries: " << entries << " and sum: " << weighted_sum4 << std::endl;
   double wNRFCher_to_NRF_to_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));

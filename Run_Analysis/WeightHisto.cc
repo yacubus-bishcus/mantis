@@ -1,20 +1,46 @@
-void WeightHisto(const char *InputFilename, const char *OutputFilenameBase, double Emax, bool chopState)
+void WeightHisto(const char *InputFilenameBase, const char *OutputFilenameBase, double Emax, bool chopState)
 {
+    std::string InFile = InputFilenameBase;
+    std::string InFileEvent = InputFilenameBase;
+    if(chopState)
+    {
+      InFileEvent = InFileEvent + "_EventCheckOn.root";  
+    }
+    else
+    {
+      InFileEvent = InFileEvent + "_EventCheckOff.root";
+    }
+    InFile = InFile + ".root";
+    const char* InputFilename = InFile.c_str();
+    const char* InputFilenameEvent = InFileEvent.c_str();
+    
     TFile *f = TFile::Open(InputFilename);
+    TFile *f1 = TFile::Open(InputFilenameEvent);
+    
     TTree *ChopIn, *ChopOut, *NRFMatData, *Cherenkov, *DetInfo;
+    TTree *nrf_to_cher_tree, *nrf_to_cher_to_det_tree;
     Int_t nbins = 100000;
+    
     TH1D *wChopIn = new TH1D("wChopIn","Weighted Chopper Incident",nbins,0.,Emax);
     TH1D *wChopOut = new TH1D("wChopOut","Weighted Chopper Emission",nbins,0.,Emax);
     TH1D *wNRF = new TH1D("wNRF","Weighted NRF",nbins,0.,Emax);
     TH1D *wCherenkov = new TH1D("wCherenkov","Weighted Cherenkov",nbins,0.,Emax);
     TH1D *wDet = new TH1D("wDet","Weighted Detector",nbins,0.,Emax);
+    TH1D *wNRF_NRF_to_Cher = new TH1D("wNRF_NRF_to_Cher","Weighted NRF Spectrum that Lead to Cherenkov",nbins, 0., Emax);
+    TH1D *wCher_NRF_to_Cher = new TH1D("wCher_NRF_to_Cher","Weighted Cherenkov Spectrum caused by NRF",nbins,0.,Emax);
+    TH1D *wNRF_NRF_to_Cher_to_Det = new TH1D("wNRF_NRF_to_Cher_to_Det","Weighted NRF Energy Spectrum that Lead to Cherenkov that Lead to Detection",nbins,0.,Emax);
+    TH1D *wCher_NRF_to_Cher_to_Det = new TH1D("wCher_NRF_to_Cher_to_Det","Weighted Cherenkov Energy Spectrum Caused by NRF that Lead to Detection", nbins, 0., Emax);
     
     // Grab file objects
+    f->cd();
     f->GetObject("ChopIn",ChopIn);
     f->GetObject("ChopOut",ChopOut);
     f->GetObject("NRFMatData",NRFMatData);
     f->GetObject("Cherenkov",Cherenkov);
     f->GetObject("DetInfo",DetInfo);
+    f1->cd();
+    f1->GetObject("nrf_to_cher_tree",nrf_to_cher_tree);
+    f1->GetObject("nrf_to_cher_to_det_tree",nrf_to_cher_to_det_tree);
 
     ChopIn->SetEstimate(-1);
     ChopOut->SetEstimate(-1);

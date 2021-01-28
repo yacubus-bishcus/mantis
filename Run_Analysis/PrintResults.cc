@@ -9,7 +9,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase)
   std::string ChopOnS = ChopOnBase;
   std::string ChopOffS = ChopOffBase;
   ChopOnSChop = ChopOnSChop + "_WeightedHistogramOn.root";
-  ChopOffSChop = ChopOffSChop + "_WeightedHistogramOff.root"
+  ChopOffSChop = ChopOffSChop + "_WeightedHistogramOff.root";
   ChopOnSCher = ChopOnSCher + "_CherenkovMergedOn.root";
   ChopOffSCher = ChopOffSCher + "_CherenkovMergedOff.root";
   ChopOnS = ChopOnS + ".root";
@@ -27,10 +27,6 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase)
   TFile *chopOffCherenkov = new TFile(ChopOffCherenkov);
   TFile *chopOn = new TFile(ChopOn);
   TFile *chopOff = new TFile(ChopOff);
-  
-  
-  // TTrees
-  TTree *ChopInOn, *ChopOutOn, *ChopInOff, *ChopOutOff, *NRFMatDataOn, *NRFMatDataOff, *CherenkovOn, *CherenkovOff, *DetDataOn, *DetDataOff;
   
   // Histograms
   TH1D *IntObjInOn, *IntObjOutOn, *IntObjInOff, *IntObjOutOff, *IntNRFInOn, *IntNRFOutOn, *IntNRFInOff, *IntNRFOutOff, *WaterInOn, *WaterInOff, *WaterNRFOn, *WaterNRFOff, *DetOn, *DetOff;

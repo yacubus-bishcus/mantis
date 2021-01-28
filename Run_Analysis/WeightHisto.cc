@@ -2,20 +2,26 @@ void WeightHisto(const char *InputFilenameBase, const char *OutputFilenameBase, 
 {
     std::string InFile = InputFilenameBase;
     std::string InFileEvent = InputFilenameBase;
+    std::string InFileCherMerged = InputFilenameBase;
+    
     if(chopState)
     {
-      InFileEvent = InFileEvent + "_EventCheckOn.root";  
+      InFileEvent = InFileEvent + "_EventCheckOn.root";
+      InFileCherMerged = InFileCherMerged + "_CherenkovMergedOn.root";
     }
     else
     {
       InFileEvent = InFileEvent + "_EventCheckOff.root";
+      InFileCherMerged = InFileCherMerged + "_CherenkovMergedOff.root";
     }
     InFile = InFile + ".root";
     const char* InputFilename = InFile.c_str();
     const char* InputFilenameEvent = InFileEvent.c_str();
+    const char* InputFilenameCher = InFileCherMerged.c_str();
     
     TFile *f = TFile::Open(InputFilename);
     TFile *f1 = TFile::Open(InputFilenameEvent);
+    TFile *f2 = TFile::Open(InputFilenameCher);
     
     TTree *ChopIn, *ChopOut, *NRFMatData, *Cherenkov, *DetInfo;
     TTree *nrf_to_cher_tree, *nrf_to_cher_to_det_tree;
@@ -36,20 +42,29 @@ void WeightHisto(const char *InputFilenameBase, const char *OutputFilenameBase, 
     f->GetObject("ChopIn",ChopIn);
     f->GetObject("ChopOut",ChopOut);
     f->GetObject("NRFMatData",NRFMatData);
-    f->GetObject("Cherenkov",Cherenkov);
     f->GetObject("DetInfo",DetInfo);
     f1->cd();
     f1->GetObject("nrf_to_cher_tree",nrf_to_cher_tree);
     f1->GetObject("nrf_to_cher_to_det_tree",nrf_to_cher_to_det_tree);
+    f2->cd();
+    f2->GetObject("wCher",Cherenkov);
 
     ChopIn->SetEstimate(-1);
     ChopOut->SetEstimate(-1);
     NRFMatData->SetEstimate(-1);
-    Cherenkov->SetEstimate(-1);
     DetInfo->SetEstimate(-1);
+    nrf_to_cher_tree->SetEstimate(-1);
+    nrf_to_cher_to_det_tree->SetEstimate(-1);
+    
+    // ******************************************************************************************************************************** //
+    // Variables Declared Objects Set up
+    // ******************************************************************************************************************************** //
+    
+    // ******************************************************************************************************************************** //
+    // Fill Chopper In Weighted Histogram
+    // ******************************************************************************************************************************** //
     
     Int_t n = ChopIn->Draw("Energy:Weight","","goff");
-    std::cout << "The chopper's incident array size is: " << n << std::endl;
     Double_t *energyIn = ChopIn->GetVal(0);
     Double_t *weightIn = ChopIn->GetVal(1);
     for(int i=0;i<n;i++)
@@ -57,8 +72,11 @@ void WeightHisto(const char *InputFilenameBase, const char *OutputFilenameBase, 
         wChopIn->Fill(energyIn[i],weightIn[i]);
     }
 
+    // ******************************************************************************************************************************** //
+    // Fill Chopper Out Weighted Histogram
+    // ******************************************************************************************************************************** //
+    
     Int_t n1 = ChopOut->Draw("Energy:Weight","","goff");
-    std::cout << "The chopper's emission array size is: " << n1 << std::endl;
     Double_t *energyOut = ChopOut->GetVal(0);
     Double_t *weightOut = ChopOut->GetVal(1);
     for(int i=0;i<n1;i++)
@@ -66,8 +84,11 @@ void WeightHisto(const char *InputFilenameBase, const char *OutputFilenameBase, 
         wChopOut->Fill(energyOut[i],weightOut[i]);
     }
     
+    // ******************************************************************************************************************************** //
+    // Fill NRF Weighted Histogram
+    // ******************************************************************************************************************************** //
+    
     Int_t n2 = NRFMatData->Draw("Energy:Weight","","goff");
-    std::cout << "The NRF array size is: " << n2 << std::endl;
     Double_t *nrfEnergy = NRFMatData->GetVal(0);
     Double_t *nrfWeight = NRFMatData->GetVal(1);
     for(int i=0;i<n2;i++)
@@ -75,17 +96,12 @@ void WeightHisto(const char *InputFilenameBase, const char *OutputFilenameBase, 
         wNRF->Fill(nrfEnergy[i],nrfWeight[i]);
     }
 
-    Int_t n3 = Cherenkov->Draw("Energy:Weight","","goff");
-    std::cout << "The Cherenkov array size is: " << n3 << std::endl;
-    Double_t *cherEnergy = Cherenkov->GetVal(0);
-    Double_t *cherWeight = Cherenkov->GetVal(1);
-    for(int i=0;i<n3;i++)
-    {
-        wCherenkov->Fill(cherEnergy[i],cherWeight[i]);
-    }
+    
+    // ******************************************************************************************************************************** //
+    // Fill DetInfo Weighted Histogram
+    // ******************************************************************************************************************************** //
     
     Int_t n4 = DetInfo->Draw("Energy:Weight","","goff");
-    std::cout << "The Det array size is: " << n4 << std::endl;
     Double_t *detEnergy = DetInfo->GetVal(0);
     Double_t *detWeight = DetInfo->GetVal(1);
     for(int i=0;i<n4;i++)
@@ -93,7 +109,50 @@ void WeightHisto(const char *InputFilenameBase, const char *OutputFilenameBase, 
         wDet->Fill(detEnergy[i],detWeight[i]);
     }
     
-    // Write Weighted Histograms to file
+    // ******************************************************************************************************************************** //
+    // Fill NRF that Lead to Cherenkov Weighted Histogram for NRF Energies and Cherenkov Energies
+    // ******************************************************************************************************************************** //
+    
+    Int_t n5 = nrf_to_cher_tree->Draw("NRF_Energy:NRF_Weight","","goff");
+    Double_t *nrfcherNRFEnergy = nrf_to_cher_tree->GetVal(0);
+    Double_t *nrfcherNRFWeight = nrf_to_cher_tree->GetVal(1);
+    for(int i=0;i<n5;i++)
+    {
+        wNRF_NRF_to_Cher->Fill(nrfcherNRFEnergy[i], nrfcherNRFWeight[i]);
+    }
+    
+    Int_t n6 = nrf_to_cher_tree->Draw("Cher_Energy:Cher_Weight","","goff");
+    Double_t *nrfcherCherEnergy = nrf_to_cher_tree->GetVal(0);
+    Double_t *nrfcherCherWeight = nrf_to_cher_tree->GetVal(1);
+    for(int i=0;i<n6;i++)
+    {
+        wCher_NRF_to_Cher->Fill(nrfcherCherEnergy[i], nrfcherCherWeight[i]);
+    }
+    
+    // ******************************************************************************************************************************** //
+    // Fill NRF that Lead to Cherenkov that Lead to Detection Weighted Histogram for NRF Energies and Cherenkov Energies
+    // ******************************************************************************************************************************** //
+    
+    Int_t n7 = nrf_to_cher_tree->Draw("EnergyNRF:WeightNRF","","goff");
+    Double_t *nrfcherdetNRFEnergy = nrf_to_cher_tree->GetVal(0);
+    Double_t *nrfcherdetNRFWeight = nrf_to_cher_tree->GetVal(1);
+    for(int i=0;i<n7;i++)
+    {
+        wNRF_NRF_to_Cher_to_Det->Fill(nrfcherdetNRFEnergy[i], nrfcherdetNRFWeight[i]);
+    }
+    
+    Int_t n8 = nrf_to_cher_tree->Draw("EnergyCher:WeightCher","","goff");
+    Double_t *nrfcherdetCherEnergy = nrf_to_cher_tree->GetVal(0);
+    Double_t *nrfcherdetCherWeight = nrf_to_cher_tree->GetVal(1);
+    for(int i=0;i<n8;i++)
+    {
+        wCher_NRF_to_Cher_to_Det->Fill(nrfcherdetCherEnergy[i], nrfcherdetCherWeight[i]);
+    }
+    
+    // ******************************************************************************************************************************** //
+    // Write Weighted Histograms to File
+    // ******************************************************************************************************************************** //
+    
     std::string FinalOutName = OutputFilenameBase;
     FinalOutName = FinalOutName + "_WeightedHistogram";
     if(chopState)
@@ -107,11 +166,17 @@ void WeightHisto(const char *InputFilenameBase, const char *OutputFilenameBase, 
     const char* OutputFilename = FinalOutName.c_str();
     TFile *fout = new TFile(OutputFilename,"recreate");
     fout->cd();
+    
     wChopIn->Write();
     wChopOut->Write();
     wNRF->Write();
-    wCherenkov->Write();
+    Cherenkov->Write();
     wDet->Write();
+    wNRF_NRF_to_Cher->Write();
+    wCher_NRF_to_Cher->Write();
+    wNRF_NRF_to_Cher_to_Det->Write();
+    wCher_NRF_to_Cher_to_Det->Write();
+    
     std::cout << "Weighted Histograms saved to: " << OutputFilename << std::endl;
     
 }

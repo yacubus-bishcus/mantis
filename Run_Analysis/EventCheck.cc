@@ -14,6 +14,9 @@ void EventCheck(const char *InputFilenameBase, const char *OutFilenameBase, bool
     std::vector<double> cher_to_detEnergies, cher_to_detWeights, cher_to_detTimes;
     std::vector<double> nrf_to_detEnergies, nrf_to_detWeights, nrf_to_detTimes;
     std::vector<double> nrfEnergyv, nrfWeightv, cherEnergyv, cherWeightv;
+    std::vector<double> nrf_to_cherenkov_to_detEvents, nrf_to_cherenkov_to_detNRFEnergies, nrf_to_cherenkov_to_detCherEnergies;
+    std::vector<double> nrf_to_cherenkov_to_detNRFWeights, nrf_to_cherenkov_to_detCherWeights;
+    std::vector<double> nrf_to_cherenkov_to_detNRFTimes, nrf_to_cherenkov_to_detCherTimes;
     double nrfE,nrfW, cherE, cherW, a, energyNRF, energyCher, weightNRF, weightCher, timeNRF, timeCher;
     int x, nrf_cher_EventID, index;
     

@@ -13,10 +13,11 @@
 // 3. WeightHisto.cc
 // 4. PrintResults.cc
 // 
-// Analysis.cc takes 3 inputs:
+// Analysis.cc takes 4 inputs:
 // 1. Chopper On File root name (without .root extension)
 // 2. Chopper Off File root name (without .root extension)
-// 3. Max Energy of Bremsstrahlung Interrogation Beam 
+// 3. OutputFile root name (without .root extension)
+// 4. Max Energy of Bremsstrahlung Interrogation Beam 
 //
 // ************************************************************************************************ //
 // ************************************************************************************************ //

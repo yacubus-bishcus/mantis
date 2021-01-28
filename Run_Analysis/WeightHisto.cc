@@ -1,3 +1,29 @@
+//
+// ************************************************************************************************ //
+// ************************************************************************************************ //
+// To Run File:
+// root -b -q 'WeightHisto.cc("test", 2.1, true)'
+// ************************************************************************************************ //
+// ************************************************************************************************ //
+// File Explanation:
+//
+// Requires 3 inputs 
+// 1. InputFilename
+// 2. Max Energy of Bremsstrahlung Interrogation Object
+// 3. InputFile Chopper State 
+// 
+// This File Scans the Cherenkov Merged File and the EventCheck File. 
+// This file outputs all histograms that require weighting to 
+// a new root file with the Following Structure:
+// TFile**		test_WeightedHistogramOn.root	
+// TFile*		test_WeightedHistogramOn.root	
+//  KEY: TH1D	wChopIn;1	Weighted Chopper Incident
+//  KEY: TH1D	wChopOut;1	Weighted Chopper Emission
+//  KEY: TH1D	wNRF;1	Weighted NRF
+//  KEY: TH1D	wCher;1	Cherenkov Weighted Energy
+//  KEY: TH1D	wDet;1	Weighted Detector
+//
+
 bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
 {
     std::string InFile = InputFilenameBase;

@@ -13,11 +13,10 @@
 // 3. WeightHisto.cc
 // 4. PrintResults.cc
 // 
-// Analysis.cc takes 4 inputs:
+// Analysis.cc takes 3 inputs:
 // 1. Chopper On File root name (without .root extension)
 // 2. Chopper Off File root name (without .root extension)
-// 3. OutputFile root name (without .root extension)
-// 4. Max Energy of Bremsstrahlung Interrogation Beam 
+// 3. Max Energy of Bremsstrahlung Interrogation Beam 
 //
 // ************************************************************************************************ //
 // ************************************************************************************************ //
@@ -29,7 +28,7 @@
 
 void Analysis(const char* InputFilenameBaseOn, 
               const char* InputFilenameBaseOff, 
-              const char* OutputFilenameBase, double Emax)
+              double Emax)
 {
     std::cout << "Merging Cherenkov, Checking Events, and Writing Weighted Histograms!" << std::endl;
     std::string inFileOn = InputFilenameBaseOn;
@@ -39,13 +38,13 @@ void Analysis(const char* InputFilenameBaseOn,
     const char* InputFilenameOn = inFileOn.c_str();
     const char* InputFilenameOff = inFileOff.c_str();
     // Chopper On
-    Cherenkov(InputFilenameOn, OutputFilenameBase, Emax, true);
-    EventCheck(InputFilenameBaseOn, OutputFilenameBase, true);
-    WeightHisto(InputFilenameBaseOn, OutputFilenameBase, Emax, true);
+    Cherenkov(InputFilenameOn, Emax, true);
+    EventCheck(InputFilenameBaseOn, true);
+    WeightHisto(InputFilenameBaseOn, Emax, true);
     // Chopper Off
-    Cherenkov(InputFilenameOff, OutputFilenameBase, Emax, false);
-    EventCheck(InputFilenameBaseOff, OutputFilenameBase, false);
-    WeightHisto(InputFilenameBaseOff, OutputFilenameBase, Emax, false);
+    Cherenkov(InputFilenameOff, Emax, false);
+    EventCheck(InputFilenameBaseOff, false);
+    WeightHisto(InputFilenameBaseOff, Emax, false);
     
     PrintResults(InputFilenameBaseOn, InputFilenameBaseOff);
     std::cout << std::endl << "Analysis Complete" << std::endl;

@@ -1,4 +1,4 @@
-void EventCheck(const char *InputFilenameBase, const char *OutFilenameBase, bool chopState)
+void EventCheck(const char *InputFilenameBase, bool chopState)
 {
     std::string inFile = InputFilenameBase;
     inFile = inFile + ".root";
@@ -253,7 +253,7 @@ void EventCheck(const char *InputFilenameBase, const char *OutFilenameBase, bool
     // ******************************************************************************************************************************** //
     
     // Write to file
-    std::string FinalOutName = OutFilenameBase;
+    std::string FinalOutName = InputFilenameBase;
     FinalOutName = FinalOutName + "_EventCheck";
     if(chopState)
     {

@@ -196,7 +196,8 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   // ******************************************************************************************************************************** //
   // Quick Incident Photocathode Analysis from Added Histogram File
   // ******************************************************************************************************************************** //
-
+  std::cout << std::endl << "Photocathode Incident Analysis..." << std::endl;
+  std::cout << "*************************************" << std::endl << std::endl;
   // Chopper On Analysis
   AdOnFile->cd();
   AdOnFile->GetObject("wDet",DetData);
@@ -217,7 +218,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   // Quick Detected Analysis from Original File
   // ******************************************************************************************************************************** //
   
-  std::cout << std::endl << "Photocathode Analysis..." << std::endl;
+  std::cout << std::endl << "Photocathode Detected Analysis..." << std::endl;
   std::cout << "*************************************" << std::endl << std::endl;
   // Chopper On Analysis
   OGOnFile->cd();

@@ -5,7 +5,14 @@ void EventCheck(const char *InputFilenameBase, const char *OutFilenameBase, bool
     const char* InputFilename = inFile.c_str();
     TFile *f = TFile::Open(InputFilename);
     std::string cherInput = InputFilenameBase;
-    cherInput = cherInput + "_CherenkovMerged.root";
+    if(chopState)
+    {
+        cherInput = cherInput + "_CherenkovMergedOn.root";
+    }
+    else
+    {
+        cherInput = cherInput + "_CherenkovMergedOff.root";
+    }
     const char* cherInputFile = cherInput.c_str();
     TFile *f1 = TFile::Open(cherInputFile);
     

@@ -52,8 +52,6 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   TH1D *wNRF_NRF_to_Cher_to_Det, *wNRF_NRF_to_Cher_to_DetOff, *wCher_NRF_to_Cher_to_Det, *wCher_NRF_to_Cher_to_DetOff;
   
   // ints, doubles, strings
-  
-  int entries;
   double weighted_sum, weighted_sum2, weighted_sum3, weighted_sum4, weighted_sum5, weighted_sum6, weighted_sum7, weighted_sum8;
   double chopper_in_z, chopper_out_z;
   double IntObj_in_z, IntObj_out_z, IntObj_nrf_in_z, IntObj_nrf_out_z;
@@ -73,24 +71,20 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   // Chopper On Analysis
   AdOnFile->cd();
   AdOnFile->GetObject("wChopIn",ChopInOn);
-  entries = ChopInOn->GetEntries();
   weighted_sum = ChopInOn->Integral();
-  std::cout << "Incident ON Entries: " << entries << " and sum: " << weighted_sum << std::endl;
+  ChopInOn->Print();
   AdOnFile->GetObject("wChopOut",ChopOutOn);
-  entries = ChopOutOn->GetEntries();
+  ChopOutOn->Print();
   weighted_sum2 = ChopOutOn->Integral();
-  std::cout << "Emission ON Entries: " << entries << " and sum: " << weighted_sum2 << std::endl;
   
   // Chopper Off Analysis
   AdOffFile->cd();
   AdOffFile->GetObject("wChopIn",ChopInOff);
-  entries = ChopInOff->GetEntries();
   weighted_sum3 = ChopInOff->Integral();
-  std::cout << "Incident OFF Entries: " << entries << " and sum: " << weighted_sum3 << std::endl;
+  ChopInOff->Print();
   AdOffFile->GetObject("wChopOut",ChopOutOff);
-  entries = ChopOutOff->GetEntries();
   weighted_sum4 = ChopOutOff->Integral();
-  std::cout << "Emission OFF Entries: " << entries << " and sum: " << weighted_sum4 << std::endl;
+  ChopOutOff->Print();
   chopper_in_z = abs(weighted_sum - weighted_sum3)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum3),2)));
   chopper_out_z = abs(weighted_sum2 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum2),2) + pow(sqrt(weighted_sum4),2)));
   
@@ -106,18 +100,14 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   OGOnFile->GetObject("IntObjOut",IntObjOutOn);
   OGOnFile->GetObject("NRFIntObjIn",IntNRFInOn);
   OGOnFile->GetObject("NRFIntObjOut",IntNRFOutOn);
-  entries = IntObjInOn->GetEntries();
   weighted_sum = IntObjInOn->Integral();
-  std::cout << "Incident ON Entries: " << entries << " and sum: " << weighted_sum << std::endl;
-  entries = IntObjOutOn->GetEntries();
+  IntObjInOn->Print();
   weighted_sum2 = IntObjOutOn->Integral();
-  std::cout << "Emission ON Entries: " << entries << " and sum: " << weighted_sum2 << std::endl;
-  entries = IntNRFInOn->GetEntries();
+  IntObjOutOn->Print();
   weighted_sum3 = IntNRFInOn->Integral();
-  std::cout << "NRF Incident ON Entries: " << entries << " and sum: " << weighted_sum3 << std::endl;
-  entries = IntNRFOutOn->GetEntries();
+  IntNRFInOn->Print();
   weighted_sum4 = IntNRFOutOn->Integral();
-  std::cout << "NRF Emission ON Entries: " << entries << " and sum: " << weighted_sum4 << std::endl;
+  IntNRFOutOn->Print();
   
   // Chopper Off Analysis
   OGOffFile->cd();
@@ -125,18 +115,14 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   OGOffFile->GetObject("IntObjOut",IntObjOutOff);
   OGOffFile->GetObject("NRFIntObjIn",IntNRFInOff);
   OGOffFile->GetObject("NRFIntObjOut",IntNRFOutOff);
-  entries = IntObjInOff->GetEntries();
   weighted_sum5 = IntObjInOff->Integral();
-  std::cout << "Incident OFF Entries: " << entries << " and sum: " << weighted_sum5 << std::endl;
-  entries = IntObjOutOff->GetEntries();
+  IntObjInOff->Print();
   weighted_sum6 = IntObjOutOff->Integral();
-  std::cout << "Emission OFF Entries: " << entries << " and sum: " << weighted_sum6 << std::endl;
-  entries = IntNRFInOff->GetEntries();
+  IntObjOutOff->Print();
   weighted_sum7 = IntNRFInOff->Integral();
-  std::cout << "NRF Incident OFF Entries: " << entries << " and sum: " << weighted_sum7 << std::endl;
-  entries = IntNRFOutOff->GetEntries();
+  IntNRFInOff->Print();
   weighted_sum8 = IntNRFOutOff->Integral();
-  std::cout << "NRF Emission OFF Entries: " << entries << " and sum: " << weighted_sum8 << std::endl;
+  IntNRFOutOff->Print();
   IntObj_in_z = abs(weighted_sum - weighted_sum5)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum5),2)));
   IntObj_out_z = abs(weighted_sum2 - weighted_sum6)/(sqrt(pow(sqrt(weighted_sum2),2) + pow(sqrt(weighted_sum6),2)));
   IntObj_nrf_in_z = abs(weighted_sum3 - weighted_sum7)/(sqrt(pow(sqrt(weighted_sum3),2) + pow(sqrt(weighted_sum7),2)));
@@ -152,23 +138,19 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   OGOnFile->cd();
   OGOnFile->GetObject("WaterIn",WaterInOn);
   OGOnFile->GetObject("NRFWaterIn",WaterNRFOn);
-  entries = WaterInOn->GetEntries();
   weighted_sum = WaterInOn->Integral();
-  std::cout << "Incident ON Entries: " << entries << " and sum: " << weighted_sum << std::endl;
-  entries = WaterNRFOn->GetEntries();
+  WaterInOn->Print();
   weighted_sum2 = WaterNRFOn->Integral();
-  std::cout << "NRF ON Entries: " << entries << " and sum: " << weighted_sum2 << std::endl;
+  WaterNRFOn->Print();
   
   // Chopper Off Analysis
   OGOffFile->cd();
   OGOffFile->GetObject("WaterIn",WaterInOff);
   OGOffFile->GetObject("NRFWaterIn",WaterNRFOff);
-  entries = WaterInOff->GetEntries();
   weighted_sum3 = WaterInOff->Integral();
-  std::cout << "Incident OFF Entries: " << entries << " and sum: " << weighted_sum3 << std::endl;
-  entries = WaterNRFOff->GetEntries();
+  WaterInOff->Print();
   weighted_sum4 = WaterNRFOff->Integral();
-  std::cout << "NRF OFF Entries: " << entries << " and sum: " << weighted_sum4 << std::endl;
+  WaterNRFOff->Print();
   water_in_z = abs(weighted_sum - weighted_sum3)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum3),2)));
   water_nrf_z = abs(weighted_sum2 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum2),2) + pow(sqrt(weighted_sum4),2)));
 
@@ -181,16 +163,14 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   // Chopper On Analysis
   AdOnFile->cd();
   AdOnFile->GetObject("wCher",CherenkovOn);
-  entries = CherenkovOn->GetEntries();
   weighted_sum = CherenkovOn->Integral();
-  std::cout << "ON Entries: " << entries << " and sum: " << weighted_sum << std::endl;
+  CherenkovOn->Print();
     
   // Chopper Off Analysis
   AdOffFile->cd();
   AdOffFile->GetObject("wCher",CherenkovOff);
-  entries = CherenkovOff->GetEntries();
   weighted_sum2 = CherenkovOff->Integral();
-  std::cout << "OFF Entries: " << entries << " and sum: " << weighted_sum2 << std::endl;
+  CherenkovOff->Print();
   cher_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
     
   // ******************************************************************************************************************************** //
@@ -201,17 +181,14 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   // Chopper On Analysis
   AdOnFile->cd();
   AdOnFile->GetObject("wDet",DetData);
-  entries = DetData->GetEntries();
   weighted_sum = DetData->Integral();
-  std::cout << "ON Entries: " << entries << " and sum: " << weighted_sum << std::endl;
+  DetData->Print();
 
   // Chopper Off Analysis
   AdOffFile->cd();
   AdOffFile->GetObject("wDet",DetDataOff);
-  entries = DetDataOff->GetEntries();
   weighted_sum2 = DetDataOff->Integral();
-  std::cout << "OFF Entries: " << entries << " and sum: " << weighted_sum2 << std::endl;
-
+  DetDataOff->Print();
   inc_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
 
   // ******************************************************************************************************************************** //
@@ -223,16 +200,14 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   // Chopper On Analysis
   OGOnFile->cd();
   OGOnFile->GetObject("Detected",DetOn);
-  entries = DetOn->GetEntries();
   weighted_sum = DetOn->Integral();
-  std::cout << "ON Entries: " << entries << " and sum: " << weighted_sum << std::endl;
+  DetOn->Print();
   
   // Chopper Off Analysis
   OGOffFile->cd();
   OGOffFile->GetObject("Detected",DetOff);
-  entries = DetOff->GetEntries();
   weighted_sum2 = DetOff->Integral();
-  std::cout << "OFF Entries: " << entries << " and sum: " << weighted_sum2 << std::endl;
+  DetOff->Print();
   det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
     
   // ******************************************************************************************************************************** //
@@ -243,29 +218,25 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
     // NRF On Analysis
     AdOnFile->cd();
     AdOnFile->GetObject("wNRF_NRF_to_Cher",wNRF_NRF_to_Cher);
-    entries = wNRF_NRF_to_Cher->GetEntries();
     weighted_sum = wNRF_NRF_to_Cher->Integral();
-    std::cout << "NRF ON Entries: " << entries << " and sum: " << weighted_sum << std::endl;
+    wNRF_NRF_to_Cher->Print();
 
     // NRF Off
     AdOffFile->cd();
     AdOffFile->GetObject("wNRF_NRF_to_Cher",wNRF_NRF_to_CherOff);
-    entries = wNRF_NRF_to_CherOff->GetEntries();
     weighted_sum2 = wNRF_NRF_to_CherOff->Integral();
-    std::cout << "NRF OFF Entries: " << entries << " and sum: " << weighted_sum2 << std::endl;
+    wNRF_NRF_to_CherOff->Print();
 
     // Cher On Analysis
     AdOnFile->cd();
     AdOnFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_Cher);
-    entries = wCher_NRF_to_Cher->GetEntries();
     weighted_sum3 = wCher_NRF_to_Cher->Integral();
-    std::cout << "Cherenkov ON Entries: " << entries << " and sum: " << weighted_sum3 << std::endl;
+    wCher_NRF_to_Cher->Print();
     // Cher Off Analysis
     AdOffFile->cd();
     AdOffFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_CherOff);
-    entries = wCher_NRF_to_CherOff->GetEntries();
     weighted_sum4 = wCher_NRF_to_CherOff->Integral();
-    std::cout << "Cherenkov OFF Entries: " << entries << " and sum: " << weighted_sum4 << std::endl;
+    wCher_NRF_to_CherOff->Print();
     wNRFCher_to_NRF_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
     wCherCher_to_NRF_z = abs(weighted_sum3 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum3),2) + pow(sqrt(weighted_sum4),2)));
 
@@ -276,29 +247,25 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
     // NRF On Analysis
     AdOnFile->cd();
     AdOnFile->GetObject("wNRF_NRF_to_Cher_to_Det",wNRF_NRF_to_Cher_to_Det);
-    entries = wNRF_NRF_to_Cher_to_Det->GetEntries();
     weighted_sum = wNRF_NRF_to_Cher_to_Det->Integral();
-    std::cout << "NRF ON Entries: " << entries << " and sum: " << weighted_sum << std::endl;
+    wNRF_NRF_to_Cher_to_Det->Print();
 
     // NRF Off
     AdOffFile->cd();
     AdOffFile->GetObject("wNRF_NRF_to_Cher_to_Det",wNRF_NRF_to_Cher_to_DetOff);
-    entries = wNRF_NRF_to_Cher_to_DetOff->GetEntries();
     weighted_sum2 = wNRF_NRF_to_Cher_to_DetOff->Integral();
-    std::cout << "NRF OFF Entries: " << entries << " and sum: " << weighted_sum2 << std::endl;
+    wNRF_NRF_to_Cher_to_DetOff->Print();
 
     // Cher On Analysis
     AdOnFile->cd();
     AdOnFile->GetObject("wCher_NRF_to_Cher_to_Det",wCher_NRF_to_Cher_to_Det);
-    entries = wCher_NRF_to_Cher_to_Det->GetEntries();
     weighted_sum3 = wCher_NRF_to_Cher_to_Det->Integral();
-    std::cout << "Cherenkov ON Entries: " << entries << " and sum: " << weighted_sum3 << std::endl;
+    wCher_NRF_to_Cher_to_Det->Print();
     // Cher Off Analysis
     AdOffFile->cd();
     AdOffFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_CherOff);
-    entries = wCher_NRF_to_CherOff->GetEntries();
     weighted_sum4 = wCher_NRF_to_CherOff->Integral();
-    std::cout << "Cherenkov OFF Entries: " << entries << " and sum: " << weighted_sum4 << std::endl;
+    wCher_NRF_to_CherOff->Print();
     wNRFCher_to_NRF_to_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
     wCherCher_to_NRF_to_det_z = abs(weighted_sum3 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum3),2) + pow(sqrt(weighted_sum4),2)));
   }

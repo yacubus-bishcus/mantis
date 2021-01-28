@@ -1,3 +1,26 @@
+//
+// ************************************************************************************************ //
+// ************************************************************************************************ //
+// To Run File:
+// root -b -q 'EventCheck.cc("test", true)'
+// ************************************************************************************************ //
+// ************************************************************************************************ //
+// File Explanation:
+//
+// Requires 2 inputs 
+// 1. InputFilename
+// 2. InputFile Chopper State 
+// 
+// This File Scans the Cherenkov Merged File and determines: 
+// 1. Check if a NRF event causes cherenkov
+// 2. Check if a NRF event was detected
+// 3. Check if a Cherenkov event was detected 
+// 4. Check if a NRF event lead to Cherenkov which was then detected 
+// 
+// The script create a new root file with the Following Structure:
+// TFile**		test_EventCheckOn.root	
+// TFile*		test_EventCheckOn.root
+
 void EventCheck(const char *InputFilenameBase, bool chopState)
 {
     std::string inFile = InputFilenameBase;

@@ -16,8 +16,11 @@
 // The Max energy for a given event is recorded along with that energy's weight
 // The script create a new root file with a TTree with the following structure
 //
-void Cherenkov(const char *InputFilename, double Emax, bool ChopState)
+void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
 {
+    std::string InFile = InputFilenameBase;
+    InFile = InFile + ".root";
+    const char* InputFilename = InFile.c_str();
     TFile *f = TFile::Open(InputFilename);
     TTree *Cherenkov;
     
@@ -96,7 +99,7 @@ void Cherenkov(const char *InputFilename, double Emax, bool ChopState)
     
     if(events.size() > 0)
     {
-        std::string FinalOutFilename = InputFilename;
+        std::string FinalOutFilename = InputFilenameBase;
         FinalOutFilename = FinalOutFilename + "_CherenkovMerged";
         if(ChopState)
         {

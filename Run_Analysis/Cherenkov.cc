@@ -7,17 +7,16 @@
 // ************************************************************************************************ //
 // File Explanation:
 //
-// Requires 4 inputs 
+// Requires 3 inputs 
 // 1. InputFilename
-// 2. OutputFilenameBase
-// 3. Max Energy of Bremsstrahlung Interrogation Beam
-// 4. InputFile Chopper State 
+// 2. Max Energy of Bremsstrahlung Interrogation Beam
+// 3. InputFile Chopper State 
 // 
 // This File takes the TTree from the input file and merges cherenkov events based on the event ID
 // The Max energy for a given event is recorded along with that energy's weight
 // The script create a new root file with a TTree with the following structure
 //
-void Cherenkov(const char *InputFilename, const char *OutputFilenameBase, double Emax, bool ChopState)
+void Cherenkov(const char *InputFilename, double Emax, bool ChopState)
 {
     TFile *f = TFile::Open(InputFilename);
     TTree *Cherenkov;
@@ -97,7 +96,7 @@ void Cherenkov(const char *InputFilename, const char *OutputFilenameBase, double
     
     if(events.size() > 0)
     {
-        std::string FinalOutFilename = OutputFilenameBase;
+        std::string FinalOutFilename = InputFilename;
         FinalOutFilename = FinalOutFilename + "_CherenkovMerged";
         if(ChopState)
         {

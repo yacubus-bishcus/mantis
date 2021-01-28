@@ -1,7 +1,6 @@
-void PrintResults(const char* ChopOnBase, const char* ChopOffBase)
+void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
 {
-  std::cout << "Setting Chop On File: " << ChopOnBase << std::endl;
-  std::cout << "Setting Chop Off File: " << ChopOffBase << std::endl << std::endl;
+
   std::string OriginalOn = ChopOnBase;
   std::string OriginalOff = ChopOffBase;
   std::string addedOn = ChopOnBase;
@@ -79,7 +78,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase)
   // Quick Interrogation Object Analysis from Original File
   // ******************************************************************************************************************************** //
 
-  std::cout << "Interrogation Object Analysis..." << std::endl;
+  std::cout << std::endl << "Interrogation Object Analysis..." << std::endl;
   std::cout << "*************************************" << std::endl << std::endl;
   // Chopper On Analysis
   OGOnFile->cd();
@@ -127,7 +126,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase)
   // Quick Incident Water Tank Analysis from Original File
   // ******************************************************************************************************************************** //
   
-  std::cout << "Water Tank Analysis..." << std::endl;
+  std::cout << std::endl << "Water Tank Analysis..." << std::endl;
   std::cout << "*************************************" << std::endl << std::endl;
   // Chopper On Analysis
   OGOnFile->cd();
@@ -157,7 +156,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase)
   // Quick Cherenkov Analysis from Added Histograms File
   // ******************************************************************************************************************************** //
 
-  std::cout << "Cherenkov Analysis..." << std::endl;
+  std::cout << std::endl << "Cherenkov Analysis..." << std::endl;
   std::cout << "*************************************" << std::endl << std::endl;
   // Chopper On Analysis
   AdOnFile->cd();
@@ -198,7 +197,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase)
   // Quick Detected Analysis from Original File
   // ******************************************************************************************************************************** //
   
-  std::cout << "Photocathode Analysis..." << std::endl;
+  std::cout << std::endl << "Photocathode Analysis..." << std::endl;
   std::cout << "*************************************" << std::endl << std::endl;
   // Chopper On Analysis
   OGOnFile->cd();
@@ -218,68 +217,70 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase)
   // ******************************************************************************************************************************** //
   // Quick NRF to Cherenkov Analysis from Added Histograms File
   // ******************************************************************************************************************************** //
+  if(check)
+  {
+    // NRF On Analysis
+    AdOnFile->cd();
+    AdOnFile->GetObject("wNRF_NRF_to_Cher",wNRF_NRF_to_Cher);
+    entries = wNRF_NRF_to_Cher->GetEntries();
+    weighted_sum = wNRF_NRF_to_Cher->Integral();
+    std::cout << "NRF ON Entries: " << entries << " and sum: " << weighted_sum << std::endl;
 
-  // NRF On Analysis
-  AdOnFile->cd();
-  AdOnFile->GetObject("wNRF_NRF_to_Cher",wNRF_NRF_to_Cher);
-  entries = wNRF_NRF_to_Cher->GetEntries();
-  weighted_sum = wNRF_NRF_to_Cher->Integral();
-  std::cout << "NRF ON Entries: " << entries << " and sum: " << weighted_sum << std::endl;
+    // NRF Off
+    AdOffFile->cd();
+    AdOffFile->GetObject("wNRF_NRF_to_Cher",wNRF_NRF_to_CherOff);
+    entries = wNRF_NRF_to_CherOff->GetEntries();
+    weighted_sum2 = wNRF_NRF_to_CherOff->Integral();
+    std::cout << "NRF OFF Entries: " << entries << " and sum: " << weighted_sum2 << std::endl;
 
-  // NRF Off
-  AdOffFile->cd();
-  AdOffFile->GetObject("wNRF_NRF_to_Cher",wNRF_NRF_to_CherOff);
-  entries = wNRF_NRF_to_CherOff->GetEntries();
-  weighted_sum2 = wNRF_NRF_to_CherOff->Integral();
-  std::cout << "NRF OFF Entries: " << entries << " and sum: " << weighted_sum2 << std::endl;
-
-  // Cher On Analysis
-  AdOnFile->cd();
-  AdOnFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_Cher);
-  entries = wCher_NRF_to_Cher->GetEntries();
-  weighted_sum3 = wCher_NRF_to_Cher->Integral();
-  std::cout << "Cherenkov ON Entries: " << entries << " and sum: " << weighted_sum3 << std::endl;
-  // Cher Off Analysis
-  AdOffFile->cd();
-  AdOffFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_CherOff);
-  entries = wCher_NRF_to_CherOff->GetEntries();
-  weighted_sum4 = wCher_NRF_to_CherOff->Integral();
-  std::cout << "Cherenkov OFF Entries: " << entries << " and sum: " << weighted_sum4 << std::endl;
-  double wNRFCher_to_NRF_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
-  double wCherCher_to_NRF_z = abs(weighted_sum3 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum3),2) + pow(sqrt(weighted_sum4),2)));
+    // Cher On Analysis
+    AdOnFile->cd();
+    AdOnFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_Cher);
+    entries = wCher_NRF_to_Cher->GetEntries();
+    weighted_sum3 = wCher_NRF_to_Cher->Integral();
+    std::cout << "Cherenkov ON Entries: " << entries << " and sum: " << weighted_sum3 << std::endl;
+    // Cher Off Analysis
+    AdOffFile->cd();
+    AdOffFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_CherOff);
+    entries = wCher_NRF_to_CherOff->GetEntries();
+    weighted_sum4 = wCher_NRF_to_CherOff->Integral();
+    std::cout << "Cherenkov OFF Entries: " << entries << " and sum: " << weighted_sum4 << std::endl;
+    double wNRFCher_to_NRF_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
+    double wCherCher_to_NRF_z = abs(weighted_sum3 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum3),2) + pow(sqrt(weighted_sum4),2)));
 
   // ******************************************************************************************************************************** //
   // Quick NRF to Cherenkov to Detected Analysis from Added Histograms File
   // ******************************************************************************************************************************** //
 
-  // NRF On Analysis
-  AdOnFile->cd();
-  AdOnFile->GetObject("wNRF_NRF_to_Cher_to_Det",wNRF_NRF_to_Cher_to_Det);
-  entries = wNRF_NRF_to_Cher_to_Det->GetEntries();
-  weighted_sum = wNRF_NRF_to_Cher_to_Det->Integral();
-  std::cout << "NRF ON Entries: " << entries << " and sum: " << weighted_sum << std::endl;
+    // NRF On Analysis
+    AdOnFile->cd();
+    AdOnFile->GetObject("wNRF_NRF_to_Cher_to_Det",wNRF_NRF_to_Cher_to_Det);
+    entries = wNRF_NRF_to_Cher_to_Det->GetEntries();
+    weighted_sum = wNRF_NRF_to_Cher_to_Det->Integral();
+    std::cout << "NRF ON Entries: " << entries << " and sum: " << weighted_sum << std::endl;
 
-  // NRF Off
-  AdOffFile->cd();
-  AdOffFile->GetObject("wNRF_NRF_to_Cher_to_Det",wNRF_NRF_to_Cher_to_DetOff);
-  entries = wNRF_NRF_to_Cher_to_DetOff->GetEntries();
-  weighted_sum2 = wNRF_NRF_to_Cher_to_DetOff->Integral();
-  std::cout << "NRF OFF Entries: " << entries << " and sum: " << weighted_sum2 << std::endl;
+    // NRF Off
+    AdOffFile->cd();
+    AdOffFile->GetObject("wNRF_NRF_to_Cher_to_Det",wNRF_NRF_to_Cher_to_DetOff);
+    entries = wNRF_NRF_to_Cher_to_DetOff->GetEntries();
+    weighted_sum2 = wNRF_NRF_to_Cher_to_DetOff->Integral();
+    std::cout << "NRF OFF Entries: " << entries << " and sum: " << weighted_sum2 << std::endl;
 
-  // Cher On Analysis
-  AdOnFile->cd();
-  AdOnFile->GetObject("wCher_NRF_to_Cher_to_Det",wCher_NRF_to_Cher_to_Det);
-  entries = wCher_NRF_to_Cher_to_Det->GetEntries();
-  weighted_sum3 = wCher_NRF_to_Cher_to_Det->Integral();
-  std::cout << "Cherenkov ON Entries: " << entries << " and sum: " << weighted_sum3 << std::endl;
-  // Cher Off Analysis
-  AdOffFile->cd();
-  AdOffFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_CherOff);
-  entries = wCher_NRF_to_CherOff->GetEntries();
-  weighted_sum4 = wCher_NRF_to_CherOff->Integral();
-  std::cout << "Cherenkov OFF Entries: " << entries << " and sum: " << weighted_sum4 << std::endl;
-  double wNRFCher_to_NRF_to_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
-  double wCherCher_to_NRF_to_det_z = abs(weighted_sum3 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum3),2) + pow(sqrt(weighted_sum4),2)));
+    // Cher On Analysis
+    AdOnFile->cd();
+    AdOnFile->GetObject("wCher_NRF_to_Cher_to_Det",wCher_NRF_to_Cher_to_Det);
+    entries = wCher_NRF_to_Cher_to_Det->GetEntries();
+    weighted_sum3 = wCher_NRF_to_Cher_to_Det->Integral();
+    std::cout << "Cherenkov ON Entries: " << entries << " and sum: " << weighted_sum3 << std::endl;
+    // Cher Off Analysis
+    AdOffFile->cd();
+    AdOffFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_CherOff);
+    entries = wCher_NRF_to_CherOff->GetEntries();
+    weighted_sum4 = wCher_NRF_to_CherOff->Integral();
+    std::cout << "Cherenkov OFF Entries: " << entries << " and sum: " << weighted_sum4 << std::endl;
+    double wNRFCher_to_NRF_to_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
+    double wCherCher_to_NRF_to_det_z = abs(weighted_sum3 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum3),2) + pow(sqrt(weighted_sum4),2)));
+  }
   
   // Z Test Results
   std::cout << "Cherenkov Incident Z-Score: " << cherenkov_in_z << std::endl;
@@ -292,8 +293,11 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase)
   std::cout << "Water Tank NRF incident Z-Score: " << water_nrf_z << std::endl;
   std::cout << "Created Cherenkov Energy Z-Score: " << cher_z << std::endl;
   std::cout << "Detected Z-Score: " << det_z << std::endl;
-  std::cout << "NRF to Cherenkov NRF Spectrum Z-Score: " << wNRFCher_to_NRF_z << std::endl;
-  std::cout << "NRF to Cherenkov Cherenkov Spectrum Z-Score: " << wCherCher_to_NRF_z << std::endl;
-  std::cout << "NRF to Cherenkov to Detector NRF Spectrum Z-Score: " << wNRFCher_to_NRF_to_det_z << std::endl;
-  std::cout << "NRF to Cherenkov to Detector Cherenkov Spectrum Z-Score: " << wCherCher_to_NRF_to_det_z << std::endl << std::endl;
+  if(check)
+  {
+    std::cout << "NRF to Cherenkov NRF Spectrum Z-Score: " << wNRFCher_to_NRF_z << std::endl;
+    std::cout << "NRF to Cherenkov Cherenkov Spectrum Z-Score: " << wCherCher_to_NRF_z << std::endl;
+    std::cout << "NRF to Cherenkov to Detector NRF Spectrum Z-Score: " << wNRFCher_to_NRF_to_det_z << std::endl;
+    std::cout << "NRF to Cherenkov to Detector Cherenkov Spectrum Z-Score: " << wCherCher_to_NRF_to_det_z << std::endl << std::endl;
+  }
 }

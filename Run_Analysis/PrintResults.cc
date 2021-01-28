@@ -55,7 +55,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   
   int entries;
   double weighted_sum, weighted_sum2, weighted_sum3, weighted_sum4, weighted_sum5, weighted_sum6, weighted_sum7, weighted_sum8;
-  double cherenkov_in_z, cherenkov_out_z;
+  double chopper_in_z, chopper_out_z;
   double IntObj_in_z, IntObj_out_z, IntObj_nrf_in_z, IntObj_nrf_out_z;
   double water_in_z, water_nrf_z, cher_z, det_z;
   double wNRFCher_to_NRF_to_det_z, wCherCher_to_NRF_to_det_z, wNRFCher_to_NRF_z, wCherCher_to_NRF_z, inc_det_z;
@@ -91,8 +91,8 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   entries = ChopOutOff->GetEntries();
   weighted_sum4 = ChopOutOff->Integral();
   std::cout << "Emission OFF Entries: " << entries << " and sum: " << weighted_sum4 << std::endl;
-  cherenkov_in_z = abs(weighted_sum - weighted_sum3)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum3),2)));
-  cherenkov_out_z = abs(weighted_sum2 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum2),2) + pow(sqrt(weighted_sum4),2)));
+  chopper_in_z = abs(weighted_sum - weighted_sum3)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum3),2)));
+  chopper_out_z = abs(weighted_sum2 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum2),2) + pow(sqrt(weighted_sum4),2)));
   
   // ******************************************************************************************************************************** //
   // Quick Interrogation Object Analysis from Original File
@@ -306,8 +306,8 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   // Z Test Results
   std::cout << std::endl << "Z-Score Summary..." << std::endl;
   std::cout << "*************************************" << std::endl << std::endl;
-  std::cout << "Cherenkov Incident Z-Score: " << cherenkov_in_z << std::endl;
-  std::cout << "Cherenkov Emission Z-Score: " << cherenkov_out_z << std::endl;
+  std::cout << "Chopper Incident Z-Score: " << chopper_in_z << std::endl;
+  std::cout << "Chopper Emission Z-Score: " << chopper_out_z << std::endl;
   std::cout << "Interrogation Object Incident Z-Score: " << IntObj_in_z << std::endl;
   std::cout << "Interrogation Object Emission Z-Score: " << IntObj_out_z << std::endl;
   std::cout << "Interrogation Object NRF Incident Z-Score: " << IntObj_nrf_in_z << std::endl;

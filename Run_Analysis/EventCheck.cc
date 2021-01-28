@@ -69,48 +69,43 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     // Grab Cherenkov Events
     Int_t n = Cherenkov->Draw("EventID:Energy:Weight","","goff");
     std::cout << "Cherenkov Entries: " << n << std::endl;
-    if(n > 0)
+    Double_t *cherEvent = Cherenkov->GetVal(0);
+    Double_t *cherEnergy = Cherenkov->GetVal(1);
+    Double_t *cherWeight = Cherenkov->GetVal(2);
+
+    for(int i=0;i<n;i++)
     {
-      Double_t *cherEvent = Cherenkov->GetVal(0);
-      Double_t *cherEnergy = Cherenkov->GetVal(1);
-      Double_t *cherWeight = Cherenkov->GetVal(2);
-    
-      for(int i=0;i<n;i++)
-      {
-          cherEventv.push_back((int)cherEvent[i]);
-      }
+      cherEventv.push_back((int)cherEvent[i]);
     }
-    
+      
     // Grab NRF Events
     Int_t n1 = NRF->Draw("EventID:Energy:Weight","","goff");
     std::cout << "NRF Entries: " << n1 << std::endl;
-    if(n1>0)
-    {    
-      Double_t *nrfEvent = NRF->GetVal(0);
-      Double_t *nrfEnergy = NRF->GetVal(1);
-      Double_t *nrfWeight = NRF->GetVal(2);
+  
+    Double_t *nrfEvent = NRF->GetVal(0);
+    Double_t *nrfEnergy = NRF->GetVal(1);
+    Double_t *nrfWeight = NRF->GetVal(2);
 
-      for(int i=0;i<n1;i++)
-      {
-          nrfEventv.push_back((int)nrfEvent[i]);
-      }
+    for(int i=0;i<n1;i++)
+    {
+        nrfEventv.push_back((int)nrfEvent[i]);
     }
+    
     
     // Grab DetInfo Events
     Int_t n2 = DetData->Draw("EventID:Energy:Weight:Time","DetectionProcess == \"Detected\"","goff");
     std::cout << "Total Number of Detected entries: " << n2 << std::endl;
-    if(n2 > 0)
+  
+    Double_t *detEvent = DetData->GetVal(0);
+    Double_t *detEnergy = DetData->GetVal(1);
+    Double_t *detWeight = DetData->GetVal(2);
+    Double_t *time = DetData->GetVal(3);
+
+    for(int i=0;i<n2;i++)
     {
-      Double_t *detEvent = DetData->GetVal(0);
-      Double_t *detEnergy = DetData->GetVal(1);
-      Double_t *detWeight = DetData->GetVal(2);
-      Double_t *time = DetData->GetVal(3);
-    
-      for(int i=0;i<n2;i++)
-      {
-          detEventv.push_back((int)detEvent[i]);
-      }
+        detEventv.push_back((int)detEvent[i]);
     }
+    
     std::cout << "All Events grabbed." << std::endl;
     
     // ******************************************************************************************************************************** //

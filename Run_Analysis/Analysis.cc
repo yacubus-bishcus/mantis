@@ -15,11 +15,11 @@ void Analysis(const char* InputFilenameBaseOn, const char* InputFilenameBaseOff,
     // Chopper On
     Cherenkov(InputFilenameOn, OutputFilenameBase, Emax, true);
     EventCheck(InputFilenameBaseOn, OutputFilenameBase, true);
-    WeightHisto(InputFilenameOn, OutputFilenameBase, Emax, true);
+    WeightHisto(InputFilenameBaseOn, OutputFilenameBase, Emax, true);
     // Chopper Off
     Cherenkov(InputFilenameOff, OutputFilenameBase, Emax, false);
     EventCheck(InputFilenameBaseOff, OutputFilenameBase, false);
-    WeightHisto(InputFilenameOff, OutputFilenameBase, Emax, false);
+    WeightHisto(InputFilenameBaseOff, OutputFilenameBase, Emax, false);
     
     PrintResults(InputFilenameBaseOn, InputFilenameBaseOff);
     std::cout << std::endl << "Analysis Complete" << std::endl;

@@ -185,7 +185,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
           }
       }
 
-      std::cout << "NRF to Cherenkov Number of Events Found: " << nrf_to_cherEvents.size() << std::endl;
+      std::cout << std::endl << "NRF to Cherenkov Number of Events Found: " << nrf_to_cherEvents.size() << std::endl;
     }
     
     // ******************************************************************************************************************************** //
@@ -219,7 +219,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
           }
       }
 
-      std::cout << "Cherenkov Events lead to Detection: " << cher_to_detEvents.size() << std::endl;
+      std::cout << std::endl << "Cherenkov Events lead to Detection: " << cher_to_detEvents.size() << std::endl;
       std::cout << "NRF Events Lead to Detection: " << nrf_to_detEvents.size() << std::endl;
     
     
@@ -272,7 +272,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
           }
       }
 
-      std::cout << "NRF Events Leading to Cherenkov Leading to Detection: " << nrf_to_cherenkov_to_detEvents.size() << std::endl;
+      std::cout << std::endl << "NRF Events Leading to Cherenkov Leading to Detection: " << nrf_to_cherenkov_to_detEvents.size() << std::endl;
     }
     
     // ******************************************************************************************************************************** //

@@ -103,7 +103,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
                 // indices of matching events 
                 int index = results[j];
                 // sum the number of secondaries of matching events 
-                secSum += sec[index];
+                secSum = secSum + sec[index];
                 // put all of the energies and weights into temp vector
                 energiesv.push_back(energy[index]);
                 weightsv.push_back(weight[index]);

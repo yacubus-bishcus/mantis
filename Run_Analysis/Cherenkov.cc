@@ -76,7 +76,6 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     std::cout << "Merging Cherenkov with " << numEntries << " number of entries..." << std::endl;
     for(int i=0;i<numEntries;i++)
     {
-        std::cout << "\r Event Complete:\t" << i << std::flush;
         while(nSum < numEntries)
         {
             // clear holding vector/variables 

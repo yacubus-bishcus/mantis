@@ -31,6 +31,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     bool check = true;
     bool check2 = true;
     bool tcheck = false;
+    TFile *f1, *f2;
     
     if(chopState)
     {
@@ -52,8 +53,25 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     const char* InputFilenameCher = InFileCherMerged.c_str();
     
     TFile *f = TFile::Open(InputFilename);
-    TFile *f1 = TFile::Open(InputFilenameEvent);
-    TFile *f2 = TFile::Open(InputFilenameEvent2);
+    try
+    {
+      f1 = TFile::Open(InputFilenameEvent); 
+      throw 300;
+    }
+    catch(int e)
+    {
+       std::cout << "No NRF to Cherenkov File Found." << std::endl; 
+    }
+    try
+    {
+      f2 = TFile::Open(InputFilenameEvent2);  
+      throw 400;
+    }
+    catch(int e)
+    {
+      std::cout << "No NRF to Cherenkov to Detection File Found." << std::endl;  
+    }
+    
     TFile *f3 = TFile::Open(InputFilenameCher);
     
     TTree *ChopIn, *ChopOut, *NRFMatData, *DetInfo;
@@ -76,9 +94,10 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     f->GetObject("ChopOut",ChopOut);
     f->GetObject("NRFMatData",NRFMatData);
     f->GetObject("DetInfo",DetInfo);
-    f1->cd();
+
     try
     {
+      f1->cd();
       f1->GetObject("nrf_to_cher_tree",nrf_to_cher_tree);
       throw 100;
     }
@@ -87,9 +106,10 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
       std::cout << "No NRF to Cherenkov Tree Found." << std::endl;
       check = false;
     }
-    f2->cd();
+  
     try
     {
+        f2->cd();
         f2->GetObject("nrf_to_cher_to_det_tree",nrf_to_cher_to_det_tree);
         throw 200;
     }

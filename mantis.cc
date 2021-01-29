@@ -94,10 +94,7 @@ int main(int argc,char **argv)
     std::cout << "NRF Verbose set to: " << verbose_in << std::endl;
     NRF_Verbose = true;
   }
-  if(addNRF_in == "False" || addNRF_in == "false")
-  {
-    std::cout << "NRF Physics turned OFF!" << std::endl;
-  }
+
   std::string RootOutputFile = (std::string)root_output_name;
   if(RootOutputFile.find(".root")<RootOutputFile.length()) {
           gOutName=(std::string)RootOutputFile.substr(0, RootOutputFile.find(".root"));
@@ -114,6 +111,12 @@ int main(int argc,char **argv)
   // choose the Random engine
   CLHEP::HepRandom::setTheEngine(new CLHEP::RanluxEngine);
   CLHEP::HepRandom::setTheSeed(seed);
+  if(addNRF_in == "False" || addNRF_in == "false")
+  {
+    std::cout << "NRF Physics turned OFF!" << std::endl;
+    G4cout << "NRF Physics turned OFF!" << G4endl;
+    addNRF = false;
+  }
   std::cout << "Seed set to: " << seed << std::endl;
 
   // construct the default run manager

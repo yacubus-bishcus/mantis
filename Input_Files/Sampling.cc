@@ -82,10 +82,6 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 				hSample->SetBinContent(i, 1);
 				break;
             		}
-            		else if(e > maxNRF + 0.01)
-            		{
-                		hSample->SetBinContent(i,0.0001);
-            		}
             		else
             		{
 				hSample->SetBinContent(i, 0.01);

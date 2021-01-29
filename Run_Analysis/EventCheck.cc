@@ -81,6 +81,8 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     NRF->SetEstimate(-1);
     DetData->SetEstimate(-1);
     
+    std::cout << "EventCheck::Objects Grabbed!" << std::endl;
+    
     // ******************************************************************************************************************************** //
     // Variables Declared Objects Set up
     // ******************************************************************************************************************************** //

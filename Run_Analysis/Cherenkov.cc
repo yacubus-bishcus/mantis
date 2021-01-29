@@ -41,6 +41,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     
     f->GetObject("Cherenkov",Cherenkov);
     Cherenkov->SetEstimate(-1);
+    std::cout << "Cherenkov Object Grabbed." << std::endl;
     Int_t numEntries = Cherenkov->Draw("EventID","","goff");
     Double_t *eventID = Cherenkov->GetVal(0);
     std::string theCutString;
@@ -55,7 +56,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     // ******************************************************************************************************************************** //
     // Variables Declared Objects Set up
     // ******************************************************************************************************************************** //
-    
+    std::cout << "Merging Cherenkov..." << std::endl;
     for(int i=0;i<numEntries;i++)
     {
         if(nSum < numEntries)
@@ -96,7 +97,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     // ******************************************************************************************************************************** //
     // Fill New Tree
     // ******************************************************************************************************************************** //
-    
+    std::cout << "Filling Cherenkov Merged File..." << std::endl;
     for(int i=0;i<events.size();i++)
     {
         EventID = events[i];
@@ -113,7 +114,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     // ******************************************************************************************************************************** //
     // Write Data to file 
     // ******************************************************************************************************************************** //
-    
+    std::cout << "Writing Cherenkov to File..." << std::endl;
     if(events.size() > 0)
     {
         std::string FinalOutFilename = InputFilenameBase;

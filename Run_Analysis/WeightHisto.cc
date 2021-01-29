@@ -26,6 +26,8 @@
 
 bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
 {
+    time_t timer, timer2, time_start, time_end;
+    time_start = std::time(&timer);
     std::string InFile = InputFilenameBase;
     std::string InFileEvent, InFileEvent2, InFileCherMerged;
     bool check = true;
@@ -116,6 +118,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     {
       nrf_to_cher_to_det_tree->SetEstimate(-1);  
     }
+    std::cout << "WeightHisto::Objects Grabbed!" << std::endl;
     // ******************************************************************************************************************************** //
     // Variables Declared Objects Set up
     // ******************************************************************************************************************************** //
@@ -131,7 +134,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     {
         wChopIn->Fill(energyIn[i],weightIn[i]);
     }
-
+    std::cout << "Chopper Incident Filled." << std::endl;
     // ******************************************************************************************************************************** //
     // Fill Chopper Out Weighted Histogram
     // ******************************************************************************************************************************** //
@@ -143,7 +146,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     {
         wChopOut->Fill(energyOut[i],weightOut[i]);
     }
-    
+    std::cout << "Chopper Emission Filled." << std::endl;
     // ******************************************************************************************************************************** //
     // Fill NRF Weighted Histogram
     // ******************************************************************************************************************************** //
@@ -155,7 +158,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     {
         wNRF->Fill(nrfEnergy[i],nrfWeight[i]);
     }
-
+    std::cout << "NRF Filled." << std::endl;
     
     // ******************************************************************************************************************************** //
     // Fill DetInfo Weighted Histogram
@@ -168,7 +171,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     {
         wDet->Fill(detEnergy[i],detWeight[i]);
     }
-    
+    std::cout << "DetInfo Filled." << std::endl;
     // ******************************************************************************************************************************** //
     // Fill NRF that Lead to Cherenkov Weighted Histogram for NRF Energies and Cherenkov Energies
     // ******************************************************************************************************************************** //
@@ -253,5 +256,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     {
         tcheck = true;
     }
+    time_end = std::time(&timer2);
+    std::cout << "Weighting Histos took: " << std::difftime(time_end,time_start) << " seconds!" << std::endl;
     return tcheck;
 }

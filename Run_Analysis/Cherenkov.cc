@@ -56,6 +56,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     // Temp Holding Vectors 
     std::vector<int> eventIDv;
     std::vector<double> energiesv, weightsv;
+    std::vector<size_t> results;
     
     for(int i=0;i<numEntries;i++)
     {

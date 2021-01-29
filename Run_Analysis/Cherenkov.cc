@@ -127,7 +127,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     // Fill New Tree
     // ******************************************************************************************************************************** //
     
-    std::cout << "Filling Cherenkov Merged File..." << std::endl;
+    std::cout << std::endl << "Filling Cherenkov Merged File..." << std::endl;
     for(int i=0;i<events.size();i++)
     {
         EventID = events[i];

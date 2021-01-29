@@ -148,7 +148,6 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
           std::cout << "Cherenkov has more entries than NRF. Searching NRF Events..." << std::endl;
           for(int i=0;i<n1;i++)
           {
-              std::cout << "\r Checking Event: \t" << i << std::flush;
               x = nrfEventv[i];
               auto exists = std::find(cherEventv.begin(),cherEventv.end(), x);
 
@@ -169,7 +168,6 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
           std::cout << "NRF has more entries than Cherenkov. Searching Cherenkov Events..." << std::endl;
           for(int i=0;i<n;i++)
           {
-              std::cout << "\r Checking Event: \t" << i << std::flush;
               x = cherEventv[i];
               auto exists = std::find(nrfEventv.begin(),nrfEventv.end(), x);
 
@@ -255,7 +253,6 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
           std::cout << "More NRF Events than Cherenkov events lead to detection. Checking Cherenkov Events..." << std::endl;
           for(int i=0;i<cher_to_detEvents.size();i++)
           {
-              std::cout << "\r Checking Event: \t" << i << std::flush;
               x = cher_to_detEvents[i];
               auto exists = std::find(nrf_to_detEvents.begin(), nrf_to_detEvents.end(),x);
               if(exists != nrf_to_detEvents.end())

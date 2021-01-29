@@ -44,7 +44,8 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     std::cout << "Cherenkov Object Grabbed." << std::endl;
     Int_t numEntries = Cherenkov->Draw("EventID","","goff");
     Double_t *eventID = Cherenkov->GetVal(0);
-    std::string theCutString;
+    std::string theCutString = "EventID == ";
+    std::string theString;
     const char* theCut;
     double secSum;
     std::vector<double> energyv, weightv, secv, energiesv, weightsv;
@@ -56,7 +57,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     // ******************************************************************************************************************************** //
     // Variables Declared Objects Set up
     // ******************************************************************************************************************************** //
-    std::cout << "Merging Cherenkov..." << std::endl;
+    std::cout << "Merging Cherenkov with " << numEntries << " number of entries..." << std::endl;
     for(int i=0;i<numEntries;i++)
     {
         if(i%1000 == 0)
@@ -68,9 +69,8 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
             energiesv.clear();
             weightsv.clear();
             secSum = 0;
-            theCutString = "EventID == ";
-            theCutString = theCutString + to_string((int)eventID[nSum]);
-            theCut = theCutString.c_str();
+            theString = theCutString + to_string((int)eventID[nSum]);
+            theCut = theString.c_str();
             events.push_back((int)eventID[nSum]);
             c1.SetTitle(theCut);
             n = Cherenkov->Draw("Energy:Weight:NumSecondaries",c1,"goff");

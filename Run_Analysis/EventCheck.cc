@@ -311,8 +311,9 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     
     // Write to file
     std::string FinalOutName = InputFilenameBase;
+    std::string FinalOutName2 = InputFilenameBase;
     FinalOutName = FinalOutName + "_NRF_to_Cher";
-    std::string FinalOutName2 = InputFilenameBase + "_NRF_to_Cher_to_Det";
+    FinalOutName2 = FinalOutName2 + "_NRF_to_Cher_to_Det";
     if(chopState)
     {
         FinalOutName = FinalOutName + "On.root";

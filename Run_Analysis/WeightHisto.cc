@@ -127,7 +127,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     // Fill Chopper In Weighted Histogram
     // ******************************************************************************************************************************** //
     
-    Int_t n = ChopIn->Draw("Energy:Weight","","goff");
+    Int_t n = ChopIn->Draw("Energy:Weight","","goff",10000000);
     Double_t *energyIn = ChopIn->GetVal(0);
     Double_t *weightIn = ChopIn->GetVal(1);
     for(int i=0;i<n;i++)
@@ -139,7 +139,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     // Fill Chopper Out Weighted Histogram
     // ******************************************************************************************************************************** //
     
-    Int_t n1 = ChopOut->Draw("Energy:Weight","","goff");
+    Int_t n1 = ChopOut->Draw("Energy:Weight","","goff",10000000);
     Double_t *energyOut = ChopOut->GetVal(0);
     Double_t *weightOut = ChopOut->GetVal(1);
     for(int i=0;i<n1;i++)

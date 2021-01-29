@@ -62,7 +62,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     {
         if(i % 100 == 0)
         {
-            std::cout << "\r\Percent Complete:\t" << (i/numEntries)*100 << std::flush;
+            std::cout << "\r Percent Complete:\t" << (i/numEntries)*100 << std::flush;
         }
         if(nSum < numEntries)
         {

@@ -115,7 +115,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
             auto it2 = std::find(energiesv.begin(), energiesv.end(),maxE);
             int maxEindex = it2 - energiesv.begin();
             // add the weight of the max energy to the final weight vector 
-            weightv.push_back(weightsv[index]);
+            weightv.push_back(weightsv[maxEindex]);
             // add the total number of secondaries into final secondary vector 
             secv.push_back(secSum);
         }

@@ -312,7 +312,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     // Write to file
     std::string FinalOutName = InputFilenameBase;
     FinalOutName = FinalOutName + "_NRF_to_Cher";
-    std::string FinalOutName2 = FinalOutName + "_NRF_to_Cher_to_Det";
+    std::string FinalOutName2 = InputFilenameBase + "_NRF_to_Cher_to_Det";
     if(chopState)
     {
         FinalOutName = FinalOutName + "On.root";
@@ -325,6 +325,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     }
     const char* OutFilename = FinalOutName.c_str();
     const char* OutFilename2 = FinalOutName2.c_str();
+    
     TFile *fout = new TFile(OutFilename,"recreate");
     fout->cd();
     
@@ -338,13 +339,14 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
         std::cout << OutFilename << " not written to File!" << std::endl << std::endl;
     }
     fout->Close();
+    
     TFile *fout2 = new TFile(OutFilename2,"recreate");
     fout2->cd();
     
     if(nrf_to_cherenkov_to_detEvents.size() > 0)
     {
         nrf_to_cher_to_det_tree->Write();
-        std::cout << "NRF to Cherenkov to Detected Events Written to file: " << OutFilename << std::endl;
+        std::cout << "NRF to Cherenkov to Detected Events Written to file: " << OutFilename2 << std::endl;
     }
     else
     {

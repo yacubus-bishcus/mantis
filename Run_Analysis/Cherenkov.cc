@@ -28,8 +28,6 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     const char* InputFilename = InFile.c_str();
     TFile *f = TFile::Open(InputFilename);
     TTree *Cherenkov;
-    time_t timer, last_time;
-    last_time = time(&timer);
     
     TTree *newCherenkov = new TTree("Merged","Cherenkov Events Merged");
     double tEnergy, Weight, tSec;
@@ -61,11 +59,10 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     std::cout << "Merging Cherenkov..." << std::endl;
     for(int i=0;i<numEntries;i++)
     {
-        if((abs(last_time - time(&timer))%100) == 0)
+        if(i%1000 == 0)
         {
-            std::cout << (i/numEntries)*100 << " % remaining..." << std::endl;
+            std::cout << (i/numEntries)*100 << " percent complete." << std::endl;
         }
-        last_time = time(&timer);
         if(nSum < numEntries)
         {
             energiesv.clear();

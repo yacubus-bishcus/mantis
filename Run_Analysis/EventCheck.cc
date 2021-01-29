@@ -23,7 +23,7 @@
 
 void EventCheck(const char *InputFilenameBase, bool chopState)
 {
-    time_t timer, t_start, t_end;
+    time_t timer, timer2, t_start, t_end;
     t_start = time(&timer);
     std::string inFile = InputFilenameBase;
     inFile = inFile + ".root";
@@ -352,7 +352,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     }
         
     fout2->Close();
-    t_end = time(&timer);
+    t_end = time(&timer2);
     std::cout << "Event Check took: " << std::difftime(t_end, t_start) << " seconds!" << std::endl;
 
 }

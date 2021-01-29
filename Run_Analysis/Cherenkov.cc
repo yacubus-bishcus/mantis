@@ -42,75 +42,88 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     f->GetObject("Cherenkov",Cherenkov);
     Cherenkov->SetEstimate(-1);
     std::cout << "Cherenkov Object Grabbed." << std::endl;
+    
+    // Grab all values and place in arrays 
     Int_t numEntries = Cherenkov->Draw("EventID:Energy:Weight:NumSecondaries","","goff");
     Double_t *eventID = Cherenkov->GetVal(0);
     Double_t *energy = Cherenkov->GetVal(1);
     Double_t *weight = Cherenkov->GetVal(2);
     Double_t *sec = Cherenkov->GetVal(3);
-    std::vector<double> energyv, weightv, energiesv, weightsv;
-    std::vector<int> eventIDv, secv;
+    
+    // Final Vectors 
+    std::vector<int> events, secv;
+    std::vector<double> energyv, weightv;
+    // Temp Holding Vectors 
+    std::vector<int> eventIDv;
+    std::vector<double> energiesv, weightsv;
+    
     for(int i=0;i<numEntries;i++)
     {
         eventIDv.push_back((int)eventID[i]);
-        energyv.push_back(energy[i]);
-        weightv.push_back(weight[i]);
-        secv.push_back((int)sec[i]);
     }
-    std::string theCutString = "EventID == ";
-    std::string theString;
-    const char* theCut;
+
     double secSum;
-    std::vector<int> events;
     Int_t n = 0;
     Int_t nSum = 0;
-    TCut c1;
     
     // ******************************************************************************************************************************** //
     // Variables Declared Objects Set up
     // ******************************************************************************************************************************** //
+    
     std::cout << "Merging Cherenkov with " << numEntries << " number of entries..." << std::endl;
     for(int i=0;i<numEntries;i++)
     {
         std::cout << "\r Event Complete:\t" << i << std::flush;
-        if(nSum < numEntries)
+        while(nSum < numEntries)
         {
+            // clear holding vector/variables 
             energiesv.clear();
             weightsv.clear();
             secSum = 0;
-            int x = eventIDv[i];
+            // grab the next event to check 
+            int x = eventIDv[nSum];
+            // find where the indices are that match x 
             auto it = std::find(eventIDv.begin(),eventIDv.end(),x);
             while(it != eventIDv.end())
             {
                 results.emplace_back(std::distance(eventIDv.begin(), it));
                 it = std::find(std::next(it), eventIDv.end(), x);
             }
-            
-            events.push_back((int)eventID[nSum]);
-       
+            // Determine how many indices match x 
+            int n = results.size();
+            // write the event that has matches into the final event vector 
+            events.push_back((int)eventIDv[nSum]);
+            // sum the events to skip repeats ... move on to next event ID value 
             nSum += n;
-            
+            // Fill the energies, weights and number of secondaries temp vectors 
             for(int j=0;j<n;j++)
             {
-                secSum += sec[j];
-                energiesv.push_back(energy[j]);
-                weightsv.push_back(weight[j]);
+                // indices of matching events 
+                int index = results[j];
+                // sum the number of secondaries of matching events 
+                secSum += sec[index];
+                // put all of the energies and weights into temp vector
+                energiesv.push_back(energy[index]);
+                weightsv.push_back(weight[index]);
             }
+            // find the max energy for the event 
             double maxE = *std::max_element(energiesv.begin(),energiesv.end());
+            // add the max energy to the final energy vector
             energyv.push_back(maxE);
-            auto it = std::find(energiesv.begin(), energiesv.end(),maxE);
-            int index = it - energiesv.begin();
+            // find index where the maxE is 
+            auto it2 = std::find(energiesv.begin(), energiesv.end(),maxE);
+            int maxEindex = it2 - energiesv.begin();
+            // add the weight of the max energy to the final weight vector 
             weightv.push_back(weightsv[index]);
+            // add the total number of secondaries into final secondary vector 
             secv.push_back(secSum);
-        }
-        else
-        {
-            break;
         }
     } // end of for loop
     
     // ******************************************************************************************************************************** //
     // Fill New Tree
     // ******************************************************************************************************************************** //
+    
     std::cout << "Filling Cherenkov Merged File..." << std::endl;
     for(int i=0;i<events.size();i++)
     {
@@ -120,7 +133,6 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
         tSec = secv[i];
         newCherenkov->Fill();
         wCher->Fill(tEnergy, Weight);
-        
     }
     
     std::cout << "Cherenkov Number of Merged Events: " << events.size() << std::endl;

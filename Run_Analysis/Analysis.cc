@@ -50,6 +50,7 @@ void Analysis(const char* InputFilenameBaseOn,
     {
       tcheck = true;
     }
+    std::cout << std::endl << std::endl << "Printing Results..." << std::endl << std::endl;
     PrintResults(InputFilenameBaseOn, InputFilenameBaseOff, tcheck);
-    std::cout << std::endl << "Analysis Complete" << std::endl;
+    std::cout << std::endl << "Analysis Complete" << std::endl << std::endl;
 }

@@ -23,6 +23,8 @@
 
 void EventCheck(const char *InputFilenameBase, bool chopState)
 {
+    time_t timer, time_start;
+    time_start = time(&timer);
     std::string inFile = InputFilenameBase;
     inFile = inFile + ".root";
     const char* InputFilename = inFile.c_str();
@@ -143,6 +145,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
       // if Cherenkov has more entries search with nrf events
       if(n1 < n)
       {
+          std::cout << "Cherenkov has more entries than NRF. Searching NRF Events..." << std::endl;
           for(int i=0;i<n1;i++)
           {
               x = nrfEventv[i];
@@ -162,6 +165,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
       // Else NRF has more entries search with cherenkov events
       else
       {
+          std::cout << "NRF has more entries than Cherenkov. Searching Cherenkov Events..." << std::endl;
           for(int i=0;i<n;i++)
           {
               x = cherEventv[i];
@@ -224,6 +228,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
       // Check if more cherenkov events of nrf events lead to detection if cherenkov > nrf then look at nrf->Detected events
       if(cher_to_detEvents.size() > nrf_to_detEvents.size())
       {
+          std::cout << "More Cherenkov Events than nrf events lead to detection. Checking NRF Detected Events..." << std::endl;
           for(int i=0;i<nrf_to_detEvents.size();i++)
           {
               x = nrf_to_detEvents[i];
@@ -243,6 +248,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
       }
       else if(nrf_to_detEvents.size() > cher_to_detEvents.size())
       {
+          std::cout << "More NRF Events than Cherenkov events lead to detection. Checking Cherenkov Events..." << std::endl;
           for(int i=0;i<cher_to_detEvents.size();i++)
           {
               x = cher_to_detEvents[i];
@@ -269,6 +275,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     // ******************************************************************************************************************************** //
     if(n > 0 && n1 > 0)
     {
+        std::cout << "Filling NRF to Cherenkov Tree..." << std::endl;
       // Fill nrf_to_cher_tree
       for(int i=0;i<nrf_to_cherEvents.size();i++)
       {
@@ -283,6 +290,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     
     if(n2 > 0)
     {
+        std::cout << "Filling NRF to Cherenkov to Detected Tree..." << std::endl;
       // Fill nrf_to_cher_to_det_tree
       for(int i=0;i<nrf_to_cherenkov_to_detEvents.size();i++)
       {
@@ -303,16 +311,20 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     
     // Write to file
     std::string FinalOutName = InputFilenameBase;
-    FinalOutName = FinalOutName + "_EventCheck";
+    FinalOutName = FinalOutName + "_NRF_to_Cher";
+    std::string FinalOutName2 = FinalOutName + "_NRF_to_Cher_to_Det";
     if(chopState)
     {
         FinalOutName = FinalOutName + "On.root";
+        FinalOutName2 = FinalOutName2 + "On.root";
     }
     else
     {
         FinalOutName = FinalOutName + "Off.root";
+        FinalOutName2 = FinalOutName2 + "Off.root";
     }
     const char* OutFilename = FinalOutName.c_str();
+    const char* OutFilename2 = FinalOutName2.c_str();
     TFile *fout = new TFile(OutFilename,"recreate");
     fout->cd();
     
@@ -321,11 +333,25 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
         nrf_to_cher_tree->Write();
         std::cout << "NRF to Cherenkov Events Written to file: " << OutFilename << std::endl;
     }
+    else
+    {
+        std::cout << OutFilename << " not written to File!" << std::endl << std::endl;
+    }
+    fout->Close();
+    TFile *fout2 = new TFile(OutFilename2,"recreate");
+    fout2->cd();
+    
     if(nrf_to_cherenkov_to_detEvents.size() > 0)
     {
         nrf_to_cher_to_det_tree->Write();
         std::cout << "NRF to Cherenkov to Detected Events Written to file: " << OutFilename << std::endl;
     }
-    fout->Close();
+    else
+    {
+        std::cout << OutFilename2 << " not written to File!" << std::endl << std::endl;
+    }
+        
+    fout2->Close();
+    std::cout << "Event Check took: " << time(&timer) - time_start << " seconds!" << std::endl;
 
 }

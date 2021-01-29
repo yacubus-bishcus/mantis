@@ -23,8 +23,8 @@
 
 void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
 {
-    time_t timer, time_start;
-    time_start = time(&timer);
+    time_t timer, t_start, t_end;
+    t_start = time(&timer);
     std::string InFile = InputFilenameBase;
     InFile = InFile + ".root";
     const char* InputFilename = InFile.c_str();
@@ -166,6 +166,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
         wCher->Write();
         std::cout << "Cherenkov Merged Event Data saved to: " << OutputFilename << std::endl;
         fout->Close();
-        std::cout << "Time to Merge Cherenkov: " << time(&timer) - time_start << " seconds" << std::endl;
+        t_end = time(&timer);
+        std::cout << "Time to Merge Cherenkov: " << std::difftime(t_end, t_start) << " seconds" << std::endl;
     }
 }

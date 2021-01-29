@@ -120,7 +120,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     
     
     // Grab DetInfo Events
-    Int_t n2 = DetData->Draw("EventID:Energy:Weight:Time","DetectionProcess == \"Detected\"","goff");
+    Int_t n2 = DetData->Draw("EventID:Energy:Weight:Time","DetectionProcess == \"Det\"","goff");
     std::cout << "Total Number of Detected entries: " << n2 << std::endl;
   
     Double_t *detEvent = DetData->GetVal(0);

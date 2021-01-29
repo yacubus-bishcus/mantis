@@ -60,9 +60,9 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     std::cout << "Merging Cherenkov with " << numEntries << " number of entries..." << std::endl;
     for(int i=0;i<numEntries;i++)
     {
-        if(i%1000 == 0)
+        if(i % 100 == 0)
         {
-            std::cout << (i/numEntries)*100 << " percent complete." << std::endl;
+            std::cout << "\r\Percent Complete:\t" << (i/numEntries)*100 << std::flush;
         }
         if(nSum < numEntries)
         {

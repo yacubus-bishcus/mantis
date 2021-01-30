@@ -1,19 +1,36 @@
+//
+// ********************************************************************
+// * DISCLAIMER                                                       *
+// *                                                                  *
+// * Neither the authors of this software system, nor their employing *
+// * institutes,nor the agencies providing financial support for this *
+// * work  make  any representation or  warranty, express or implied, *
+// * regarding  this  software system or assume any liability for its *
+// * use.                                                             *
+// *                                                                  *
+// * By copying,  distributing  or modifying the Program (or any work *
+// * based  on  the Program)  you indicate  your  acceptance of  this *
+// * statement, and all its terms.                                    *
+// ********************************************************************
+//
+//
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// Author:
+// Jacob E Bickus, 2021
+// MIT, NSE
+// jbickus@mit.edu
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+///////////////////////////////////////////////////////////////////////////////
 
 #include "physicsList.hh"
-
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
-
 #include "G4DecayPhysics.hh"
-
 #include "G4NRFPhysics.hh"
-
 #include "G4OpticalPhysics.hh"
 #include "G4EmStandardPhysics_option4.hh"
 #include "G4EmExtraPhysics.hh"
 #include "G4EmProcessOptions.hh"
-//#include "G4EmLowEPPhysics.hh"
-
 #include "G4HadronPhysicsQGSP_BIC_HP.hh"
 #include "G4HadronPhysicsQGSP_BIC.hh"
 #include "G4HadronElasticPhysics.hh"
@@ -21,7 +38,6 @@
 #include "G4NeutronCrossSectionXS.hh"
 #include "G4NeutronTrackingCut.hh"
 #include "G4StoppingPhysics.hh"
-
 #include "G4HadronicProcessStore.hh"
 #include "G4LossTableManager.hh"
 #include "G4ProcessTable.hh"

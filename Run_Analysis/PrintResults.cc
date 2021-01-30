@@ -35,8 +35,15 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool checkAdO
   
   TFile *OGOnFile = new TFile(OGOn);
   TFile *OGOffFile = new TFile(OGOff);
-  TFile *AdOnFile = new TFile(adOn);
-  TFile *AdOffFile = new TFile(adOff);
+  if(gSystem->AccessPathName(adOn) && gSystem->AccessPathName(adOff))
+  {
+    std::cout << "Added Files do not exist. Skipping..." << std::endl;
+  }
+  else
+  {
+    TFile *AdOnFile = new TFile(adOn);
+    TFile *AdOffFile = new TFile(adOff);
+  }
   
   // Histograms from OG
   TH1D *IntObjInOn, *IntObjOutOn, *IntObjInOff, *IntObjOutOff, *IntNRFInOn, *IntNRFOutOn, *IntNRFInOff, *IntNRFOutOff;

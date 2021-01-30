@@ -1,3 +1,7 @@
+// C++ source file to encapsulate the G4NRF physics process
+// Jayson Vavrek, MIT, 2016
+// jvavrek@mit.edu
+
 #include "G4NRFPhysics.hh"
 
 #include "G4RayleighScattering.hh"

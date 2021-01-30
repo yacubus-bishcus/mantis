@@ -24,18 +24,14 @@
 
 #include "RunAction.hh"
 RunAction::RunAction(HistoManager* histoAnalysis, G4bool brem, G4bool output_in)
-        : G4UserRunAction(),fTimer(nullptr), fHistoManager(histoAnalysis)
+        : G4UserRunAction(), fHistoManager(histoAnalysis)
 {
-  fTimer = new G4Timer;
   bremTest = brem;
   output = output_in;       
 }
 
 RunAction::~RunAction()
-{
-  delete fTimer;
-}
-
+{}
 
 void RunAction::BeginOfRunAction(const G4Run* aRun)
 {
@@ -52,14 +48,11 @@ void RunAction::BeginOfRunAction(const G4Run* aRun)
   fScintEnergy = 0;
   fNRF = 0;
   fStatusKilled = 0;
-  fTimer->Start();
   std::cout << "Beginning Run..." << std::endl;
 }
 
 void RunAction::EndOfRunAction(const G4Run* aRun)
 {
-  fTimer->Stop();
-
   G4int TotNbofEvents = aRun->GetNumberOfEvent();
   std::ios::fmtflags mode = G4cout.flags();
   G4int prec = G4cout.precision(2);

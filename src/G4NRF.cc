@@ -1,5 +1,138 @@
+//
+// ********************************************************************
+// * DISCLAIMER                                                       *
+// *                                                                  *
+// * The following disclaimer summarizes all the specific disclaimers *
+// * of contributors to this software. The specific disclaimers,which *
+// * govern, are listed with their locations in:                      *
+// *   http://cern.ch/geant4/license                                  *
+// *                                                                  *
+// * Neither the authors of this software system, nor their employing *
+// * institutes,nor the agencies providing financial support for this *
+// * work  make  any representation or  warranty, express or implied, *
+// * regarding  this  software system or assume any liability for its *
+// * use.                                                             *
+// *                                                                  *
+// * This  code  implementation is the  intellectual property  of the *
+// * GEANT4 collaboration.                                            *
+// * By copying,  distributing  or modifying the Program (or any work *
+// * based  on  the Program)  you indicate  your  acceptance of  this *
+// * statement, and all its terms.                                    *
+// *                                                                  *
+// * This version (C) 2018 Jayson Vavrek under the MIT License.       *
+// ********************************************************************
+//
+//      ------------ G4NRF physics process --------
+//
+//      File name: G4NRF
+//      Author:        David Jordan (david.jordan@pnl.gov)
+//      Creation date: October 2006
+//
+//      Modifications: Jayson Vavrek (jvavrek@mit.edu)
+//        Moderate to major bug fixes, new cross section evaluation,
+//        enhanced documentation.
+//      Release date: August 2018
+//
+//      How to use this physics process:
+//
+//      (1) Store ENSDF-derived nuclear level and gamma emission
+//          files in a directory pointed to by the environment
+//          variable $G4NRFGAMMADATA.  These files include:
+//             z[Z-value].a[A-value] -- default photon evaporation files
+//             gamma_table_nnn.dat   -- supplementary info for gamma emission
+//             level_table_nnn.dat   -- supplementary level info
+//             ground_state_properties.dat
+//
+//
+//      (2) At the top of the user's physicsList class, add:
+//
+//            #include "G4NRFPhysics.hh"
+//
+//          Then inside physicsList::ConstructPhysics(), add:
+//
+//            RegisterPhysics(new G4NRFPhysics("NRF", use_xsec_tables,
+//                            use_xsec_integration, force_isotropic));
+//
+//          where use_xsec_tables, use_xsec_integration, force_isotropic
+//          are boolean values for whether to use NRF cross section
+//          table interpolation (instead of on-the-fly evaluation),
+//          whether to use the high-accuracy numerically-integrated
+//          form of the cross section, and whether to force isotropic
+//          emission of NRF photons. Recommended: true, true, either.
+//          Rather than set flags in the physicsList, the user may want
+//          to use command-line arguments.
+//
+//
+//      (3) Material definition requirements: Materials should be constructed
+//          from elements containing G4Isotopes in order to trigger
+//          calculation of NRF cross sections. NRF interactions can still
+//          occur using, e.g. NIST-defined materials, but this has not been
+//          tested extensively.
+//
+//          Example (in user's DetectorConstruction class):
+//
+//          // Natural Oxygen
+//
+//          G4Isotope *O16 = new G4Isotope(name="O16", iz=8, n=16, a=15.995*g/mole);
+//          G4Isotope *O17 = new G4Isotope(name="O17", iz=8, n=17, a=16.999*g/mole);
+//          G4Isotope *O18 = new G4Isotope(name="O18", iz=8, n=18, a=17.992*g/mole);
+//          G4Element *NatO = new G4Element
+//                       (name="Natural Oxygen", symbol="O", ncomponents=3);
+//          NatO->AddIsotope(O16, abundance=99.757*perCent);
+//          NatO->AddIsotope(O17, abundance= 0.038*perCent);
+//          NatO->AddIsotope(O18, abundance= 0.205*perCent);
+//
+// -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
+//
+// Description:
+//
+// G4NRF.cc is the main Geant4 code for simulating nuclear resonance fluorescence
+// (NRF). It primarily calculates the NRF cross section for gamma rays incident on
+// a properly-defined material, then calculates the final state if an NRF interaction
+// is determined to occur.
+//
+//
+// Major updates to the G4NRF class by Jayson Vavrek (2018):
+//
+// 0) Ended up replacing NRF_xsec_calc() entirely. Old version is now called
+//    NRF_xsec_calc_gaus(). New version performs numerical integration of the
+//    integral rather than a Gaussain approximation, and calulates the effective
+//    temperature using the new Debye temperature database file. See the methods
+//    PsiIntegral() and expIntegrand().
+//
+// 1) Since the numerical integration can introduce a performance penalty, added
+//    the option to build a table of numerically-integrated cross section values
+//    vs photon energy at initialization instead of integrating on the fly. At
+//    runtime, the sigma vs E table is interpolated using Geant4's c2_function
+//    capabilities. This results in at least 40% faster event rates with much
+//    higher accuracy, and could likely be optimized even further. See the
+//    methods InterpolateCrossSection() and MakeCrossSectionTable().
+//
+// 2) In NRF_xsec_calc(), added some basic functionality to interrupt the code
+//    when an NRF event is triggered with a cross section above some level for
+//    debugging of cross section formulae. User must manually set
+//      const bool interrupt = false;
+//    to take advantage of this if so desired, and un-comment the lines checking
+//    for interrupt in NRF_xsec_calc, etc.
+//
+// 3) Introduction of the print_to_standalone() function, which can be used to
+//    generate a standalone plaintext NRF gamma database. A full database print
+//    takes about 10-15 minutes (with a 2.4 GHz i5 on a late 2011 Mac.) User must
+//    manually set
+//      const bool standalone = true;
+//    in this file, and may manually adjust the Z/A ranges of isotopes in the
+//    print_to_standalone() method below.
+//
+// 4) Encapsulation of G4NRF by the G4NRFPhysics class, which allows inheritance
+//    from G4VPhysicsConstructor as per Geant4 standards for adding custom physics
+//    processes. Furthermore, used SetProcessType() and SetProcessSubType(), both
+//    of which are set to fHadronic.
+//
+// -------------------------------------------------------------------
+
+// Edits were made to remove some verbosity by Jacob E Bickus for personal use 
 
 #include "G4NRF.hh"
 

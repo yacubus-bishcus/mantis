@@ -143,26 +143,24 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     // Write Data to file 
     // ******************************************************************************************************************************** //
     std::cout << "Writing Cherenkov to File..." << std::endl;
-    if(events.size() > 0)
+
+    std::string FinalOutFilename = InputFilenameBase;
+    FinalOutFilename = FinalOutFilename + "_CherenkovMerged";
+    if(ChopState)
     {
-        std::string FinalOutFilename = InputFilenameBase;
-        FinalOutFilename = FinalOutFilename + "_CherenkovMerged";
-        if(ChopState)
-        {
-            FinalOutFilename = FinalOutFilename + "On.root";
-        }
-        else
-        {
-            FinalOutFilename = FinalOutFilename + "Off.root";
-        }
-        const char* OutputFilename = FinalOutFilename.c_str();
-        TFile *fout = new TFile(OutputFilename,"recreate");
-        fout->cd();
-        newCherenkov->Write();
-        wCher->Write();
-        std::cout << "Cherenkov Merged Event Data saved to: " << OutputFilename << std::endl;
-        fout->Close();
-        t_end = time(&timer2);
-        std::cout << "Time to Merge Cherenkov: " << std::difftime(t_end, t_start) << " seconds" << std::endl;
+        FinalOutFilename = FinalOutFilename + "On.root";
     }
+    else
+    {
+        FinalOutFilename = FinalOutFilename + "Off.root";
+    }
+    const char* OutputFilename = FinalOutFilename.c_str();
+    TFile *fout = new TFile(OutputFilename,"recreate");
+    fout->cd();
+    newCherenkov->Write();
+    wCher->Write();
+    std::cout << "Cherenkov Merged Event Data saved to: " << OutputFilename << std::endl;
+    fout->Close();
+    t_end = time(&timer2);
+    std::cout << "Time to Merge Cherenkov: " << std::difftime(t_end, t_start) << " seconds" << std::endl;
 }

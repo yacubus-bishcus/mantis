@@ -208,126 +208,127 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         }
       } // end of optical photons if statement
   } // end of if loop while inside water
-// *********************************************** Track Photocathode Interactions **************************************************** //
+
+  // *********************************************** Track Photocathode Interactions **************************************************** //
         
-    // Photocathode Analysis
+  // Photocathode Analysis
 
-    if(endPoint->GetStepStatus() == fGeomBoundary) 
+  if(endPoint->GetStepStatus() == fGeomBoundary) 
+  {
+
+    const G4DynamicParticle* theParticle = theTrack->GetDynamicParticle();
+    G4OpBoundaryProcessStatus theStatus = Undefined;
+    G4ProcessManager* OpManager =
+                  G4OpticalPhoton::OpticalPhoton()->GetProcessManager();
+    G4int MAXofPostStepLoops =
+                  OpManager->GetPostStepProcessVector()->entries();
+    G4ProcessVector* postStepDoItVector =
+    OpManager->GetPostStepProcessVector(typeDoIt);
+    // incident photocathode
+    if(nextStep_VolumeName.compare(0,2,"PC")==0 
+     && previousStep_VolumeName.compare(0,2,"PC")!=0
+     && theTrack->GetParticleDefinition() == G4Gamma::Definition()) 
     {
-
-      const G4DynamicParticle* theParticle = theTrack->GetDynamicParticle();
-      G4OpBoundaryProcessStatus theStatus = Undefined;
-      G4ProcessManager* OpManager =
-                    G4OpticalPhoton::OpticalPhoton()->GetProcessManager();
-      G4int MAXofPostStepLoops =
-                    OpManager->GetPostStepProcessVector()->entries();
-      G4ProcessVector* postStepDoItVector =
-      OpManager->GetPostStepProcessVector(typeDoIt);
-      // incident photocathode
-      if(nextStep_VolumeName.compare(0,2,"PC")==0 
-       && previousStep_VolumeName.compare(0,2,"PC")!=0
-       && theTrack->GetParticleDefinition() == G4Gamma::Definition()) 
+      // Kill photons that are above the QE energy Max
+      if(theTrack->GetKineticEnergy()/(eV) > 10)
       {
-        // Kill photons that are above the QE energy Max
-        if(theTrack->GetKineticEnergy()/(eV) > 10)
+        theTrack->SetTrackStatus(fStopAndKill);   
+        run->AddStatusKilled();
+      }
+      run->AddTotalSurface();
+
+      for (G4int i=0; i<MAXofPostStepLoops; ++i) 
+      {
+        G4VProcess* currentProcess = (*postStepDoItVector)[i];
+
+        G4OpBoundaryProcess* opProc = dynamic_cast<G4OpBoundaryProcess*>(currentProcess);
+
+        if(opProc && !bremTest) 
         {
-          theTrack->SetTrackStatus(fStopAndKill);   
-          run->AddStatusKilled();
-        }
-        run->AddTotalSurface();
+          theStatus = opProc->GetStatus();
 
-        for (G4int i=0; i<MAXofPostStepLoops; ++i) 
+          if(theStatus == Transmission) 
+          {
+            procCount = "Trans";
+          }
+          else if(theStatus == FresnelRefraction) 
+          {
+            procCount = "Refr";
+          }
+          else if (theStatus == TotalInternalReflection) 
+          {
+            procCount = "Int_Refl";
+          }
+          else if (theStatus == LambertianReflection) 
+          {
+            procCount = "Lamb";
+          }
+          else if (theStatus == LobeReflection) 
+          {
+            procCount = "Lobe";
+          }
+          else if (theStatus == SpikeReflection) 
+          {
+            procCount = "Spike";
+          }
+          else if (theStatus == BackScattering) 
+          {
+            procCount = "BackS";
+          }
+          else if (theStatus == Absorption) 
+          {
+            procCount = "Abs";
+          }
+          // Keep track of detected photons 
+          else if (theStatus == Detection) 
+          {
+            procCount = "Det";
+            manager->FillH1(6, theParticle->GetKineticEnergy()/(eV), weight);
+          }
+          else if (theStatus == NotAtBoundary) 
+          {
+            procCount = "NotAtBoundary";
+          }
+          else if (theStatus == SameMaterial) 
+          {
+            procCount = "SameMaterial";
+          }
+          else if (theStatus == StepTooSmall) 
+          {
+            procCount = "SteptooSmall";
+          }
+          else if (theStatus == NoRINDEX) 
+          {
+            procCount = "NoRINDEX";
+          }
+          else 
+          {
+            G4cout << "theStatus: " << theStatus
+                   << " was none of the above." << G4endl;
+            procCount = "noStatus";
+          }
+        } // for if opProc
+        // Keep track of Detector Data 
+        if(drawDetDataFlag && !bremTest)
         {
-          G4VProcess* currentProcess = (*postStepDoItVector)[i];
-
-          G4OpBoundaryProcess* opProc = dynamic_cast<G4OpBoundaryProcess*>(currentProcess);
-
-          if(opProc && !bremTest) 
+          manager->FillNtupleIColumn(4,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+          manager->FillNtupleIColumn(4,1, theTrack->GetTrackID());
+          manager->FillNtupleDColumn(4,2, theParticle->GetKineticEnergy()/(eV));
+          manager->FillNtupleDColumn(4,3, weight);
+          G4String creatorProcess;
+          if(theTrack->GetCreatorProcess() !=0)
           {
-            theStatus = opProc->GetStatus();
-
-            if(theStatus == Transmission) 
-            {
-              procCount = "Trans";
-            }
-            else if(theStatus == FresnelRefraction) 
-            {
-              procCount = "Refr";
-            }
-            else if (theStatus == TotalInternalReflection) 
-            {
-              procCount = "Int_Refl";
-            }
-            else if (theStatus == LambertianReflection) 
-            {
-              procCount = "Lamb";
-            }
-            else if (theStatus == LobeReflection) 
-            {
-              procCount = "Lobe";
-            }
-            else if (theStatus == SpikeReflection) 
-            {
-              procCount = "Spike";
-            }
-            else if (theStatus == BackScattering) 
-            {
-              procCount = "BackS";
-            }
-            else if (theStatus == Absorption) 
-            {
-              procCount = "Abs";
-            }
-            // Keep track of detected photons 
-            else if (theStatus == Detection) 
-            {
-              procCount = "Det";
-              manager->FillH1(6, theParticle->GetKineticEnergy()/(eV), weight);
-            }
-            else if (theStatus == NotAtBoundary) 
-            {
-              procCount = "NotAtBoundary";
-            }
-            else if (theStatus == SameMaterial) 
-            {
-              procCount = "SameMaterial";
-            }
-            else if (theStatus == StepTooSmall) 
-            {
-              procCount = "SteptooSmall";
-            }
-            else if (theStatus == NoRINDEX) 
-            {
-              procCount = "NoRINDEX";
-            }
-            else 
-            {
-              G4cout << "theStatus: " << theStatus
-                     << " was none of the above." << G4endl;
-              procCount = "noStatus";
-            }
-          } // for if opProc
-          // Keep track of Detector Data 
-          if(drawDetDataFlag && !bremTest)
+            creatorProcess =  theTrack->GetCreatorProcess()->GetProcessName();     
+          }
+          else
           {
-            manager->FillNtupleIColumn(4,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
-            manager->FillNtupleIColumn(4,1, theTrack->GetTrackID());
-            manager->FillNtupleDColumn(4,2, theParticle->GetKineticEnergy()/(eV));
-            manager->FillNtupleDColumn(4,3, weight);
-            G4String creatorProcess;
-            if(theTrack->GetCreatorProcess() !=0)
-            {
-              creatorProcess =  theTrack->GetCreatorProcess()->GetProcessName();     
-            }
-            else
-            {
-              creatorProcess = "Beam";     
-            }
-            manager->FillNtupleSColumn(4,4, creatorProcess);
-            manager->FillNtupleSColumn(4,5, procCount);
-            manager->FillNtupleDColumn(4,6, theTrack->GetGlobalTime()); // time units is nanoseconds 
-            manager->AddNtupleRow(4);
-          }      
+            creatorProcess = "Beam";     
+          }
+          manager->FillNtupleSColumn(4,4, creatorProcess);
+          manager->FillNtupleSColumn(4,5, procCount);
+          manager->FillNtupleDColumn(4,6, theTrack->GetGlobalTime()); // time units is nanoseconds 
+          manager->AddNtupleRow(4);
+        }      
       } // for for loop
     } // for if statement if first time in photocathode
   } // for if at boundary

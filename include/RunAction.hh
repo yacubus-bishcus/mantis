@@ -9,9 +9,6 @@
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
-#include "G4Timer.hh"
-
-class G4Timer;
 
 class RunAction : public G4UserRunAction
 {
@@ -37,7 +34,6 @@ class RunAction : public G4UserRunAction
   private:
     G4bool bremTest;
     G4bool output;
-    G4Timer* fTimer;
     HistoManager* fHistoManager;
     G4double fCerenkovEnergy;
     G4double fScintEnergy;

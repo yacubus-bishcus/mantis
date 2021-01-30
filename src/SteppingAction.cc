@@ -228,6 +228,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
        && previousStep_VolumeName.compare(0,2,"PC")!=0
        && theTrack->GetParticleDefinition() == G4Gamma::Definition()) 
       {
+        // Kill photons that are above the QE energy Max
+        if(theTrack->GetKineticEnergy()/(eV) > 10)
+        {
+          theTrack->SetTrackStatus(fStopAndKill);   
+          run->AddStatusKilled();
+        }
         run->AddTotalSurface();
 
         for (G4int i=0; i<MAXofPostStepLoops; ++i) 
@@ -276,7 +282,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             else if (theStatus == Detection) 
             {
               procCount = "Det";
-              manager->FillH1(6, theParticle->GetKineticEnergy()/(MeV), weight);
+              manager->FillH1(6, theParticle->GetKineticEnergy()/(eV), weight);
             }
             else if (theStatus == NotAtBoundary) 
             {
@@ -306,7 +312,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           {
             manager->FillNtupleIColumn(4,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
             manager->FillNtupleIColumn(4,1, theTrack->GetTrackID());
-            manager->FillNtupleDColumn(4,2, theParticle->GetKineticEnergy()/(MeV));
+            manager->FillNtupleDColumn(4,2, theParticle->GetKineticEnergy()/(eV));
             manager->FillNtupleDColumn(4,3, weight);
             G4String creatorProcess;
             if(theTrack->GetCreatorProcess() !=0)

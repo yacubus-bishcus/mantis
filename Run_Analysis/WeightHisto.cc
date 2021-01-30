@@ -26,12 +26,12 @@
 
 bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
 {
+    TFile *f1, *f2, *f3;
     time_t timer, timer2, time_start, time_end;
     time_start = std::time(&timer);
     std::string InFile = InputFilenameBase;
     std::string InFileEvent, InFileEvent2, InFileCherMerged;
-    bool check = true;
-    bool check2 = true;
+    bool checkNRF_to_Cher, checkNRF_to_Cher_to_Det, checkCherenkov;
     bool tcheck = false;
     
     if(chopState)
@@ -54,9 +54,37 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     const char* InputFilenameCher = InFileCherMerged.c_str();
     
     TFile *f = TFile::Open(InputFilename);
-    TFile *f1 = TFile::Open(InputFilenameEvent); 
-    TFile *f2 = TFile::Open(InputFilenameEvent2);  
-    TFile *f3 = TFile::Open(InputFilenameCher);
+    
+    if(gSystem->AccessPathName(InputFilenameEvent))
+    {
+        std::cout << "NRF to Cherenkov Event File does not exist. Skipping..." << std::endl;
+        checkNRF_to_Cher = false;
+    }
+    else
+    {
+        f1 = TFile::Open(InputFilenameEvent); 
+        checkNRF_to_Cher = true;
+    }
+    if(gSystem->AccessPathName(InputFilenameEvent2))
+    {
+        std::cout << "NRF to Cherenkov to Detected File does not exist. Skipping..." << std::endl;
+        checkNRF_to_Cher_to_Det = false;
+    }
+    else
+    {
+        f2 = TFile::Open(InputFilenameEvent2);  
+        checkNRF_to_Cher_to_Det = true;
+    }
+    if(gSystem->AccessPathName(InputFilenameCher))
+    {
+        std::cout << " Merged Cherenkov File does not exist. Skipping..." << std::endl;
+        checkCherenkov = false;
+    }
+    else
+    {
+        f3 = TFile::Open(InputFilenameCher);
+        checkCherenkov = true;
+    }
     
     TTree *ChopIn, *ChopOut, *NRFMatData, *DetInfo;
     TTree *nrf_to_cher_tree, *nrf_to_cher_to_det_tree;
@@ -79,45 +107,29 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     f->GetObject("NRFMatData",NRFMatData);
     f->GetObject("DetInfo",DetInfo);
     
-    f1->cd();
-    try
-    {
+    if(checkNRF_to_Cher)
+    {    
+      f1->cd();
       f1->GetObject("nrf_to_cher_tree",nrf_to_cher_tree);
-      throw 100;
+      nrf_to_cher_tree->SetEstimate(-1);
     }
-    catch(int e)
+    if(checkNRF_to_Cher_to_Det)
     {
-      std::cout << "No NRF to Cherenkov Tree Found." << std::endl;
-      check = false;
+      f2->cd();
+      f2->GetObject("nrf_to_cher_to_det_tree",nrf_to_cher_to_det_tree);
+      nrf_to_cher_to_det_tree->SetEstimate(-1); 
     }
-    
-    f2->cd();
-    try
+    if(checkCherenkov)
     {
-        f2->GetObject("nrf_to_cher_to_det_tree",nrf_to_cher_to_det_tree);
-        throw 200;
+      f3->cd();
+      f3->GetObject("wCher",Cherenkov);
     }
-    catch(int e)
-    {
-        std::cout << "No NRF to Cherenkov to Detected Tree Found." << std::endl;
-        check2 = false;
-    }
-    
-    f3->cd();
-    f3->GetObject("wCher",Cherenkov);
 
     ChopIn->SetEstimate(-1);
     ChopOut->SetEstimate(-1);
     NRFMatData->SetEstimate(-1);
     DetInfo->SetEstimate(-1);
-    if(check)
-    {
-        nrf_to_cher_tree->SetEstimate(-1);
-    }
-    if(check2)
-    {
-      nrf_to_cher_to_det_tree->SetEstimate(-1);  
-    }
+
     std::cout << "WeightHisto::Objects Grabbed!" << std::endl;
     // ******************************************************************************************************************************** //
     // Variables Declared Objects Set up
@@ -175,7 +187,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     // ******************************************************************************************************************************** //
     // Fill NRF that Lead to Cherenkov Weighted Histogram for NRF Energies and Cherenkov Energies
     // ******************************************************************************************************************************** //
-    if(check)
+    if(checkNRF_to_Cher)
     {
         Int_t n5 = nrf_to_cher_tree->Draw("NRF_Energy:NRF_Weight","","goff");
         Double_t *nrfcherNRFEnergy = nrf_to_cher_tree->GetVal(0);
@@ -197,7 +209,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
         // ******************************************************************************************************************************** //
         // Fill NRF that Lead to Cherenkov that Lead to Detection Weighted Histogram for NRF Energies and Cherenkov Energies
         // ******************************************************************************************************************************** //
-    if(check2)
+    if(checkNRF_to_Cher_to_Det)
     {
         Int_t n7 = nrf_to_cher_to_det_tree->Draw("EnergyNRF:WeightNRF","","goff");
         Double_t *nrfcherdetNRFEnergy = nrf_to_cher_to_det_tree->GetVal(0);
@@ -236,23 +248,26 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     wChopIn->Write();
     wChopOut->Write();
     wNRF->Write();
-    Cherenkov->Write();
+    if(checkCherenkov)
+    {
+      Cherenkov->Write();
+    }
     wDet->Write();
     
-    if(check)
+    if(checkNRF_to_Cher)
     {
         wNRF_NRF_to_Cher->Write();
         wCher_NRF_to_Cher->Write();
     }
     
-    if(check2)
+    if(checkNRF_to_Cher_to_Det)
     {
         wNRF_NRF_to_Cher_to_Det->Write();
         wCher_NRF_to_Cher_to_Det->Write();
     }
     fout->Close();
     std::cout << "Weighted Histograms saved to: " << OutputFilename << std::endl; 
-    if(check && check2)
+    if(checkNRF_to_Cher && checkNRF_to_Cher_to_Det)
     {
         tcheck = true;
     }

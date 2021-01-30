@@ -1,5 +1,5 @@
 # Mantis
-This program allows the user to run calorimetric NRF Cherenkov Detector cargo screening simulations. This simulation provides visualization tools in addition to root histogramming data. Visualization tools can be utilized in both batch and interactive modes. The final output provided can be manipulated by the user through the "mantis.in" input. 
+This program allows the user to run calorimetric NRF Cherenkov Detector cargo screening simulations. This simulation provides visualization tools in addition to root data. Visualization tools can be utilized in both batch and interactive modes. The final output provided can be manipulated by the user through the "mantis.in" input. 
 
 Mantis Output
 ==
@@ -227,10 +227,36 @@ Several helper scripts are included:
 * This merges the output files.
 * Takes inputs <"Output_FileName_Root*.root"> <merged_FileName.root> 
 
-4. PostAnalysis.cc 
-* This allows for quick comparison of the On/Off chopper states of merged root files 
-The PostAnalysis.cc file can be run in CERN ROOT with the command:
+3. Cherenkov.cc
+* This merges Cherenkov Events 
+* Outputs ROOT file: filename_CherenkovMerged(On/Off).root
+* Can be run in CERN ROOT with the command:
 
-`> root -b -q 'PostAnalysis.cc("ChopperOn.root","ChopperOff.root")'`
+`> root -b -q 'Cherenkov.cc("filenameBase", maxInputEnergy, ChopperState(true/false))'`
 
-The File outputs the On/Off States respective: Detected Entries, Detected Weighted Sum, NRF Incident Water Weighted Sum. It also outputs the percent difference between the Chopper On/Off detected weighted sums. 
+4. EventCheck.cc
+* This checks for matching EventIDs across the Cherenkov, NRF and DetInfo TTrees.
+* Outputs two ROOT files: filename_NRF_to_Cher(On/Off).root and filename__NRF_to_Cher_to_Det(On/Off).root 
+* can be run in CERN ROOT with the command:
+
+`> root -b -q 'EventCheck.cc("filenameBase", ChopperState(true/false))'`
+
+5. WeightHisto.cc
+* This weights histograms from the various TTree branches "Energy:Weight"
+* Outputs ROOT file: filename_WeightedHistogram(On/Off).root 
+* can be run in CERN ROOT with the command:
+
+`> root -b -q 'WeightHisto.cc("filenameBase", InputEnergyMax, ChopperState(true/false))'`
+
+6. PrintResults.cc
+* This prints the Chopper On/Off Comparison results and Z-Scores
+* can be run in CERN ROOT with the command:
+
+`> root -b -q 'PrintResults.cc("filenameOnBase", "filenameOffBase")'`
+
+4. Analysis.cc 
+* This runs Cherenkov.cc, EventCheck.cc, WeightHisto.cc and PrintResults.cc 
+* The Analysis.cc file can be run in CERN ROOT with the command:
+
+`> root -b -q 'Analysis.cc("ChopperOn","ChopperOff", maxInputEnergy)'`
+

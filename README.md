@@ -254,7 +254,7 @@ Several helper scripts are included:
 
 `> root -b -q 'PrintResults.cc("filenameOnBase", "filenameOffBase")'`
 
-4. Analysis.cc 
+7. Analysis.cc 
 * This runs Cherenkov.cc, EventCheck.cc, WeightHisto.cc and PrintResults.cc 
 * The Analysis.cc file can be run in CERN ROOT with the command:
 

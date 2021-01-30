@@ -19,7 +19,7 @@
 
 void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool checkAdOnFile, bool checkEvents)
 {
-
+  TFile *AdOnFile, *AdOffFile;
   std::string OriginalOn = ChopOnBase;
   std::string OriginalOff = ChopOffBase;
   std::string addedOn = ChopOnBase;
@@ -41,8 +41,8 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool checkAdO
   }
   else
   {
-    TFile *AdOnFile = new TFile(adOn);
-    TFile *AdOffFile = new TFile(adOff);
+    AdOnFile = TFile::Open(adOn);
+    AdOffFile = TFile::Open(adOff);
   }
   
   // Histograms from OG
@@ -74,9 +74,9 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool checkAdO
   // ******************************************************************************************************************************** //
   if(checkAdOnFile)
   {
-  std::cout << "Chopper Wheel Analysis..." << std::endl;
-  std::cout << "*************************************" << std::endl << std::endl;
-  // Chopper On Analysis
+    std::cout << "Chopper Wheel Analysis..." << std::endl;
+    std::cout << "*************************************" << std::endl << std::endl;
+    // Chopper On Analysis
     AdOnFile->cd();
     AdOnFile->GetObject("wChopIn",ChopInOn);
     weighted_sum = ChopInOn->Integral();

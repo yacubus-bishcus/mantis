@@ -18,6 +18,7 @@
 // Author:
 // Jacob E Bickus, 2021
 // MIT, NSE
+// jbickus@mit.edu
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -426,34 +427,33 @@ G4double PMT_y_pos;
 std::vector<G4double> PMT_y_posv;
 if(nPMT>1)
 {
-        if(PMT_rmax*2 > water_size_y/(nPMT+1))
-        {
-                std::cerr << "ERROR Too many PMTs to fit on Water Surface!" << std::endl;
-                exit(10);
-        }
-        for(G4int i=1; i<=nPMT; i++)
-        {
-                PMT_y_pos = 0. - water_size_y/2 + i*(water_size_y/(nPMT + 1));
-                PMT_y_posv.push_back(PMT_y_pos);
-                G4cout << "PMT Position " << i << " set to " << PMT_y_posv[i-1]/(cm)<< " cm" << G4endl;
-        }
+  if(PMT_rmax*2 > water_size_y/(nPMT+1))
+  {
+    std::cerr << "ERROR Too many PMTs to fit on Water Surface!" << std::endl;
+    exit(10);
+  }
+  for(G4int i=1; i<=nPMT; i++)
+  {
+    PMT_y_pos = 0. - water_size_y/2 + i*(water_size_y/(nPMT + 1));
+    PMT_y_posv.push_back(PMT_y_pos);
+    G4cout << "PMT Position " << i << " set to " << PMT_y_posv[i-1]/(cm)<< " cm" << G4endl;
+  }
 }
 else
 {
-        PMT_y_posv.push_back(0);
+  PMT_y_posv.push_back(0);
 }
 
 for(G4int k=1; k<=nPMT; k++)
 {
-
-        new G4PVPlacement(0,
-                          G4ThreeVector(0, PMT_y_posv[k-1], -water_size_x/2 + PMT_z - plexiThickness - tapeThick),
-                          logicPMT,
-                          "PMT",
-                          logicWater,
-                          false,
-                          k,
-                          checkOverlaps);
+  new G4PVPlacement(0,
+                    G4ThreeVector(0, PMT_y_posv[k-1], -water_size_x/2 + PMT_z - plexiThickness - tapeThick),
+                    logicPMT,
+                    "PMT",
+                    logicWater,
+                    false,
+                    k,
+                    checkOverlaps);
 }
 
 // ************************************** Construct Photocathode *********************************** // 
@@ -462,11 +462,11 @@ G4double PC_z = 20*nm;
 G4cout << "The Photocathode material was set as: " << pc_mat << G4endl;
 if(pc_mat == "GaAsP")
 {
-        PC_mat = GaAsP;
+  PC_mat = GaAsP;
 }
 else if(pc_mat == "Bialkali")
 {
-        PC_mat = bialkali;
+  PC_mat = bialkali;
 }
 else exit(1);
 
@@ -511,11 +511,11 @@ logicPC->SetVisAttributes(red);
 // Set Visual colors
 if(bremTest)
 {
-        logicalLinac->SetVisAttributes(lightGray);
-        grayc->SetForceWireframe(true);
-        logicalVacuum->SetVisAttributes(grayc);
-        logicBremTarget->SetVisAttributes(red);
-        logicBremTargetBacking->SetVisAttributes(blue);
+  logicalLinac->SetVisAttributes(lightGray);
+  grayc->SetForceWireframe(true);
+  logicalVacuum->SetVisAttributes(grayc);
+  logicBremTarget->SetVisAttributes(red);
+  logicBremTargetBacking->SetVisAttributes(blue);
 }
 if(DetectorViewOnly)
 {
@@ -541,170 +541,168 @@ else
 
 // ************************** WATER ********************************//
         
-        G4double photonEnergy[] =
-        { 2.034*eV, 2.068*eV, 2.103*eV, 2.139*eV,
-          2.177*eV, 2.216*eV, 2.256*eV, 2.298*eV,
-          2.341*eV, 2.386*eV, 2.433*eV, 2.481*eV,
-          2.532*eV, 2.585*eV, 2.640*eV, 2.697*eV,
-          2.757*eV, 2.820*eV, 2.885*eV, 2.954*eV,
-          3.026*eV, 3.102*eV, 3.181*eV, 3.265*eV,
-          3.353*eV, 3.446*eV, 3.545*eV, 3.649*eV,
-          3.760*eV, 3.877*eV, 4.002*eV, 4.136*eV };
+G4double photonEnergy[] =
+{ 2.034*eV, 2.068*eV, 2.103*eV, 2.139*eV,
+  2.177*eV, 2.216*eV, 2.256*eV, 2.298*eV,
+  2.341*eV, 2.386*eV, 2.433*eV, 2.481*eV,
+  2.532*eV, 2.585*eV, 2.640*eV, 2.697*eV,
+  2.757*eV, 2.820*eV, 2.885*eV, 2.954*eV,
+  3.026*eV, 3.102*eV, 3.181*eV, 3.265*eV,
+  3.353*eV, 3.446*eV, 3.545*eV, 3.649*eV,
+  3.760*eV, 3.877*eV, 4.002*eV, 4.136*eV };
 
-        const G4int nEntries = sizeof(photonEnergy)/sizeof(G4double);
+const G4int nEntries = sizeof(photonEnergy)/sizeof(G4double);
 
-        G4double photonEnergy2[] =
-        {1.72*eV, 1.746197183*eV, 1.771142857*eV, 1.796811594*eV,1.823235294*eV,
-         1.850447761*eV, 1.878484848*eV, 1.907384615*eV, 1.9371875*eV,
-         1.967936508*eV, 1.999677419*eV, 2.032459016*eV, 2.066333333*eV,
-         2.101355932*eV,2.137586207*eV, 2.175087719*eV, 2.213928571*eV, 2.254181818*eV,
-         2.295925926*eV, 2.339245283*eV, 2.384230769*eV, 2.430980392*eV, 2.4796*eV,
-         2.530204082*eV, 2.582916667*eV, 2.63787234*eV, 2.695217391*eV,
-         2.755111111*eV, 2.817727273*eV, 2.883255814*eV, 2.951904762*eV,
-         3.023902439*eV, 3.0995*eV, 3.178974359*eV, 3.262631579*eV,
-         3.542285714*eV, 4.132666667*eV, 4.508363636*eV, 4.9592*eV
-        };
+G4double photonEnergy2[] =
+{1.72*eV, 1.746197183*eV, 1.771142857*eV, 1.796811594*eV,1.823235294*eV,
+ 1.850447761*eV, 1.878484848*eV, 1.907384615*eV, 1.9371875*eV,
+ 1.967936508*eV, 1.999677419*eV, 2.032459016*eV, 2.066333333*eV,
+ 2.101355932*eV,2.137586207*eV, 2.175087719*eV, 2.213928571*eV, 2.254181818*eV,
+ 2.295925926*eV, 2.339245283*eV, 2.384230769*eV, 2.430980392*eV, 2.4796*eV,
+ 2.530204082*eV, 2.582916667*eV, 2.63787234*eV, 2.695217391*eV,
+ 2.755111111*eV, 2.817727273*eV, 2.883255814*eV, 2.951904762*eV,
+ 3.023902439*eV, 3.0995*eV, 3.178974359*eV, 3.262631579*eV,
+ 3.542285714*eV, 4.132666667*eV, 4.508363636*eV, 4.9592*eV
+};
 
 // Water need to add rayleigh scattering! -- added automatically if material name = Water
         
-        G4double refractiveIndex1[] =
-        { 1.3435, 1.344,  1.3445, 1.345,  1.3455,
-          1.346,  1.3465, 1.347,  1.3475, 1.348,
-          1.3485, 1.3492, 1.35,   1.3505, 1.351,
-          1.3518, 1.3522, 1.3530, 1.3535, 1.354,
-          1.3545, 1.355,  1.3555, 1.356,  1.3568,
-          1.3572, 1.358,  1.3585, 1.359,  1.3595,
-          1.36,   1.3608};
+G4double refractiveIndex1[] =
+{ 1.3435, 1.344,  1.3445, 1.345,  1.3455,
+  1.346,  1.3465, 1.347,  1.3475, 1.348,
+  1.3485, 1.3492, 1.35,   1.3505, 1.351,
+  1.3518, 1.3522, 1.3530, 1.3535, 1.354,
+  1.3545, 1.355,  1.3555, 1.356,  1.3568,
+  1.3572, 1.358,  1.3585, 1.359,  1.3595,
+  1.36,   1.3608};
 
-        assert(sizeof(refractiveIndex1) == sizeof(photonEnergy));
+assert(sizeof(refractiveIndex1) == sizeof(photonEnergy));
 
-        G4double absorption[] =
-        {0.812347685*m, 1.209189843*m, 1.602564103*m, 1.937984496*m, 2.150537634*m,
-         2.277904328*m, 2.43902439*m, 2.941176471*m, 3.217503218*m, 3.429355281*m,
-         3.629764065*m, 3.78214826*m, 4.496402878*m, 7.4019245*m, 11.16071429*m, 14.38848921*m,
-         16.15508885*m, 17.69911504*m, 21.09704641*m, 23.04147465*m, 24.44987775*m,
-         30.76923077*m, 49.01960784*m,66.66666667*m,78.74015748*m,94.33962264*m,
-         102.145046*m, 108.4598698*m, 157.480315*m, 202.020202*m, 220.2643172*m,
-         211.4164905*m, 150.8295626*m, 117.5088132*m, 87.95074758*m,
-         60.60606061*m,18.11594203*m,11.79245283*m,9.652509653*m};
+G4double absorption[] =
+{0.812347685*m, 1.209189843*m, 1.602564103*m, 1.937984496*m, 2.150537634*m,
+ 2.277904328*m, 2.43902439*m, 2.941176471*m, 3.217503218*m, 3.429355281*m,
+ 3.629764065*m, 3.78214826*m, 4.496402878*m, 7.4019245*m, 11.16071429*m, 14.38848921*m,
+ 16.15508885*m, 17.69911504*m, 21.09704641*m, 23.04147465*m, 24.44987775*m,
+ 30.76923077*m, 49.01960784*m,66.66666667*m,78.74015748*m,94.33962264*m,
+ 102.145046*m, 108.4598698*m, 157.480315*m, 202.020202*m, 220.2643172*m,
+ 211.4164905*m, 150.8295626*m, 117.5088132*m, 87.95074758*m,
+ 60.60606061*m,18.11594203*m,11.79245283*m,9.652509653*m};
 
-        assert(sizeof(absorption) == sizeof(photonEnergy2));
+assert(sizeof(absorption) == sizeof(photonEnergy2));
 
-        G4double scintilFast[] =
-        { 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
-          1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
-          1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
-          1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
-          1.00, 1.00, 1.00, 1.00 };
+G4double scintilFast[] =
+{ 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
+  1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
+  1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
+  1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
+  1.00, 1.00, 1.00, 1.00 };
 
-        assert(sizeof(scintilFast) == sizeof(photonEnergy));
+assert(sizeof(scintilFast) == sizeof(photonEnergy));
 
-        G4double scintilSlow[] =
-        { 0.01, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00,
-          7.00, 8.00, 9.00, 8.00, 7.00, 6.00, 4.00,
-          3.00, 2.00, 1.00, 0.01, 1.00, 2.00, 3.00,
-          4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 8.00,
-          7.00, 6.00, 5.00, 4.00 };
+G4double scintilSlow[] =
+{ 0.01, 1.00, 2.00, 3.00, 4.00, 5.00, 6.00,
+  7.00, 8.00, 9.00, 8.00, 7.00, 6.00, 4.00,
+  3.00, 2.00, 1.00, 0.01, 1.00, 2.00, 3.00,
+  4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 8.00,
+  7.00, 6.00, 5.00, 4.00 };
 
-        assert(sizeof(scintilSlow) == sizeof(photonEnergy));
+assert(sizeof(scintilSlow) == sizeof(photonEnergy));
 
-        G4MaterialPropertiesTable* waterMPT = new G4MaterialPropertiesTable();
+G4MaterialPropertiesTable* waterMPT = new G4MaterialPropertiesTable();
 
-        waterMPT->AddProperty("RINDEX", photonEnergy, refractiveIndex1,nEntries)->SetSpline(true);
-        waterMPT->AddProperty("ABSLENGTH",photonEnergy2, absorption, nEntries)->SetSpline(true);
-        waterMPT->AddProperty("FASTCOMPONENT",photonEnergy, scintilFast, nEntries)->SetSpline(true);
-        waterMPT->AddProperty("SLOWCOMPONENT",photonEnergy, scintilSlow, nEntries)->SetSpline(true);
+waterMPT->AddProperty("RINDEX", photonEnergy, refractiveIndex1,nEntries)->SetSpline(true);
+waterMPT->AddProperty("ABSLENGTH",photonEnergy2, absorption, nEntries)->SetSpline(true);
+waterMPT->AddProperty("FASTCOMPONENT",photonEnergy, scintilFast, nEntries)->SetSpline(true);
+waterMPT->AddProperty("SLOWCOMPONENT",photonEnergy, scintilSlow, nEntries)->SetSpline(true);
 
-        waterMPT->AddConstProperty("SCINTILLATIONYIELD",50./MeV);
-        waterMPT->AddConstProperty("RESOLUTIONSCALE",1.0);
-        waterMPT->AddConstProperty("FASTTIMECONSTANT", 1.*ns);
-        waterMPT->AddConstProperty("SLOWTIMECONSTANT",10.*ns);
-        waterMPT->AddConstProperty("YIELDRATIO",0.8);
+waterMPT->AddConstProperty("SCINTILLATIONYIELD",50./MeV);
+waterMPT->AddConstProperty("RESOLUTIONSCALE",1.0);
+waterMPT->AddConstProperty("FASTTIMECONSTANT", 1.*ns);
+waterMPT->AddConstProperty("SLOWTIMECONSTANT",10.*ns);
+waterMPT->AddConstProperty("YIELDRATIO",0.8);
 
-        G4double energy_water[] = {
-                1.56962*eV, 1.58974*eV, 1.61039*eV, 1.63157*eV,
-                1.65333*eV, 1.67567*eV, 1.69863*eV, 1.72222*eV,
-                1.74647*eV, 1.77142*eV, 1.7971 *eV, 1.82352*eV,
-                1.85074*eV, 1.87878*eV, 1.90769*eV, 1.93749*eV,
-                1.96825*eV, 1.99999*eV, 2.03278*eV, 2.06666*eV,
-                2.10169*eV, 2.13793*eV, 2.17543*eV, 2.21428*eV,
-                2.25454*eV, 2.29629*eV, 2.33962*eV, 2.38461*eV,
-                2.43137*eV, 2.47999*eV, 2.53061*eV, 2.58333*eV,
-                2.63829*eV, 2.69565*eV, 2.75555*eV, 2.81817*eV,
-                2.88371*eV, 2.95237*eV, 3.02438*eV, 3.09999*eV,
-                3.17948*eV, 3.26315*eV, 3.35134*eV, 3.44444*eV,
-                3.54285*eV, 3.64705*eV, 3.75757*eV, 3.87499*eV,
-                3.99999*eV, 4.13332*eV, 4.27585*eV, 4.42856*eV,
-                4.59258*eV, 4.76922*eV, 4.95999*eV, 5.16665*eV,
-                5.39129*eV, 5.63635*eV, 5.90475*eV, 6.19998*eV
-        };
+G4double energy_water[] = {
+        1.56962*eV, 1.58974*eV, 1.61039*eV, 1.63157*eV,
+        1.65333*eV, 1.67567*eV, 1.69863*eV, 1.72222*eV,
+        1.74647*eV, 1.77142*eV, 1.7971 *eV, 1.82352*eV,
+        1.85074*eV, 1.87878*eV, 1.90769*eV, 1.93749*eV,
+        1.96825*eV, 1.99999*eV, 2.03278*eV, 2.06666*eV,
+        2.10169*eV, 2.13793*eV, 2.17543*eV, 2.21428*eV,
+        2.25454*eV, 2.29629*eV, 2.33962*eV, 2.38461*eV,
+        2.43137*eV, 2.47999*eV, 2.53061*eV, 2.58333*eV,
+        2.63829*eV, 2.69565*eV, 2.75555*eV, 2.81817*eV,
+        2.88371*eV, 2.95237*eV, 3.02438*eV, 3.09999*eV,
+        3.17948*eV, 3.26315*eV, 3.35134*eV, 3.44444*eV,
+        3.54285*eV, 3.64705*eV, 3.75757*eV, 3.87499*eV,
+        3.99999*eV, 4.13332*eV, 4.27585*eV, 4.42856*eV,
+        4.59258*eV, 4.76922*eV, 4.95999*eV, 5.16665*eV,
+        5.39129*eV, 5.63635*eV, 5.90475*eV, 6.19998*eV
+};
 
-        const G4int numentries_water = sizeof(energy_water)/sizeof(G4double);
+  const G4int numentries_water = sizeof(energy_water)/sizeof(G4double);
 
-        G4double energy_ray_water[] = {
-                1.56962*eV, 1.58974*eV, 1.61039*eV, 1.63157*eV,
-                1.65333*eV, 1.67567*eV, 1.69863*eV, 1.72222*eV,
-                1.74647*eV, 1.77142*eV, 1.7971 *eV, 1.82352*eV,
-                1.85074*eV, 1.87878*eV, 1.90769*eV, 1.93749*eV,
-                1.96825*eV, 1.99999*eV, 2.03278*eV, 2.06666*eV,
-                2.10169*eV, 2.13793*eV, 2.17543*eV, 2.21428*eV,
-                2.25454*eV, 2.29629*eV, 2.33962*eV, 2.38461*eV,
-                2.43137*eV, 2.47999*eV, 2.53061*eV, 2.58333*eV
-        }; // 32 entries
+  G4double energy_ray_water[] = {
+          1.56962*eV, 1.58974*eV, 1.61039*eV, 1.63157*eV,
+          1.65333*eV, 1.67567*eV, 1.69863*eV, 1.72222*eV,
+          1.74647*eV, 1.77142*eV, 1.7971 *eV, 1.82352*eV,
+          1.85074*eV, 1.87878*eV, 1.90769*eV, 1.93749*eV,
+          1.96825*eV, 1.99999*eV, 2.03278*eV, 2.06666*eV,
+          2.10169*eV, 2.13793*eV, 2.17543*eV, 2.21428*eV,
+          2.25454*eV, 2.29629*eV, 2.33962*eV, 2.38461*eV,
+          2.43137*eV, 2.47999*eV, 2.53061*eV, 2.58333*eV
+  }; // 32 entries
 
 
 
-        const G4int numentries_water_ray = sizeof(energy_ray_water)/sizeof(G4double);
+  const G4int numentries_water_ray = sizeof(energy_ray_water)/sizeof(G4double);
 
-        G4double mie_water[] = {
-                167024.4*m, 158726.7*m, 150742  *m,
-                143062.5*m, 135680.2*m, 128587.4*m,
-                121776.3*m, 115239.5*m, 108969.5*m,
-                102958.8*m, 97200.35*m, 91686.86*m,
-                86411.33*m, 81366.79*m, 76546.42*m,
-                71943.46*m, 67551.29*m, 63363.36*m,
-                59373.25*m, 55574.61*m, 51961.24*m,
-                48527.00*m, 45265.87*m, 42171.94*m,
-                39239.39*m, 36462.50*m, 33835.68*m,
-                31353.41*m, 29010.30*m, 26801.03*m,
-                24720.42*m, 22763.36*m, 20924.88*m,
-                19200.07*m, 17584.16*m, 16072.45*m,
-                14660.38*m, 13343.46*m, 12117.33*m,
-                10977.70*m, 9920.416*m, 8941.407*m,
-                8036.711*m, 7202.470*m, 6434.927*m,
-                5730.429*m, 5085.425*m, 4496.467*m,
-                3960.210*m, 3473.413*m, 3032.937*m,
-                2635.746*m, 2278.907*m, 1959.588*m,
-                1675.064*m, 1422.710*m, 1200.004*m,
-                1004.528*m, 833.9666*m, 686.1063*m
-        };
+  G4double mie_water[] = {
+          167024.4*m, 158726.7*m, 150742  *m,
+          143062.5*m, 135680.2*m, 128587.4*m,
+          121776.3*m, 115239.5*m, 108969.5*m,
+          102958.8*m, 97200.35*m, 91686.86*m,
+          86411.33*m, 81366.79*m, 76546.42*m,
+          71943.46*m, 67551.29*m, 63363.36*m,
+          59373.25*m, 55574.61*m, 51961.24*m,
+          48527.00*m, 45265.87*m, 42171.94*m,
+          39239.39*m, 36462.50*m, 33835.68*m,
+          31353.41*m, 29010.30*m, 26801.03*m,
+          24720.42*m, 22763.36*m, 20924.88*m,
+          19200.07*m, 17584.16*m, 16072.45*m,
+          14660.38*m, 13343.46*m, 12117.33*m,
+          10977.70*m, 9920.416*m, 8941.407*m,
+          8036.711*m, 7202.470*m, 6434.927*m,
+          5730.429*m, 5085.425*m, 4496.467*m,
+          3960.210*m, 3473.413*m, 3032.937*m,
+          2635.746*m, 2278.907*m, 1959.588*m,
+          1675.064*m, 1422.710*m, 1200.004*m,
+          1004.528*m, 833.9666*m, 686.1063*m
+  };
 
-        assert(sizeof(mie_water) == sizeof(energy_water));
+  assert(sizeof(mie_water) == sizeof(energy_water));
 
-// gforward, gbackward, forward backward ratio
-        G4double mie_water_const[3]={0.99,0.99,0.8};
+  G4double mie_water_const[3]={0.99,0.99,0.8};
 
-        waterMPT->AddProperty("MIEHG",energy_water,mie_water,numentries_water)->SetSpline(true);
-        waterMPT->AddConstProperty("MIEHG_FORWARD",mie_water_const[0]);
-        waterMPT->AddConstProperty("MIEHG_BACKWARD",mie_water_const[1]);
-        waterMPT->AddConstProperty("MIEHG_FORWARD_RATIO",mie_water_const[2]);
+  waterMPT->AddProperty("MIEHG",energy_water,mie_water,numentries_water)->SetSpline(true);
+  waterMPT->AddConstProperty("MIEHG_FORWARD",mie_water_const[0]);
+  waterMPT->AddConstProperty("MIEHG_BACKWARD",mie_water_const[1]);
+  waterMPT->AddConstProperty("MIEHG_FORWARD_RATIO",mie_water_const[2]);
 
-        G4double rayleigh_water[] = {
-                2335.5*m, 2210.5*m, 2090.8*m, 1976.4*m, 1866.8*m, 1762.1*m,
-                1662.1*m, 1566.6*m, 1475.4*m, 1388.5*m, 1305.6*m, 1224.6*m,
-                1146.8*m, 1075.6*m, 1007.8*m, 941.23*m, 880.95*m, 821.12*m,
-                766.36*m, 714.50*m, 665.40*m, 618.97*m, 575.11*m, 533.69*m,
-                493.46*m, 457.10*m, 421.51*m, 389.06*m, 358.57*m, 329.98*m,
-                303.17*m, 277.43*m
-
-        }; // 32 entries
+  G4double rayleigh_water[] = {
+          2335.5*m, 2210.5*m, 2090.8*m, 1976.4*m, 1866.8*m, 1762.1*m,
+          1662.1*m, 1566.6*m, 1475.4*m, 1388.5*m, 1305.6*m, 1224.6*m,
+          1146.8*m, 1075.6*m, 1007.8*m, 941.23*m, 880.95*m, 821.12*m,
+          766.36*m, 714.50*m, 665.40*m, 618.97*m, 575.11*m, 533.69*m,
+          493.46*m, 457.10*m, 421.51*m, 389.06*m, 358.57*m, 329.98*m,
+          303.17*m, 277.43*m
+  }; // 32 entries
 
 // Note to Self: Never have spline set to true if rayleigh water goes to zero. Creates seg fault
-        assert(sizeof(rayleigh_water) == sizeof(energy_ray_water));
-        waterMPT->AddProperty("RAYLEIGH",energy_ray_water,rayleigh_water,numentries_water_ray)->SetSpline(true);
-        Water->SetMaterialPropertiesTable(waterMPT);
+  assert(sizeof(rayleigh_water) == sizeof(energy_ray_water));
+  waterMPT->AddProperty("RAYLEIGH",energy_ray_water,rayleigh_water,numentries_water_ray)->SetSpline(true);
+  Water->SetMaterialPropertiesTable(waterMPT);
 // Set the Birks Constant for the Water scintillator
-        Water->GetIonisation()->SetBirksConstant(0.126*mm/MeV);
+  Water->GetIonisation()->SetBirksConstant(0.126*mm/MeV);
 
 // ********************** APPLY OPTICAL QUALITIES ********************** //
 
@@ -770,116 +768,116 @@ new G4LogicalBorderSurface("tape_surf", physWater, physTape, tape_opsurf);
         
 // PMT
 // wavelengths (nm) reversed order 280, 300, 400, 450, 500, 750, 1000, 1500, 2000, 2500
-        G4double ephotonPMT[] = {0.4959388*eV, 0.6199*eV, 0.8265*eV, 1.239*eV, 1.653*eV, 2.480*eV,
-                                 2.755*eV, 3.10*eV, 3.54*eV, 4.133*eV};
-        const G4int num = sizeof(ephotonPMT)/sizeof(G4double);
+G4double ephotonPMT[] = {0.4959388*eV, 0.6199*eV, 0.8265*eV, 1.239*eV, 1.653*eV, 2.480*eV,
+                         2.755*eV, 3.10*eV, 3.54*eV, 4.133*eV};
+const G4int num = sizeof(ephotonPMT)/sizeof(G4double);
 // Wavelengths (nm) reversed order 200, 250, 280, 300, 350, 400, 450, 500, 550, 600, 650, 700
-        G4double ephotonPMT2[] = {1.7711*eV, 1.9074*eV, 2.0663*eV, 2.2542*eV, 2.4796*eV,
-                                  2.7551*eV, 3.0995*eV, 3.5423*eV, 4.133*eV, 4.428*eV, 4.959*eV, 6.199*eV};
-        const G4int num2 = sizeof(ephotonPMT2)/sizeof(G4double);
-        G4double ephotonPMT3[] = {1.823*eV, 1.8644316*eV, 1.907457*eV, 1.952515*eV,
-                                  2.0*eV, 2.049*eV, 2.101*eV, 2.156*eV, 2.2140125*eV, 2.2749*eV, 2.339*eV,
-                                  2.407*eV, 2.480*eV,2.56*eV,2.6379*eV, 2.725*eV, 2.817*eV, 2.917*eV,
-                                  3.024017*eV, 3.138853*eV, 3.262755*eV};
-        const G4int num3 = sizeof(ephotonPMT3)/sizeof(G4double);
+G4double ephotonPMT2[] = {1.7711*eV, 1.9074*eV, 2.0663*eV, 2.2542*eV, 2.4796*eV,
+                          2.7551*eV, 3.0995*eV, 3.5423*eV, 4.133*eV, 4.428*eV, 4.959*eV, 6.199*eV};
+const G4int num2 = sizeof(ephotonPMT2)/sizeof(G4double);
+G4double ephotonPMT3[] = {1.823*eV, 1.8644316*eV, 1.907457*eV, 1.952515*eV,
+                          2.0*eV, 2.049*eV, 2.101*eV, 2.156*eV, 2.2140125*eV, 2.2749*eV, 2.339*eV,
+                          2.407*eV, 2.480*eV,2.56*eV,2.6379*eV, 2.725*eV, 2.817*eV, 2.917*eV,
+                          3.024017*eV, 3.138853*eV, 3.262755*eV};
+const G4int num3 = sizeof(ephotonPMT3)/sizeof(G4double);
 
 
 // PMT Surface Properties
-        G4double reflectivity[] = {0.03822, 0.0392,  0.040,  0.041,
-                                   0.0415,  0.0428,  0.0433,  0.0440, 0.0451, 0.0469 };
-        G4double transmittance[] = {0.962, 0.961, 0.96, 0.959, 0.959, 0.958, 0.957,0.956,0.955, 0.954};
-        assert(sizeof(reflectivity) == sizeof(ephotonPMT));
-        assert(sizeof(transmittance) == sizeof(ephotonPMT2));
-        G4double efficiency[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-        assert(sizeof(efficiency) == sizeof(ephotonPMT));
-        G4double pmt_iof[] = {1.486, 1.4945, 1.5013, 1.5075, 1.5118, 1.5214, 1.5253, 1.5308, 1.5392, 1.5528};
-        assert(sizeof(pmt_iof) == sizeof(ephotonPMT));
-        G4double abslength[] = {1000*m,1000*m,1000*m,1000*m,1000*m,1000*m,1000*m,1000*m,1000*m, 1000*m}; // treating glass as transparent
-        assert(sizeof(abslength) == sizeof(ephotonPMT));
-        G4OpticalSurface* PMT_opsurf = new G4OpticalSurface("PMTSurface",unified,polished,dielectric_metal);
-        G4MaterialPropertiesTable* PMTopt = new G4MaterialPropertiesTable();
-        G4MaterialPropertiesTable* PMTphysabs = new G4MaterialPropertiesTable();
-        PMTopt->AddProperty("REFLECTIVITY", ephotonPMT, reflectivity, num)->SetSpline(true);
-        PMTopt->AddProperty("TRANSMITTANCE", ephotonPMT2, transmittance, num2);
-        PMTopt->AddProperty("EFFICIENCY", ephotonPMT, efficiency, num);
-        PMTopt->AddProperty("RINDEX", ephotonPMT, pmt_iof, num)->SetSpline(true);
-        PMTphysabs->AddProperty("RINDEX", ephotonPMT, pmt_iof, num)->SetSpline(true);
-        PMTphysabs->AddProperty("ABSLENGTH", ephotonPMT, abslength, num);
-        PMT_opsurf->SetMaterialPropertiesTable(PMTopt);
-        PMT_mat->SetMaterialPropertiesTable(PMTphysabs);
+G4double reflectivity[] = {0.03822, 0.0392,  0.040,  0.041,
+                           0.0415,  0.0428,  0.0433,  0.0440, 0.0451, 0.0469 };
+G4double transmittance[] = {0.962, 0.961, 0.96, 0.959, 0.959, 0.958, 0.957,0.956,0.955, 0.954};
+assert(sizeof(reflectivity) == sizeof(ephotonPMT));
+assert(sizeof(transmittance) == sizeof(ephotonPMT2));
+G4double efficiency[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+assert(sizeof(efficiency) == sizeof(ephotonPMT));
+G4double pmt_iof[] = {1.486, 1.4945, 1.5013, 1.5075, 1.5118, 1.5214, 1.5253, 1.5308, 1.5392, 1.5528};
+assert(sizeof(pmt_iof) == sizeof(ephotonPMT));
+G4double abslength[] = {1000*m,1000*m,1000*m,1000*m,1000*m,1000*m,1000*m,1000*m,1000*m, 1000*m}; // treating glass as transparent
+assert(sizeof(abslength) == sizeof(ephotonPMT));
+G4OpticalSurface* PMT_opsurf = new G4OpticalSurface("PMTSurface",unified,polished,dielectric_metal);
+G4MaterialPropertiesTable* PMTopt = new G4MaterialPropertiesTable();
+G4MaterialPropertiesTable* PMTphysabs = new G4MaterialPropertiesTable();
+PMTopt->AddProperty("REFLECTIVITY", ephotonPMT, reflectivity, num)->SetSpline(true);
+PMTopt->AddProperty("TRANSMITTANCE", ephotonPMT2, transmittance, num2);
+PMTopt->AddProperty("EFFICIENCY", ephotonPMT, efficiency, num);
+PMTopt->AddProperty("RINDEX", ephotonPMT, pmt_iof, num)->SetSpline(true);
+PMTphysabs->AddProperty("RINDEX", ephotonPMT, pmt_iof, num)->SetSpline(true);
+PMTphysabs->AddProperty("ABSLENGTH", ephotonPMT, abslength, num);
+PMT_opsurf->SetMaterialPropertiesTable(PMTopt);
+PMT_mat->SetMaterialPropertiesTable(PMTphysabs);
 
 // Photocathode surface properties
-        G4double Ga_As_photocath_EFF[]={0.25*perCent,36.246*perCent,39.8*perCent,40.0*perCent,36.0*perCent,30.0*perCent,
-                                        24.0*perCent, 15.0*perCent,4.8*perCent, 0.6*perCent, 0.25*perCent, 0.10*perCent}; //Enables 'detection' of photons
-        assert(sizeof(Ga_As_photocath_EFF) == sizeof(ephotonPMT2));
-        G4double Ga_As_photocath_ReR[]={3.346,3.3588,3.3877,3.4857,3.6209,4.0919,4.6678,4.6102,3.8200, 3.7322};
-        assert(sizeof(Ga_As_photocath_ReR) == sizeof(ephotonPMT));
-        G4double Ga_As_photocath_ImR[]={0.0056,0.0071,0.0096,0.01523, 0.106, 0.41247, 1.0094, 2.0488, 2.0051, 1.9908};
-        assert(sizeof(Ga_As_photocath_ImR) == sizeof(ephotonPMT));
-        G4double bialkali_photocath_EFF[] = {0.015*perCent, 0.2*perCent, 3.0*perCent, 7.0*perCent, 18.5*perCent, 25.0*perCent,
-                                             28.0*perCent, 26.0*perCent, 6.0*perCent, 0.19*perCent, 0.1*perCent, 0.01*perCent};
-        assert(sizeof(bialkali_photocath_EFF) == sizeof(ephotonPMT2));
-        G4double bialkali_photocath_ReR[] = {2.96,2.95,2.95,2.95,2.96, 2.98, 3.01, 3.06,
-                                             3.12, 3.20, 3.26, 3.09, 3.0,3.0,3.0,2.87,2.7,2.61,2.38,2.18,1.92};
-        assert(sizeof(bialkali_photocath_ReR) == sizeof(ephotonPMT3));
-        G4double bialkali_photocath_ImR[] = {0.33,0.34,0.34,0.35,0.37,0.38,0.42,0.46,
-                                             0.53,0.63,0.86,1.05,1.06,1.11,1.34,1.44,1.50,1.53,1.71,1.69,1.69};
-        assert(sizeof(bialkali_photocath_ImR) == sizeof(ephotonPMT3));
-        G4MaterialPropertiesTable* photocath_mt = new G4MaterialPropertiesTable();
-        if(pc_mat == "GaAsP")
-        {
-                photocath_mt->AddProperty("EFFICIENCY", ephotonPMT2,Ga_As_photocath_EFF, num2)->SetSpline(true);
-                photocath_mt->AddProperty("REALRINDEX", ephotonPMT,Ga_As_photocath_ReR,num)->SetSpline(true);
-                photocath_mt->AddProperty("IMAGINARYRINDEX", ephotonPMT, Ga_As_photocath_ImR, num)->SetSpline(true);
-        }
-        else if(pc_mat == "Bialkali")
-        {
-                photocath_mt->AddProperty("EFFICIENCY", ephotonPMT2,bialkali_photocath_EFF, num)->SetSpline(true);
-                photocath_mt->AddProperty("REALRINDEX", ephotonPMT3,bialkali_photocath_ReR,num3)->SetSpline(true);
-                photocath_mt->AddProperty("IMAGINARYRINDEX", ephotonPMT3, bialkali_photocath_ImR, num3)->SetSpline(true);
-        }
+G4double Ga_As_photocath_EFF[]={0.25*perCent,36.246*perCent,39.8*perCent,40.0*perCent,36.0*perCent,30.0*perCent,
+                                24.0*perCent, 15.0*perCent,4.8*perCent, 0.6*perCent, 0.25*perCent, 0.10*perCent}; //Enables 'detection' of photons
+assert(sizeof(Ga_As_photocath_EFF) == sizeof(ephotonPMT2));
+G4double Ga_As_photocath_ReR[]={3.346,3.3588,3.3877,3.4857,3.6209,4.0919,4.6678,4.6102,3.8200, 3.7322};
+assert(sizeof(Ga_As_photocath_ReR) == sizeof(ephotonPMT));
+G4double Ga_As_photocath_ImR[]={0.0056,0.0071,0.0096,0.01523, 0.106, 0.41247, 1.0094, 2.0488, 2.0051, 1.9908};
+assert(sizeof(Ga_As_photocath_ImR) == sizeof(ephotonPMT));
+G4double bialkali_photocath_EFF[] = {0.015*perCent, 0.2*perCent, 3.0*perCent, 7.0*perCent, 18.5*perCent, 25.0*perCent,
+                                     28.0*perCent, 26.0*perCent, 6.0*perCent, 0.19*perCent, 0.1*perCent, 0.01*perCent};
+assert(sizeof(bialkali_photocath_EFF) == sizeof(ephotonPMT2));
+G4double bialkali_photocath_ReR[] = {2.96,2.95,2.95,2.95,2.96, 2.98, 3.01, 3.06,
+                                     3.12, 3.20, 3.26, 3.09, 3.0,3.0,3.0,2.87,2.7,2.61,2.38,2.18,1.92};
+assert(sizeof(bialkali_photocath_ReR) == sizeof(ephotonPMT3));
+G4double bialkali_photocath_ImR[] = {0.33,0.34,0.34,0.35,0.37,0.38,0.42,0.46,
+                                     0.53,0.63,0.86,1.05,1.06,1.11,1.34,1.44,1.50,1.53,1.71,1.69,1.69};
+assert(sizeof(bialkali_photocath_ImR) == sizeof(ephotonPMT3));
+G4MaterialPropertiesTable* photocath_mt = new G4MaterialPropertiesTable();
+if(pc_mat == "GaAsP")
+{
+  photocath_mt->AddProperty("EFFICIENCY", ephotonPMT2,Ga_As_photocath_EFF, num2)->SetSpline(true);
+  photocath_mt->AddProperty("REALRINDEX", ephotonPMT,Ga_As_photocath_ReR,num)->SetSpline(true);
+  photocath_mt->AddProperty("IMAGINARYRINDEX", ephotonPMT, Ga_As_photocath_ImR, num)->SetSpline(true);
+}
+else if(pc_mat == "Bialkali")
+{
+  photocath_mt->AddProperty("EFFICIENCY", ephotonPMT2,bialkali_photocath_EFF, num)->SetSpline(true);
+  photocath_mt->AddProperty("REALRINDEX", ephotonPMT3,bialkali_photocath_ReR,num3)->SetSpline(true);
+  photocath_mt->AddProperty("IMAGINARYRINDEX", ephotonPMT3, bialkali_photocath_ImR, num3)->SetSpline(true);
+}
 
-        G4OpticalSurface* photocath_opsurf= new G4OpticalSurface("photocath_opsurf");
-        photocath_opsurf->SetType(dielectric_metal);
-        photocath_opsurf->SetFinish(polished);
-        photocath_opsurf->SetPolish(1.0);
-        photocath_opsurf->SetModel(glisur);
-        photocath_opsurf->SetMaterialPropertiesTable(photocath_mt);
+G4OpticalSurface* photocath_opsurf= new G4OpticalSurface("photocath_opsurf");
+photocath_opsurf->SetType(dielectric_metal);
+photocath_opsurf->SetFinish(polished);
+photocath_opsurf->SetPolish(1.0);
+photocath_opsurf->SetModel(glisur);
+photocath_opsurf->SetMaterialPropertiesTable(photocath_mt);
 
-        new G4LogicalSkinSurface("photocath_surf", logicPC, photocath_opsurf); // name, physical volume of surface, phsical volume of world?, G4optical surface
+new G4LogicalSkinSurface("photocath_surf", logicPC, photocath_opsurf); // name, physical volume of surface, phsical volume of world?, G4optical surface
 new G4LogicalSkinSurface("PMT_surf", logicPMT, PMT_opsurf);
 // Air
-        G4double refractiveIndex2[] =
-        { 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
-          1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
-          1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
-          1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
-          1.00, 1.00, 1.00, 1.00 };
+G4double refractiveIndex2[] =
+{ 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
+  1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
+  1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
+  1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
+  1.00, 1.00, 1.00, 1.00 };
 
-        G4MaterialPropertiesTable* airMPT = new G4MaterialPropertiesTable();
-        airMPT->AddProperty("RINDEX", photonEnergy, refractiveIndex2, nEntries);
+G4MaterialPropertiesTable* airMPT = new G4MaterialPropertiesTable();
+airMPT->AddProperty("RINDEX", photonEnergy, refractiveIndex2, nEntries);
 
-        air->SetMaterialPropertiesTable(airMPT);
-        
-        // Material Verbosity to print materials properties tables 
-        if(material_verbose)
-        {
-          G4cout << "Material Verbose set to True/On!" << G4endl;
-          G4cout << "Material Properties Table for: " << air->GetName() << G4endl;
-          airMPT->DumpTable();
-          G4cout << "Material Properties Table for: " << teflonTape->GetName() << G4endl;
-          tapeOPMPT->DumpTable();
-          G4cout << "Material Properties Table for: " << pc_mat << G4endl;
-          photocath_mt->DumpTable();
-          G4cout << "Material Properties Table for: " << Water->GetName() << G4endl;
-          waterMPT->DumpTable();
-          G4cout << "Material Properties Table for: " << plexiglass->GetName() << G4endl;
-          casingOPMPT->DumpTable();
-        }
+air->SetMaterialPropertiesTable(airMPT);
+
+// Material Verbosity to print materials properties tables 
+if(material_verbose)
+{
+  G4cout << "Material Verbose set to True/On!" << G4endl;
+  G4cout << "Material Properties Table for: " << air->GetName() << G4endl;
+  airMPT->DumpTable();
+  G4cout << "Material Properties Table for: " << teflonTape->GetName() << G4endl;
+  tapeOPMPT->DumpTable();
+  G4cout << "Material Properties Table for: " << pc_mat << G4endl;
+  photocath_mt->DumpTable();
+  G4cout << "Material Properties Table for: " << Water->GetName() << G4endl;
+  waterMPT->DumpTable();
+  G4cout << "Material Properties Table for: " << plexiglass->GetName() << G4endl;
+  casingOPMPT->DumpTable();
+}
 
 //always return the physical World!!!
 
-        return physWorld;
+return physWorld;
 }
 
 /* ************************************************************************************ */

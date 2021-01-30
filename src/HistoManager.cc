@@ -103,7 +103,7 @@ void HistoManager::Book(G4bool bremTest)
       manager->FinishNtuple();
 
       // Create 6 Histogram for Energy if detected
-      manager->CreateH1("Detected","Photons Detected by Photocathode Weighted Energy Spectrum", nbins, 0., 2.1, "MeV");
+      manager->CreateH1("Detected","Photons Detected by Photocathode Weighted Energy Spectrum", nbins, 0., 2.1, "eV");
     
       // Create ID 4 Ntuple for Reactions within detector
       manager->CreateNtuple("DetInfo","Detected Information");

@@ -17,7 +17,7 @@
 // entries, weighted sums, and Z-Scores.
 //
 
-void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
+void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool checkAdOnFile, bool checkEvents)
 {
 
   std::string OriginalOn = ChopOnBase;
@@ -65,28 +65,30 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   // ******************************************************************************************************************************** //
   // Quick Chopper Analysis from Added Histograms File
   // ******************************************************************************************************************************** //
- 
+  if(checkAdOnFile)
+  {
   std::cout << "Chopper Wheel Analysis..." << std::endl;
   std::cout << "*************************************" << std::endl << std::endl;
   // Chopper On Analysis
-  AdOnFile->cd();
-  AdOnFile->GetObject("wChopIn",ChopInOn);
-  weighted_sum = ChopInOn->Integral();
-  ChopInOn->Print();
-  AdOnFile->GetObject("wChopOut",ChopOutOn);
-  ChopOutOn->Print();
-  weighted_sum2 = ChopOutOn->Integral();
-  
-  // Chopper Off Analysis
-  AdOffFile->cd();
-  AdOffFile->GetObject("wChopIn",ChopInOff);
-  weighted_sum3 = ChopInOff->Integral();
-  ChopInOff->Print();
-  AdOffFile->GetObject("wChopOut",ChopOutOff);
-  weighted_sum4 = ChopOutOff->Integral();
-  ChopOutOff->Print();
-  chopper_in_z = abs(weighted_sum - weighted_sum3)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum3),2)));
-  chopper_out_z = abs(weighted_sum2 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum2),2) + pow(sqrt(weighted_sum4),2)));
+    AdOnFile->cd();
+    AdOnFile->GetObject("wChopIn",ChopInOn);
+    weighted_sum = ChopInOn->Integral();
+    ChopInOn->Print();
+    AdOnFile->GetObject("wChopOut",ChopOutOn);
+    ChopOutOn->Print();
+    weighted_sum2 = ChopOutOn->Integral();
+
+    // Chopper Off Analysis
+    AdOffFile->cd();
+    AdOffFile->GetObject("wChopIn",ChopInOff);
+    weighted_sum3 = ChopInOff->Integral();
+    ChopInOff->Print();
+    AdOffFile->GetObject("wChopOut",ChopOutOff);
+    weighted_sum4 = ChopOutOff->Integral();
+    ChopOutOff->Print();
+    chopper_in_z = abs(weighted_sum - weighted_sum3)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum3),2)));
+    chopper_out_z = abs(weighted_sum2 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum2),2) + pow(sqrt(weighted_sum4),2)));
+  }
   
   // ******************************************************************************************************************************** //
   // Quick Interrogation Object Analysis from Original File
@@ -158,38 +160,41 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   // Quick Cherenkov Analysis from Added Histograms File
   // ******************************************************************************************************************************** //
 
-  std::cout << std::endl << "Cherenkov Analysis..." << std::endl;
-  std::cout << "*************************************" << std::endl << std::endl;
-  // Chopper On Analysis
-  AdOnFile->cd();
-  AdOnFile->GetObject("wCher",CherenkovOn);
-  weighted_sum = CherenkovOn->Integral();
-  CherenkovOn->Print();
-    
-  // Chopper Off Analysis
-  AdOffFile->cd();
-  AdOffFile->GetObject("wCher",CherenkovOff);
-  weighted_sum2 = CherenkovOff->Integral();
-  CherenkovOff->Print();
-  cher_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
-    
-  // ******************************************************************************************************************************** //
-  // Quick Incident Photocathode Analysis from Added Histogram File
-  // ******************************************************************************************************************************** //
-  std::cout << std::endl << "Photocathode Incident Analysis..." << std::endl;
-  std::cout << "*************************************" << std::endl << std::endl;
-  // Chopper On Analysis
-  AdOnFile->cd();
-  AdOnFile->GetObject("wDet",DetData);
-  weighted_sum = DetData->Integral();
-  DetData->Print();
+  if(checkAdOnFile)
+  {
+    std::cout << std::endl << "Cherenkov Analysis..." << std::endl;
+    std::cout << "*************************************" << std::endl << std::endl;
+    // Chopper On Analysis
+    AdOnFile->cd();
+    AdOnFile->GetObject("wCher",CherenkovOn);
+    weighted_sum = CherenkovOn->Integral();
+    CherenkovOn->Print();
 
-  // Chopper Off Analysis
-  AdOffFile->cd();
-  AdOffFile->GetObject("wDet",DetDataOff);
-  weighted_sum2 = DetDataOff->Integral();
-  DetDataOff->Print();
-  inc_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
+    // Chopper Off Analysis
+    AdOffFile->cd();
+    AdOffFile->GetObject("wCher",CherenkovOff);
+    weighted_sum2 = CherenkovOff->Integral();
+    CherenkovOff->Print();
+    cher_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
+
+    // ******************************************************************************************************************************** //
+    // Quick Incident Photocathode Analysis from Added Histogram File
+    // ******************************************************************************************************************************** //
+    std::cout << std::endl << "Photocathode Incident Analysis..." << std::endl;
+    std::cout << "*************************************" << std::endl << std::endl;
+    // Chopper On Analysis
+    AdOnFile->cd();
+    AdOnFile->GetObject("wDet",DetData);
+    weighted_sum = DetData->Integral();
+    DetData->Print();
+
+    // Chopper Off Analysis
+    AdOffFile->cd();
+    AdOffFile->GetObject("wDet",DetDataOff);
+    weighted_sum2 = DetDataOff->Integral();
+    DetDataOff->Print();
+    inc_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
+  }
 
   // ******************************************************************************************************************************** //
   // Quick Detected Analysis from Original File
@@ -213,7 +218,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   // ******************************************************************************************************************************** //
   // Quick NRF to Cherenkov Analysis from Added Histograms File
   // ******************************************************************************************************************************** //
-  if(check)
+  if(checkEvents)
   {
     // NRF On Analysis
     AdOnFile->cd();
@@ -273,17 +278,24 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool check)
   // Z Test Results
   std::cout << std::endl << "Z-Score Summary..." << std::endl;
   std::cout << "*************************************" << std::endl << std::endl;
-  std::cout << "Chopper Incident Z-Score: " << chopper_in_z << std::endl;
-  std::cout << "Chopper Emission Z-Score: " << chopper_out_z << std::endl;
+  if(checkAdOnFile)
+  {
+    std::cout << "Chopper Incident Z-Score: " << chopper_in_z << std::endl;
+    std::cout << "Chopper Emission Z-Score: " << chopper_out_z << std::endl;
+  }
   std::cout << "Interrogation Object Incident Z-Score: " << IntObj_in_z << std::endl;
   std::cout << "Interrogation Object Emission Z-Score: " << IntObj_out_z << std::endl;
   std::cout << "Interrogation Object NRF Incident Z-Score: " << IntObj_nrf_in_z << std::endl;
   std::cout << "Interrogation Object NRF Emission Z-Score: " << IntObj_nrf_out_z << std::endl;
   std::cout << "Water Tank Incident Z-Score: " << water_in_z << std::endl;
   std::cout << "Water Tank NRF incident Z-Score: " << water_nrf_z << std::endl;
-  std::cout << "Created Cherenkov Energy Z-Score: " << cher_z << std::endl;
+  if(checkAdOnFile)
+  {
+    std::cout << "Created Cherenkov Energy Z-Score: " << cher_z << std::endl;
+    std::cout << "Incident Photocathode Z-Score: " << inc_det_z << std::endl;
+  }
   std::cout << "Detected Z-Score: " << det_z << std::endl;
-  if(check)
+  if(checkEvents)
   {
     std::cout << "NRF to Cherenkov NRF Spectrum Z-Score: " << wNRFCher_to_NRF_z << std::endl;
     std::cout << "NRF to Cherenkov Cherenkov Spectrum Z-Score: " << wCherCher_to_NRF_z << std::endl;

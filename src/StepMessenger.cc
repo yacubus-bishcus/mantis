@@ -32,10 +32,10 @@ StepMessenger::StepMessenger(SteppingAction* stepAction)
   myDir->SetGuidance("Output Commands");
   Cmd = new G4UIcmdWithAString("/output/myoutput",this);
   Cmd->SetGuidance("Choose Desired Outputs");
-  Cmd->SetGuidance("Choice: ChopData, NRFData, IntObjData, WaterIncData, CherenkovData, DetData, none (default)");
+  Cmd->SetGuidance("Choice: ChopIncData, ChopOutData, NRFData, IntObjData, WaterIncData, CherenkovData, DetData, none (default)");
   Cmd->SetParameterName("choice",false);
   Cmd->SetDefaultValue("none");
-  Cmd->SetCandidates("ChopData NRFData IntObjData WaterIncData CherenkovData DetData none");
+  Cmd->SetCandidates("ChopIncData ChopOutData NRFData IntObjData WaterIncData CherenkovData DetData none");
 }
 
 StepMessenger::~StepMessenger()
@@ -49,10 +49,15 @@ void StepMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   if(command == Cmd)
   {
     G4String theCommand = newValue;
-    if(theCommand == "ChopData")
+    if(theCommand == "ChopIncData")
     {
-      stepA->SetChopperDataFlag(1);
-      std::cout << "User Selected Chopper Data." << std::endl;
+      stepA->SetChopperIncDataFlag(1);
+      std::cout << "User Selected Chopper Incident Data." << std::endl;
+    }
+    else if(theCommand == "ChopOutData")
+    {
+      stepA->SetChopperOutDataFlag(1);
+      std::cout << "User Selected Chopper Emission Data." << std::endl;
     }
     else if(theCommand == "NRFData")
     {

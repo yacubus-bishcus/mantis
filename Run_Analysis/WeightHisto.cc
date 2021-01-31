@@ -131,6 +131,8 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     DetInfo->SetEstimate(-1);
 
     std::cout << "WeightHisto::Objects Grabbed!" << std::endl;
+    Int_t maxNumberOfEntries = 50000000;
+    std::cout << "WeightHisto::Setting Max Number of Entries to Draw: " << maxNumberOfEntries << std::endl;
     // ******************************************************************************************************************************** //
     // Variables Declared Objects Set up
     // ******************************************************************************************************************************** //
@@ -139,7 +141,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     // Fill Chopper In Weighted Histogram
     // ******************************************************************************************************************************** //
     
-    Int_t n = ChopIn->Draw("Energy:Weight","","goff",10000000);
+    Int_t n = ChopIn->Draw("Energy:Weight","","goff",maxNumberOfEntries);
     Double_t *energyIn = ChopIn->GetVal(0);
     Double_t *weightIn = ChopIn->GetVal(1);
     for(int i=0;i<n;i++)
@@ -151,7 +153,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     // Fill Chopper Out Weighted Histogram
     // ******************************************************************************************************************************** //
     
-    Int_t n1 = ChopOut->Draw("Energy:Weight","","goff",10000000);
+    Int_t n1 = ChopOut->Draw("Energy:Weight","","goff",maxNumberOfEntries);
     Double_t *energyOut = ChopOut->GetVal(0);
     Double_t *weightOut = ChopOut->GetVal(1);
     for(int i=0;i<n1;i++)
@@ -163,7 +165,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     // Fill NRF Weighted Histogram
     // ******************************************************************************************************************************** //
     
-    Int_t n2 = NRFMatData->Draw("Energy:Weight","","goff");
+    Int_t n2 = NRFMatData->Draw("Energy:Weight","","goff", maxNumberOfEntries);
     Double_t *nrfEnergy = NRFMatData->GetVal(0);
     Double_t *nrfWeight = NRFMatData->GetVal(1);
     for(int i=0;i<n2;i++)
@@ -176,7 +178,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     // Fill DetInfo Weighted Histogram
     // ******************************************************************************************************************************** //
     
-    Int_t n4 = DetInfo->Draw("Energy:Weight","","goff");
+    Int_t n4 = DetInfo->Draw("Energy:Weight","","goff", maxNumberOfEntries);
     Double_t *detEnergy = DetInfo->GetVal(0);
     Double_t *detWeight = DetInfo->GetVal(1);
     for(int i=0;i<n4;i++)
@@ -189,7 +191,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     // ******************************************************************************************************************************** //
     if(checkNRF_to_Cher)
     {
-        Int_t n5 = nrf_to_cher_tree->Draw("NRF_Energy:NRF_Weight","","goff");
+        Int_t n5 = nrf_to_cher_tree->Draw("NRF_Energy:NRF_Weight","","goff", maxNumberOfEntries);
         Double_t *nrfcherNRFEnergy = nrf_to_cher_tree->GetVal(0);
         Double_t *nrfcherNRFWeight = nrf_to_cher_tree->GetVal(1);
         for(int i=0;i<n5;i++)
@@ -197,7 +199,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
             wNRF_NRF_to_Cher->Fill(nrfcherNRFEnergy[i], nrfcherNRFWeight[i]);
         }
 
-        Int_t n6 = nrf_to_cher_tree->Draw("Cher_Energy:Cher_Weight","","goff");
+        Int_t n6 = nrf_to_cher_tree->Draw("Cher_Energy:Cher_Weight","","goff",maxNumberOfEntries);
         Double_t *nrfcherCherEnergy = nrf_to_cher_tree->GetVal(0);
         Double_t *nrfcherCherWeight = nrf_to_cher_tree->GetVal(1);
         for(int i=0;i<n6;i++)
@@ -211,7 +213,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
         // ******************************************************************************************************************************** //
     if(checkNRF_to_Cher_to_Det)
     {
-        Int_t n7 = nrf_to_cher_to_det_tree->Draw("EnergyNRF:WeightNRF","","goff");
+        Int_t n7 = nrf_to_cher_to_det_tree->Draw("EnergyNRF:WeightNRF","","goff",maxNumberOfEntries);
         Double_t *nrfcherdetNRFEnergy = nrf_to_cher_to_det_tree->GetVal(0);
         Double_t *nrfcherdetNRFWeight = nrf_to_cher_to_det_tree->GetVal(1);
         for(int i=0;i<n7;i++)
@@ -219,7 +221,7 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
             wNRF_NRF_to_Cher_to_Det->Fill(nrfcherdetNRFEnergy[i], nrfcherdetNRFWeight[i]);
         }
 
-        Int_t n8 = nrf_to_cher_to_det_tree->Draw("EnergyCher:WeightCher","","goff");
+        Int_t n8 = nrf_to_cher_to_det_tree->Draw("EnergyCher:WeightCher","","goff",maxNumberOfEntries);
         Double_t *nrfcherdetCherEnergy = nrf_to_cher_to_det_tree->GetVal(0);
         Double_t *nrfcherdetCherWeight = nrf_to_cher_to_det_tree->GetVal(1);
         for(int i=0;i<n8;i++)

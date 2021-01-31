@@ -7,18 +7,19 @@
 // ************************************************************************************************ //
 // File Explanation:
 //
-// Requires 4 inputs 
+// Requires 5 inputs 
 // 1. Chopper On Filename 
 // 2. Chopper Off Filename
 // 3. Check Bool if Weighted Histogram File Exists 
-// 4. Check Bool if Weighted Histogram contains EventCheck Data
+// 4. Check Bool if Cherenkov Weighted Histogram Exists in Weighted Histogram file 
+// 5. Check Bool if Weighted Histogram contains EventCheck Data
 // 
 // This File Scans the Weighted Histogram File. 
 // This file prints to terminal all histogram 
 // entries, weighted sums, and Z-Scores.
 //
 
-void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool checkAdOnFile, bool checkEvents)
+void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool checkAdOnFile, bool checkCherenkov, bool checkEvents)
 {
   TFile *AdOnFile, *AdOffFile;
   std::string OriginalOn = ChopOnBase;
@@ -168,7 +169,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool checkAdO
   // Quick Cherenkov Analysis from Added Histograms File
   // ******************************************************************************************************************************** //
 
-  if(checkAdOnFile)
+  if(checkAdOnFile && checkCherenkov)
   {
     std::cout << std::endl << "Cherenkov Analysis..." << std::endl;
     std::cout << "*************************************" << std::endl << std::endl;
@@ -184,7 +185,9 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool checkAdO
     weighted_sum2 = CherenkovOff->Integral();
     CherenkovOff->Print();
     cher_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
-
+  }
+  if(checkAOnFile)
+  {
     // ******************************************************************************************************************************** //
     // Quick Incident Photocathode Analysis from Added Histogram File
     // ******************************************************************************************************************************** //
@@ -297,9 +300,12 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool checkAdO
   std::cout << "Interrogation Object NRF Emission Z-Score: " << IntObj_nrf_out_z << std::endl;
   std::cout << "Water Tank Incident Z-Score: " << water_in_z << std::endl;
   std::cout << "Water Tank NRF incident Z-Score: " << water_nrf_z << std::endl;
-  if(checkAdOnFile)
+  if(checkAdOnFile && checkCherenkov)
   {
     std::cout << "Created Cherenkov Energy Z-Score: " << cher_z << std::endl;
+  }
+  if(checkAdOnFile)
+  {
     std::cout << "Incident Photocathode Z-Score: " << inc_det_z << std::endl;
   }
   std::cout << "Detected Z-Score: " << det_z << std::endl;

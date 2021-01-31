@@ -25,8 +25,9 @@
 #include "SteppingAction.hh"
 
 SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun, G4bool brem)
-        : G4UserSteppingAction(), drawChopperDataFlag(0), drawNRFDataFlag(0), drawIntObjDataFlag(0),
-        drawWaterIncDataFlag(0), drawCherenkovDataFlag(0), drawDetDataFlag(0), stepM(NULL)
+        : G4UserSteppingAction(), drawChopperIncDataFlag(0), drawChopperOutDataFlag(0), drawNRFDataFlag(0), 
+          drawIntObjDataFlag(0), drawWaterIncDataFlag(0), drawCherenkovDataFlag(0), drawDetDataFlag(0), 
+          stepM(NULL)
 {
   stepM = new StepMessenger(this);
   local_det = det;
@@ -115,7 +116,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 // *********************************************** Track Chopper Interactions **************************************************** //
    
   // Chopper Analysis
-  if(drawChopperDataFlag)
+  if(drawChopperIncDataFlag)
   {
     // Gammas Incident Chopper Wheel 
     if(nextStep_VolumeName.compare(0, 4,"Chop") == 0
@@ -127,6 +128,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       manager->FillNtupleIColumn(0,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
       manager->AddNtupleRow(0);
     }
+  }
+ if(drawChopperOutDataFlag)
+ {
     // Gammas Exiting Chopper Wheel 
     if(nextStep_VolumeName.compare(0,4,"Chop") != 0
        && previousStep_VolumeName.compare(0,4,"Chop") == 0

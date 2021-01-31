@@ -66,9 +66,13 @@ virtual void UserSteppingAction(const G4Step*);
 
 public: // for now set to public until I can figure out how to work with protected
 
-void SetChopperDataFlag(G4int val)
+void SetChopperIncDataFlag(G4int val)
 {
-  drawChopperDataFlag = val;
+  drawChopperIncDataFlag = val;
+}
+void SetChopperOutDataFlag(G4int val)
+{
+  drawChopperOutDataFlag = val;
 }
 void SetNRFDataFlag(G4int val)
 {
@@ -98,7 +102,7 @@ const DetectorConstruction* local_det;
 RunAction* run;
 G4OpBoundaryProcessStatus fExpectedNextStatus;
 G4String procCount;
-G4int drawChopperDataFlag, drawNRFDataFlag, drawIntObjDataFlag, drawWaterIncDataFlag, drawCherenkovDataFlag, drawDetDataFlag;
+G4int drawChopperIncDataFlag, drawChopperOutDataFlag, drawNRFDataFlag, drawIntObjDataFlag, drawWaterIncDataFlag, drawCherenkovDataFlag, drawDetDataFlag;
 StepMessenger* stepM;
 };
 

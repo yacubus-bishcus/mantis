@@ -85,7 +85,8 @@
 
 /run/initialize
 
-#/output/myoutput ChopData
+#/output/myoutput ChopIncData
+#/output/myoutput ChopOutData
 #/output/myoutput NRFData
 #/output/myoutput IntObjData
 #/output/myoutput WaterIncData

@@ -2,15 +2,16 @@
 // ************************************************************************************************ //
 // ************************************************************************************************ //
 // To Run File:
-// root -b -q 'PrintResults.cc("test", "testOff", true)'
+// root -b -q 'PrintResults.cc("test", "testOff", true, true)'
 // ************************************************************************************************ //
 // ************************************************************************************************ //
 // File Explanation:
 //
-// Requires 3 inputs 
+// Requires 4 inputs 
 // 1. Chopper On Filename 
 // 2. Chopper Off Filename
-// 3. Check Bool if Weighted Histogram contains EventCheck Data
+// 3. Check Bool if Weighted Histogram File Exists 
+// 4. Check Bool if Weighted Histogram contains EventCheck Data
 // 
 // This File Scans the Weighted Histogram File. 
 // This file prints to terminal all histogram 

@@ -186,7 +186,7 @@ void PrintResults(const char* ChopOnBase, const char* ChopOffBase, bool checkAdO
     CherenkovOff->Print();
     cher_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
   }
-  if(checkAOnFile)
+  if(checkAdOnFile)
   {
     // ******************************************************************************************************************************** //
     // Quick Incident Photocathode Analysis from Added Histogram File

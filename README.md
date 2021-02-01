@@ -17,12 +17,12 @@ Seven(7) histograms are available upon user request:
 
 Additionally, five(5) ntuples(TTrees) are available upon user request:
 
-1. Incident Chopper Data -> /output/myoutput ChopData must be uncommented!
+1. Incident Chopper Data -> /output/myoutput ChopIncData must be uncommented!
  - Unweighted Incident Chopper Energies
  - Weights 
  - Event IDs
 
-2. Emission Chopper Data -> /output/myoutput ChopData must be uncommented!
+2. Emission Chopper Data -> /output/myoutput ChopOutData must be uncommented!
  - Unweighted Incident Chopper Energies
  - Weights 
  - Event IDs
@@ -252,7 +252,7 @@ Several helper scripts are included:
 * This prints the Chopper On/Off Comparison results and Z-Scores
 * can be run in CERN ROOT with the command:
 
-`> root -b -q 'PrintResults.cc("filenameOnBase", "filenameOffBase")'`
+`> root -b -q 'PrintResults.cc("filenameOnBase", "filenameOffBase", checkWeighted_Histograms_File, check_Cherenkov, check_EventCheck)'`
 
 7. Analysis.cc 
 * This runs Cherenkov.cc, EventCheck.cc, WeightHisto.cc and PrintResults.cc 

@@ -76,8 +76,9 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     std::cout << "Merging Cherenkov with " << numEntries << " number of entries..." << std::endl;
     for(int i=0;i<numEntries;i++)
     {
-        while(nSum < numEntries)
+        if(nSum < numEntries)
         {
+            std::cout << "\r Event: " << nSum << std::flush;
             // clear holding vector/variables 
             energiesv.clear();
             weightsv.clear();
@@ -119,6 +120,10 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
             weightv.push_back(weightsv[maxEindex]);
             // add the total number of secondaries into final secondary vector 
             secv.push_back(secSum);
+        }
+        else
+        {
+            break;
         }
     } // end of for loop
     

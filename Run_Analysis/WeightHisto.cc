@@ -141,6 +141,11 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     // Fill Chopper In Weighted Histogram
     // ******************************************************************************************************************************** //
     
+    if(ChopIn->GetEntries() > maxNumberOfEntries)
+    {
+        std::cerr << "WARNING: Chopper Incident Number of Entries Exceeds Max Number of Entries." << std::endl;
+        std::cerr << "Some data may not be transferred." << std::endl;
+    }
     Int_t n = ChopIn->Draw("Energy:Weight","","goff",maxNumberOfEntries);
     Double_t *energyIn = ChopIn->GetVal(0);
     Double_t *weightIn = ChopIn->GetVal(1);
@@ -153,6 +158,11 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     // Fill Chopper Out Weighted Histogram
     // ******************************************************************************************************************************** //
     
+    if(ChopOut->GetEntries() > maxNumberOfEntries)
+    {
+        std::cerr << "WARNING: Chopper Emission Number of Entries Exceeds Max Number of Entries." << std::endl;
+        std::cerr << "Some data may not be transferred." << std::endl;
+    }
     Int_t n1 = ChopOut->Draw("Energy:Weight","","goff",maxNumberOfEntries);
     Double_t *energyOut = ChopOut->GetVal(0);
     Double_t *weightOut = ChopOut->GetVal(1);
@@ -165,6 +175,11 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     // Fill NRF Weighted Histogram
     // ******************************************************************************************************************************** //
     
+    if(NRFMatData->GetEntries() > maxNumberOfEntries)
+    {
+        std::cerr << "WARNING: NRF Number of Entries Exceeds Max Number of Entries." << std::endl;
+        std::cerr << "Some data may not be transferred." << std::endl;
+    }
     Int_t n2 = NRFMatData->Draw("Energy:Weight","","goff", maxNumberOfEntries);
     Double_t *nrfEnergy = NRFMatData->GetVal(0);
     Double_t *nrfWeight = NRFMatData->GetVal(1);
@@ -178,6 +193,11 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     // Fill DetInfo Weighted Histogram
     // ******************************************************************************************************************************** //
     
+    if(DetInfo->GetEntries() > maxNumberOfEntries)
+    {
+        std::cout << "WARNING: Detector Information Number of Entries Exceeds Max Number of Entries." << std::endl;
+        std::cout << "Some data may not be transferred." << std::endl;
+    }
     Int_t n4 = DetInfo->Draw("Energy:Weight","","goff", maxNumberOfEntries);
     Double_t *detEnergy = DetInfo->GetVal(0);
     Double_t *detWeight = DetInfo->GetVal(1);
@@ -191,6 +211,11 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
     // ******************************************************************************************************************************** //
     if(checkNRF_to_Cher)
     {
+        if(nrf_to_cher_tree->GetEntries() > maxNumberOfEntries)
+        {
+            std::cout << "WARNING: NRF to Cherenkov Number of Entries Exceeds Max Number of Entries." << std::endl;
+            std::cout << "Some data may not be transferred." << std::endl;
+        }
         Int_t n5 = nrf_to_cher_tree->Draw("NRF_Energy:NRF_Weight","","goff", maxNumberOfEntries);
         Double_t *nrfcherNRFEnergy = nrf_to_cher_tree->GetVal(0);
         Double_t *nrfcherNRFWeight = nrf_to_cher_tree->GetVal(1);
@@ -213,6 +238,11 @@ bool WeightHisto(const char *InputFilenameBase, double Emax, bool chopState)
         // ******************************************************************************************************************************** //
     if(checkNRF_to_Cher_to_Det)
     {
+        if(nrf_to_cher_to_det_tree->GetEntries() > maxNumberOfEntries)
+        {
+            std::cout << "WARNING: NRF to Cherenkov to Detector Number of Entries Exceeds Max Number of Entries." << std::endl;
+            std::cout << "Some data may not be transferred." << std::endl;
+        }
         Int_t n7 = nrf_to_cher_to_det_tree->Draw("EnergyNRF:WeightNRF","","goff",maxNumberOfEntries);
         Double_t *nrfcherdetNRFEnergy = nrf_to_cher_to_det_tree->GetVal(0);
         Double_t *nrfcherdetNRFWeight = nrf_to_cher_to_det_tree->GetVal(1);

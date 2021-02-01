@@ -34,7 +34,7 @@
 #################################################################################################
 # CHOPPER WHEEL OPTIONS 
 #units mm
-#/chopper/thickness 10
+#/chopper/thickness 30
 # This is the distance from the Chopper wheel to the source units cm must be between 1 and 50
 #/chopper/distance 50
 

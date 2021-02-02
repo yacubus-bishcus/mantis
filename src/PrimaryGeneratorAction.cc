@@ -95,7 +95,7 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 
-  std::cout << "PrimaryGeneratorAction::GeneratePrimaries" << std::endl;
+  //std::cout << "PrimaryGeneratorAction::GeneratePrimaries" << std::endl;
 // Set Particle Energy (Must be in generate primaries)
 #if defined (G4ANALYSIS_USE_ROOT)
 

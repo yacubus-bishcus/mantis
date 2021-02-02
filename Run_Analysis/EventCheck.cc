@@ -1,15 +1,8 @@
 //
-// ************************************************************************************************ //
-// ************************************************************************************************ //
-// To Run File:
-// root -b -q 'EventCheck.cc("test", true)'
-// ************************************************************************************************ //
-// ************************************************************************************************ //
 // File Explanation:
 //
 // Requires 2 inputs 
 // 1. InputFilename
-// 2. InputFile Chopper State 
 // 
 // This File Scans the Cherenkov Merged File and determines: 
 // 1. Check if a NRF event causes cherenkov
@@ -18,28 +11,14 @@
 // 4. Check if a NRF event lead to Cherenkov which was then detected 
 // 
 // The script create a new root file with the Following Structure:
-// TFile**		test_EventCheckOn.root	
-// TFile*		test_EventCheckOn.root
+// TFile**		test_EventCheck.root	
+// TFile*		test_EventCheck.root
 
-void EventCheck(const char *InputFilenameBase, bool chopState)
+void EventCheck(const char *InputFilename)
 {
     time_t timer, timer2, time_start, time_end;
     time_start = std::time(&timer);
-    std::string inFile = InputFilenameBase;
-    inFile = inFile + ".root";
-    const char* InputFilename = inFile.c_str();
     TFile *f = TFile::Open(InputFilename);
-    std::string cherInput = InputFilenameBase;
-    if(chopState)
-    {
-        cherInput = cherInput + "_CherenkovMergedOn.root";
-    }
-    else
-    {
-        cherInput = cherInput + "_CherenkovMergedOff.root";
-    }
-    const char* cherInputFile = cherInput.c_str();
-    TFile *f1 = TFile::Open(cherInputFile);
     
     TTree *Cherenkov, *NRF, *DetData;
     std::vector<int> cherEventv, nrfEventv, detEventv, nrf_to_cherEvents, cher_to_detEvents, nrf_to_detEvents;
@@ -70,14 +49,10 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     nrf_to_cher_to_det_tree->Branch("TimeCher",&timeCher);
     
     // Grab objects
-    f1->cd();
-    f1->GetObject("Merged",Cherenkov);
-    //Cherenkov->Print();
     f->cd();
+    f->GetObject("Cherenkov",Cherenkov);
     f->GetObject("NRFMatData",NRF);
-    //NRF->Print();
     f->GetObject("DetInfo",DetData);
-    //DetData->Print();
     
     Cherenkov->SetEstimate(-1);
     NRF->SetEstimate(-1);
@@ -94,7 +69,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     // ******************************************************************************************************************************** //
     
     // Grab Cherenkov Events
-    Int_t n = Cherenkov->Draw("EventID:Energy:Weight","","goff");
+    G4int n = Cherenkov->Draw("EventID:Energy:Weight","","goff");
     std::cout << "Cherenkov Entries: " << n << std::endl;
     Double_t *cherEvent = Cherenkov->GetVal(0);
     Double_t *cherEnergy = Cherenkov->GetVal(1);
@@ -108,7 +83,6 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     // Grab NRF Events
     Int_t n1 = NRF->Draw("EventID:Energy:Weight","","goff");
     std::cout << "NRF Entries: " << n1 << std::endl;
-  
     Double_t *nrfEvent = NRF->GetVal(0);
     Double_t *nrfEnergy = NRF->GetVal(1);
     Double_t *nrfWeight = NRF->GetVal(2);
@@ -121,8 +95,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     
     // Grab DetInfo Events
     Int_t n2 = DetData->Draw("EventID:Energy:Weight:Time","DetectionProcess == \"Det\"","goff");
-    std::cout << "Total Number of Detected entries: " << n2 << std::endl;
-  
+    std::cout << "Total Number of Detected entries: " << n2 << std::endl;  
     Double_t *detEvent = DetData->GetVal(0);
     Double_t *detEnergy = DetData->GetVal(1);
     Double_t *detWeight = DetData->GetVal(2);
@@ -141,7 +114,7 @@ void EventCheck(const char *InputFilenameBase, bool chopState)
     
     if(n != 0 && n1 != 0)
     {
-      std::cout << "Finding NRF Events that Caused Cherenkov..." << std::endl;
+      G4cout << "Finding NRF Events that Caused Cherenkov..." << std::endl;
       // if Cherenkov has more entries search with nrf events
       if(n1 < n)
       {

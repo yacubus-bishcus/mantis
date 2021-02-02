@@ -60,20 +60,20 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4String nextStep_VolumeName = endPoint->GetPhysicalVolume()->GetName();
   G4String previousStep_VolumeName = startPoint->GetPhysicalVolume()->GetName();
   // kill photons past IntObj
-  G4double EndIntObj = local_det->getEndIntObj();
+  G4double EndIntObj = kdet->getEndIntObj();
 
   // Run Cuts
   if(theTrack->GetPosition().z()/(cm) > EndIntObj/(cm))
   {
     // kill photons that go beyond the interrogation object
     theTrack->SetTrackStatus(fStopAndKill);
-    run->AddStatusKilled();
+    krun->AddStatusKilled();
   }
   else if(nextStep_VolumeName.compare(0, 3, "Col") == 0)
   {
     // kill photons in collimator
     theTrack->SetTrackStatus(fStopAndKill);
-    run->AddStatusKilled();
+    krun->AddStatusKilled();
   }
         
 // ************************************************* Checks and Cuts Complete ************************************************** //
@@ -91,7 +91,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     const G4VProcess* process = endPoint->GetProcessDefinedStep();
     if(process->GetProcessName() == "NRF")
     {
-      run->AddNRF();
+      krun->AddNRF();
       manager->FillNtupleIColumn(2,0, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
       manager->FillNtupleIColumn(2,1, theTrack->GetTrackID());
       manager->FillNtupleDColumn(2,2,theTrack->GetKineticEnergy()/(MeV));
@@ -215,14 +215,14 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 {
                     if(secondaries->at(i)->GetCreatorProcess()->GetProcessName() == "Scintillation") 
                     {
-                      run->AddScintillationEnergy(secondaries->at(i)->GetKineticEnergy());
-                      run->AddScintillation();
+                      krun->AddScintillationEnergy(secondaries->at(i)->GetKineticEnergy());
+                      krun->AddScintillation();
                     }
                     if(secondaries->at(i)->GetCreatorProcess()->GetProcessName() == "Cerenkov") 
                     {
                       // for total run
-                      run->AddCerenkovEnergy(secondaries->at(i)->GetKineticEnergy());
-                      run->AddCerenkov();
+                      krun->AddCerenkovEnergy(secondaries->at(i)->GetKineticEnergy());
+                      krun->AddCerenkov();
                     }
                 }
             }
@@ -254,9 +254,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       if(theTrack->GetKineticEnergy()/(eV) > 10)
       {
         theTrack->SetTrackStatus(fStopAndKill);   
-        run->AddStatusKilled();
+        krun->AddStatusKilled();
       }
-      run->AddTotalSurface();
+      krun->AddTotalSurface();
 
       for (G4int i=0; i<MAXofPostStepLoops; ++i) 
       {

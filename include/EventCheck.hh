@@ -71,7 +71,7 @@ std::vector<double> nrf_to_cherenkov_to_detNRFWeights, nrf_to_cherenkov_to_detCh
 std::vector<double> nrf_to_cherenkov_to_detNRFTimes, nrf_to_cherenkov_to_detCherTimes;
 double nrfE,nrfW, cherE, cherW, a, energyNRF, energyCher, weightNRF, weightCher, timeNRF, timeCher;
 int nrf_cher_EventID;
-G4int n2, x, index;
+G4int num_entries, num_entries1, num_entries2, x, index;
 
 };
 

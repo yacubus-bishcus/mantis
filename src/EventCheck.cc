@@ -68,8 +68,11 @@ EventCheck::EventCheck()
     {
         //Cherenkov->Print();
         f->GetObject("Cherenkov",Cherenkov);
+        Cherenkov->Print();
         f->GetObject("NRFMatData",NRF);
+        NRF->Print();
         f->GetObject("DetInfo",DetData);
+        DetData->Print();
     
         Cherenkov->SetEstimate(-1);
         NRF->SetEstimate(-1);

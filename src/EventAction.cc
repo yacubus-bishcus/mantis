@@ -32,10 +32,33 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event*)
 {
+  c_weight = 0;
+  c_eventID = 0;
+  c_secondaries = 0;
+  c_time = 0;
+  energyv.clear();
+  weightv.clear();
+  timev.clear();
 }
 
 void EventAction::EndOfEventAction(const G4Event* anEvent)
 {
+  // Grab Max Energy
+  G4double maxE = *std::max_element(energyv.begin(),energyv.end());
+  // Find Max Energy's Weight
+  auto it = std::find(energyv.begin(), energyv.end(),maxE);
+  G4int maxEIndex = it - energyv.begin();
+  c_weight = weightv[maxEIndex];
+  // Find the Average Time 
+  c_time = calcAvg();
+  G4AnalysisManager* manager = G4AnalysisManager::Instance();
+  manager->FillNtupleDColumn(3,0,maxE);
+  manager->FillNtupleDColumn(3,1,c_weight);
+  manager->FillNtupleIColumn(3,2,anEvent->GetEventID());
+  manager->FillNtupleIColumn(3,3,c_secondaries);
+  manager->FillNtupleDColumn(3,4,c_time);
+  manager->AddNtupleRow(3);
+  
   tEvents = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
 
   if(anEvent->GetEventID() != 0 && anEvent->GetEventID() % 10000 == 0)

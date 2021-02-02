@@ -23,7 +23,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "RunAction.hh"
-RunAction::RunAction(HistoManager* histoAnalysis, Cherenkov* cher, G4bool brem, G4bool output_in)
+RunAction::RunAction(HistoManager* histoAnalysis, G4bool brem, G4bool output_in)
         : G4UserRunAction(), fHistoManager(histoAnalysis)
 {
   bremTest = brem;

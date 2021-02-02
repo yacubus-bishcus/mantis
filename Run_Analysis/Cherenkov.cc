@@ -23,6 +23,28 @@
 
 void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
 {
+    
+    // Create Structure for Events 
+    struct Event
+    {
+        int eventID;
+        double energy;
+        double weight;
+        int numSec;
+    };
+    
+    struct by_Event()
+    {
+        bool operator()(Event const &a, Event const &b) const noexcept 
+        {
+            return a.eventID < b.eventID;
+        }
+    };
+    
+    std::vector<Event> Events;
+    Event theEvent;
+    
+    // Other declarations 
     time_t timer,timer2, t_start, t_end;
     t_start = time(&timer);
     std::string InFile = InputFilenameBase;
@@ -32,7 +54,9 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     TTree *Cherenkov;
     
     TTree *newCherenkov = new TTree("Merged","Cherenkov Events Merged");
-    double tEnergy, Weight, tSec;
+    double tEnergy, Weight, secSum, tSec;
+    Int_t n = 0;
+    Int_t nSum = 0;
     int EventID;
     newCherenkov->Branch("EventID",&EventID);
     newCherenkov->Branch("Energy",&tEnergy);
@@ -59,19 +83,33 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     std::vector<int> eventIDv;
     std::vector<double> energiesv, weightsv;
     std::vector<size_t> results;
+
+// ******************************************************************************************************************************** //
+// Variables Declared Objects Set up
+// ******************************************************************************************************************************** //
     
+// ******************************************************************************************************************************** //
+// Filling Event Structure to Sort 
+// ******************************************************************************************************************************** //
+    
+    std::cout << "Filling Event Structure..." << std::endl;
     for(int i=0;i<numEntries;i++)
     {
-        eventIDv.push_back((int)eventID[i]);
+        theEvent = {(int)eventID[i], energy[i], weight[i], sec[i]};
+        Events.push_back(theEvent);
     }
-
-    double secSum;
-    Int_t n = 0;
-    Int_t nSum = 0;
+    std::cout << "Event Structure Filled to sort!" << std::endl;
     
-    // ******************************************************************************************************************************** //
-    // Variables Declared Objects Set up
-    // ******************************************************************************************************************************** //
+// ******************************************************************************************************************************** //
+// Sorting Events 
+// ******************************************************************************************************************************** // 
+    
+    std::sort(Events.begin(), Events.end(), by_Event());
+    std::cout << "Events Sorted in Event Structure!" << std::endl;
+    
+// ******************************************************************************************************************************** //
+// Merging Cherenkov Events 
+// ******************************************************************************************************************************** //
     
     std::cout << "Merging Cherenkov with " << numEntries << " number of entries..." << std::endl;
     for(int i=0;i<numEntries;i++)
@@ -84,7 +122,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
             weightsv.clear();
             secSum = 0;
             // grab the next event to check 
-            int x = eventIDv[nSum];
+            int x = Events[nSum].eventID;
             // find where the indices are that match x 
             auto it = std::find(eventIDv.begin(),eventIDv.end(),x);
             while(it != eventIDv.end())

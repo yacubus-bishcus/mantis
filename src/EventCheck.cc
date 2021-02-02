@@ -103,6 +103,7 @@ EventCheck::EventCheck()
     G4double *cherEvent = Cherenkov->GetVal(0);
     G4double *cherEnergy = Cherenkov->GetVal(1);
     G4double *cherWeight = Cherenkov->GetVal(2);
+    std::cout << "Cherenkov Data Written to Arrays." << std::endl;
 
     for(int i=0;i<n;i++)
     {

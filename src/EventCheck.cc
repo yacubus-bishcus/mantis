@@ -112,7 +112,7 @@ EventCheck::EventCheck()
     {
       cherEventv.push_back((int)cherEvent[i]);
     }
-    std::cout << "here" << std::endl;
+    NRF->Print();
     // Grab NRF Events
     num_entries1 = NRF->Draw("EventID:Energy:Weight","","goff");
     std::cout << "here2" << std::endl;

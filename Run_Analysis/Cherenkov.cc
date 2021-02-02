@@ -47,7 +47,7 @@ bool eventCompare(Event& a, int x)
         return false;
 }
 
-void Cherenkov(const char *InputFilenameBase, double Emax, Long64_t maxNumberOfEntries, Long64_t startEntry, int fileNumber)
+void Cherenkov(const char *InputFilenameBase, double Emax, Long64_t maxNumberOfEntries, Long64_t startEntry, int fileNumber, bool lastFile)
 {
     
     std::vector<Event> Events;
@@ -66,6 +66,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, Long64_t maxNumberOfE
     double tEnergy, Weight, secSum, tSec;
     Int_t n = 0;
     Int_t nSum = 0;
+    Int_t lastnSum = 0;
     int EventID;
     newCherenkov->Branch("EventID",&EventID);
     newCherenkov->Branch("Energy",&tEnergy);
@@ -144,6 +145,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, Long64_t maxNumberOfE
             // write the event that has matches into the final event vector
             events.push_back(x);
             // sum the events to skip repeats ... move on to next event ID value
+            lastnSum = nSum;
             nSum += n;
             // Fill the energies, weights and number of secondaries temp vectors
             for(int j=0;j<n;j++)
@@ -169,10 +171,19 @@ void Cherenkov(const char *InputFilenameBase, double Emax, Long64_t maxNumberOfE
             secv.push_back(secSum);
         }
         else
-        {
+        { 
             break;
         }
     } // end of for loop
+    
+    // Remove last index to avoid overlap
+    if(!lastFile)
+    {
+      events.pop_back();
+      energyv.pop_back();
+      weightv.pop_back();
+      secv.pop_back();  
+    }
     
     // ******************************************************************************************************************************** //
     // Fill New Tree
@@ -209,5 +220,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, Long64_t maxNumberOfE
     fout->Close();
     t_end = time(&timer2);
     std::cout << "Time to Merge Cherenkov: " << std::difftime(t_end, t_start) << " seconds" << std::endl;
+    
+    return lastnSum;
 }
 

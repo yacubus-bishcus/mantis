@@ -25,14 +25,14 @@
 
 // declare global variables
 G4long seed;
-G4String macro, root_output_name, gOutName, bremTest, standalone_in, verbose_in, addNRF_in; 
+G4String macro, root_output_name, gOutName, bremTest, standalone_in, verbose_in, addNRF_in, checkEvents_in; 
 
 namespace
 {
   void PrintUsage()
   {
     std::cerr << "Usage: " << std::endl;
-    std::cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true]" 
+    std::cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] [-e checkEvents=false]" 
               << std::endl;
   }
 }
@@ -47,6 +47,7 @@ int main(int argc,char **argv)
   G4bool standalone = false;
   G4bool NRF_Verbose = false;
   G4bool addNRF = true;
+  G4bool checkEvents = false;
   macro = "mantis.in";
   seed = 1;
   G4bool output = false;
@@ -62,7 +63,7 @@ int main(int argc,char **argv)
   }
 
   // Evaluate Arguments
-  if ( argc > 15 )
+  if ( argc > 17 )
   {
     PrintUsage();
     return 1;
@@ -77,6 +78,7 @@ int main(int argc,char **argv)
     else if (G4String(argv[i]) == "-p") standalone_in = argv[i+1];
     else if (G4String(argv[i]) == "-v") verbose_in = argv[i+1];
     else if (G4String(argv[i]) == "-n") addNRF_in = argv[i+1];
+    else if (G4String(argv[i]) == "-e") checkEvents_in = argv[i+1];
     else
     {
       PrintUsage();
@@ -93,6 +95,11 @@ int main(int argc,char **argv)
   {
     std::cout << "NRF Verbose set to: " << verbose_in << std::endl;
     NRF_Verbose = true;
+  }
+  if(checkEvents_in == "True" || checkEvents_in == "true")
+  {
+    std::cout << "Check Events set to: " << checkEvents_in << std::endl;
+    checkEvents = true;
   }
 
   std::string RootOutputFile = (std::string)root_output_name;
@@ -133,7 +140,7 @@ int main(int argc,char **argv)
   // Set up Physics List
   physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
   runManager->SetUserInitialization(thePL);
-  runManager->SetUserInitialization(new ActionInitialization(det, brem, output));
+  runManager->SetUserInitialization(new ActionInitialization(det, brem, output, checkEvents));
 
   // Run manager initialized in macros
 #ifdef G4VIS_USE

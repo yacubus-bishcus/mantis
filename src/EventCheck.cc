@@ -111,13 +111,14 @@ EventCheck::EventCheck()
     std::cout << "here" << std::endl;
     // Grab NRF Events
     n1 = NRF->Draw("EventID:Energy:Weight","","goff");
+    std::cout << "here2" << std::endl;
     std::cout << "NRF Entries: " << n1 << std::endl;
     G4cout << "NRF Entries: " << n1 << G4endl;
     Double_t *nrfEvent = NRF->GetVal(0);
     Double_t *nrfEnergy = NRF->GetVal(1);
     Double_t *nrfWeight = NRF->GetVal(2);
 
-    for(int i=0;i<n1;i++)
+    for(int i=0;i<n1;++i)
     {
         nrfEventv.push_back((int)nrfEvent[i]);
     }
@@ -130,7 +131,7 @@ EventCheck::EventCheck()
     Double_t *detWeight = DetData->GetVal(2);
     Double_t *time = DetData->GetVal(3);
 
-    for(int i=0;i<n2;i++)
+    for(int i=0;i<n2;++i)
     {
         detEventv.push_back((int)detEvent[i]);
     }
@@ -144,7 +145,7 @@ EventCheck::EventCheck()
       // if Cherenkov has more entries search with nrf events
       if(n1 < n)
       {
-          for(int i=0;i<n1;i++)
+          for(int i=0;i<n1;++i)
           {
               x = nrfEventv[i];
               auto exists = std::find(cherEventv.begin(),cherEventv.end(), x);
@@ -163,7 +164,7 @@ EventCheck::EventCheck()
       // Else NRF has more entries search with cherenkov events
       else
       {
-          for(int i=0;i<n;i++)
+          for(int i=0;i<n;++i)
           {
               x = cherEventv[i];
               auto exists = std::find(nrfEventv.begin(),nrfEventv.end(), x);
@@ -185,7 +186,7 @@ EventCheck::EventCheck()
     
     if(n2 > 0)
     {
-      for(int i=0;i<n2;i++)
+      for(int i=0;i<n2;++i)
       {
           // Check to see if Cherenkov Event ID matches Det Event ID
           x = detEventv[i];
@@ -223,7 +224,7 @@ EventCheck::EventCheck()
       if(cher_to_detEvents.size() > nrf_to_detEvents.size())
       {
           G4cout << "More Cherenkov Events than nrf events lead to detection. Checking NRF Detected Events..." << G4endl;
-          for(unsigned int i=0;i<nrf_to_detEvents.size();i++)
+          for(unsigned int i=0;i<nrf_to_detEvents.size();++i)
           {
               x = nrf_to_detEvents[i];
               auto exists = std::find(cher_to_detEvents.begin(), cher_to_detEvents.end(),x);
@@ -243,7 +244,7 @@ EventCheck::EventCheck()
       else if(nrf_to_detEvents.size() > cher_to_detEvents.size())
       {
           G4cout << "More NRF Events than Cherenkov events lead to detection. Checking Cherenkov Events..." << G4endl;
-          for(unsigned int i=0;i<cher_to_detEvents.size();i++)
+          for(unsigned int i=0;i<cher_to_detEvents.size();++i)
           {
               x = cher_to_detEvents[i];
               auto exists = std::find(nrf_to_detEvents.begin(), nrf_to_detEvents.end(),x);

@@ -100,7 +100,7 @@ EventCheck::EventCheck()
     nrf_to_cher_to_det_tree->Branch("TimeCher",&timeCher);
  
     // Grab Cherenkov Events
-    n = Cherenkov->Draw("EventID:Energy:Weight","","goff");
+    G4int n = Cherenkov->Draw("EventID:Energy:Weight","","goff");
     std::cout << "Cherenkov Entries: " << n << std::endl;
     G4cout << "Cherenkov Entries: " << n << G4endl;
     G4double *cherEvent = Cherenkov->GetVal(0);
@@ -113,13 +113,13 @@ EventCheck::EventCheck()
     }
     std::cout << "here" << std::endl;
     // Grab NRF Events
-    n1 = NRF->Draw("EventID:Energy:Weight","","goff");
+    G4int n1 = NRF->Draw("EventID:Energy:Weight","","goff");
     std::cout << "here2" << std::endl;
     std::cout << "NRF Entries: " << n1 << std::endl;
     G4cout << "NRF Entries: " << n1 << G4endl;
-    Double_t *nrfEvent = NRF->GetVal(0);
-    Double_t *nrfEnergy = NRF->GetVal(1);
-    Double_t *nrfWeight = NRF->GetVal(2);
+    G4double *nrfEvent = NRF->GetVal(0);
+    G4double *nrfEnergy = NRF->GetVal(1);
+    G4double *nrfWeight = NRF->GetVal(2);
 
     for(int i=0;i<n1;++i)
     {

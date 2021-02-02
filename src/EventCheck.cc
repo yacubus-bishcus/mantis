@@ -39,6 +39,7 @@
 extern G4String gOutName;
 EventCheck::EventCheck()
 {
+    std::cout << "EventCheck::EventCheck"<<std::endl;
     time_start = std::time(&timer);
     TFile *f = TFile::Open(gOutName);
     f->cd();

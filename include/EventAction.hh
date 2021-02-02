@@ -72,7 +72,7 @@ private:
 G4double calcAvg()
 {
   G4double sum;
-  for(std::size_t i=0;i<timev.size();i++)
+  for(std::size_t i=0;i<timev.size();++i)
   {
     sum += timev.at(i);
   }

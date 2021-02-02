@@ -34,7 +34,7 @@ class DetectorConstruction;
 class ActionInitialization : public G4VUserActionInitialization
 {
   public:
-    ActionInitialization(const DetectorConstruction*, G4bool, G4bool);
+    ActionInitialization(const DetectorConstruction*, G4bool, G4bool, G4bool);
     virtual ~ActionInitialization();
 
     virtual void Build() const;
@@ -43,6 +43,7 @@ private:
     const DetectorConstruction* fDetector;
     G4bool bremTest;
     G4bool output;
+    G4bool checkEvents;
 };
 
 #endif

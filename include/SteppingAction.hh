@@ -97,11 +97,11 @@ void SetDetDataFlag(G4int val)
 }
 
 private:
-G4bool bremTest;
 G4double weight;
 const DetectorConstruction* kdet;
 RunAction* krun;
 EventAction* kevent;
+G4bool bremTest;
 G4OpBoundaryProcessStatus fExpectedNextStatus;
 G4String procCount;
 G4int drawChopperIncDataFlag, drawChopperOutDataFlag, drawNRFDataFlag, drawIntObjDataFlag, drawWaterIncDataFlag, drawCherenkovDataFlag, drawDetDataFlag;

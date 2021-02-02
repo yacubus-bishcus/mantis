@@ -64,7 +64,9 @@ public:
 private:
 
 time_t timer, timer2, time_start, time_end;
-TTree *Cherenkov, *NRF, *DetData, nrf_to_cher_tree, nrf_to_cher_to_det_tree;
+#if defined (G4ANALYSIS_USE_ROOT)
+TTree *Cherenkov, *NRF, *DetData, *nrf_to_cher_tree, *nrf_to_cher_to_det_tree;
+#endif
 std::vector<int> cherEventv, nrfEventv, detEventv, nrf_to_cherEvents, cher_to_detEvents, nrf_to_detEvents;
 std::vector<double> cher_to_detEnergies, cher_to_detWeights, cher_to_detTimes;
 std::vector<double> nrf_to_detEnergies, nrf_to_detWeights, nrf_to_detTimes;

@@ -114,7 +114,6 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtupleDColumn("Energy");
       manager->CreateNtupleDColumn("Weight");
       manager->CreateNtupleIColumn("EventID");
-      manager->CreateNtupleIColumn("TrackID");
       manager->CreateNtupleIColumn("NumSecondaries");
       manager->CreateNtupleDColumn("Time");
       manager->FinishNtuple();

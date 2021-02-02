@@ -78,7 +78,6 @@ EventCheck::EventCheck()
         Cherenkov->SetEstimate(-1);
         NRF->SetEstimate(-1);
         DetData->SetEstimate(-1);
-        f->Close();
     }
     
     G4cout << "EventCheck::Objects Grabbed!" << G4endl;

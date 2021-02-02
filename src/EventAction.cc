@@ -49,6 +49,7 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
     eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
     G4double weight = info->GetWeight();
     // Find the Average Time 
+    G4double c_time;
     if(timev.size() > 0)
     {
       c_time = calcAvg();

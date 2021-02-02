@@ -70,6 +70,7 @@ EventCheck::EventCheck()
     bool confirm = f->cd();
     if(confirm)
     {
+        std::cout << "Confirmed." << std::endl;
         f->GetObject("Cherenkov",Cherenkov);
         f->GetObject("NRFMatData",NRF);
         f->GetObject("DetInfo",DetData);

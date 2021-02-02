@@ -32,6 +32,7 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event*)
 {
+  std::cout << "EventAction::BeginOfEventAction -> Beginning" << std::endl;
   c_secondaries = 0;
   energyv.clear();
   weightv.clear();
@@ -40,6 +41,7 @@ void EventAction::BeginOfEventAction(const G4Event*)
 
 void EventAction::EndOfEventAction(const G4Event* anEvent)
 {
+  std::cout << "EventAction::EndOfEventAction -> Beginning" << std::endl;
   if(c_secondaries > 0)
   {
     // Grab Max Energy

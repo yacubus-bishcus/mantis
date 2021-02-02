@@ -112,7 +112,7 @@ EventCheck::EventCheck()
 EventCheck::~EventCheck()
 {}
 
-EventCheck::Determine_NRF_to_Cherenkov()
+void EventCheck::Determine_NRF_to_Cherenkov()
 {
     G4int x, index;
     
@@ -166,7 +166,7 @@ EventCheck::Determine_NRF_to_Cherenkov()
 // Determine if Cherenkov or NRF Lead to Detection Event
 // ******************************************************************************************************************************** //
 
-EventCheck::Determine_Detection_Events()
+void EventCheck::Determine_Detection_Events()
 {
     G4int x, index;
     if(n2 > 0)
@@ -255,7 +255,7 @@ EventCheck::Determine_Detection_Events()
 // Fill TTrees
 // ******************************************************************************************************************************** //
 
-EventCheck::WriteEvents()
+void EventCheck::WriteEvents()
 {
     if(n > 0 && n1 > 0)
     {

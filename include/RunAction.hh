@@ -38,7 +38,7 @@
 class RunAction : public G4UserRunAction
 {
   public:
-    RunAction(HistoManager* histoAnalysis, G4bool, G4bool);
+    RunAction(HistoManager* histoAnalysis, G4bool, G4bool, G4bool);
     virtual ~RunAction();
 
   public:

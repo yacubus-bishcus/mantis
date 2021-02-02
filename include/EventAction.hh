@@ -87,6 +87,7 @@ G4double calcAvg()
 }
 
 G4int tEvents, c_secondaries;
+G4double c_time;
 G4bool mergeCherenkov;
 std::vector<double> energyv, weightv, timev;
 };

@@ -79,7 +79,7 @@ G4double calcAvg()
 }
 
 G4int tEvents, c_secondaries;
-G4double c_time, sum, weight;
+G4double c_time, sum;
 std::vector<double> energyv, timev;
 };
 

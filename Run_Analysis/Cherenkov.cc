@@ -115,7 +115,17 @@ Int_t Cherenkov(const char *InputFilenameBase, double Emax, Long64_t maxNumberOf
     
     std::sort(Events.begin(), Events.end(), by_Event());
     std::cout << "Events Sorted in Event Structure!" << std::endl;
+    std::vector<int> events_sorted, sec_sorted;
+    std::vector<double> energy_sorted, weight_sorted;
     
+    for(int i=0;i<Events.size();i++)
+    {
+      events_sorted.push_back(Events[i].eventID);
+      energy_sorted.push_back(Events[i].energy);
+      weight_sorted.push_back(Events[i].weight);
+      sec_sorted.push_back(Events[i].numSec);
+    }
+    std::cout << "Sorted Events written to vector arrays." << std::endl;
 // ******************************************************************************************************************************** //
 // Merging Cherenkov Events
 // ******************************************************************************************************************************** //
@@ -132,13 +142,14 @@ Int_t Cherenkov(const char *InputFilenameBase, double Emax, Long64_t maxNumberOf
             results.clear();
             secSum = 0;
             // grab the next event to check
-            int x = Events[nSum].eventID;
+            int x = events_sorted[nSum];
             // find where the indices are that match x
-            auto it = std::find_if(Events.begin(), Events.end(), std::bind(eventCompare, std::placeholders::_1, x));
-            while(it != Events.end())
+            //auto it = std::find_if(Events.begin(), Events.end(), std::bind(eventCompare, std::placeholders::_1, x));
+            auto it = std::find(events_sorted.begin(), events_sorted.end(), x);
+            while(it != events_sorted.end())
             {
-                results.emplace_back(std::distance(Events.begin(), it));
-                it = std::find_if(std::next(it), Events.end(), std::bind(eventCompare, std::placeholders::_1, x));
+                results.emplace_back(std::distance(events_sorted.begin(), it));
+                it = std::find(std::next(it), events_sorted.end(), x);
             }
             // Determine how many indices match x
             int n = results.size();
@@ -153,10 +164,10 @@ Int_t Cherenkov(const char *InputFilenameBase, double Emax, Long64_t maxNumberOf
                 // indices of matching events
                 int index = results[j];
                 // sum the number of secondaries of matching events
-                secSum = secSum + Events[index].numSec;
+                secSum = secSum + sec_sorted[index];
                 // put all of the energies and weights into temp vector
-                energiesv.push_back(Events[index].energy);
-                weightsv.push_back(Events[index].weight);
+                energiesv.push_back(energy_sorted[index]);
+                weightsv.push_back(weight_sorted[index]);
             }
             // find the max energy for the event
             double maxE = *std::max_element(energiesv.begin(),energiesv.end());

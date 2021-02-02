@@ -55,7 +55,6 @@ class RunAction : public G4UserRunAction
     void AddTotalSurface(void) {fTotalSurface += 1;}
     void AddNRF(void){fNRF++;}
     void AddStatusKilled(void){fStatusKilled++;}
-    void CheckEvents(G4bool val){checkEvents = val;}
 
   private:
     G4bool bremTest;

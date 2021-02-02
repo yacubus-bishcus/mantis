@@ -67,9 +67,8 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
   
   tEvents = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
 
-  if(anEvent->GetEventID() != 0 && anEvent->GetEventID() % 100 == 0)
+  if(anEvent->GetEventID() != 0 && anEvent->GetEventID() % 10 == 0)
   {
-    std::cout << "\r\tEvent & % Complete " << "\t" << anEvent->GetEventID() 
-              << "\t" << 100.*(anEvent->GetEventID()/(double)tEvents) << " %" << std::flush;
+    std::cout << "\r\tEvent " << "\t" << anEvent->GetEventID() << std::flush;
   }
 }

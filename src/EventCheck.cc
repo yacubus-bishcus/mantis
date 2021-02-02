@@ -111,12 +111,10 @@ EventCheck::EventCheck()
     {
       cherEventv.push_back((int)cherEvent[i]);
     }
-    std::cout << "here" << std::endl;
-    NRF->Print();
-    std::cout << "here4" << std::endl;
+
     // Grab NRF Events
     num_entries1 = NRF->Draw("EventID:Energy:Weight","","goff");
-    std::cout << "here2" << std::endl;
+    
     std::cout << "NRF Entries: " << num_entries1 << std::endl;
     G4cout << "NRF Entries: " << num_entries1 << G4endl;
     G4double *nrfEvent = NRF->GetVal(0);
@@ -130,6 +128,7 @@ EventCheck::EventCheck()
     
     // Grab DetInfo Events
     num_entries2 = DetData->Draw("EventID:Energy:Weight:Time","DetectionProcess == \"Det\"","goff");
+    std::cout << "Total Number of Detected entries: " << num_entries2 << std::endl;
     G4cout << "Total Number of Detected entries: " << num_entries2 << G4endl;
     G4double *detEvent = DetData->GetVal(0);
     G4double *detEnergy = DetData->GetVal(1);
@@ -217,7 +216,9 @@ EventCheck::EventCheck()
       }
 
       G4cout << G4endl << "Cherenkov Events lead to Detection: " << cher_to_detEvents.size() << G4endl;
+      std::cout << std::endl << "Cherenkov Events lead to Detection: " << cher_to_detEvents.size() << std::endl;
       G4cout << "NRF Events Lead to Detection: " << nrf_to_detEvents.size() << G4endl;
+      std::cout << "NRF Events Lead to Detection: " << nrf_to_detEvents.size() << std::endl;
     
     
       // ******************************************************************************************************************************** //
@@ -268,6 +269,7 @@ EventCheck::EventCheck()
       }
 
       G4cout << G4endl << "NRF Events Leading to Cherenkov Leading to Detection: " << nrf_to_cherenkov_to_detEvents.size() << G4endl;
+      std::cout << std::endl << "NRF Events Leading to Cherenkov Leading to Detection: " << nrf_to_cherenkov_to_detEvents.size() << std::endl;
     }
 }
 EventCheck::~EventCheck()

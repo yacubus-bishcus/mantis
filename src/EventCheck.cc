@@ -108,7 +108,7 @@ EventCheck::EventCheck()
     G4double *cherEnergy = Cherenkov->GetVal(1);
     G4double *cherWeight = Cherenkov->GetVal(2);
 
-    for(int i=0;i<n;i++)
+    for(int i=0;i<num_entries;++i)
     {
       cherEventv.push_back((int)cherEvent[i]);
     }
@@ -122,7 +122,7 @@ EventCheck::EventCheck()
     G4double *nrfEnergy = NRF->GetVal(1);
     G4double *nrfWeight = NRF->GetVal(2);
 
-    for(int i=0;i<n1;++i)
+    for(int i=0;i<num_entries1;++i)
     {
         nrfEventv.push_back((int)nrfEvent[i]);
     }
@@ -135,7 +135,7 @@ EventCheck::EventCheck()
     Double_t *detWeight = DetData->GetVal(2);
     Double_t *time = DetData->GetVal(3);
 
-    for(int i=0;i<n2;++i)
+    for(int i=0;i<num_entries2;++i)
     {
         detEventv.push_back((int)detEvent[i]);
     }

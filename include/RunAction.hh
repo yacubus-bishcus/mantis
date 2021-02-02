@@ -33,6 +33,7 @@
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
+#include "EventCheck.hh"
 
 class RunAction : public G4UserRunAction
 {
@@ -54,10 +55,12 @@ class RunAction : public G4UserRunAction
     void AddTotalSurface(void) {fTotalSurface += 1;}
     void AddNRF(void){fNRF++;}
     void AddStatusKilled(void){fStatusKilled++;}
+    void CheckEvents(G4bool val){checkEvents = val;}
 
   private:
     G4bool bremTest;
     G4bool output;
+    G4bool checkEvents;
     HistoManager* fHistoManager;
     G4double fCerenkovEnergy;
     G4double fScintEnergy;

@@ -202,7 +202,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         {
           kevent->CherenkovEnergy(theTrack->GetKineticEnergy()/(MeV));
           kevent->CherenkovWeight(weight);
-          kevent->CherenkovTrackID(theTrack->GetTrackID());
           kevent->CherenkovSecondaries(secondaries->size());
           kevent->CherenkovTime(theTrack->GetGlobalTime());     
         }

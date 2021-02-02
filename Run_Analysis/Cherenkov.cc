@@ -29,7 +29,7 @@ struct Event
     int numSec;
 };
 
-struct by_Event()
+struct by_Event
 {
     bool operator()(Event const &a, Event const &b) const noexcept 
     {
@@ -101,7 +101,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     std::cout << "Filling Event Structure..." << std::endl;
     for(int i=0;i<numEntries;i++)
     {
-        theEvent = {(int)eventID[i], energy[i], weight[i], sec[i]};
+        theEvent = {(int)eventID[i], energy[i], weight[i], (int)sec[i]};
         Events.push_back(theEvent);
     }
     std::cout << "Event Structure Filled to sort!" << std::endl;

@@ -46,7 +46,7 @@ EventCheck::EventCheck()
     {
         std::cerr << "File: " << root_output_name << " does not exist." << std::endl;
     }
-    TFile *f = new TFile(root_output_name.c_str());
+    f = new TFile(root_output_name.c_str());
     f->cd();
     f->GetObject("Cherenkov",Cherenkov);
     f->GetObject("NRFMatData",NRF);
@@ -294,7 +294,7 @@ void EventCheck::WriteEvents()
     const char* OutFilename = FinalOutName.c_str();
     const char* OutFilename2 = FinalOutName2.c_str();
     
-    TFile *fout = new TFile(OutFilename,"recreate");
+    fout = new TFile(OutFilename,"recreate");
     fout->cd();
     
     if(nrf_to_cherEvents.size() > 0)
@@ -308,7 +308,7 @@ void EventCheck::WriteEvents()
     }
     fout->Close();
     
-    TFile *fout2 = new TFile(OutFilename2,"recreate");
+    fout2 = new TFile(OutFilename2,"recreate");
     fout2->cd();
     
     if(nrf_to_cherenkov_to_detEvents.size() > 0)

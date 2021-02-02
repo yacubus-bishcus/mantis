@@ -58,10 +58,6 @@ void CherenkovEnergy(G4double energy)
 {
   energyv.push_back(energy);
 }
-void CherenkovWeight(G4double weight)
-{
-  weightv.push_back(weight);
-}
 void CherenkovSecondaries(G4int secondaries)
 {
   c_secondaries += secondaries;
@@ -83,8 +79,8 @@ G4double calcAvg()
 }
 
 G4int tEvents, c_secondaries;
-G4double c_time, sum;
-std::vector<double> energyv, weightv, timev;
+G4double c_time, sum, weight;
+std::vector<double> energyv, timev;
 };
 
 #endif

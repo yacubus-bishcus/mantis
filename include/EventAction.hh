@@ -78,7 +78,6 @@ private:
 
 G4double calcAvg()
 {
-  G4double sum;
   for(std::size_t i=0;i<timev.size();i++)
   {
     sum += timev.at(i);
@@ -87,7 +86,7 @@ G4double calcAvg()
 }
 
 G4int tEvents, c_secondaries;
-G4double c_time;
+G4double c_time, sum;
 G4bool mergeCherenkov;
 std::vector<double> energyv, weightv, timev;
 };

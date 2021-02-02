@@ -17,14 +17,19 @@ void CherenkovMaster(const char *InputFilenameBase, double Emax)
     double numFiles = n/maxEntriesPerFile;
     numFiles = ceil(numFiles);
     Int_t startEntry = 0;
+    bool lastFile = false;
     
     for(int i=0;i<numFiles;i++)
     {
         time_start = time(&timer);
-        Cherenkov(InputFilenameBase, Emax, maxEntriesPerFile, startEntry, i);
+        if(i == numFiles)
+            lastFile = true;
+        else
+            lastFile = false;
+        
+        startEntry = Cherenkov(InputFilenameBase, Emax, maxEntriesPerFile, startEntry, i, lastFile);
         time_end = time(&timer);
         std::cout << "File " << i << " of " << numFiles << " complete!" << std::endl;
         std::cout << "Approximate time remaining: " << difftime(time_end, time_start)*(numFiles - i) << " seconds" << std::endl << std::endl;
-        startEntry = (i*maxEntriesPerFile) + 1;
     }
 }

@@ -30,24 +30,22 @@
 #include "G4ios.hh"
 #include <vector>
 
-#if defined (G4ANALYSIS_USE_ROOT)
-#include "TFile.h"
 #include "TROOT.h"
-#include "TH1D.h"
-#include "TTree.h"
-#include "TBranch.h"
-#include "TMath.h"
 #include "TApplication.h"
 #include "TSystem.h"
 #include "TH1.h"
 #include "TPad.h"
+#include "TCanvas.h"
+#include "TFile.h"
+#include "TTree.h"
+#include "TBranch.h"
+#include "TMath.h"
+#include "TString.h"
 
 class TH1D;
 class TFile;
 class TTree;
 class TBranch;
-
-#endif
 
 
 class EventCheck
@@ -62,9 +60,8 @@ public:
 private:
 
 time_t timer, timer2, time_start, time_end;
-#if defined (G4ANALYSIS_USE_ROOT)
+TFile *f, *fout, *fout2;
 TTree *Cherenkov, *NRF, *DetData, *nrf_to_cher_tree, *nrf_to_cher_to_det_tree;
-#endif
 std::vector<int> cherEventv, nrfEventv, detEventv, nrf_to_cherEvents, cher_to_detEvents, nrf_to_detEvents;
 std::vector<double> cher_to_detEnergies, cher_to_detWeights, cher_to_detTimes;
 std::vector<double> nrf_to_detEnergies, nrf_to_detWeights, nrf_to_detTimes;

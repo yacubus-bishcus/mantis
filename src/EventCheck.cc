@@ -36,12 +36,11 @@
 
 #include "EventCheck.hh"
 
-extern G4String gOutName;
+extern G4String root_output_name;
 EventCheck::EventCheck()
 {
-    std::cout << "EventCheck::EventCheck"<<std::endl;
     time_start = std::time(&timer);
-    TFile *f = TFile::Open(gOutName);
+    TFile *f = TFile::Open(root_output_name.c_str());
     f->cd();
     f->GetObject("Cherenkov",Cherenkov);
     f->GetObject("NRFMatData",NRF);

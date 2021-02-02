@@ -26,9 +26,8 @@
 
 
 StackingAction::StackingAction(const DetectorConstruction* det, RunAction* run)
+  : local_det(det), local_run(run)
 {
-  local_det = det;
-  local_run = run;
 }
 
 StackingAction::~StackingAction()

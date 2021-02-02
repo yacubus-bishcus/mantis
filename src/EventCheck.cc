@@ -112,7 +112,9 @@ EventCheck::EventCheck()
     {
       cherEventv.push_back((int)cherEvent[i]);
     }
+    std::cout << "here" << std::endl;
     NRF->Print();
+    std::cout << "here4" << std::endl;
     // Grab NRF Events
     num_entries1 = NRF->Draw("EventID:Energy:Weight","","goff");
     std::cout << "here2" << std::endl;
@@ -130,10 +132,10 @@ EventCheck::EventCheck()
     // Grab DetInfo Events
     num_entries2 = DetData->Draw("EventID:Energy:Weight:Time","DetectionProcess == \"Det\"","goff");
     G4cout << "Total Number of Detected entries: " << num_entries2 << G4endl;
-    Double_t *detEvent = DetData->GetVal(0);
-    Double_t *detEnergy = DetData->GetVal(1);
-    Double_t *detWeight = DetData->GetVal(2);
-    Double_t *time = DetData->GetVal(3);
+    G4double *detEvent = DetData->GetVal(0);
+    G4double *detEnergy = DetData->GetVal(1);
+    G4double *detWeight = DetData->GetVal(2);
+    G4double *time = DetData->GetVal(3);
 
     for(int i=0;i<num_entries2;++i)
     {

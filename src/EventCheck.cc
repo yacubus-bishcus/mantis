@@ -51,7 +51,6 @@ extern G4String root_output_name;
 extern G4String gOutName;
 EventCheck::EventCheck()
 {
-    std::cout << "Reading from: " << root_output_name << std::endl;
     time_start = std::time(&timer);
     
     if(gSystem->AccessPathName(root_output_name.c_str()))
@@ -352,6 +351,6 @@ void EventCheck::WriteEvents()
     fout2->Close();
     time_end = std::time(&timer2);
     G4cout << "Event Check took: " << std::difftime(time_end, time_start) << " seconds!" << G4endl;
-    std::cout << "Event Check took: " << std::difftime(time_end, time_start) << " seconds!" << std::endl;
+    std::cout << "Event Check took: " << std::difftime(time_end, time_start) << " seconds!" << std::endl << std::endl;
 
 }

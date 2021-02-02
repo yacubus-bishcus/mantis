@@ -49,7 +49,12 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
     G4int maxEIndex = it - energyv.begin();
     G4double c_weight = weightv[maxEIndex];
     // Find the Average Time 
-    G4double c_time = calcAvg();
+    if(timev.size > 0)
+    {
+      G4double c_time = calcAvg();
+    }
+    else
+      G4double c_time = 0;
     // Fill the TTree 
     G4AnalysisManager* manager = G4AnalysisManager::Instance();
     manager->FillNtupleDColumn(3,0,maxE);

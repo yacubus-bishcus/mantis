@@ -34,6 +34,7 @@
 #include "StackingAction.hh"
 #include "HistoManager.hh"
 #include "StepMessenger.hh"
+#include "EventAction.hh"
 #include "DetectorConstruction.hh"
 #include "eventInformation.hh"
 
@@ -58,7 +59,7 @@ class StepMessenger;
 class SteppingAction : public G4UserSteppingAction
 {
 public:
-SteppingAction(const DetectorConstruction*, RunAction*, G4bool);
+SteppingAction(const DetectorConstruction*, RunAction*, EventAction*, G4bool);
 virtual ~SteppingAction();
 
 // method from the base class
@@ -98,8 +99,9 @@ void SetDetDataFlag(G4int val)
 private:
 G4bool bremTest;
 G4double weight;
-const DetectorConstruction* local_det;
-RunAction* run;
+const DetectorConstruction* kdet;
+RunAction* krun;
+EventAction* kevent;
 G4OpBoundaryProcessStatus fExpectedNextStatus;
 G4String procCount;
 G4int drawChopperIncDataFlag, drawChopperOutDataFlag, drawNRFDataFlag, drawIntObjDataFlag, drawWaterIncDataFlag, drawCherenkovDataFlag, drawDetDataFlag;

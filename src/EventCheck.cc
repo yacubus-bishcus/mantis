@@ -66,7 +66,7 @@ EventCheck::EventCheck()
     {
         std::cout << "File: " << root_output_name << " exists." << std::endl;
     }
-    f = new TFile(root_output_name.c_str());
+    f = new TFile(root_output_name);
     f->cd();
     f->GetObject("Cherenkov",Cherenkov);
     f->GetObject("NRFMatData",NRF);

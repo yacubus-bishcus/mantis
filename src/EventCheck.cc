@@ -53,7 +53,6 @@ EventCheck::EventCheck()
 {
     std::cout << "Reading from: " << root_output_name << std::endl;
     time_start = std::time(&timer);
-    std::cout << root_output_name.c_str() << std::endl;
     if(gSystem)
     {
         std::cout << "G System exists" << std::endl;
@@ -66,7 +65,8 @@ EventCheck::EventCheck()
     {
         std::cout << "File: " << root_output_name << " exists." << std::endl;
     }
-    f = new TFile(root_output_name);
+    const char *inFilename = root_output_name.c_str();
+    f = new TFile(inFilename);
     f->cd();
     f->GetObject("Cherenkov",Cherenkov);
     f->GetObject("NRFMatData",NRF);

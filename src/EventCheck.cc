@@ -40,6 +40,7 @@ extern G4String root_output_name;
 extern G4String gOutName;
 EventCheck::EventCheck()
 {
+    std::cout << "Reading from: " << root_output_name << std::endl;
     time_start = std::time(&timer);
     TFile *f = TFile::Open(root_output_name.c_str());
     f->cd();

@@ -36,20 +36,6 @@
 
 #include "EventCheck.hh"
 
-#if defined (G4ANALYSIS_USE_ROOT)
-
-#include "TROOT.h"
-#include "TApplication.h"
-#include "TSystem.h"
-#include "TH1.h"
-#include "TPad.h"
-//  #include "TCanvas.h"
-#include "TFile.h"
-#include "TTree.h"
-#include "TBranch.h"
-#include "TMath.h"
-#endif /* defined (G4ANALYSIS_USE_ROOT) */
-
 extern G4String gOutName;
 EventCheck::EventCheck()
 {

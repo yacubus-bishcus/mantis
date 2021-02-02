@@ -116,9 +116,6 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtupleIColumn("EventID");
       manager->CreateNtupleIColumn("TrackID");
       manager->CreateNtupleIColumn("NumSecondaries");
-      manager->CreateNtupleDColumn("XPos");
-      manager->CreateNtupleDColumn("YPos");
-      manager->CreateNtupleDColumn("ZPos");
       manager->CreateNtupleDColumn("Time");
       manager->FinishNtuple();
 

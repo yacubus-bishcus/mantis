@@ -194,7 +194,7 @@ EventCheck::EventCheck()
       if(cher_to_detEvents.size() > nrf_to_detEvents.size())
       {
           G4cout << "More Cherenkov Events than nrf events lead to detection. Checking NRF Detected Events..." << G4endl;
-          for(int i=0;i<nrf_to_detEvents.size();i++)
+          for(signed int i=0;i<nrf_to_detEvents.size();i++)
           {
               x = nrf_to_detEvents[i];
               auto exists = std::find(cher_to_detEvents.begin(), cher_to_detEvents.end(),x);
@@ -214,7 +214,7 @@ EventCheck::EventCheck()
       else if(nrf_to_detEvents.size() > cher_to_detEvents.size())
       {
           G4cout << "More NRF Events than Cherenkov events lead to detection. Checking Cherenkov Events..." << G4endl;
-          for(int i=0;i<cher_to_detEvents.size();i++)
+          for(signed int i=0;i<cher_to_detEvents.size();i++)
           {
               x = cher_to_detEvents[i];
               auto exists = std::find(nrf_to_detEvents.begin(), nrf_to_detEvents.end(),x);
@@ -248,7 +248,7 @@ void EventCheck::WriteEvents()
     {
         G4cout << "Filling NRF to Cherenkov Tree..." << G4endl;
       // Fill nrf_to_cher_tree
-      for(int i=0;i<nrf_to_cherEvents.size();i++)
+      for(signed int i=0;i<nrf_to_cherEvents.size();i++)
       {
           nrf_cher_EventID = nrf_to_cherEvents[i];
           nrfE = nrfEnergyv[i];
@@ -263,7 +263,7 @@ void EventCheck::WriteEvents()
     {
         G4cout << "Filling NRF to Cherenkov to Detected Tree..." << G4endl;
       // Fill nrf_to_cher_to_det_tree
-      for(int i=0;i<nrf_to_cherenkov_to_detEvents.size();i++)
+      for(signed int i=0;i<nrf_to_cherenkov_to_detEvents.size();i++)
       {
           a = nrf_to_cherenkov_to_detEvents[i];
           energyNRF = nrf_to_cherenkov_to_detNRFEnergies[i];

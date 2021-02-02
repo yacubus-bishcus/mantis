@@ -23,12 +23,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "RunAction.hh"
-RunAction::RunAction(HistoManager* histoAnalysis, Cherenkov* cher, G4bool brem, G4bool output_in, G4bool merge_in)
-        : G4UserRunAction(), fHistoManager(histoAnalysis), fCher(cher)
+RunAction::RunAction(HistoManager* histoAnalysis, Cherenkov* cher, G4bool brem, G4bool output_in)
+        : G4UserRunAction(), fHistoManager(histoAnalysis)
 {
   bremTest = brem;
   output = output_in;  
-  merge_cherenkov = merge_in;
 }
 
 RunAction::~RunAction()
@@ -125,11 +124,5 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
   if(output)
   {
     fHistoManager->finish();
-  }
-  if(merge_cherenkov)
-  {
-    std::cout << "RunAction::EndOfRunAction -> Merging Cherenkov Events..." << std::endl;
-    G4cout << "RunAction::EndOfRunAction -> Merging Cherenkov Events..." << G4endl;
-    cher->MergeCherenkovEvents();      
   }
 }

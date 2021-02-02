@@ -46,7 +46,7 @@ EventCheck::EventCheck()
     {
         std::cerr << "File: " << root_output_name << " does not exist." << std::endl;
     }
-    TFile *f = TFile::Open(root_output_name.c_str());
+    TFile *f = new TFile(root_output_name.c_str());
     f->cd();
     f->GetObject("Cherenkov",Cherenkov);
     f->GetObject("NRFMatData",NRF);

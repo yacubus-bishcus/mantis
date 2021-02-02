@@ -36,12 +36,11 @@ void EventAction::BeginOfEventAction(const G4Event*)
   energyv.clear();
   weightv.clear();
   timev.clear();
-  mergeCherenkov = false;
 }
 
 void EventAction::EndOfEventAction(const G4Event* anEvent)
 {
-  if(mergeCherenkov)
+  if(c_secondaries > 0)
   {
     // Grab Max Energy
     G4double maxE = *std::max_element(energyv.begin(),energyv.end());

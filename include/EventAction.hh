@@ -53,10 +53,7 @@ EventAction();
 public:
 void BeginOfEventAction(const G4Event*);
 void EndOfEventAction(const G4Event*);
-void SetCherenkovMerge(G4bool merge)
-{
-  mergeCherenkov = merge;
-}
+
 void CherenkovEnergy(G4double energy)
 {
   energyv.push_back(energy);
@@ -87,7 +84,6 @@ G4double calcAvg()
 
 G4int tEvents, c_secondaries;
 G4double c_time, sum;
-G4bool mergeCherenkov;
 std::vector<double> energyv, weightv, timev;
 };
 

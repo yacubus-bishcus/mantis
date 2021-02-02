@@ -66,10 +66,11 @@ EventCheck::EventCheck()
     bool confirm = f->cd();
     if(confirm)
     {
-        Cherenkov->Print();
+        //Cherenkov->Print();
         f->GetObject("Cherenkov",Cherenkov);
         f->GetObject("NRFMatData",NRF);
         f->GetObject("DetInfo",DetData);
+        std::cout << "Here" << std::endl;
     
         Cherenkov->SetEstimate(-1);
         NRF->SetEstimate(-1);

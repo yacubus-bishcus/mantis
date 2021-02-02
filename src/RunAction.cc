@@ -125,4 +125,12 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
   {
     fHistoManager->finish();
   }
+  if(checkEvents)
+  {
+    EventCheck *eCheck = new EventCheck();  
+    eCheck->Determine_NRF_to_Cherenkov();
+    eCheck->Determine_Detection_Events();
+    eCheck->WriteEvents();
+  }
+  
 }

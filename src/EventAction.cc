@@ -35,7 +35,6 @@ void EventAction::BeginOfEventAction(const G4Event*)
   //std::cout << "EventAction::BeginOfEventAction -> Beginning" << std::endl;
   c_secondaries = 0;
   energyv.clear();
-  weightv.clear();
   timev.clear();
 }
 
@@ -47,9 +46,8 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
     // Grab Max Energy
     G4double maxE = *std::max_element(energyv.begin(),energyv.end());
     // Find Max Energy's Weight
-    auto it = std::find(energyv.begin(), energyv.end(),maxE);
-    G4int maxEIndex = it - energyv.begin();
-    G4double c_weight = weightv[maxEIndex];
+    eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
+    weight = info->GetWeight();
     // Find the Average Time 
     if(timev.size() > 0)
     {
@@ -60,7 +58,7 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
     // Fill the TTree 
     G4AnalysisManager* manager = G4AnalysisManager::Instance();
     manager->FillNtupleDColumn(3,0,maxE);
-    manager->FillNtupleDColumn(3,1,c_weight);
+    manager->FillNtupleDColumn(3,1, weight);
     manager->FillNtupleIColumn(3,2,anEvent->GetEventID());
     manager->FillNtupleIColumn(3,3,c_secondaries);
     manager->FillNtupleDColumn(3,4,c_time);

@@ -201,7 +201,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         if(drawCherenkovDataFlag)
         {
           kevent->CherenkovEnergy(theTrack->GetKineticEnergy()/(MeV));
-          kevent->CherenkovWeight(weight);
           kevent->CherenkovSecondaries(secondaries->size());
           kevent->CherenkovTime(theTrack->GetGlobalTime());     
         }

@@ -20,26 +20,33 @@
 //  KEY: TTree	Merged;1	Cherenkov Events Merged
 //  KEY: TH1D	wCher;1	Cherenkov Weighted Energy
 
+// Create Structure for Events 
+struct Event
+{
+    int eventID;
+    double energy;
+    double weight;
+    int numSec;
+};
+
+struct by_Event()
+{
+    bool operator()(Event const &a, Event const &b) const noexcept 
+    {
+        return a.eventID < b.eventID;
+    }
+};
+
+bool eventCompare(Event& a, int x)
+{
+    if(a.eventID == x)
+        return true;
+    else
+        return false;
+}
 
 void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
 {
-    
-    // Create Structure for Events 
-    struct Event
-    {
-        int eventID;
-        double energy;
-        double weight;
-        int numSec;
-    };
-    
-    struct by_Event()
-    {
-        bool operator()(Event const &a, Event const &b) const noexcept 
-        {
-            return a.eventID < b.eventID;
-        }
-    };
     
     std::vector<Event> Events;
     Event theEvent;
@@ -80,7 +87,6 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     std::vector<int> events, secv;
     std::vector<double> energyv, weightv;
     // Temp Holding Vectors 
-    std::vector<int> eventIDv;
     std::vector<double> energiesv, weightsv;
     std::vector<size_t> results;
 
@@ -120,20 +126,21 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
             // clear holding vector/variables 
             energiesv.clear();
             weightsv.clear();
+            results.clear();
             secSum = 0;
             // grab the next event to check 
             int x = Events[nSum].eventID;
             // find where the indices are that match x 
-            auto it = std::find(eventIDv.begin(),eventIDv.end(),x);
-            while(it != eventIDv.end())
+            auto it = std::find_if(Events.begin(), Events.end(), std::bind(eventCompare, std::placeholders::_1, x));
+            while(it != Events.end())
             {
-                results.emplace_back(std::distance(eventIDv.begin(), it));
-                it = std::find(std::next(it), eventIDv.end(), x);
+                results.emplace_back(std::distance(Events.begin(), it));
+                it = std::find_if(std::next(it), Events.end(), std::bind(eventCompare, std::placeholders::_1, x));
             }
             // Determine how many indices match x 
             int n = results.size();
             // write the event that has matches into the final event vector 
-            events.push_back((int)eventIDv[nSum]);
+            events.push_back(x);
             // sum the events to skip repeats ... move on to next event ID value 
             nSum += n;
             // Fill the energies, weights and number of secondaries temp vectors 
@@ -142,10 +149,10 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
                 // indices of matching events 
                 int index = results[j];
                 // sum the number of secondaries of matching events 
-                secSum = secSum + sec[index];
+                secSum = secSum + Events[index].numSec;
                 // put all of the energies and weights into temp vector
-                energiesv.push_back(energy[index]);
-                weightsv.push_back(weight[index]);
+                energiesv.push_back(Events[index].energy);
+                weightsv.push_back(Events[index].weight);
             }
             // find the max energy for the event 
             double maxE = *std::max_element(energiesv.begin(),energiesv.end());

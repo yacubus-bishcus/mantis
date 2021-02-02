@@ -47,7 +47,7 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
     G4double maxE = *std::max_element(energyv.begin(),energyv.end());
     // Find Max Energy's Weight
     eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
-    weight = info->GetWeight();
+    G4double weight = info->GetWeight();
     // Find the Average Time 
     if(timev.size() > 0)
     {

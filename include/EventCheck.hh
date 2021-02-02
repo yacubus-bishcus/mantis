@@ -28,6 +28,7 @@
 #include "globals.hh"
 #include "G4Types.hh"
 #include "G4ios.hh"
+#include <vector>
 
 #if defined (G4ANALYSIS_USE_ROOT)
 #include "TFile.h"

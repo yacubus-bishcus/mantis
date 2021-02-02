@@ -34,10 +34,9 @@ DetectorConstruction::DetectorConstruction(G4bool brem)
         plexiThickness(0.18*mm), tapeThick(0.01*cm), // PMT Properties 
         PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), // Output Properties 
         DetectorViewOnly(false), material_verbose(false), // Messenger 
-        detectorM(NULL)
+        bremTest(brem), detectorM(NULL)
 {
         detectorM = new DetectorMessenger(this);
-        bremTest = brem;
 }
 
 DetectorConstruction::~DetectorConstruction()

@@ -322,7 +322,7 @@ G4int nPMT;
 G4String pc_mat;
 
 // Output Properties 
-G4bool DetectorViewOnly, material_verbose, bremTest;;
+G4bool DetectorViewOnly, material_verbose, bremTest;
 
 // Messenger 
 DetectorMessenger* detectorM;

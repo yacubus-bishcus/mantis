@@ -53,7 +53,7 @@ EventCheck::EventCheck()
 {
     std::cout << "Reading from: " << root_output_name << std::endl;
     time_start = std::time(&timer);
-    G4int n, n1;
+    
     if(gSystem->AccessPathName(root_output_name.c_str()))
     {
         std::cerr << "File: " << root_output_name << " does not exist." << std::endl;
@@ -101,9 +101,9 @@ EventCheck::EventCheck()
     nrf_to_cher_to_det_tree->Branch("TimeCher",&timeCher);
  
     // Grab Cherenkov Events
-    n = Cherenkov->Draw("EventID:Energy:Weight","","goff");
-    std::cout << "Cherenkov Entries: " << n << std::endl;
-    G4cout << "Cherenkov Entries: " << n << G4endl;
+    num_entries = Cherenkov->Draw("EventID:Energy:Weight","","goff");
+    std::cout << "Cherenkov Entries: " << num_entries << std::endl;
+    G4cout << "Cherenkov Entries: " << num_entries << G4endl;
     G4double *cherEvent = Cherenkov->GetVal(0);
     G4double *cherEnergy = Cherenkov->GetVal(1);
     G4double *cherWeight = Cherenkov->GetVal(2);
@@ -114,10 +114,10 @@ EventCheck::EventCheck()
     }
     std::cout << "here" << std::endl;
     // Grab NRF Events
-    n1 = NRF->Draw("EventID:Energy:Weight","","goff");
+    num_entries1 = NRF->Draw("EventID:Energy:Weight","","goff");
     std::cout << "here2" << std::endl;
-    std::cout << "NRF Entries: " << n1 << std::endl;
-    G4cout << "NRF Entries: " << n1 << G4endl;
+    std::cout << "NRF Entries: " << num_entries1 << std::endl;
+    G4cout << "NRF Entries: " << num_entries1 << G4endl;
     G4double *nrfEvent = NRF->GetVal(0);
     G4double *nrfEnergy = NRF->GetVal(1);
     G4double *nrfWeight = NRF->GetVal(2);
@@ -128,8 +128,8 @@ EventCheck::EventCheck()
     }
     
     // Grab DetInfo Events
-    n2 = DetData->Draw("EventID:Energy:Weight:Time","DetectionProcess == \"Det\"","goff");
-    G4cout << "Total Number of Detected entries: " << n2 << G4endl;
+    num_entries2 = DetData->Draw("EventID:Energy:Weight:Time","DetectionProcess == \"Det\"","goff");
+    G4cout << "Total Number of Detected entries: " << num_entries2 << G4endl;
     Double_t *detEvent = DetData->GetVal(0);
     Double_t *detEnergy = DetData->GetVal(1);
     Double_t *detWeight = DetData->GetVal(2);
@@ -143,13 +143,13 @@ EventCheck::EventCheck()
     std::cout << "All Events grabbed." << std::endl;
     G4cout << "All Events grabbed." << G4endl;
     
-    if(n != 0 && n1 != 0)
+    if(num_entries != 0 && num_entries1 != 0)
     {
       G4cout << "Finding NRF Events that Caused Cherenkov..." << G4endl;
       // if Cherenkov has more entries search with nrf events
-      if(n1 < n)
+      if(num_entries1 < num_entries)
       {
-          for(int i=0;i<n1;++i)
+          for(int i=0;i<num_entries1;++i)
           {
               x = nrfEventv[i];
               auto exists = std::find(cherEventv.begin(),cherEventv.end(), x);
@@ -168,7 +168,7 @@ EventCheck::EventCheck()
       // Else NRF has more entries search with cherenkov events
       else
       {
-          for(int i=0;i<n;++i)
+          for(int i=0;i<num_entries;++i)
           {
               x = cherEventv[i];
               auto exists = std::find(nrfEventv.begin(),nrfEventv.end(), x);
@@ -188,9 +188,9 @@ EventCheck::EventCheck()
       G4cout << G4endl << "NRF to Cherenkov Number of Events Found: " << nrf_to_cherEvents.size() << G4endl;
     }
     
-    if(n2 > 0)
+    if(num_entries2 > 0)
     {
-      for(int i=0;i<n2;++i)
+      for(int i=0;i<num_entries2;++i)
       {
           // Check to see if Cherenkov Event ID matches Det Event ID
           x = detEventv[i];
@@ -278,7 +278,7 @@ EventCheck::~EventCheck()
 
 void EventCheck::WriteEvents()
 {
-    if(n > 0 && n1 > 0)
+    if(num_entries > 0 && num_entries1 > 0)
     {
         G4cout << "Filling NRF to Cherenkov Tree..." << G4endl;
       // Fill nrf_to_cher_tree
@@ -293,7 +293,7 @@ void EventCheck::WriteEvents()
       }
     }
     
-    if(n2 > 0)
+    if(num_entries2 > 0)
     {
         G4cout << "Filling NRF to Cherenkov to Detected Tree..." << G4endl;
       // Fill nrf_to_cher_to_det_tree

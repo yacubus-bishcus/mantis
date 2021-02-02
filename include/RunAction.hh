@@ -37,7 +37,7 @@
 class RunAction : public G4UserRunAction
 {
   public:
-    RunAction(HistoManager* histoAnalysis, G4bool, G4bool, G4bool);
+    RunAction(HistoManager* histoAnalysis, G4bool, G4bool);
     virtual ~RunAction();
 
   public:
@@ -58,9 +58,7 @@ class RunAction : public G4UserRunAction
   private:
     G4bool bremTest;
     G4bool output;
-    G4bool merge_cherenkov;
     HistoManager* fHistoManager;
-    Cherenkov* fCher;
     G4double fCerenkovEnergy;
     G4double fScintEnergy;
     G4double fCerenkovCount;

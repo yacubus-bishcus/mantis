@@ -24,15 +24,14 @@
 
 #include "SteppingAction.hh"
 
-SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* localrun, G4bool brem)
-        : G4UserSteppingAction(), drawChopperIncDataFlag(0), drawChopperOutDataFlag(0), drawNRFDataFlag(0), 
+SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, EventAction* event, G4bool brem)
+        : G4UserSteppingAction(), kdet(det), krun(run), kevent(event),
+          drawChopperIncDataFlag(0), drawChopperOutDataFlag(0), drawNRFDataFlag(0), 
           drawIntObjDataFlag(0), drawWaterIncDataFlag(0), drawCherenkovDataFlag(0), drawDetDataFlag(0), 
           stepM(NULL)
 {
   stepM = new StepMessenger(this);
-  local_det = det;
   fExpectedNextStatus = Undefined;
-  run = localrun;
   bremTest = brem;
 }
 
@@ -201,17 +200,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       {
         if(drawCherenkovDataFlag)
         {
-          manager->FillNtupleDColumn(3,0,theTrack->GetKineticEnergy()/(MeV));
-          manager->FillNtupleDColumn(3,1,weight);
-          manager->FillNtupleIColumn(3,2, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
-          manager->FillNtupleIColumn(3,3,theTrack->GetTrackID());
-          manager->FillNtupleIColumn(3,4, secondaries->size());
-          G4ThreeVector watLoc = theTrack->GetPosition();
-          manager->FillNtupleDColumn(3,5,watLoc.x()/(cm));
-          manager->FillNtupleDColumn(3,6,watLoc.y()/(cm));
-          manager->FillNtupleDColumn(3,7,watLoc.z()/(cm));
-          manager->FillNtupleDColumn(3,8,theTrack->GetGlobalTime());
-          manager->AddNtupleRow(3);     
+          kevent->CherenkovEnergy(theTrack->GetKineticEnergy()/(MeV));
+          kevent->CherenkovWeight(weight);
+          kevent->CherenkovTrackID(theTrack->GetTrackID());
+          kevent->CherenkovSecondaries(secondaries->size());
+          kevent->CherenkovTime(theTrack->GetGlobalTime());     
         }
 
         for(unsigned int i=0; i<secondaries->size(); ++i) 

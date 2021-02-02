@@ -108,13 +108,6 @@ EventCheck::EventCheck()
     }
     
     G4cout << "All Events grabbed." << G4endl;
-}
-EventCheck::~EventCheck()
-{}
-
-void EventCheck::Determine_NRF_to_Cherenkov()
-{
-    G4int x, index;
     
     if(n != 0 && n1 != 0)
     {
@@ -160,15 +153,7 @@ void EventCheck::Determine_NRF_to_Cherenkov()
 
       G4cout << G4endl << "NRF to Cherenkov Number of Events Found: " << nrf_to_cherEvents.size() << G4endl;
     }
-}
-
-// ******************************************************************************************************************************** //
-// Determine if Cherenkov or NRF Lead to Detection Event
-// ******************************************************************************************************************************** //
-
-void EventCheck::Determine_Detection_Events()
-{
-    G4int x, index;
+    
     if(n2 > 0)
     {
       for(int i=0;i<n2;i++)
@@ -250,6 +235,8 @@ void EventCheck::Determine_Detection_Events()
       G4cout << G4endl << "NRF Events Leading to Cherenkov Leading to Detection: " << nrf_to_cherenkov_to_detEvents.size() << G4endl;
     }
 }
+EventCheck::~EventCheck()
+{}
 
 // ******************************************************************************************************************************** //
 // Fill TTrees

@@ -41,6 +41,12 @@
 #include "TSystem.h"
 #include "TH1.h"
 #include "TPad.h"
+
+class TH1D;
+class TFile;
+class TTree;
+class TBranch;
+
 #endif
 
 

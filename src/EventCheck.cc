@@ -53,6 +53,7 @@ EventCheck::EventCheck()
 {
     std::cout << "Reading from: " << root_output_name << std::endl;
     time_start = std::time(&timer);
+    G4int n, n1;
     if(gSystem->AccessPathName(root_output_name.c_str()))
     {
         std::cerr << "File: " << root_output_name << " does not exist." << std::endl;
@@ -100,7 +101,7 @@ EventCheck::EventCheck()
     nrf_to_cher_to_det_tree->Branch("TimeCher",&timeCher);
  
     // Grab Cherenkov Events
-    G4int n = Cherenkov->Draw("EventID:Energy:Weight","","goff");
+    n = Cherenkov->Draw("EventID:Energy:Weight","","goff");
     std::cout << "Cherenkov Entries: " << n << std::endl;
     G4cout << "Cherenkov Entries: " << n << G4endl;
     G4double *cherEvent = Cherenkov->GetVal(0);
@@ -113,7 +114,7 @@ EventCheck::EventCheck()
     }
     std::cout << "here" << std::endl;
     // Grab NRF Events
-    G4int n1 = NRF->Draw("EventID:Energy:Weight","","goff");
+    n1 = NRF->Draw("EventID:Energy:Weight","","goff");
     std::cout << "here2" << std::endl;
     std::cout << "NRF Entries: " << n1 << std::endl;
     G4cout << "NRF Entries: " << n1 << G4endl;

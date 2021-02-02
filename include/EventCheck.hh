@@ -34,6 +34,12 @@
 #include "TROOT.h"
 #include "TH1D.h"
 #include "TTree.h"
+#include "TBranch.h"
+#include "TMath.h"
+#include "TApplication.h"
+#include "TSystem.h"
+#include "TH1.h"
+#include "TPad.h"
 #endif
 
 

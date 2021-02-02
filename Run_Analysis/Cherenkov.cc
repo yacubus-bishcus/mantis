@@ -74,7 +74,7 @@ void Cherenkov(const char *InputFilenameBase, double Emax, bool ChopState)
     
     f->GetObject("Cherenkov",Cherenkov);
     Cherenkov->SetEstimate(-1);
-    std::cout << "Cherenkov Object Grabbed." << std::endl;
+    std::cout << "Cherenkov Object Grabbed. Placing Variables in arrays..." << std::endl;
     
     // Grab all values and place in arrays 
     Int_t numEntries = Cherenkov->Draw("EventID:Energy:Weight:NumSecondaries","","goff");

@@ -36,6 +36,21 @@
 
 #include "EventCheck.hh"
 
+#include "TROOT.h"
+#include "TApplication.h"
+#include "TSystem.h"
+#include "TH1.h"
+#include "TPad.h"
+#include "TCanvas.h"
+#include "TFile.h"
+#include "TTree.h"
+#include "TBranch.h"
+#include "TMath.h"
+#endif 
+
+#include <iostream>
+#include <fstream>
+
 extern G4String root_output_name;
 extern G4String gOutName;
 EventCheck::EventCheck()

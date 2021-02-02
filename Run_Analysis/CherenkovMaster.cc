@@ -10,9 +10,9 @@ void CherenkovMaster(const char *InputFilenameBase, double Emax)
     InFile = InFile + ".root";
     const char* InputFilename = InFile.c_str();
     TFile *f = TFile::Open(InputFilename);
-    TTree *Cherenkov;
-    f->GetObject("Cherenkov",Cherenkov);
-    Int_t n = Cherenkov->GetEntries();
+    TTree *Cherenkov_tree;
+    f->GetObject("Cherenkov",Cherenkov_tree);
+    Int_t n = Cherenkov_tree->GetEntries();
     int maxEntriesPerFile = 1e7;
     double numFiles = n/maxEntriesPerFile;
     numFiles = ceil(numFiles);

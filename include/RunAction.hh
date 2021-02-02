@@ -57,10 +57,8 @@ class RunAction : public G4UserRunAction
     void AddStatusKilled(void){fStatusKilled++;}
 
   private:
-    G4bool bremTest;
-    G4bool output;
-    G4bool checkEvents;
     HistoManager* fHistoManager;
+    G4bool bremTest, output, checkEvents;
     G4double fCerenkovEnergy;
     G4double fScintEnergy;
     G4double fCerenkovCount;

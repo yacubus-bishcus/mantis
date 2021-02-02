@@ -33,12 +33,8 @@
 
 
 ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool brem_check, G4bool output_in, G4bool checkEvents_in)
-        : G4VUserActionInitialization(), fDetector(det)
-{
-   bremTest = brem_check;
-   output = output_in;
-   checkEvents = checkEvents_in;
-}
+        : G4VUserActionInitialization(), fDetector(det), bremTest(brem_check), output(output_in), checkEvents(checkEvents_in)
+{}
 
 ActionInitialization::~ActionInitialization()
 {

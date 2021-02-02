@@ -274,7 +274,6 @@ void SetMaterialVerbosity(G4bool val)
 }
 
 private:
-G4bool bremTest;
 
 // Chopper Properties 
 G4double chopperDensity, chopper_thick, chopper_z;
@@ -323,7 +322,7 @@ G4int nPMT;
 G4String pc_mat;
 
 // Output Properties 
-G4bool DetectorViewOnly, material_verbose;
+G4bool DetectorViewOnly, material_verbose, bremTest;;
 
 // Messenger 
 DetectorMessenger* detectorM;

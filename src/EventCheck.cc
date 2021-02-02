@@ -69,11 +69,11 @@ EventCheck::EventCheck()
     {
         //Cherenkov->Print();
         f->GetObject("Cherenkov",Cherenkov);
-        Cherenkov->Print();
+        //Cherenkov->Print();
         f->GetObject("NRFMatData",NRF);
-        NRF->Print();
+        //NRF->Print();
         f->GetObject("DetInfo",DetData);
-        DetData->Print();
+        //DetData->Print();
     
         Cherenkov->SetEstimate(-1);
         NRF->SetEstimate(-1);
@@ -139,9 +139,6 @@ EventCheck::EventCheck()
     {
         detEventv.push_back((int)detEvent[i]);
     }
-    
-    std::cout << "All Events grabbed." << std::endl;
-    G4cout << "All Events grabbed." << G4endl;
     
     if(num_entries != 0 && num_entries1 != 0)
     {
@@ -355,5 +352,6 @@ void EventCheck::WriteEvents()
     fout2->Close();
     time_end = std::time(&timer2);
     G4cout << "Event Check took: " << std::difftime(time_end, time_start) << " seconds!" << G4endl;
+    std::cout << "Event Check took: " << std::difftime(time_end, time_start) << " seconds!" << std::endl;
 
 }

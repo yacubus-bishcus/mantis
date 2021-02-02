@@ -70,18 +70,15 @@ EventCheck::EventCheck()
         f->GetObject("Cherenkov",Cherenkov);
         f->GetObject("NRFMatData",NRF);
         f->GetObject("DetInfo",DetData);
-        std::cout << "Here" << std::endl;
     
         Cherenkov->SetEstimate(-1);
         NRF->SetEstimate(-1);
         DetData->SetEstimate(-1);
-        std::cout << "here" << std::endl;
         f->Close();
-        std::cout << "here closed" << std::endl;
     }
     
     G4cout << "EventCheck::Objects Grabbed!" << G4endl;
-    std::cout << "here issue" << std::endl;
+
     // Set up Output Trees
     nrf_to_cher_tree = new TTree("nrf_to_cher_tree","NRF Events that Lead to Cherenkov");
     nrf_to_cher_tree->Branch("EventID",&nrf_cher_EventID);
@@ -136,6 +133,7 @@ EventCheck::EventCheck()
         detEventv.push_back((int)detEvent[i]);
     }
     
+    std::cout << "All Events grabbed." << std::endl;
     G4cout << "All Events grabbed." << G4endl;
     
     if(n != 0 && n1 != 0)
@@ -179,7 +177,7 @@ EventCheck::EventCheck()
               }
           }
       }
-
+      std::cout << std::endl << "NRF to Cherenkov Number of Events Found: " << nrf_to_cherEvents.size() << std::endl;
       G4cout << G4endl << "NRF to Cherenkov Number of Events Found: " << nrf_to_cherEvents.size() << G4endl;
     }
     

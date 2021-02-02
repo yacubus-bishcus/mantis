@@ -37,6 +37,7 @@
 #include "EventCheck.hh"
 
 extern G4String root_output_name;
+extern G4String gOutName;
 EventCheck::EventCheck()
 {
     time_start = std::time(&timer);

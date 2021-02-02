@@ -75,11 +75,13 @@ EventCheck::EventCheck()
         Cherenkov->SetEstimate(-1);
         NRF->SetEstimate(-1);
         DetData->SetEstimate(-1);
+        std::cout << "here" << std::endl;
         f->Close();
+        std::cout << "here closed" << std::endl;
     }
     
     G4cout << "EventCheck::Objects Grabbed!" << G4endl;
-    
+    std::cout << "here issue" << std::endl;
     // Set up Output Trees
     nrf_to_cher_tree = new TTree("nrf_to_cher_tree","NRF Events that Lead to Cherenkov");
     nrf_to_cher_tree->Branch("EventID",&nrf_cher_EventID);

@@ -47,7 +47,7 @@ bool eventCompare(Event& a, int x)
         return false;
 }
 
-void Cherenkov(const char *InputFilenameBase, double Emax, Long64_t maxNumberOfEntries, Long64_t startEntry, int fileNumber, bool lastFile)
+Int_t Cherenkov(const char *InputFilenameBase, double Emax, Long64_t maxNumberOfEntries, Long64_t startEntry, int fileNumber, bool lastFile)
 {
     
     std::vector<Event> Events;

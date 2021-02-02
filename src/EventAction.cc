@@ -36,6 +36,7 @@ void EventAction::BeginOfEventAction(const G4Event*)
   energyv.clear();
   weightv.clear();
   timev.clear();
+  mergeCherenkov = false;
 }
 
 void EventAction::EndOfEventAction(const G4Event* anEvent)

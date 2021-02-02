@@ -131,6 +131,8 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtupleSColumn("DetectionProcess");
       manager->CreateNtupleDColumn("Time");
       manager->FinishNtuple();
+    
+    std::cout << "HistoManager::Book -> Finished!" << std::endl;
   }
 
   fFactoryOn = true;

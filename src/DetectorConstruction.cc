@@ -26,7 +26,7 @@
 
 DetectorConstruction::DetectorConstruction(G4bool brem)
         : G4VUserDetectorConstruction(), // chopper properties 
-        chopperDensity(19.1*g/cm3), chopper_thick(10*mm), chopper_z(50*cm), chopperOn(false), // interrogation object properties 
+        chopperDensity(19.1*g/cm3), chopper_thick(30*mm), chopper_z(50*cm), chopperOn(false), // interrogation object properties 
         IntObj_rad(4.5*cm), intObjDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm), IntObj_Selection("Uranium"), // radio abundances
         chopper_radio_abundance(0), intObj_radio_abundance(0), // Attenuator Properties 
         attenuatorState(false), attenuatorState2(false), attenThickness(0.1*mm), attenThickness2(0.1*mm), attenuatorMat("G4_AIR"), attenuatorMat2("G4_AIR"), // Water Tank properties 

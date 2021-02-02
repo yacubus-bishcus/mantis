@@ -36,7 +36,7 @@ RunAction::~RunAction()
 
 void RunAction::BeginOfRunAction(const G4Run* aRun)
 {
-  std::cout << "RunAction::BeginOfRunAction -> Output: " << output << std::endl;
+  //std::cout << "RunAction::BeginOfRunAction -> Output: " << output << std::endl;
   if(output)
   {
     fHistoManager->Book(bremTest);

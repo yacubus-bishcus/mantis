@@ -53,24 +53,20 @@ EventCheck::EventCheck()
 {
     std::cout << "Reading from: " << root_output_name << std::endl;
     time_start = std::time(&timer);
-    if(gSystem)
-    {
-        std::cout << "G System exists" << std::endl;
-    }
     if(gSystem->AccessPathName(root_output_name.c_str()))
     {
         std::cerr << "File: " << root_output_name << " does not exist." << std::endl;
+        return;
     }
     else
     {
         std::cout << "File: " << root_output_name << " exists." << std::endl;
     }
-    const char *inFilename = root_output_name.c_str();
-    f = new TFile(inFilename);
+    f = new TFile(root_output_name.c_str());
     bool confirm = f->cd();
     if(confirm)
     {
-        std::cout << "Confirmed." << std::endl;
+        Cherenkov->Print();
         f->GetObject("Cherenkov",Cherenkov);
         f->GetObject("NRFMatData",NRF);
         f->GetObject("DetInfo",DetData);

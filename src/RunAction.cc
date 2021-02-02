@@ -24,11 +24,8 @@
 
 #include "RunAction.hh"
 RunAction::RunAction(HistoManager* histoAnalysis, G4bool brem, G4bool output_in, G4bool checkEvents_in)
-        : G4UserRunAction(), fHistoManager(histoAnalysis)
+        : G4UserRunAction(), fHistoManager(histoAnalysis), bremTest(brem), output(output_in), checkEvents(checkEvents_in)
 {
-  bremTest = brem;
-  output = output_in; 
-  checkEvents = checkEvents_in;
 }
 
 RunAction::~RunAction()

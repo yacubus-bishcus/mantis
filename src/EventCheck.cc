@@ -67,15 +67,18 @@ EventCheck::EventCheck()
     }
     const char *inFilename = root_output_name.c_str();
     f = new TFile(inFilename);
-    f->cd();
-    f->GetObject("Cherenkov",Cherenkov);
-    f->GetObject("NRFMatData",NRF);
-    f->GetObject("DetInfo",DetData);
+    bool confirm = f->cd();
+    if(confirm)
+    {
+        f->GetObject("Cherenkov",Cherenkov);
+        f->GetObject("NRFMatData",NRF);
+        f->GetObject("DetInfo",DetData);
     
-    Cherenkov->SetEstimate(-1);
-    NRF->SetEstimate(-1);
-    DetData->SetEstimate(-1);
-    f->Close();
+        Cherenkov->SetEstimate(-1);
+        NRF->SetEstimate(-1);
+        DetData->SetEstimate(-1);
+        f->Close();
+    }
     
     G4cout << "EventCheck::Objects Grabbed!" << G4endl;
     

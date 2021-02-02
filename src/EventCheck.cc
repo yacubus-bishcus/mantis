@@ -42,6 +42,10 @@ EventCheck::EventCheck()
 {
     std::cout << "Reading from: " << root_output_name << std::endl;
     time_start = std::time(&timer);
+    if(gSystem)
+    {
+        std::cout << "G System exists" << std::endl;
+    }
     if(gSystem->AccessPathName(root_output_name.c_str()))
     {
         std::cerr << "File: " << root_output_name << " does not exist." << std::endl;

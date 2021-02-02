@@ -44,7 +44,8 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
   if(c_secondaries > 0)
   {
     // Grab Max Energy
-    G4double maxE = *std::max_element(energyv.begin(),energyv.end());
+    //G4double maxE = *std::max_element(energyv.begin(),energyv.end());
+    G4double maxE = 1.0;
     // Find Max Energy's Weight
     eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
     weight = info->GetWeight();

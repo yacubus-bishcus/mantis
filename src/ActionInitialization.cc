@@ -46,11 +46,12 @@ ActionInitialization::~ActionInitialization()
 
 void ActionInitialization::Build() const
 {
-        HistoManager* histo = new HistoManager();
-        SetUserAction(new PrimaryGeneratorAction(bremTest));
-        RunAction* run = new RunAction(histo, bremTest, output, checkEvents);
-        SetUserAction(run);
-        EventAction* event = new EventAction();
-        SetUserAction(new SteppingAction(fDetector, run, event, bremTest));
-        SetUserAction(new StackingAction(fDetector, run));
+    HistoManager* histo = new HistoManager();
+    SetUserAction(new PrimaryGeneratorAction(bremTest));
+    RunAction* run = new RunAction(histo, bremTest, output, checkEvents);
+    SetUserAction(run);
+    EventAction* event = new EventAction();
+    SetUserAction(event);
+    SetUserAction(new SteppingAction(fDetector, run, event, bremTest));
+    SetUserAction(new StackingAction(fDetector, run));
 }

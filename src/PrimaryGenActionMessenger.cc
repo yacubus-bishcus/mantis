@@ -49,7 +49,6 @@ void PrimaryGenActionMessenger::SetNewValue(G4UIcommand* command, G4String newVa
   if(command == Cmd)
   {
     G4double theCommand = Cmd->GetNewDoubleValue(newValue);
-    std::cout << "PrimaryGenActionMessenger::Input Energy set to: " << std::setprecision(10) << theCommand << " MeV" << std::endl;
     genA->SetEnergyValue(theCommand);
 
   }

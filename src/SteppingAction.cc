@@ -331,6 +331,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             manager->FillNtupleSColumn(4,3, process->GetProcessName());
             manager->FillNtupleSColumn(4,4, procCount);
             manager->FillNtupleDColumn(4,5, theTrack->GetGlobalTime()); // time units is nanoseconds 
+            G4String creatorProcess;
+            if(theTrack->GetCreatorProcess !=0)
+              creatorProcess = theTrack->GetCreatorProcess->GetName();
+            else
+              creatorProcess = "Brem";
+            manager->FillNtupleSColumn(4,6, creatorProcess);
             manager->AddNtupleRow(4);
           }
           if(WeightHisto)

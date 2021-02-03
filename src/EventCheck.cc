@@ -40,6 +40,7 @@ extern G4String root_output_name;
 extern G4String gOutName;
 EventCheck::EventCheck()
 {
+    G4int cher_to_detSecSum;
     time_start = std::time(&timer);
     
     if(gSystem->AccessPathName(root_output_name.c_str()))
@@ -169,7 +170,6 @@ EventCheck::EventCheck()
       G4cout << G4endl << "NRF to Cherenkov Number of Events Found: " << nrf_to_cherEvents.size() << G4endl;
     }
     
-    G4int cher_to_detSecSum;
     if(num_entries2 > 0)
     {
       for(int i=0;i<num_entries2;++i)

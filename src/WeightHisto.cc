@@ -97,6 +97,7 @@ WeightHisto::~WeightHisto()
 
 void WeightHisto::Fill_NRF_to_Cherenkov()
 {
+    std::cout << "here" << std::endl;
     G4int n_entries = nrf_to_cher_tree->Draw("NRF_Energy:NRF_Weight","","goff");
     std::cout << "NRF to Cherenkov Tree Entries: " << n_entries << std::endl;
     if(n_entries > 0)

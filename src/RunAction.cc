@@ -116,7 +116,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
     std::cout << " Average Scintillation Photon energy emitted in the Water: " << (fScintEnergy/eV)/fScintCount << " eV." << std::endl;
   }
 
-  std::cout <<   "---------------------------------" << std::endl;
+  std::cout <<   "---------------------------------" << std::endl << std::endl;
 
   if(output)
   {

@@ -34,6 +34,7 @@
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
 #include "EventCheck.hh"
+#include "WeightHisto.hh"
 
 class RunAction : public G4UserRunAction
 {

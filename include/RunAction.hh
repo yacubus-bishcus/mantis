@@ -51,8 +51,6 @@ class RunAction : public G4UserRunAction
     void AddScintillationEnergy(G4double en) {fScintEnergy += en;}
     void AddCerenkov(void) {fCerenkovCount++;} // changed from +=
     void AddScintillation(void) {fScintCount++;}
-    void AddRayleigh(void) {fRayleighCount++;}
-    void AddOpAbsorption(void) {fOpAbsorption++;}
     void AddTotalSurface(void) {fTotalSurface += 1;}
     void AddNRF(void){fNRF++;}
     void AddStatusKilled(void){fStatusKilled++;}
@@ -61,7 +59,7 @@ class RunAction : public G4UserRunAction
     HistoManager* fHistoManager;
     G4bool bremTest, output, checkEvents, weightHisto;
     G4double fCerenkovEnergy, fScintEnergy, fCerenkovCount;
-    G4int fScintCount, fRayleighCount, fOpAbsorption, fTotalSurface, fNRF, fStatusKilled;
+    G4int fScintCount, fTotalSurface, fNRF, fStatusKilled;
 };
 
 

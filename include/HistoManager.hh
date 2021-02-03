@@ -50,6 +50,11 @@ void SetChosenEnergy(G4double val)
   chosen_energy = val;
 }
 
+G4double GetEmax()const
+{
+  return xmax;
+}
+
 private:
 G4bool fFactoryOn;
 G4double chosen_energy;

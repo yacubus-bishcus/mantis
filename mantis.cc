@@ -183,7 +183,8 @@ int main(int argc,char **argv)
 
   G4int stop_time = time(0);
   G4cout << G4endl << "*-----------------------------------------------*" << G4endl;
-  G4cout << G4endl << "The MC took:\t\t" << stop_time - start_time << "s" <<G4endl;
+  G4cout << G4endl << "*-----------------------------------------------*" << G4endl;
+  G4cout << G4endl << "The MC took:\t\t" << stop_time - start_time << "s" << G4endl << G4endl;
 
   delete LoggedSession;
   delete runManager;

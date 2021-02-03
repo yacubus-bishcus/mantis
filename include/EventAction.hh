@@ -27,8 +27,8 @@
 
 #include "G4UserEventAction.hh"
 #include "globals.hh"
-#include <iostream>
-#include <fstream>
+//#include <iostream>
+//#include <fstream>
 #include "G4Types.hh"
 #include "G4EventManager.hh"
 #include "eventInformation.hh"
@@ -39,7 +39,7 @@
 #include "G4UImanager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4Run.hh"
-#include <time.h>
+//#include <time.h>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 class G4Event;
@@ -78,7 +78,7 @@ G4double calcAvg()
   return sum/timev.size();
 }
 
-G4int tEvents, c_secondaries;
+G4int c_secondaries;
 G4double sum;
 std::vector<double> energyv, timev;
 G4bool weightHisto;

@@ -234,7 +234,7 @@ else if(IntObj_Selection == "Plastic")
 }
 else{G4cerr << "ERROR: Interogation Material not found."<<G4endl;}
 
-G4cout << "The User's Interogation Object Material: "
+G4cout << G4endl << "The User's Interogation Object Material: "
           << intObjMat->GetName() << G4endl;
 if(IntObj_Selection == "Uranium" || IntObj_Selection == "Plutonium")
 {
@@ -309,11 +309,11 @@ new G4PVPlacement(0,G4ThreeVector(0,0,0), logicCasing, "Pglass", logicSecondAtte
         
 if(plexiThickness != 0.18*mm)
 {
-  G4cout << "Plexiglass Thickness Changed to: " << plexiThickness << " mm" << G4endl;
+  G4cout << G4endl << "Plexiglass Thickness Changed to: " << plexiThickness << " mm" << G4endl;
 }
 else
 {
-  G4cout << "Plexiglass Thickness set to default: " << plexiThickness << " mm" << G4endl;
+  G4cout << G4endl << "Plexiglass Thickness set to default: " << plexiThickness << " mm" << G4endl;
 }
 if(tapeThick != 0.01*cm)
 {

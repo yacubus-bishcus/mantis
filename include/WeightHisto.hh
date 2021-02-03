@@ -49,7 +49,7 @@ class TTree;
 class WeightHisto
 {
 public:
-    WeightHisto();
+    WeightHisto(G4double);
     ~WeightHisto();
     
 public:

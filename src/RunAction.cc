@@ -23,8 +23,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "RunAction.hh"
-RunAction::RunAction(HistoManager* histoAnalysis, G4bool brem, G4bool output_in, G4bool checkEvents_in)
-        : G4UserRunAction(), fHistoManager(histoAnalysis), bremTest(brem), output(output_in), checkEvents(checkEvents_in)
+RunAction::RunAction(HistoManager* histoAnalysis, G4bool brem, G4bool output_in, G4bool checkEvents_in, G4bool weight_histo_in)
+        : G4UserRunAction(), fHistoManager(histoAnalysis), bremTest(brem), output(output_in), checkEvents(checkEvents_in), weightHisto(weight_histo_in)
 {
 }
 
@@ -129,5 +129,11 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
     EventCheck *eCheck = new EventCheck();  
     eCheck->WriteEvents();
   }
-  
+  if(weightHisto)
+  {
+    WeightHisto *WeightHisto = new WeightHisto();
+    WeightHisto->Fill_NRF_to_Cherenkov();
+    WeightHisto->Fill_to_Det();
+    WeightHisto->Write();
+  }
 }

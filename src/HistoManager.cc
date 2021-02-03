@@ -109,6 +109,9 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtupleDColumn("ZPos");
       manager->FinishNtuple();
     
+      // Create Histogram ID 6
+      manager->CreateH1("NRF_Weighted","NRF Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
+    
       // Create ID 3 Ntuple for cherenkov in water 
       manager->CreateNtuple("Cherenkov","Cherenkov in Water Data");
       manager->CreateNtupleDColumn("Energy");
@@ -117,9 +120,9 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtupleIColumn("NumSecondaries");
       manager->CreateNtupleDColumn("Time");
       manager->FinishNtuple();
-
-      // Create 6 Histogram for Energy if detected
-      manager->CreateH1("Detected","Photons Detected by Photocathode Weighted Energy Spectrum", nbins, 0., 2.1, "eV");
+    
+      // Create Histogram ID 7
+      manager->CreateH1("Cherenkov_Weighted", "Cherenkov Weighted Energy Spectrum", nbins,0.,xmax,"MeV");
     
       // Create ID 4 Ntuple for Reactions within detector
       manager->CreateNtuple("DetInfo","Detected Information");
@@ -132,7 +135,12 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtupleDColumn("Time");
       manager->FinishNtuple();
     
-    std::cout << "HistoManager::Book -> Finished!" << std::endl;
+      // Create ID 8 Histogram for Incident Detector 
+      manager->CreateH1("Inc_Det_Weighted", "Incident Detector Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
+    
+      // Create ID 9 Histogram for Energy if detected
+      manager->CreateH1("Detected","Photons Detected by Photocathode Weighted Energy Spectrum", nbins, 0., 2.1, "eV");
+    
   }
 
   fFactoryOn = true;

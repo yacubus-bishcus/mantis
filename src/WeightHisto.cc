@@ -40,7 +40,7 @@
 extern G4String root_output_name;
 extern G4String gOutName;
 
-WeightHisto::WeightHisto()
+WeightHisto::WeightHisto(G4double Emax)
 {
     time_start = std::time(&timer);
     std::string cher_to_nrf_infile = gOutName + "_NRF_to_Cher.root";
@@ -62,10 +62,10 @@ WeightHisto::WeightHisto()
         f1 = new TFile(to_det_infile.c_str());
     
     // Set up Output Histograms
-    wNRF_NRF_to_Cher = new TH1D("wNRF_NRF_to_Cher","Weighted NRF Spectrum that Lead to Cherenkov",nbins, 0., Emax);
-    wCher_NRF_to_Cher = new TH1D("wCher_NRF_to_Cher","Weighted Cherenkov Spectrum caused by NRF",nbins,0.,Emax);
-    wNRF_to_Det = new TH1D("wNRF_to_Det","Weighted NRF Energy Spectrum that Lead to Cherenkov that Lead to Detection",nbins,0.,Emax);
-    wCher_to_Det = new TH1D("wCher_to_Det","Weighted Cherenkov Energy Spectrum Caused by NRF that Lead to Detection", nbins, 0., Emax);
+    wNRF_NRF_to_Cher = new TH1D("wNRF_NRF_to_Cher","Weighted NRF Spectrum that Lead to Cherenkov",100000, 0., Emax);
+    wCher_NRF_to_Cher = new TH1D("wCher_NRF_to_Cher","Weighted Cherenkov Spectrum caused by NRF",100000,0.,Emax);
+    wNRF_to_Det = new TH1D("wNRF_to_Det","Weighted NRF Energy Spectrum that Lead to Cherenkov that Lead to Detection",100000,0.,Emax);
+    wCher_to_Det = new TH1D("wCher_to_Det","Weighted Cherenkov Energy Spectrum Caused by NRF that Lead to Detection", 100000, 0., Emax);
     bool confirm = f->cd();
     if(confirm)
     {

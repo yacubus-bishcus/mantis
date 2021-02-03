@@ -27,8 +27,6 @@
 
 #include "G4UserEventAction.hh"
 #include "globals.hh"
-//#include <iostream>
-//#include <fstream>
 #include "G4Types.hh"
 #include "G4EventManager.hh"
 #include "eventInformation.hh"
@@ -39,9 +37,7 @@
 #include "G4UImanager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4Run.hh"
-//#include <time.h>
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 class G4Event;
 
 class EventAction : public G4UserEventAction

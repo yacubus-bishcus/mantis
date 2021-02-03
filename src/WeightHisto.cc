@@ -23,19 +23,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-
 #include "WeightHisto.hh"
-
-#include "TROOT.h"
-#include "TApplication.h"
-#include "TSystem.h"
-#include "TH1.h"
-#include "TPad.h"
-#include "TCanvas.h"
-#include "TFile.h"
-#include "TTree.h"
-#include "TBranch.h"
-#include "TMath.h"
 
 extern G4String root_output_name;
 extern G4String gOutName;
@@ -47,24 +35,24 @@ WeightHisto::WeightHisto(G4double Emax)
     std::string to_det_infile = gOutName + "_NRF_to_Cher_to_Det.root";
     if(gSystem->AccessPathName(cher_to_nrf_infile.c_str()))
     {
-        std::cerr << "File: " << cher_to_nrf_infile << " NOT FOUND!" << std::endl;
+        G4cerr << "File: " << cher_to_nrf_infile << " NOT FOUND!" << G4endl;
         return;
     }
     else
     {
         f = new TFile(cher_to_nrf_infile.c_str());
-        std::cout << "File: " << cher_to_nrf_infile << " exists!" << std::endl;
+        G4cout << "File: " << cher_to_nrf_infile << " exists!" << G4endl;
     }
     
     if(gSystem->AccessPathName(to_det_infile.c_str()))
     {
-        std::cerr << "File: " << to_det_infile << " NOT FOUND!" << std::endl;
+        G4cerr << "File: " << to_det_infile << " NOT FOUND!" << G4endl;
         return;
     }
     else
     {
         f1 = new TFile(to_det_infile.c_str());
-        std::cout << "File: " << to_det_infile << " exists!" << std::endl;
+        G4cout << "File: " << to_det_infile << " exists!" << G4endl;
     }
     
    
@@ -90,7 +78,7 @@ WeightHisto::WeightHisto(G4double Emax)
     }
     else
         return;
-    std::cout << "WeightHisto::WeightHisto --> Objects Obtained." << std::endl;
+    G4cout << "WeightHisto::WeightHisto --> Objects Obtained." << G4endl;
     
 }
 
@@ -105,11 +93,11 @@ void WeightHisto::Fill_NRF_to_Cherenkov()
 {
     if(nrf_to_cher_tree == NULL)
     {
-        std::cout << "NRF to Cherenkov Tree Empty. Exiting..." << std::endl;
+        G4cout << "NRF to Cherenkov Tree Empty. Exiting..." << G4endl;
         return;
     }
     G4int n_entries = nrf_to_cher_tree->Draw("NRF_Energy:NRF_Weight","","goff");
-    std::cout << "NRF to Cherenkov Tree Entries: " << n_entries << std::endl;
+    G4cout << "NRF to Cherenkov Tree Entries: " << n_entries << G4endl;
 
     G4double *nrfcherNRFEnergy = nrf_to_cher_tree->GetVal(0);
     G4double *nrfcherNRFWeight = nrf_to_cher_tree->GetVal(1);
@@ -120,7 +108,7 @@ void WeightHisto::Fill_NRF_to_Cherenkov()
     }
     
     n_entries = nrf_to_cher_tree->Draw("Cher_Energy:Cher_Weight","","goff");
-    std::cout << "NRF to Cherenkov to Detected Entries: " << n_entries << std::endl;
+    G4cout << "NRF to Cherenkov to Detected Entries: " << n_entries << G4endl;
 
     G4double *nrfcherCherEnergy = nrf_to_cher_tree->GetVal(0);
     G4double *nrfcherCherWeight = nrf_to_cher_tree->GetVal(1);
@@ -130,7 +118,7 @@ void WeightHisto::Fill_NRF_to_Cherenkov()
         wCher_NRF_to_Cher->Fill(nrfcherCherEnergy[i], nrfcherCherWeight[i]);
     }
     
-    std::cout << "WeightHisto::Fill_NRF_to_Cherenkov --> Complete." << std::endl;
+    G4cout << "WeightHisto::Fill_NRF_to_Cherenkov --> Complete." << G4endl;
 }
 
 // ******************************************************************************************************************************** //
@@ -141,7 +129,7 @@ void WeightHisto::Fill_to_Det()
 {
     if(nrf_to_cher_to_det_tree == NULL)
     {
-        std::cout << "To Detection Tree Empty. Exiting..." << std::endl;
+        G4cout << "To Detection Tree Empty. Exiting..." << G4endl;
         return;
     }
     G4int n_entries = nrf_to_cher_to_det_tree->Draw("EnergyNRF:WeightNRF","","goff");
@@ -162,7 +150,7 @@ void WeightHisto::Fill_to_Det()
         wCher_to_Det->Fill(nrfcherdetCherEnergy[i], nrfcherdetCherWeight[i]);
     }
     
-    std::cout << "WeightHisto::Fill_to_Det --> Complete!" << std::endl;
+    G4cout << "WeightHisto::Fill_to_Det --> Complete!" << G4endl;
 }
 
 // ******************************************************************************************************************************** //
@@ -195,7 +183,7 @@ void WeightHisto::Write()
         return;
     
     fout->Close();
-    std::cout << "Weighted Histograms written to: " << fileOut << std::endl;
+    G4cout << "Weighted Histograms written to: " << fileOut << G4endl;
     time_end = std::time(&timer2);
-    std::cout << "Weighting Histos took: " << std::difftime(time_end,time_start) << " seconds!" << std::endl;
+    G4cout << "Weighting Histos took: " << std::difftime(time_end,time_start) << " seconds!" << G4endl;
 }

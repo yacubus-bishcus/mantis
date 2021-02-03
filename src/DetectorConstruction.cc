@@ -1,4 +1,4 @@
-//
+/
 // ********************************************************************
 // * DISCLAIMER                                                       *
 // *                                                                  *
@@ -25,15 +25,15 @@
 #include "DetectorConstruction.hh"
 
 DetectorConstruction::DetectorConstruction(G4bool brem)
-        : G4VUserDetectorConstruction(), // chopper properties 
-        chopperDensity(19.1*g/cm3), chopper_thick(30*mm), chopper_z(50*cm), chopperOn(false), // interrogation object properties 
+        : G4VUserDetectorConstruction(), // chopper properties
+        chopperDensity(19.1*g/cm3), chopper_thick(30*mm), chopper_z(50*cm), chopperOn(false), // interrogation object properties
         IntObj_rad(4.5*cm), intObjDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm), IntObj_Selection("Uranium"), // radio abundances
-        chopper_radio_abundance(0), intObj_radio_abundance(0), // Attenuator Properties 
-        attenuatorState(false), attenuatorState2(false), attenThickness(0.1*mm), attenThickness2(0.1*mm), attenuatorMat("G4_AIR"), attenuatorMat2("G4_AIR"), // Water Tank properties 
-        theAngle(120.0), water_size_x(60*cm), water_size_y(2.5908*m), water_size_z(40*cm), // plexi/tape properties 
-        plexiThickness(0.18*mm), tapeThick(0.01*cm), // PMT Properties 
-        PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), // Output Properties 
-        DetectorViewOnly(false), material_verbose(false), // Messenger 
+        chopper_radio_abundance(0), intObj_radio_abundance(0), // Attenuator Properties
+        attenuatorState(false), attenuatorState2(false), attenThickness(0.1*mm), attenThickness2(0.1*mm), attenuatorMat("G4_AIR"), attenuatorMat2("G4_AIR"), // Water Tank properties
+        theAngle(120.0), water_size_x(60*cm), water_size_y(2.5908*m), water_size_z(40*cm), // plexi/tape properties
+        plexiThickness(0.18*mm), tapeThick(0.01*cm), // PMT Properties
+        PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), // Output Properties
+        DetectorViewOnly(false), material_verbose(false), // Messenger
         bremTest(brem), detectorM(NULL)
 {
         detectorM = new DetectorMessenger(this);
@@ -49,7 +49,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // Get nist material manager
 G4NistManager* nist = G4NistManager::Instance();
 
-// ************************************* Set up Materials ***************************************** // 
+// ************************************* Set up Materials ***************************************** //
         
 G4Material *air = nist->FindOrBuildMaterial("G4_AIR");
 G4Material *steel = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
@@ -194,7 +194,7 @@ if(IntObj_Selection == "Uranium")
 {
   if(intObj_radio_abundance <= 0.0)
   {
-    std::cout << "Fatal Error: User must input interrogation object isotope abundance for Uranium 235" << std::endl;
+    G4cerr << "Fatal Error: User must input interrogation object isotope abundance for Uranium 235" << G4endl;
     exit(100);
   }
   Uranium_interrogation->AddIsotope(Uranium235, intObj_U235_abundance*perCent);
@@ -205,7 +205,7 @@ else if(IntObj_Selection == "Plutonium")
 {
   if(intObj_radio_abundance <= 0.0)
   {
-    std::cout << "Fatal Error: User must input interrogation object isotope abundance for Plutonium 239" << std::endl;
+    G4cerr << "Fatal Error: User must input interrogation object isotope abundance for Plutonium 239" << G4endl;
     exit(100);
   }
   Plutonium_interrogation->AddIsotope(Plutonium239, intObj_Pu239_abundance*perCent);
@@ -232,12 +232,12 @@ else if(IntObj_Selection == "Plastic")
 {
   intObjMat->AddMaterial(poly,1);
 }
-else{std::cerr << "ERROR: Interogation Material not found."<<std::endl;}
+else{G4cerr << "ERROR: Interogation Material not found."<<G4endl;}
 
 G4cout << "The User's Interogation Object Material: "
           << intObjMat->GetName() << G4endl;
 if(IntObj_Selection == "Uranium" || IntObj_Selection == "Plutonium")
-{       
+{
   G4cout << "The User's Interrogation Object Abundance: " << intObj_radio_abundance << " %" << G4endl;
 }
 G4cout << "The User's Interrogation Object Radius: " << IntObj_rad/(cm) << " cm" << G4endl;
@@ -254,13 +254,13 @@ physIntObj = new G4PVPlacement(0,
                                0, checkOverlaps);
  
         
-// *************************** Interrogation Object Setup Complete ***************************** // 
+// *************************** Interrogation Object Setup Complete ***************************** //
 
 // ********************************** Begin Detector Construction ********************************** //
 
-// First Attenuation Layer 
+// First Attenuation Layer
 
-G4Box* solidAttenuator = new G4Box("Attenuator", water_size_x + attenThickness + attenThickness2, water_size_y + attenThickness + attenThickness2, 
+G4Box* solidAttenuator = new G4Box("Attenuator", water_size_x + attenThickness + attenThickness2, water_size_y + attenThickness + attenThickness2,
                                    water_size_z + attenThickness + attenThickness2);
 G4LogicalVolume* logicAttenuator = new G4LogicalVolume(solidAttenuator, attenuator, "Attenuator");
 if(attenuatorState)
@@ -272,7 +272,7 @@ else
   attenuatorState2 = false;
   attenThickness2 = 0*cm;
   G4cout<< "Second Attenuator Thickness automatically set to Off." << G4endl;
-}       
+}
 
 G4double water_z_pos = container_z_pos - 2.4384*m;
 G4double myangle = (180. - theAngle)*pi/180.;
@@ -290,7 +290,7 @@ new G4PVPlacement(waterRot2,
 G4ThreeVector(-1*water_x_pos,0,water_z_pos), logicAttenuator,
 "1LayR", logicWorld, false, 0, checkOverlaps);
 
-// Option to add second layer of low Z attenuation material 
+// Option to add second layer of low Z attenuation material
         
 G4Box* solidSecondAttenuator = new G4Box("LowZAttenuator", water_size_x + attenThickness2, water_size_y+attenThickness2,
                                          water_size_z+attenThickness2);
@@ -337,8 +337,8 @@ G4cout << "The Water Tank X was set to: " << water_size_x/(cm)<< " cm" << G4endl
 G4cout << "The Water Tank Y was set to: " << water_size_y/(cm)<< " cm" << G4endl;
 G4cout << "The Water Tank Z was set to: " << water_size_z/(cm) << " cm" << G4endl << G4endl;
 
-G4Box* solidWater = new G4Box("Water", water_size_x-plexiThickness-tapeThick, 
-                              water_size_y-plexiThickness-tapeThick, 
+G4Box* solidWater = new G4Box("Water", water_size_x-plexiThickness-tapeThick,
+                              water_size_y-plexiThickness-tapeThick,
                               water_size_z-plexiThickness-tapeThick);
         G4LogicalVolume* logicWater =
                 new G4LogicalVolume(solidWater, //its solid
@@ -354,13 +354,13 @@ physWater = new G4PVPlacement(0,         //no rotation
                                   0, //copy number
                                   checkOverlaps); //overlaps checking
         
-// ******************************* End of Detector Construction Setup ********************************* // 
+// ******************************* End of Detector Construction Setup ********************************* //
 
 // ************************************* Set up Chopper Wheel ************************************** //
 
 if(chopper_radio_abundance <= 0.0)
 {
-  std::cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << std::endl;
+  G4cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << G4endl;
   exit(100);
 }
         
@@ -385,7 +385,7 @@ Plutonium_chopper->AddIsotope(Plutonium240, chopper_Pu240_abundance*perCent);
         
 if(chopper_z > water_z_pos)
 {
-        std::cerr << "ERROR: Chopper wheel location should be behind water detectors, exiting." << std::endl;
+        G4cerr << "ERROR: Chopper wheel location should be behind water detectors, exiting." << G4endl;
         exit(100);
 }
 G4Tubs *solidChopper = new G4Tubs("Chop", 0*cm, 10*cm, chopper_thick/2, 0.*deg, 180.*deg);
@@ -401,7 +401,7 @@ else if(chopperDensity == 19.6*g/cm3)
   chopperMat->AddElement(Plutonium_chopper, 1);
   G4cout << "The Chopper material selected was: Plutonium" << G4endl;
 }
-else{std::cerr << "ERROR Chopper Density not found!" << std::endl; exit(100);}
+else{G4cerr << "ERROR Chopper Density not found!" << G4endl; exit(100);}
 
 G4cout << "The Chopper material density selected was: " << chopperDensity/(g/cm3) << " g/cm3" << G4endl;
 G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
@@ -428,7 +428,7 @@ if(nPMT>1)
 {
   if(PMT_rmax*2 > water_size_y/(nPMT+1))
   {
-    std::cerr << "ERROR Too many PMTs to fit on Water Surface!" << std::endl;
+    G4cerr << "ERROR Too many PMTs to fit on Water Surface!" << G4endl;
     exit(10);
   }
   for(G4int i=1; i<=nPMT; i++)
@@ -455,7 +455,7 @@ for(G4int k=1; k<=nPMT; k++)
                     checkOverlaps);
 }
 
-// ************************************** Construct Photocathode *********************************** // 
+// ************************************** Construct Photocathode *********************************** //
         
 G4double PC_z = 20*nm;
 G4cout << "The Photocathode material was set as: " << pc_mat << G4endl;
@@ -481,7 +481,7 @@ physPC = new G4PVPlacement(0,
                            0,
                            checkOverlaps);
 
-// ****************************** Visualization Handler ******************************** // 
+// ****************************** Visualization Handler ******************************** //
         
 G4VisAttributes *yellow= new G4VisAttributes( G4Colour(255/255.,255/255.,51/255. ));
 G4VisAttributes *red= new G4VisAttributes( G4Colour(255/255., 0/255., 0/255. ));
@@ -858,7 +858,7 @@ airMPT->AddProperty("RINDEX", photonEnergy, refractiveIndex2, nEntries);
 
 air->SetMaterialPropertiesTable(airMPT);
 
-// Material Verbosity to print materials properties tables 
+// Material Verbosity to print materials properties tables
 if(material_verbose)
 {
   G4cout << "Material Verbose set to True/On!" << G4endl;
@@ -875,8 +875,7 @@ if(material_verbose)
 }
 
 //always return the physical World!!!
-std::cout << "DetectorConstruction::Construct -> Constructed!" << std::endl << std::endl;
+G4cout << "DetectorConstruction::Construct -> Constructed!" << G4endl << G4endl;
 return physWorld;
 }
-
 /* ************************************************************************************ */

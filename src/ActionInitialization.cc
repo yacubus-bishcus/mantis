@@ -32,8 +32,8 @@
 #include "HistoManager.hh"
 
 
-ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool brem_check, G4bool output_in, G4bool checkEvents_in)
-        : G4VUserActionInitialization(), fDetector(det), bremTest(brem_check), output(output_in), checkEvents(checkEvents_in)
+ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool brem_check, G4bool output_in, G4bool checkEvents_in, G4bool weight_histo_in)
+        : G4VUserActionInitialization(), fDetector(det), bremTest(brem_check), output(output_in), checkEvents(checkEvents_in), weightHisto(weight_histo_in)
 {}
 
 ActionInitialization::~ActionInitialization()
@@ -46,8 +46,8 @@ void ActionInitialization::Build() const
     SetUserAction(new PrimaryGeneratorAction(bremTest));
     RunAction* run = new RunAction(histo, bremTest, output, checkEvents);
     SetUserAction(run);
-    EventAction* event = new EventAction();
+    EventAction* event = new EventAction(weightHisto);
     SetUserAction(event);
-    SetUserAction(new SteppingAction(fDetector, run, event, bremTest));
+    SetUserAction(new SteppingAction(fDetector, run, event, bremTest, weightHisto));
     SetUserAction(new StackingAction(fDetector, run));
 }

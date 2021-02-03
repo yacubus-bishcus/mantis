@@ -875,7 +875,7 @@ if(material_verbose)
 }
 
 //always return the physical World!!!
-std::cout << "DetectorConstruction::Construct -> Constructed!" << std::endl;
+std::cout << "DetectorConstruction::Construct -> Constructed!" << std::endl << std::endl;
 return physWorld;
 }
 

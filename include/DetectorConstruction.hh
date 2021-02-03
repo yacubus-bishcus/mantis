@@ -189,7 +189,7 @@ void SetIntObj(G4String val)
           IntObj_Selection = "Plastic";
           intObjDensity = 0.94*g/cm3;
         }
-        else{std::cerr << "ERROR: IntObj not correctly chosen"<<std::endl;}
+        else{G4cerr << "ERROR: IntObj not correctly chosen" << G4endl;}
 }
 
 void SetChopperMaterial(G4String val)

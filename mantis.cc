@@ -14,6 +14,7 @@
 #ifdef G4VIS_USE
 #include "G4VisExecutive.hh"
 #include "G4TrajectoryDrawByParticleID.hh"
+G4VisManager* visManager;
 #endif
 
 #include "G4UIExecutive.hh"
@@ -157,7 +158,7 @@ int main(int argc,char **argv)
 #ifdef G4VIS_USE
   if(ui || macro == "vis_save.mac")
   {
-    G4VisManager* visManager = new G4VisExecutive();
+    visManager = new G4VisExecutive();
     visManager->Initialize();
   }
 #endif

@@ -25,14 +25,14 @@
 
 // declare global variables
 G4long seed;
-G4String macro, root_output_name, gOutName, bremTest, standalone_in, verbose_in, addNRF_in, checkEvents_in; 
+G4String macro, root_output_name, gOutName, bremTest, standalone_in, verbose_in, addNRF_in, checkEvents_in, weight_histo_in; 
 
 namespace
 {
   void PrintUsage()
   {
     std::cerr << "Usage: " << std::endl;
-    std::cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] [-e checkEvents=false]" 
+    std::cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] [-e checkEvents=false] [-w weightHisto=false]" 
               << std::endl;
   }
 }
@@ -48,6 +48,7 @@ int main(int argc,char **argv)
   G4bool NRF_Verbose = false;
   G4bool addNRF = true;
   G4bool checkEvents = false;
+  G4bool weightHisto = false;
   macro = "mantis.in";
   seed = 1;
   G4bool output = false;
@@ -63,7 +64,7 @@ int main(int argc,char **argv)
   }
 
   // Evaluate Arguments
-  if ( argc > 17 )
+  if ( argc > 19 )
   {
     PrintUsage();
     return 1;
@@ -79,6 +80,7 @@ int main(int argc,char **argv)
     else if (G4String(argv[i]) == "-v") verbose_in = argv[i+1];
     else if (G4String(argv[i]) == "-n") addNRF_in = argv[i+1];
     else if (G4String(argv[i]) == "-e") checkEvents_in = argv[i+1];
+    else if (G4String(argv[i]) == "-w") weight_histo_in = argv[i+1];
     else
     {
       PrintUsage();
@@ -100,6 +102,11 @@ int main(int argc,char **argv)
   {
     std::cout << "Check Events set to: " << checkEvents_in << std::endl;
     checkEvents = true;
+  }
+  if(weight_histo_in == "True" || weight_histo_in == "true")
+  {
+    std::cout << "Weight Histograms set to: " << weight_histo_in << std::endl;
+    weightHisto = true;
   }
 
   std::string RootOutputFile = (std::string)root_output_name;
@@ -140,7 +147,7 @@ int main(int argc,char **argv)
   // Set up Physics List
   physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
   runManager->SetUserInitialization(thePL);
-  runManager->SetUserInitialization(new ActionInitialization(det, brem, output, checkEvents));
+  runManager->SetUserInitialization(new ActionInitialization(det, brem, output, checkEvents, weightHisto));
 
   // Run manager initialized in macros
 #ifdef G4VIS_USE

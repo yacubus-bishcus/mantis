@@ -26,7 +26,6 @@
 #define DetectorConstruction_h 1
 
 #include "G4VUserDetectorConstruction.hh"
-#include "globals.hh"
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4LogicalVolume.hh"
@@ -50,8 +49,6 @@
 #include "G4OpRayleigh.hh"
 
 #include "G4Box.hh" //for box
-//#include "G4Cons.hh" //for cone
-//#include "G4Orb.hh" //for orb
 #include "G4Sphere.hh" //for sphere
 #include "G4Tubs.hh" // for tube/cylinder
 

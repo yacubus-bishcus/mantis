@@ -37,12 +37,12 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest) : G4VUserPrimary
   if(bremTest)
   {
     fParticleGun->SetParticleDefinition(G4Electron::Definition());
-    std::cout << "Particle Type set to Electron!" << std::endl;
+    std::cout << "Particle Type set to Electron!" << std::endl << std::endl;
   }
   else
   {
     fParticleGun->SetParticleDefinition(G4Gamma::Definition());
-    std::cout << "Particle Type set to Gamma!"<<std::endl;
+    std::cout << "Particle Type set to Gamma!"<< std::endl << std::endl;
   }
 
   // Default Kinematics

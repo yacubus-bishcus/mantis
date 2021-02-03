@@ -133,7 +133,7 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateH1("Inc_Det_Weighted", "Incident Detector Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
     
       // Create ID 9 Histogram for Energy if detected
-      manager->CreateH1("Detected","Photons Detected by Photocathode Weighted Energy Spectrum", nbins, 0., 2.1, "eV");
+      manager->CreateH1("Detected","Photons Detected by Photocathode Weighted Energy Spectrum", nbins, 0., 2.1, "MeV");
     
   }
 

@@ -78,7 +78,15 @@ WeightHisto::WeightHisto(G4double Emax)
     if(confirm)
     {
         f->GetObject("nrf_to_cher_tree",nrf_to_cher_tree);
-        nrf_to_cher_tree->Print();
+        if(nrf_to_cher_tree != NULL)
+        {
+            nrf_to_cher_tree->Print();
+        }
+        else
+        {
+            std::cout << "NRF to Cherenkov File is empty."<< std::endl;
+            return;
+        }
     }
     else
         return;

@@ -23,9 +23,9 @@
 
 #include "EventAction.hh"
 
-EventAction::EventAction()
-{
-}
+EventAction::EventAction(G4bool weight_histo_in)
+  : weightHisto(weight_histo_in)
+{}
 
 EventAction::~EventAction()
 {}
@@ -64,6 +64,10 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
     manager->FillNtupleIColumn(3,3,c_secondaries);
     manager->FillNtupleDColumn(3,4,c_time);
     manager->AddNtupleRow(3);
+    if(weightHisto)
+    {
+      manager->FillH1(7, maxE, weight);
+    }
   }
   
   tEvents = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();

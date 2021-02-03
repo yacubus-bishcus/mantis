@@ -88,6 +88,22 @@ int main(int argc,char **argv)
     }
   }
 
+  std::string RootOutputFile = (std::string)root_output_name;
+  if(RootOutputFile.find(".root")<RootOutputFile.length()) {
+          gOutName=(std::string)RootOutputFile.substr(0, RootOutputFile.find(".root"));
+  }
+  else gOutName=(std::string)root_output_name;
+
+  G4UImanager* UI = G4UImanager::GetUIpointer();
+  MySession* LoggedSession = new MySession;
+  
+  if(! ui && macro != "vis_save.mac")
+  {
+    output = true;
+    UI->SetCoutDestination(LoggedSession);
+  }
+  
+  // Write option selection to Outfile 
   if(standalone_in == "True" || standalone_in == "true")
   {
     G4cout << "Standalone File Requested." << G4endl;
@@ -108,38 +124,26 @@ int main(int argc,char **argv)
     G4cout << "Weight Histograms set to: " << weight_histo_in << G4endl;
     weightHisto = true;
   }
-
-  std::string RootOutputFile = (std::string)root_output_name;
-  if(RootOutputFile.find(".root")<RootOutputFile.length()) {
-          gOutName=(std::string)RootOutputFile.substr(0, RootOutputFile.find(".root"));
-  }
-  else gOutName=(std::string)root_output_name;
-
-  G4UImanager* UI = G4UImanager::GetUIpointer();
-  MySession* LoggedSession = new MySession;
-  if(! ui && macro != "vis_save.mac")
-  {
-    output = true;
-    UI->SetCoutDestination(LoggedSession);
-  }
-  // choose the Random engine
-  CLHEP::HepRandom::setTheEngine(new CLHEP::RanluxEngine);
-  CLHEP::HepRandom::setTheSeed(seed);
   if(addNRF_in == "False" || addNRF_in == "false")
   {
     //std::cout << "NRF Physics turned OFF!" << std::endl;
     G4cout << "NRF Physics turned OFF!" << G4endl;
     addNRF = false;
   }
-  G4cout << "Seed set to: " << seed << G4endl;
-
-  // construct the default run manager
-  G4RunManager* runManager = new G4RunManager;
   if(bremTest == "True" || bremTest == "true")
   {
      G4cout << "Conducting Brem Test!" << G4endl;
      brem = true;
   }
+  G4cout << "Seed set to: " << seed << G4endl;
+  
+  // choose the Random engine
+  CLHEP::HepRandom::setTheEngine(new CLHEP::RanluxEngine);
+  CLHEP::HepRandom::setTheSeed(seed);
+
+  // construct the default run manager
+  G4RunManager* runManager = new G4RunManager;
+  
   // set mandatory initialization classes
   DetectorConstruction* det = new DetectorConstruction(brem);
   runManager->SetUserInitialization(det);
@@ -178,9 +182,6 @@ int main(int argc,char **argv)
 
   delete LoggedSession;
   delete runManager;
-
-  //std::cout<< std::endl << " The MC took:\t\t" << stop_time - start_time <<"s"<< std::endl;
-  //std::cout << std::endl << " Run completed!"<< std::endl << std::endl;
 
   return 0;
 }

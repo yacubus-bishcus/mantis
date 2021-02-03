@@ -86,11 +86,14 @@ WeightHisto::WeightHisto()
     
 }
 
+WeightHisto::~WeightHisto()
+{}
+
 // ******************************************************************************************************************************** //
 // Fill NRF that Lead to Cherenkov Weighted Histogram for NRF Energies and Cherenkov Energies
 // ******************************************************************************************************************************** //
 
-WeightHisto::Fill_NRF_to_Cherenkov()
+void WeightHisto::Fill_NRF_to_Cherenkov()
 {
     G4int n_entries = nrf_to_cher_tree->Draw("NRF_Energy:NRF_Weight","","goff");
     G4double *nrfcherNRFEnergy = nrf_to_cher_tree->GetVal(0);
@@ -115,7 +118,7 @@ WeightHisto::Fill_NRF_to_Cherenkov()
  // Fill NRF that Lead to Cherenkov that Lead to Detection Weighted Histogram for NRF Energies and Cherenkov Energies
  // ******************************************************************************************************************************** //
 
-WeightHisto::Fill_to_Det()
+void WeightHisto::Fill_to_Det()
 {
     G4int n_entries = nrf_to_cher_to_det_tree->Draw("EnergyNRF:WeightNRF","","goff");
     G4double *nrfcherdetNRFEnergy = nrf_to_cher_to_det_tree->GetVal(0);
@@ -123,7 +126,7 @@ WeightHisto::Fill_to_Det()
     
     for(int i=0;i<n_entries;++i)
     {
-        wNRF_NRF_to_Cher_to_Det->Fill(nrfcherdetNRFEnergy[i], nrfcherdetNRFWeight[i]);
+        wNRF_to_Det->Fill(nrfcherdetNRFEnergy[i], nrfcherdetNRFWeight[i]);
     }
 
     n_entries = nrf_to_cher_to_det_tree->Draw("EnergyCher:WeightCher","","goff");
@@ -132,7 +135,7 @@ WeightHisto::Fill_to_Det()
     
     for(int i=0;i<n_entries;++i)
     {
-        wCher_NRF_to_Cher_to_Det->Fill(nrfcherdetCherEnergy[i], nrfcherdetCherWeight[i]);
+        wCher_to_Det->Fill(nrfcherdetCherEnergy[i], nrfcherdetCherWeight[i]);
     }
 }
 
@@ -140,7 +143,7 @@ WeightHisto::Fill_to_Det()
 // Write Weighted Histograms to File
 // ******************************************************************************************************************************** //
 
-WeightHisto::Write()
+void WeightHisto::Write()
 {
     std::string fileOut = gOutName + "_WeightedHisto.root";
     fout = new TFile(fileOut.c_str(), "recreate");
@@ -149,8 +152,8 @@ WeightHisto::Write()
     {
         wNRF_NRF_to_Cher->Write();
         wCher_NRF_to_Cher->Write();
-        wNRF_NRF_to_Cher_to_Det->Write();
-        wCher_NRF_to_Cher_to_Det->Write();
+        wNRF_to_Det->Write();
+        wCher_to_Det->Write();
     }
     else
         return;

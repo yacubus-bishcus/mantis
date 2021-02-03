@@ -47,14 +47,14 @@ void HistoManager::Book(G4bool bremTest)
           hBrems  = (TH1D*) fin->Get("hBrems");
           if (hBrems)
           {
-              xmax = hBrems->GetXaxis()->GetXmax();
-              G4cout << "Found Input Max Energy: " << xmax << " MeV" << G4endl;
-              fin->Close();
+            xmax = hBrems->GetXaxis()->GetXmax();
+            G4cout << "Found Input Max Energy: " << xmax << " MeV" << G4endl;
+            fin->Close();
           }
           else
           {
-                  G4cerr << "Error reading from file " << fin->GetName() << G4endl;
-                  exit(1);
+            G4cerr << "Error reading from file " << fin->GetName() << G4endl;
+            exit(1);
           }
       }
 
@@ -121,7 +121,6 @@ void HistoManager::Book(G4bool bremTest)
       // Create ID 4 Ntuple for Reactions within detector
       manager->CreateNtuple("DetInfo","Detected Information");
       manager->CreateNtupleIColumn("EventID");
-      manager->CreateNtupleIColumn("TrackID");
       manager->CreateNtupleDColumn("Energy");
       manager->CreateNtupleDColumn("Weight");
       manager->CreateNtupleSColumn("CreatorProcess");

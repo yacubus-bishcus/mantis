@@ -155,8 +155,12 @@ int main(int argc,char **argv)
 
   // Run manager initialized in macros
 #ifdef G4VIS_USE
-  G4VisManager* visManager = new G4VisExecutive();
-  visManager->Initialize();
+  G4VisManager* visManager;
+  if(ui || macro == "vis_save.mac")
+  {
+    visManager = new G4VisExecutive();
+    visManager->Initialize();
+  }
 #endif
 
   if(! ui)

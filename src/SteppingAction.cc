@@ -333,7 +333,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             manager->FillNtupleDColumn(4,5, theTrack->GetGlobalTime()); // time units is nanoseconds 
             G4String creatorProcess;
             if(theTrack->GetCreatorProcess !=0)
-              creatorProcess = theTrack->GetCreatorProcess->GetName();
+              creatorProcess = theTrack->GetCreatorProcess->GetProcessName();
             else
               creatorProcess = "Brem";
             manager->FillNtupleSColumn(4,6, creatorProcess);

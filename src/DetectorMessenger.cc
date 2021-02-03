@@ -178,85 +178,85 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   {
     G4double theCommand = Cmd->GetNewDoubleValue(newValue);
     DetectorA->SetPC_radius(theCommand);
-    std::cout << "The Photocathode Radius manually set to: " << theCommand << " cm" << std::endl;
+    G4cout << "The Photocathode Radius manually set to: " << theCommand << " cm" << G4endl;
   }
   else if(command == CmdX)
   {
     G4double theCommandX = CmdX->GetNewDoubleValue(newValue);
     DetectorA->SetWaterX(theCommandX);
-    std::cout << "The Water X-Dimension Size manually set to: " << theCommandX << " cm" << std::endl;
+    G4cout << "The Water X-Dimension Size manually set to: " << theCommandX << " cm" << G4endl;
   }
   else if(command == CmdY)
   {
     G4double theCommandY = CmdY->GetNewDoubleValue(newValue);
     DetectorA->SetWaterY(theCommandY);
-    std::cout << "The Water Y-Dimension Size manually set to: " << theCommandY << " cm" << std::endl;
+    G4cout << "The Water Y-Dimension Size manually set to: " << theCommandY << " cm" << G4endl;
   }
   else if(command == CmdZ)
   {
     G4double theCommandZ = CmdZ->GetNewDoubleValue(newValue);
     DetectorA->SetWaterZ(theCommandZ);
-    std::cout << "The Water Z-Dimension Size manually set to: " << theCommandZ << " cm" << std::endl;
+    G4cout << "The Water Z-Dimension Size manually set to: " << theCommandZ << " cm" << G4endl;
   }
   else if(command == Cmdtr)
   {
     G4double theCommandtX = Cmdtr->GetNewDoubleValue(newValue);
     DetectorA->SetIntObj_radius(theCommandtX);
-    std::cout << "The Interrogation Object Radius manually set to: " << theCommandtX << " cm" << std::endl;
+    G4cout << "The Interrogation Object Radius manually set to: " << theCommandtX << " cm" << G4endl;
   }
   else if(command == Cmdtrad)
   {
     G4double theCommandtrad = Cmdtrad->GetNewDoubleValue(newValue);
     DetectorA->SetIntObjAbundance(theCommandtrad);
-    std::cout << "The Interrogation Object fissile radioisotope abundance manually set to: " << theCommandtrad << " percent" << std::endl;
+    G4cout << "The Interrogation Object fissile radioisotope abundance manually set to: " << theCommandtrad << " percent" << G4endl;
   }
   else if(command == Cmdtsel)
   {
     G4String theCommandtsel = newValue;
     DetectorA->SetIntObj(theCommandtsel);
-    std::cout << "The Interrogation Object manually set to: " << theCommandtsel << " material!" << std::endl;
+    G4cout << "The Interrogation Object manually set to: " << theCommandtsel << " material!" << G4endl;
   }
   else if(command == CmdtXpos)
   {
     G4double theCommandtXpos = CmdtXpos->GetNewDoubleValue(newValue);
     DetectorA->SetIntObjX_pos(theCommandtXpos);
-    std::cout << "The Interrogation Object X Position manually set to: " << theCommandtXpos << " cm" << std::endl;
+    G4cout << "The Interrogation Object X Position manually set to: " << theCommandtXpos << " cm" << G4endl;
   }
   else if(command == CmdtYpos)
   {
     G4double theCommandtYpos = CmdtYpos->GetNewDoubleValue(newValue);
     DetectorA->SetIntObjY_pos(theCommandtYpos);
-    std::cout << "The Interrogation Object Y Position manually set to: " << theCommandtYpos << " cm" << std::endl;
+    G4cout << "The Interrogation Object Y Position manually set to: " << theCommandtYpos << " cm" << G4endl;
   }
   else if(command == CmdtZpos)
   {
     G4double theCommandtZpos = CmdtZpos->GetNewDoubleValue(newValue);
     DetectorA->SetIntObjZ_pos(theCommandtZpos);
-    std::cout << "The Interrogation Object Z Position manually set to: " << theCommandtZpos << " cm" << std::endl;
+    G4cout << "The Interrogation Object Z Position manually set to: " << theCommandtZpos << " cm" << G4endl;
   }
   else if(command == Cmdpcmat)
   {
     G4String commandpcmat = newValue;
-    std::cout << commandpcmat << " manually set as photocathode material." << std::endl;
+    G4cout << commandpcmat << " manually set as photocathode material." << G4endl;
     DetectorA->SetPC_material(commandpcmat);
   }
   else if(command == CmdnPMT)
   {
     G4int thecmdnPMT = CmdnPMT->GetNewIntValue(newValue);
     DetectorA->SetnPMT(thecmdnPMT);
-    std::cout << "The number of photocathodes per cherenkov Detector manually set to: " << thecmdnPMT << std::endl;
+    G4cout << "The number of photocathodes per cherenkov Detector manually set to: " << thecmdnPMT << G4endl;
   }
   else if(command == CmdChopZ)
   {
     G4double thecmdchopz = CmdChopZ->GetNewDoubleValue(newValue);
     DetectorA->SetChopper_z(thecmdchopz);
-    std::cout << "The Chopper distance from the source manually set to: " << thecmdchopz << " cm" << std::endl;
+    G4cout << "The Chopper distance from the source manually set to: " << thecmdchopz << " cm" << G4endl;
   }
   else if(command == CmdChopthick)
   {
     G4double thecmdchopthick = CmdChopthick->GetNewDoubleValue(newValue);
     DetectorA->SetChopperThick(thecmdchopthick);
-    std::cout << "The Chopper thickness manually set to: " << thecmdchopthick << " mm" <<std::endl;
+    G4cout << "The Chopper thickness manually set to: " << thecmdchopthick << " mm" <<G4endl;
   }
   else if(command == CmdChopperOn)
   {
@@ -264,25 +264,25 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     if(thecmdchopperon == "On" || thecmdchopperon == "on")
     {
       DetectorA->SetChopperOn(true);
-      std::cout << "The Chopper state set to On!" << std::endl;
+      G4cout << "The Chopper state set to On!" << G4endl;
     }
     else
     {
       DetectorA->SetChopperOn(false);
-      std::cout << "The Chopper state set to Off!" << std::endl;
+      G4cout << "The Chopper state set to Off!" << G4endl;
     }
   }
   else if(command == CmdChopperAbundance)
   {
     G4double thechopperabundance = CmdChopperAbundance->GetNewDoubleValue(newValue);
     DetectorA->SetChopperAbundance(thechopperabundance);
-    std::cout << "The Chopper isotope abundance manually set to: " << thechopperabundance << " percent" << std::endl;
+    G4cout << "The Chopper isotope abundance manually set to: " << thechopperabundance << " percent" << G4endl;
   }
   else if(command == CmdAngle)
   {
     G4double thecmdAngle = CmdAngle->GetNewDoubleValue(newValue);
     DetectorA->SettheAngle(thecmdAngle);
-    std::cout << "The Detector angle manually set to: " << thecmdAngle << " degrees" << std::endl;
+    G4cout << "The Detector angle manually set to: " << thecmdAngle << " degrees" << G4endl;
   }
   else if(command == CmdAttenOn)
   {
@@ -298,7 +298,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
       check_atten_on = true;
       DetectorA->SetAttenuatorState(true);
     }
-    std::cout << "The first attenuation layer manually set to: " << theCmdAttenOn << std::endl;
+    G4cout << "The first attenuation layer manually set to: " << theCmdAttenOn << G4endl;
   }
   else if(command == CmdAttenThick)
   {
@@ -306,7 +306,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     {
       G4double theCmdAttendThickness = CmdAttenThick->GetNewDoubleValue(newValue);
       DetectorA->SetAttenuatorThickness(theCmdAttendThickness);
-      std::cout << "The first attenuation layer thickness manually set to: " << theCmdAttendThickness << " cm" << std::endl;
+      G4cout << "The first attenuation layer thickness manually set to: " << theCmdAttendThickness << " cm" << G4endl;
     }
   }
   else if(command == CmdAttenMat)
@@ -315,7 +315,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     {
       G4String theAttenMaterial = newValue;
       DetectorA->SetAttenuatorMaterial(theAttenMaterial);
-      std::cout << "The first attenuation layer material manually set to: " << theAttenMaterial << std::endl;
+      G4cout << "The first attenuation layer material manually set to: " << theAttenMaterial << G4endl;
     }
   }
   else if(command == CmdAttenOn2)
@@ -332,7 +332,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
       check_atten2_on = true;
       DetectorA->SetAttenuatorState2(true);
     }
-    std::cout << "The second attenuation layer manually set to: " << theCmdAttenOn2 << std::endl;
+    G4cout << "The second attenuation layer manually set to: " << theCmdAttenOn2 << G4endl;
   }
   else if(command == CmdAttenThick2)
   {
@@ -340,7 +340,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     {
       G4double theCmdAttendThickness2 = CmdAttenThick2->GetNewDoubleValue(newValue);
       DetectorA->SetAttenuatorThickness2(theCmdAttendThickness2);
-      std::cout << "The second attenuation layer thickness manually set to: " << theCmdAttendThickness2 << " cm" << std::endl;
+      G4cout << "The second attenuation layer thickness manually set to: " << theCmdAttendThickness2 << " cm" << G4endl;
     }
   }
   else if(command == CmdAttenMat2)
@@ -349,20 +349,20 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     {
       G4String theAttenMaterial2 = newValue;
       DetectorA->SetAttenuatorMaterial2(theAttenMaterial2);
-      std::cout << "The second attenuation layer material manually set to: " << theAttenMaterial2 << std::endl;
+      G4cout << "The second attenuation layer material manually set to: " << theAttenMaterial2 << G4endl;
     }
   }
   else if(command == CmdPlexi)
   {
     G4double plexiThickness = CmdPlexi->GetNewDoubleValue(newValue);
     DetectorA->SetPlexiThickness(plexiThickness);
-    std::cout << "The Plexiglass thickness manually set to: " << plexiThickness << " cm" << std::endl;
+    G4cout << "The Plexiglass thickness manually set to: " << plexiThickness << " cm" << G4endl;
   }
   else if(command == CmdTape)
   {
     G4double tapeThickness = CmdTape->GetNewDoubleValue(newValue);
     DetectorA->SetTapeThickness(tapeThickness);
-    std::cout << "The tape thickness manually set to: " << tapeThickness << " mm" << std::endl;
+    G4cout << "The tape thickness manually set to: " << tapeThickness << " mm" << G4endl;
   }
   else if(command == CmdVis)
   {
@@ -376,7 +376,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   {
     G4String theCmdChopMaterial = newValue;
     DetectorA->SetChopperMaterial(theCmdChopMaterial);
-    std::cout << "The chopper material manually set to: " << theCmdChopMaterial << std::endl;
+    G4cout << "The chopper material manually set to: " << theCmdChopMaterial << G4endl;
   }
   else if(command == CmdVerbose)
   {
@@ -384,7 +384,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     G4bool theVerbositybool = false;
     if(theVerbosity == "On" || theVerbosity == "on" || theVerbosity == "True" || theVerbosity == "true")
     {
-      std::cout << "The Material Verbosity Setting manually set to: " << theVerbosity << std::endl;
+      G4cout << "The Material Verbosity Setting manually set to: " << theVerbosity << G4endl;
       theVerbositybool = true;
     }
     DetectorA->SetMaterialVerbosity(theVerbositybool);

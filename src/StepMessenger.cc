@@ -52,37 +52,37 @@ void StepMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     if(theCommand == "ChopIncData")
     {
       stepA->SetChopperIncDataFlag(1);
-      std::cout << "User Selected Chopper Incident Data." << std::endl;
+      G4cout << "User Selected Chopper Incident Data." << G4endl;
     }
     else if(theCommand == "ChopOutData")
     {
       stepA->SetChopperOutDataFlag(1);
-      std::cout << "User Selected Chopper Emission Data." << std::endl;
+      G4cout << "User Selected Chopper Emission Data." << G4endl;
     }
     else if(theCommand == "NRFData")
     {
       stepA->SetNRFDataFlag(1);
-      std::cout << "User Selected NRF Data." << std::endl;
+      G4cout << "User Selected NRF Data." << G4endl;
     }
     else if(theCommand == "IntObjData")
     {
       stepA->SetIntObjDataFlag(1);
-      std::cout << "User Selected Interrogation Object Incident Data." << std::endl;
+      G4cout << "User Selected Interrogation Object Incident Data." << G4endl;
     }
     else if(theCommand == "WaterIncData")
     {
       stepA->SetWaterIncDataFlag(1);
-      std::cout << "User Selected Incident Water Data." <<std::endl;
+      G4cout << "User Selected Incident Water Data." <<G4endl;
     }
     else if(theCommand == "CherenkovData")
     {
       stepA->SetCherenkovDataFlag(1);
-      std::cout << "User Selected Cherenkov Data." <<std::endl;
+      G4cout << "User Selected Cherenkov Data." <<G4endl;
     }
     else if(theCommand == "DetData")
     {
       stepA->SetDetDataFlag(1);
-      std::cout << "User Selected Detected Data."<<std::endl;
+      G4cout << "User Selected Detected Data."<<G4endl;
     }
     else if(theCommand == "none")
     {

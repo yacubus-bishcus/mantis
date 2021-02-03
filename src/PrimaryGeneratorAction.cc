@@ -37,12 +37,12 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest) : G4VUserPrimary
   if(bremTest)
   {
     fParticleGun->SetParticleDefinition(G4Electron::Definition());
-    std::cout << "Particle Type set to Electron!" << std::endl << std::endl;
+    G4cout << "Particle Type set to Electron!" << G4endl << G4endl;
   }
   else
   {
     fParticleGun->SetParticleDefinition(G4Gamma::Definition());
-    std::cout << "Particle Type set to Gamma!"<< std::endl << std::endl;
+    G4cout << "Particle Type set to Gamma!"<< G4endl << G4endl;
   }
 
   // Default Kinematics
@@ -65,13 +65,13 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest) : G4VUserPrimary
      }
      else
      {
-          std::cerr << "Error reading from file " << fin->GetName() << std::endl;
+          G4cerr << "Error reading from file " << fin->GetName() << G4endl;
           exit(1);
      }
   }
   else if(!bremTest && chosen_energy > 0)
   {
-     std::cout << "PrimaryGeneratorAction::PrimaryGeneratorAction Chosen Energy set to: " << chosen_energy << " MeV" << std::endl;
+     G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction Chosen Energy set to: " << chosen_energy << " MeV" << G4endl;
      HistoManager* histo = new HistoManager;
      histo->SetChosenEnergy(chosen_energy);
   }
@@ -107,8 +107,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 #else
   if(chosen_energy < 0)
   {
-          std::cerr << "ERROR: G4ANALYSIS_USE_ROOT not defined in pre-compiler" << std::endl;
-          std::cerr << "SYSTEM EXITING" << std::endl;
+          G4cerr << "ERROR: G4ANALYSIS_USE_ROOT not defined in pre-compiler" << G4endl;
+          G4cerr << "SYSTEM EXITING" << G4endl;
           exit(100);
   }
 

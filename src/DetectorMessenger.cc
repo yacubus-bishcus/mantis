@@ -214,7 +214,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   {
     G4String theCommandtsel = newValue;
     DetectorA->SetIntObj(theCommandtsel);
-    G4cout << "The Interrogation Object manually set to: " << theCommandtsel << " material!" << G4endl;
+    G4cout << "The Interrogation Object manually set to: " << theCommandtsel << " material!" << G4endl << G4endl;
   }
   else if(command == CmdtXpos)
   {
@@ -232,7 +232,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   {
     G4double theCommandtZpos = CmdtZpos->GetNewDoubleValue(newValue);
     DetectorA->SetIntObjZ_pos(theCommandtZpos);
-    G4cout << "The Interrogation Object Z Position manually set to: " << theCommandtZpos << " cm" << G4endl;
+    G4cout << "The Interrogation Object Z Position manually set to: " << theCommandtZpos << " cm" << G4endl << G4endl;
   }
   else if(command == Cmdpcmat)
   {

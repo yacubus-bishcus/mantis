@@ -44,7 +44,7 @@ void ActionInitialization::Build() const
 {
     HistoManager* histo = new HistoManager();
     SetUserAction(new PrimaryGeneratorAction(bremTest));
-    RunAction* run = new RunAction(histo, bremTest, output, checkEvents);
+    RunAction* run = new RunAction(histo, bremTest, output, checkEvents, weightHisto);
     SetUserAction(run);
     EventAction* event = new EventAction(weightHisto);
     SetUserAction(event);

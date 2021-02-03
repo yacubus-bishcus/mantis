@@ -98,23 +98,29 @@ WeightHisto::~WeightHisto()
 void WeightHisto::Fill_NRF_to_Cherenkov()
 {
     G4int n_entries = nrf_to_cher_tree->Draw("NRF_Energy:NRF_Weight","","goff");
-    G4double *nrfcherNRFEnergy = nrf_to_cher_tree->GetVal(0);
-    G4double *nrfcherNRFWeight = nrf_to_cher_tree->GetVal(1);
-    
-    for(int i=0;i<n_entries;++i)
+    std::cout << "NRF to Cherenkov Tree Entries: " << n_entries << std::endl;
+    if(n_entries > 0)
     {
-        wNRF_NRF_to_Cher->Fill(nrfcherNRFEnergy[i], nrfcherNRFWeight[i]);
+        G4double *nrfcherNRFEnergy = nrf_to_cher_tree->GetVal(0);
+        G4double *nrfcherNRFWeight = nrf_to_cher_tree->GetVal(1);
+    
+        for(int i=0;i<n_entries;++i)
+        {
+            wNRF_NRF_to_Cher->Fill(nrfcherNRFEnergy[i], nrfcherNRFWeight[i]);
+        }
     }
-
     n_entries = nrf_to_cher_tree->Draw("Cher_Energy:Cher_Weight","","goff");
-    G4double *nrfcherCherEnergy = nrf_to_cher_tree->GetVal(0);
-    G4double *nrfcherCherWeight = nrf_to_cher_tree->GetVal(1);
-    
-    for(int i=0;i<n_entries;++i)
+    std::cout << "NRF to Cherenkov to Detected Entries: " << n_entries << std::endl;
+    if(n_entries)
     {
-        wCher_NRF_to_Cher->Fill(nrfcherCherEnergy[i], nrfcherCherWeight[i]);
+        G4double *nrfcherCherEnergy = nrf_to_cher_tree->GetVal(0);
+        G4double *nrfcherCherWeight = nrf_to_cher_tree->GetVal(1);
+
+        for(int i=0;i<n_entries;++i)
+        {
+            wCher_NRF_to_Cher->Fill(nrfcherCherEnergy[i], nrfcherCherWeight[i]);
+        }
     }
-    
     std::cout << "WeightHisto::Fill_NRF_to_Cherenkov --> Complete." << std::endl;
 }
 

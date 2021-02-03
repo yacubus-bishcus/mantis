@@ -57,10 +57,6 @@ set(Input_SCRIPTS
   )
 
 set(Run_Analysis_SCRIPTS
-Analysis.cc
-Cherenkov.cc
-WeightHisto.cc
-EventCheck.cc
 PrintResults.cc
 stitch.sh
 )

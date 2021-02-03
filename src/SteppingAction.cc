@@ -82,12 +82,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
   weight = info->GetWeight();
   G4AnalysisManager* manager = G4AnalysisManager::Instance();
+  
 // **************************************************** Track NRF Materials **************************************************** //
-        
+  
+  const G4VProcess* process = endPoint->GetProcessDefinedStep();
   // Keep track of Any NRF Created  
   if(drawNRFDataFlag)
   {
-    const G4VProcess* process = endPoint->GetProcessDefinedStep();
     if(process->GetProcessName() == "NRF")
     {
       krun->AddNRF();
@@ -237,7 +238,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   if(endPoint->GetStepStatus() == fGeomBoundary) 
   {
-
     const G4DynamicParticle* theParticle = theTrack->GetDynamicParticle();
     G4OpBoundaryProcessStatus theStatus = Undefined;
     G4ProcessManager* OpManager =
@@ -248,8 +248,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     OpManager->GetPostStepProcessVector(typeDoIt);
     // incident photocathode
     if(nextStep_VolumeName.compare(0,2,"PC")==0 
-     && previousStep_VolumeName.compare(0,2,"PC")!=0
-     && theTrack->GetParticleDefinition() == G4Gamma::Definition()) 
+     && previousStep_VolumeName.compare(0,2,"PC")!=0) 
     {
       krun->AddTotalSurface();
 
@@ -299,7 +298,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           else if (theStatus == Detection) 
           {
             procCount = "Det";
-            manager->FillH1(9, theParticle->GetKineticEnergy()/(MeV), weight);
+            manager->FillH1(9, theParticle->GetTotalEnergy()/(MeV), weight);
           }
           else if (theStatus == NotAtBoundary) 
           {
@@ -323,32 +322,23 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                    << " was none of the above." << G4endl;
             procCount = "noStatus";
           }
-        } // for if opProc
-        // Keep track of Detector Data 
-        if(drawDetDataFlag && !bremTest)
-        {
-          manager->FillNtupleIColumn(4,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
-          manager->FillNtupleIColumn(4,1, theTrack->GetTrackID());
-          manager->FillNtupleDColumn(4,2, theParticle->GetKineticEnergy()/(eV));
-          manager->FillNtupleDColumn(4,3, weight);
-          G4String creatorProcess;
-          if(theTrack->GetCreatorProcess() !=0)
+          // Keep track of Detector Data 
+          if(drawDetDataFlag && !bremTest)
           {
-            creatorProcess =  theTrack->GetCreatorProcess()->GetProcessName();     
+            manager->FillNtupleIColumn(4,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+            manager->FillNtupleDColumn(4,1, theParticle->GetTotalEnergy()/(MeV));
+            manager->FillNtupleDColumn(4,2, weight);
+            manager->FillNtupleSColumn(4,3, process->GetProcessName());
+            manager->FillNtupleSColumn(4,4, procCount);
+            manager->FillNtupleDColumn(4,5, theTrack->GetGlobalTime()); // time units is nanoseconds 
+            manager->AddNtupleRow(4);
           }
-          else
-          {
-            creatorProcess = "Beam";     
-          }
-          manager->FillNtupleSColumn(4,4, creatorProcess);
-          manager->FillNtupleSColumn(4,5, procCount);
-          manager->FillNtupleDColumn(4,6, theTrack->GetGlobalTime()); // time units is nanoseconds 
-          manager->AddNtupleRow(4);
           if(WeightHisto)
           {
-            manager->FillH1(8,theTrack->GetKineticEnergy()/(MeV), weight);
+            manager->FillH1(8,theParticle->GetTotalEnergy()/(MeV), weight);
           } // for if WeightHisto
-        } // for if drawDetDataFlag     
+          
+        } // for if opProc    
       } // for for loop
     } // for if statement if first time in photocathode
   } // for if at boundary

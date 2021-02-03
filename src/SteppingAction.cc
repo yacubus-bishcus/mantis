@@ -24,8 +24,8 @@
 
 #include "SteppingAction.hh"
 
-SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, EventAction* event, G4bool brem)
-        : G4UserSteppingAction(), kdet(det), krun(run), kevent(event), bremTest(brem),
+SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, EventAction* event, G4bool brem, G4bool weightHisto)
+        : G4UserSteppingAction(), kdet(det), krun(run), kevent(event), bremTest(brem), WeightHisto(weightHisto)
           drawChopperIncDataFlag(0), drawChopperOutDataFlag(0), drawNRFDataFlag(0), 
           drawIntObjDataFlag(0), drawWaterIncDataFlag(0), drawCherenkovDataFlag(0), drawDetDataFlag(0), 
           stepM(NULL)
@@ -99,6 +99,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       G4ThreeVector NRF_loc = theTrack->GetPosition();
       manager->FillNtupleDColumn(2,5, NRF_loc.z()/(cm));
       manager->AddNtupleRow(2);
+      if(WeightHisto)
+      {
+        manager->FillH1(6, theTrack->GetKineticEnergy()/(MeV), weight);
+      }         
     }
   }
   // Check if Track is created by NRF 
@@ -247,12 +251,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
      && previousStep_VolumeName.compare(0,2,"PC")!=0
      && theTrack->GetParticleDefinition() == G4Gamma::Definition()) 
     {
-      // Kill photons that are above the QE energy Max
-      if(theTrack->GetKineticEnergy()/(eV) > 10)
-      {
-        theTrack->SetTrackStatus(fStopAndKill);   
-        krun->AddStatusKilled();
-      }
       krun->AddTotalSurface();
 
       for (G4int i=0; i<MAXofPostStepLoops; ++i) 
@@ -300,8 +298,14 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           // Keep track of detected photons 
           else if (theStatus == Detection) 
           {
+            // Kill photons that are above the QE energy Max
+            if(theTrack->GetKineticEnergy()/(eV) > 100)
+            {
+              theTrack->SetTrackStatus(fStopAndKill);   
+              krun->AddStatusKilled();
+            }
             procCount = "Det";
-            manager->FillH1(6, theParticle->GetKineticEnergy()/(eV), weight);
+            manager->FillH1(9, theParticle->GetKineticEnergy()/(eV), weight);
           }
           else if (theStatus == NotAtBoundary) 
           {
@@ -346,7 +350,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           manager->FillNtupleSColumn(4,5, procCount);
           manager->FillNtupleDColumn(4,6, theTrack->GetGlobalTime()); // time units is nanoseconds 
           manager->AddNtupleRow(4);
-        }      
+          if(WeightHisto)
+          {
+            manager->FillH1(8,theTrack->GetKineticEnergy()/(MeV), weight);
+          } // for if WeightHisto
+        } // for if drawDetDataFlag     
       } // for for loop
     } // for if statement if first time in photocathode
   } // for if at boundary

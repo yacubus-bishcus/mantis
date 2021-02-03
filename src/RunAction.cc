@@ -41,8 +41,6 @@ void RunAction::BeginOfRunAction(const G4Run* aRun)
   fTotalSurface = 0;
   fCerenkovCount = 0;
   fScintCount = 0;
-  fRayleighCount = 0;
-  fOpAbsorption = 0;
   fCerenkovEnergy = 0;
   fScintEnergy = 0;
   fNRF = 0;

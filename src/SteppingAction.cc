@@ -328,15 +328,14 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             manager->FillNtupleIColumn(4,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
             manager->FillNtupleDColumn(4,1, theParticle->GetTotalEnergy()/(MeV));
             manager->FillNtupleDColumn(4,2, weight);
-            manager->FillNtupleSColumn(4,3, process->GetProcessName());
-            manager->FillNtupleSColumn(4,4, procCount);
-            manager->FillNtupleDColumn(4,5, theTrack->GetGlobalTime()); // time units is nanoseconds 
             G4String creatorProcess;
             if(theTrack->GetCreatorProcess() !=0)
               creatorProcess = theTrack->GetCreatorProcess()->GetProcessName();
             else
               creatorProcess = "Brem";
-            manager->FillNtupleSColumn(4,6, creatorProcess);
+            manager->FillNtupleSColumn(4,3, creatorProcess);
+            manager->FillNtupleSColumn(4,4, procCount);
+            manager->FillNtupleDColumn(4,5, theTrack->GetGlobalTime()); // time units is nanoseconds 
             manager->AddNtupleRow(4);
           }
           if(WeightHisto)

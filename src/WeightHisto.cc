@@ -51,7 +51,10 @@ WeightHisto::WeightHisto(G4double Emax)
         return;
     }
     else
+    {
         f = new TFile(cher_to_nrf_infile.c_str());
+        std::cout << "File: " << cher_to_nrf_infile << " exists!" << std::endl;
+    }
     
     if(gSystem->AccessPathName(to_det_infile.c_str()))
     {
@@ -59,7 +62,10 @@ WeightHisto::WeightHisto(G4double Emax)
         return;
     }
     else
+    {
         f1 = new TFile(to_det_infile.c_str());
+        std::cout << "File: " << to_det_infile << " exists!" << std::endl;
+    }
     
    
     // Set up Output Histograms

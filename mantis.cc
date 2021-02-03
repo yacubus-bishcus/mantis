@@ -31,9 +31,9 @@ namespace
 {
   void PrintUsage()
   {
-    std::cerr << "Usage: " << std::endl;
-    std::cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] [-e checkEvents=false] [-w weightHisto=false]" 
-              << std::endl;
+    G4cerr << "Usage: " << G4endl;
+    G4cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] [-e checkEvents=false] [-w weightHisto=false]" 
+              << G4endl;
   }
 }
 
@@ -90,22 +90,22 @@ int main(int argc,char **argv)
 
   if(standalone_in == "True" || standalone_in == "true")
   {
-    std::cout << "Standalone File Requested." << std::endl;
+    G4cout << "Standalone File Requested." << G4endl;
     standalone = true;
   }
   if(verbose_in == "True" || verbose_in == "true")
   {
-    std::cout << "NRF Verbose set to: " << verbose_in << std::endl;
+    G4cout << "NRF Verbose set to: " << verbose_in << G4endl;
     NRF_Verbose = true;
   }
   if(checkEvents_in == "True" || checkEvents_in == "true")
   {
-    std::cout << "Check Events set to: " << checkEvents_in << std::endl;
+    G4cout << "Check Events set to: " << checkEvents_in << G4endl;
     checkEvents = true;
   }
   if(weight_histo_in == "True" || weight_histo_in == "true")
   {
-    std::cout << "Weight Histograms set to: " << weight_histo_in << std::endl;
+    G4cout << "Weight Histograms set to: " << weight_histo_in << G4endl;
     weightHisto = true;
   }
 
@@ -127,17 +127,17 @@ int main(int argc,char **argv)
   CLHEP::HepRandom::setTheSeed(seed);
   if(addNRF_in == "False" || addNRF_in == "false")
   {
-    std::cout << "NRF Physics turned OFF!" << std::endl;
+    //std::cout << "NRF Physics turned OFF!" << std::endl;
     G4cout << "NRF Physics turned OFF!" << G4endl;
     addNRF = false;
   }
-  std::cout << "Seed set to: " << seed << std::endl;
+  G4cout << "Seed set to: " << seed << G4endl;
 
   // construct the default run manager
   G4RunManager* runManager = new G4RunManager;
   if(bremTest == "True" || bremTest == "true")
   {
-     std::cout << "Conducting Brem Test!" << std::endl;
+     G4cout << "Conducting Brem Test!" << G4endl;
      brem = true;
   }
   // set mandatory initialization classes
@@ -179,8 +179,8 @@ int main(int argc,char **argv)
   delete LoggedSession;
   delete runManager;
 
-  std::cout<< std::endl << " The MC took:\t\t" << stop_time - start_time <<"s"<< std::endl;
-  std::cout << std::endl << " Run completed!"<< std::endl << std::endl;
+  //std::cout<< std::endl << " The MC took:\t\t" << stop_time - start_time <<"s"<< std::endl;
+  //std::cout << std::endl << " Run completed!"<< std::endl << std::endl;
 
   return 0;
 }

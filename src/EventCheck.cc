@@ -113,7 +113,7 @@ EventCheck::EventCheck()
     
     // Grab DetInfo Events
     num_entries2 = DetData->Draw("EventID:Energy:Weight:Time","DetectionProcess == \"Det\"","goff");
-    G4cout << "Total Number of Detected entries: " << num_entries2 << G4endl;
+    G4cout << "Total Number of Detected entries: " << num_entries2 << G4endl << G4endl;
     G4double *detEvent = DetData->GetVal(0);
     G4double *detEnergy = DetData->GetVal(1);
     G4double *detWeight = DetData->GetVal(2);
@@ -330,5 +330,5 @@ void EventCheck::WriteEvents()
         
     fout2->Close();
     time_end = std::time(&timer2);
-    G4cout << "Event Check took: " << std::difftime(time_end, time_start) << " seconds!" << G4endl;
+    G4cout << "Event Check took: " << std::difftime(time_end, time_start) << " seconds!" << G4endl << G4endl;
 }

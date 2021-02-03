@@ -25,7 +25,7 @@
 #include "SteppingAction.hh"
 
 SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, EventAction* event, G4bool brem, G4bool weightHisto)
-        : G4UserSteppingAction(), kdet(det), krun(run), kevent(event), bremTest(brem), WeightHisto(weightHisto)
+        : G4UserSteppingAction(), kdet(det), krun(run), kevent(event), bremTest(brem), WeightHisto(weightHisto),
           drawChopperIncDataFlag(0), drawChopperOutDataFlag(0), drawNRFDataFlag(0), 
           drawIntObjDataFlag(0), drawWaterIncDataFlag(0), drawCherenkovDataFlag(0), drawDetDataFlag(0), 
           stepM(NULL)

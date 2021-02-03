@@ -126,6 +126,7 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtupleSColumn("CreatorProcess");
       manager->CreateNtupleSColumn("DetectionProcess");
       manager->CreateNtupleDColumn("Time");
+      manager->CreateNtupleSColumn("other_process");
       manager->FinishNtuple();
     
       // Create ID 8 Histogram for Incident Detector 

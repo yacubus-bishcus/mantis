@@ -298,14 +298,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           // Keep track of detected photons 
           else if (theStatus == Detection) 
           {
-            // Kill photons that are above the QE energy Max
-            if(theTrack->GetKineticEnergy()/(eV) > 100)
-            {
-              theTrack->SetTrackStatus(fStopAndKill);   
-              krun->AddStatusKilled();
-            }
             procCount = "Det";
-            manager->FillH1(9, theParticle->GetKineticEnergy()/(eV), weight);
+            manager->FillH1(9, theParticle->GetKineticEnergy()/(MeV), weight);
           }
           else if (theStatus == NotAtBoundary) 
           {

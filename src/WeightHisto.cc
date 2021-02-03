@@ -43,6 +43,7 @@ extern G4String gOutName;
 WeightHisto::WeightHisto(G4double Emax)
 {
     time_start = std::time(&timer);
+    std::cout << "Emax set to: " << Emax << std::endl;
     std::string cher_to_nrf_infile = gOutName + "_NRF_to_Cher.root";
     std::string to_det_infile = gOutName + "_NRF_to_Cher_to_Det.root";
     if(gSystem->AccessPathName(cher_to_nrf_infile.c_str()))
@@ -61,17 +62,16 @@ WeightHisto::WeightHisto(G4double Emax)
     else
         f1 = new TFile(to_det_infile.c_str());
     
-    std::cout << "here3" << std::endl;
+   
     // Set up Output Histograms
     wNRF_NRF_to_Cher = new TH1D("wNRF_NRF_to_Cher","Weighted NRF Spectrum that Lead to Cherenkov",100000, 0., Emax);
     wCher_NRF_to_Cher = new TH1D("wCher_NRF_to_Cher","Weighted Cherenkov Spectrum caused by NRF",100000,0.,Emax);
     wNRF_to_Det = new TH1D("wNRF_to_Det","Weighted NRF Energy Spectrum that Lead to Cherenkov that Lead to Detection",100000,0.,Emax);
     wCher_to_Det = new TH1D("wCher_to_Det","Weighted Cherenkov Energy Spectrum Caused by NRF that Lead to Detection", 100000, 0., Emax);
-    std::cout << "here2" << std::endl;
+    
     bool confirm = f->cd();
     if(confirm)
     {
-        std::cout << "here" << std::endl;
         f->GetObject("nrf_to_cher_tree",nrf_to_cher_tree);
         nrf_to_cher_tree->SetEstimate(-1);
     }
@@ -80,8 +80,10 @@ WeightHisto::WeightHisto(G4double Emax)
     confirm = f1->cd();
     if(confirm)
     {
+        std::cout << "here" << std::endl;
         f1->GetObject("nrf_to_cher_to_det_tree",nrf_to_cher_to_det_tree);
         nrf_to_cher_to_det_tree->SetEstimate(-1);
+        std::cout << "here2" << std::endl;
     }
     else
         return;
@@ -115,6 +117,8 @@ void WeightHisto::Fill_NRF_to_Cherenkov()
     {
         wCher_NRF_to_Cher->Fill(nrfcherCherEnergy[i], nrfcherCherWeight[i]);
     }
+    
+    std::cout << "WeightHisto::Fill_NRF_to_Cherenkov --> Complete." << std::endl;
 }
 
 // ******************************************************************************************************************************** //

@@ -146,9 +146,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 #if defined (G4ANALYSIS_USE_ROOT)
   if(chosen_energy < 0 && !bremTest)
   {
-          G4double s = hSample->GetBinContent(hSample->GetXaxis()->FindBin(energy));
-          G4double dNdE = hBrems->GetBinContent(hBrems->GetXaxis()->FindBin(energy));
-          w = dNdE/s;
+    G4double s = hSample->GetBinContent(hSample->GetXaxis()->FindBin(energy));
+    G4double dNdE = hBrems->GetBinContent(hBrems->GetXaxis()->FindBin(energy));
+    w = dNdE/s;
   }
 
 #endif

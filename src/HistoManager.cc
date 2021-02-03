@@ -47,14 +47,13 @@ void HistoManager::Book(G4bool bremTest)
           hBrems  = (TH1D*) fin->Get("hBrems");
           if (hBrems)
           {
-              G4cout << "Imported brems from " << fin->GetName() << G4endl << G4endl;
               xmax = hBrems->GetXaxis()->GetXmax();
               G4cout << "Found Input Max Energy: " << xmax << " MeV" << G4endl;
               fin->Close();
           }
           else
           {
-                  std::cerr << "Error reading from file " << fin->GetName() << std::endl;
+                  G4cerr << "Error reading from file " << fin->GetName() << G4endl;
                   exit(1);
           }
       }
@@ -67,10 +66,6 @@ void HistoManager::Book(G4bool bremTest)
   if(! fileOpen){
     G4cerr << "HistoManager::Book(): Cannot Open " <<manager->GetFileName()<<G4endl;
     return;
-  }
-  else
-  {
-    G4cout << "HistoManager::Book() Opened!" << G4endl;
   }
   
   // Create ID 0 Ntuple for Incident Chopper Data 

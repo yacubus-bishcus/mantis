@@ -105,7 +105,7 @@ void WeightHisto::Fill_NRF_to_Cherenkov()
 {
     if(nrf_to_cher_tree == NULL)
     {
-        std::cout << "Trees Empty. Exiting..." << std::endl;
+        std::cout << "NRF to Cherenkov Tree Empty. Exiting..." << std::endl;
         return;
     }
     G4int n_entries = nrf_to_cher_tree->Draw("NRF_Energy:NRF_Weight","","goff");
@@ -171,6 +171,10 @@ void WeightHisto::Fill_to_Det()
 
 void WeightHisto::Write()
 {
+    if(nrf_to_cher_tree == NULL)
+    {
+        return;
+    }
     std::string fileOut = gOutName + "_WeightedHisto.root";
     fout = new TFile(fileOut.c_str(), "recreate");
     bool confirm = fout->cd();

@@ -73,6 +73,7 @@ WeightHisto::WeightHisto(G4double Emax)
     {
         f->GetObject("nrf_to_cher_tree",nrf_to_cher_tree);
         nrf_to_cher_tree->SetEstimate(-1);
+        std::cout << "here1" << std::endl;
     }
     else
         return;

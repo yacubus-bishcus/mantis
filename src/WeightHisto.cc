@@ -71,7 +71,7 @@ WeightHisto::WeightHisto(G4double Emax)
     bool confirm = f->cd();
     if(confirm)
     {
-        std::cout "here3" << std::endl;
+        std::cout << "here3" << std::endl;
         f->GetObject("nrf_to_cher_tree",nrf_to_cher_tree);
         std::cout << "here" << std::endl;
         nrf_to_cher_tree->SetEstimate(-1);

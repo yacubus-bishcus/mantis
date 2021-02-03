@@ -179,8 +179,8 @@ int main(int argc,char **argv)
   delete LoggedSession;
   delete runManager;
 
-  std::cout<<" The MC took:\t\t" << stop_time - start_time <<"s"<< std::endl;
-  std::cout << std::endl << " Run completed!"<< std::endl;
+  std::cout<< std::endl << " The MC took:\t\t" << stop_time - start_time <<"s"<< std::endl;
+  std::cout << std::endl << " Run completed!"<< std::endl << std::endl;
 
   return 0;
 }

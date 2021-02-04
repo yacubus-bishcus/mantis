@@ -26,7 +26,7 @@ G4VisManager* visManager;
 
 // declare global variables
 G4long seed;
-G4String macro, root_output_name, gOutName, bremTest, resonance_test, standalone_in, verbose_in, addNRF_in, checkEvents_in, weight_histo_in; 
+G4String macro, root_output_name, gOutName, bremTest, resonance_in, standalone_in, verbose_in, addNRF_in, checkEvents_in, weight_histo_in; 
 
 namespace
 {

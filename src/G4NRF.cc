@@ -405,7 +405,6 @@ G4VParticleChange* G4NRF::PostStepDoIt(const G4Track& trackData,
   const G4DynamicParticle* aDynamicParticle = trackData.GetDynamicParticle();
   G4double KineticEnergy = aDynamicParticle->GetKineticEnergy();
 
-  // G4ParticleMomentum ParticleDirection = aDynamicParticle->GetMomentumDirection();
   G4ThreeVector IncidentGammaDirection = aDynamicParticle->GetMomentumDirection();
 
   G4bool first_pass = true;
@@ -429,11 +428,6 @@ G4VParticleChange* G4NRF::PostStepDoIt(const G4Track& trackData,
 
       G4int jgamma;
       G4double E_gamma = pLevel->SelectGamma(jgamma); // randomly selects from the level's list of known gammas
-      if (Verbose) {
-        G4cout << "  Selected gamma energy (MeV): " << E_gamma/MeV << G4endl;
-        G4cout << "  Gamma index:                 " << jgamma << G4endl;
-      }
-
 
       const G4NRFNuclearLevel* pLevel_next = NULL;
       G4double Level_energy_next = 0.0;  // default is transition to g.s.
@@ -465,6 +459,8 @@ G4VParticleChange* G4NRF::PostStepDoIt(const G4Track& trackData,
           G4double J0, J, Jf;      // Spin of initial, intermediate, & final levels
           G4int    L1, L2;         // Angular momentum of excitation, de-excitation gammas
           G4double Delta1, Delta2; // mixing ratios for excitation, de-excitation
+          if(Verbose)
+            G4cout << "Gamma Energy: " << E_gamma/(MeV) << G4endl;
 
           if (!force_isotropic_ang_corr) {
             SetupMultipolarityInfo(nLevel, E_gamma, jgamma, pLevel, pLevel_next, J0, J, Jf, L1, L2, Delta1, Delta2);

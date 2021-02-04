@@ -80,6 +80,12 @@ The command line input options and flags include:
 
 `-v NRF Verbose` 
 
+`-e Event Check` -> Automatically Checks for Events where NRF Lead to Optical Photons that lead to detection see EventCheck.cc for details 
+
+`-w Weight Histograms` -> Creates weighted histograms for TTree Outputs 
+
+`-r Test Resonance` -> Tests Resonance energies for development of Sampling.cc 
+
 __Mandatory Inputs for mantis.in__
 
 mantis.in has the following MANDATORY inputs that the user must not comment:

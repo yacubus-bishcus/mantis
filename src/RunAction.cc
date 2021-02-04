@@ -53,35 +53,32 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
   std::ios::fmtflags mode = G4cout.flags();
   G4int prec = G4cout.precision(2);
   G4cout << G4endl << "Run Summary" << G4endl;
-  G4cout <<   "---------------------------------" << G4endl;
-  G4cout << "Total Number of Events: " << TotNbofEvents << G4endl;
-  G4cout << "Total number of Surface Events: " << fTotalSurface << G4endl;
-  G4cout << "Total number of NRF Photons: " << fNRF << G4endl;
-  G4cout << "Total number of Cherenkov Photons: " << fCerenkovCount << G4endl;
-  G4cout << "Total number of Tracks Cut Based on Position: " << fStatusKilled << G4endl;
-  G4cout << "Average total energy of Cerenkov photons created in the Water per event: "
+  G4cout <<   "----------------------------------------------------------------" << G4endl;
+  G4cout << "Total Number of Events:                                " << TotNbofEvents << G4endl;
+  G4cout << "Total number of Surface Events:                        " << fTotalSurface << G4endl;
+  G4cout << "Total number of NRF Photons:                           " << fNRF << G4endl;
+  G4cout << "Total number of Cherenkov Photons:                     " << fCerenkovCount << G4endl;
+  G4cout << "Total number of Scintillation Photons:                 " << fScintCount << G4endl;
+  G4cout << "Total number of Optical Photons:                       " << fCerenkovCount + fScintCount << G4endl;
+  G4cout << "Total number of Tracks Cut Based on Position:          " << fStatusKilled << G4endl;
+  G4cout << "Average total energy of Cherenkov photons per event:   "
           << (fCerenkovEnergy/eV)/TotNbofEvents << " eV." << G4endl;
-  G4cout << "Average number of Cerenkov photons created in the Water per event: "
+  G4cout << "Average number of Cherenkov photons created per event: "
           << fCerenkovCount/TotNbofEvents << G4endl;
 
   if (fCerenkovCount > 0)
   {
-    G4cout << " Average Cherenkov Photon energy emitted in Water: "
+    G4cout << " Average Cherenkov Photon energy emitted:            "
             << (fCerenkovEnergy/eV)/fCerenkovCount << " eV." << G4endl;
   }
 
-  G4cout << "Average total energy of scintillation photons created per event in the Water: "
-          << (fScintEnergy/eV)/TotNbofEvents << " eV." << G4endl;
-  G4cout << "Average number of scintillation photons created per event in the Water: "
-          << fScintCount/TotNbofEvents << G4endl;
-
   if (fScintCount > 0)
   {
-    G4cout << " Average Scintillation Photon energy emitted in the Water: "
+    G4cout << " Average Scintillation Photon energy emitted:        " 
             << (fScintEnergy/eV)/fScintCount << " eV." << G4endl;
   }
 
-  G4cout <<   "---------------------------------" << G4endl;
+  G4cout <<   "----------------------------------------------------------------" << G4endl;
 
   G4cout.setf(mode, std::ios::floatfield);
 

@@ -56,11 +56,11 @@ void physicsList::ConstructPhysics() {
         // Add OpticalPhysics to physicsList
         G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(0);
         opticalPhysics->SetWLSTimeProfile("delta");
-        opticalPhysics->SetScintillationYieldFactor(1.0);
-        opticalPhysics->SetScintillationExcitationRatio(0.0);
-        G4int maxNumber = 500;
-        opticalPhysics->GetCerenkovProcess()->SetMaxNumPhotonsPerStep(maxNumber);
-        opticalPhysics->SetMaxBetaChangePerStep(10.0);
+        opticalPhysics->SetScintillationYieldFactor(1.0); // this would change if the yield changed based on particle type --> not relevant here 
+        //opticalPhysics->SetScintillationExcitationRatio(0.0);
+        //G4int maxNumber = 500;
+        //opticalPhysics->SetMaxNumPhotonsPerStep(maxNumber);
+        //opticalPhysics->SetMaxBetaChangePerStep(10.0);
         opticalPhysics->SetTrackSecondariesFirst(kCerenkov, true);
         opticalPhysics->SetTrackSecondariesFirst(kScintillation, true);
         RegisterPhysics(opticalPhysics);

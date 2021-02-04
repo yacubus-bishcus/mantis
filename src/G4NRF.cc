@@ -460,7 +460,10 @@ G4VParticleChange* G4NRF::PostStepDoIt(const G4Track& trackData,
           G4int    L1, L2;         // Angular momentum of excitation, de-excitation gammas
           G4double Delta1, Delta2; // mixing ratios for excitation, de-excitation
           if(Verbose)
+          {
+            G4cout.precision(12);
             G4cout << "Gamma Energy: " << E_gamma/(MeV) << G4endl;
+          }
 
           if (!force_isotropic_ang_corr) {
             SetupMultipolarityInfo(nLevel, E_gamma, jgamma, pLevel, pLevel_next, J0, J, Jf, L1, L2, Delta1, Delta2);

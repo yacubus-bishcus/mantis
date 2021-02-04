@@ -315,7 +315,7 @@ G4double G4NRF::NRF_xsec_calc_gaus(G4double GammaEnergy, const G4NRFNuclearLevel
 
   const G4double xsec = fac1 * stat_fac * fac2 * fac3;
 
-  if (Verbose && Z == 92 && A == 235 && xsec/barn > 1) 
+  if (Verbose && Z == 92 && A == 235) 
   {
     G4cout << std::setprecision(12);
     G4cout << "GammaEnergy (MeV):  " << GammaEnergy/MeV << G4endl;

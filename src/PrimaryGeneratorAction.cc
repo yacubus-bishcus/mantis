@@ -26,8 +26,10 @@
 #include "PrimaryGenActionMessenger.hh"
 extern G4long seed;
 
-PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest, G4bool resonance_in) : G4VUserPrimaryGeneratorAction(),
-        chosen_energy(-1), genM(NULL), fParticleGun(0), resonance_test(resonance_in)
+PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_in) 
+        : G4VUserPrimaryGeneratorAction(),
+        bremTest(brem_in), resonance_test(resonance_in), chosen_energy(-1), 
+        genM(NULL), fParticleGun(0)
 {
 
   genM = new PrimaryGenActionMessenger(this);

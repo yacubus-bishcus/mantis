@@ -245,10 +245,6 @@ G4double G4NRF::GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize
       G4NRFNuclearLevel* pLevel = pNuclearLevelManager->NearestLevelRecoilAbsorb(GammaEnergy, E_TOL);
 
       if (pLevel != NULL) {   // i.e., kinematics permit gamma excitation
-        if (Verbose) {
-            G4cout << "G4NRFGetMeanFreePath -- Found level at energy "
-                 << pLevel->Energy() << G4endl;
-        }
 
         found_nearby_level = true;   // setting this ends the search
         A_excited = A;               // stash A, Z, level pointer
@@ -396,17 +392,6 @@ G4double G4NRF::NRF_xsec_calc(G4double GammaEnergy, G4NRFNuclearLevel* pLevel,
     xsec = fac1 * fac2 * fac3 * fac4;
   }
 
-  if (Verbose || (interrupt && xsec/barn > 1.0)) {
-    G4cout << std::setprecision(12);
-    G4cout << "Z:                  " << Z               << G4endl;
-    G4cout << "A:                  " << A               << G4endl;
-    G4cout << "E (MeV):            " << E               << G4endl;
-    G4cout << "E_level (MeV):      " << E1/MeV          << G4endl;
-    G4cout << "E_r (MeV):          " << E_r/MeV         << G4endl;
-    G4cout << "xsec (barn):        " << xsec/barn       << G4endl;
-    G4cout << G4endl;
-  }
-
   if (interrupt && xsec/barn > 20.0 && E_r/MeV > 2.1 && E_r/MeV < 2.2) exit(11);
   return xsec;
 }
@@ -441,12 +426,6 @@ G4VParticleChange* G4NRF::PostStepDoIt(const G4Track& trackData,
       G4double Level_energy = pLevel->Energy();
       G4int    nLevel = pLevel->nLevel();
 
-      if (Verbose) {
-        G4cout << "G4NRF::PostStepDoIt -- " << G4endl;
-        G4cout << " Curent level index: nLevel = " << nLevel << G4endl;
-        G4cout << " Current level energy (MeV) = " << Level_energy/MeV << G4endl;
-      }
-
 
       G4int jgamma;
       G4double E_gamma = pLevel->SelectGamma(jgamma); // randomly selects from the level's list of known gammas
@@ -464,7 +443,6 @@ G4VParticleChange* G4NRF::PostStepDoIt(const G4Track& trackData,
 
         if (pLevel_next) {  // found excited state at lower energy than current state
           Level_energy_next = pLevel_next->Energy();
-          if (Verbose) G4cout << "Found excited state at lower energy than current state" << G4endl;
         } else {              // could not find next excited state, so must be g.s. transition
           continue_cascade = false;
         }
@@ -487,13 +465,6 @@ G4VParticleChange* G4NRF::PostStepDoIt(const G4Track& trackData,
           G4double J0, J, Jf;      // Spin of initial, intermediate, & final levels
           G4int    L1, L2;         // Angular momentum of excitation, de-excitation gammas
           G4double Delta1, Delta2; // mixing ratios for excitation, de-excitation
-
-          if (Verbose) {
-            G4cout << "Input to SetupMultipolarityInfo:" << G4endl;
-            G4cout << "  nLevel        = " << nLevel      << G4endl;
-            G4cout << "  E_gamma (MeV) = " << E_gamma/MeV << G4endl;
-            G4cout << "  jgamma        = " << jgamma      << G4endl;
-          }
 
           if (!force_isotropic_ang_corr) {
             SetupMultipolarityInfo(nLevel, E_gamma, jgamma, pLevel, pLevel_next, J0, J, Jf, L1, L2, Delta1, Delta2);
@@ -629,11 +600,6 @@ void G4NRF::AssignMultipoles(const G4NRFNuclearLevel* pLevel,
 
     L_j     = FindMin_L(Ji, Pi, Jf, Pf, transition);
     Delta = MixingRatio_WeisskopfEstimate(transition, L_j, E_gamma, Pi, Pf);
-
-    if (Verbose) {
-      G4cout << "  L from FindMin_L: " << L_j << G4endl;
-      G4cout << "  Delta from Weisskopf estimate: " << Delta << G4endl;
-    }
 
     break;
 

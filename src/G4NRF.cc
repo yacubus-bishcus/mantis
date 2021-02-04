@@ -271,9 +271,6 @@ G4double G4NRF::GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize
 
         sigma = Isotope_number_density * xsec;
 
-        if (Verbose) {
-          G4cout << "G4NRF::GetMeanFreePath: sigma (cm^-1): " << sigma/(1.0/cm) << G4endl;
-        }
       } else {
         jisotope++;   // move on to next isotope in current element
       }
@@ -322,7 +319,8 @@ G4double G4NRF::NRF_xsec_calc_gaus(G4double GammaEnergy, const G4NRFNuclearLevel
 
   const G4double xsec = fac1 * stat_fac * fac2 * fac3;
 
-  if (Verbose && Z == 92 && A == 235) {
+  if (Verbose && Z == 92 && A == 235 && xsec/barn > 1) 
+  {
     G4cout << std::setprecision(12);
     G4cout << "GammaEnergy (MeV):  " << GammaEnergy/MeV << G4endl;
     G4cout << "Level energy (MeV): " << E1/MeV          << G4endl;

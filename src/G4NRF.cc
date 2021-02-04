@@ -315,16 +315,6 @@ G4double G4NRF::NRF_xsec_calc_gaus(G4double GammaEnergy, const G4NRFNuclearLevel
 
   const G4double xsec = fac1 * stat_fac * fac2 * fac3;
 
-  if (Verbose && Z == 92 && A == 235) 
-  {
-    G4cout << std::setprecision(12);
-    G4cout << "GammaEnergy (MeV):  " << GammaEnergy/MeV << G4endl;
-    G4cout << "Level energy (MeV): " << E1/MeV          << G4endl;
-    G4cout << "E (MeV):            " << E/MeV           << G4endl;
-    G4cout << "E_r (MeV):          " << E_r/MeV         << G4endl;
-    G4cout << "xsec (barn):        " << xsec/barn       << G4endl;
-  }
-
   return xsec;
 }
 
@@ -390,6 +380,19 @@ G4double G4NRF::NRF_xsec_calc(G4double GammaEnergy, G4NRFNuclearLevel* pLevel,
   } else {
     fac4 = PsiIntegral(x, teff, nMeshpoints, sigmaBound);
     xsec = fac1 * fac2 * fac3 * fac4;
+  }
+  if (Verbose || (interrupt && xsec/barn > 1.0)) {
+    G4cout << std::setprecision(12);
+    G4cout << "------------------------------------"    << G4endl;
+    G4cout << "A:                  " << A               << G4endl;
+    G4cout << "E (MeV):            " << E               << G4endl;
+    G4cout << "E_level (MeV):      " << E1/MeV          << G4endl;
+    G4cout << "E_r (MeV):          " << E_r/MeV         << G4endl;
+    G4cout << "E_recoil (eV):      " << E_recoil/eV     << G4endl;
+    G4cout << "E_emit (MeV):       " << G4endl;
+    G4cout << "xsec (barn):        " << xsec/barn       << G4endl;
+    G4cout << "------------------------------------"    << G4endl;
+    G4cout << G4endl;
   }
 
   if (interrupt && xsec/barn > 20.0 && E_r/MeV > 2.1 && E_r/MeV < 2.2) exit(11);

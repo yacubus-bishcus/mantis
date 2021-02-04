@@ -14,7 +14,7 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 		std::cout << "Sampling for Uranium!" << std::endl;
 		// U-238
 		Evec.push_back(1.78200716196); // 33
-		Evec.push_back(1.79300725065); // 6.21
+		//Evec.push_back(1.79300725065); // 6.21
 		Evec.push_back(1.84600768563); // 31
 		Evec.push_back(2.17601067909); // 24e-3
 		Evec.push_back(2.20901100546); // 18e-3

@@ -31,8 +31,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest, G4bool resonance
 {
 
   genM = new PrimaryGenActionMessenger(this);
-  G4int n_particle = 1;
-  fParticleGun = new G4ParticleGun(n_particle);
+  fParticleGun = new G4ParticleGun(1);
 
   if(bremTest)
   {
@@ -47,7 +46,6 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest, G4bool resonance
 
   // Default Kinematics
   fParticleGun->SetParticleTime(0.0*ns);
-
 
 #if defined (G4ANALYSIS_USE_ROOT)
 

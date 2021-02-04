@@ -40,7 +40,6 @@ extern G4String root_output_name;
 extern G4String gOutName;
 EventCheck::EventCheck()
 {
-    G4int cher_to_detSecSum = 0;
     time_start = std::time(&timer);
     
     if(gSystem->AccessPathName(root_output_name.c_str()))
@@ -94,7 +93,6 @@ EventCheck::EventCheck()
     G4double *cherEvent = Cherenkov->GetVal(0);
     G4double *cherEnergy = Cherenkov->GetVal(1);
     G4double *cherWeight = Cherenkov->GetVal(2);
-    G4double *cherSecondaries = Cherenkov->GetVal(3);
 
     for(int i=0;i<num_entries;++i)
     {
@@ -115,7 +113,7 @@ EventCheck::EventCheck()
     
     // Grab DetInfo Events
     num_entries2 = DetData->Draw("EventID:Energy:Weight:Time","DetectionProcess == \"Det\" && (CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\")","goff");
-    G4cout << "Total Number of Detected entries: " << num_entries2 << G4endl << G4endl;
+    G4cout << "Total Number of Detected Optical Photon entries: " << num_entries2 << G4endl << G4endl;
     G4double *detEvent = DetData->GetVal(0);
     G4double *detEnergy = DetData->GetVal(1);
     G4double *detWeight = DetData->GetVal(2);
@@ -177,7 +175,7 @@ EventCheck::EventCheck()
           // Check to see if Cherenkov Event ID matches Det Event ID
           x = detEventv[i];
           auto exists = std::find(cherEventv.begin(), cherEventv.end(),x);
-
+          // This section here looks at events and places the energy of the "first" aka Max energy Cherenkov photon energy in the vector cher_to_detEnergies 
           if(exists != cherEventv.end())
           {
               index = exists - cherEventv.begin();
@@ -185,7 +183,6 @@ EventCheck::EventCheck()
               cher_to_detEnergies.push_back(detEnergy[index]);
               cher_to_detWeights.push_back(detWeight[index]);
               cher_to_detTimes.push_back(time[index]);
-              cher_to_detSecSum += (int)cherSecondaries[index];
           }
           // Check to see if NRF Event ID matches Det Event ID
           exists = std::find(nrfEventv.begin(),nrfEventv.end(),x);
@@ -199,8 +196,7 @@ EventCheck::EventCheck()
           }
       }
 
-      G4cout << G4endl << "Cherenkov Events lead to Detection: " << cher_to_detEvents.size() << G4endl;
-      G4cout << "Total Number of Cherenkov Photons that lead to Detection: " << cher_to_detSecSum << G4endl;
+      G4cout << G4endl << "Optical Photon Events lead to Detection: " << cher_to_detEvents.size() << G4endl;
       G4cout << "NRF Events Lead to Detection: " << nrf_to_detEvents.size() << G4endl;
     
       // ******************************************************************************************************************************** //

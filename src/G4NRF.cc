@@ -462,10 +462,6 @@ G4VParticleChange* G4NRF::PostStepDoIt(const G4Track& trackData,
           G4double J0, J, Jf;      // Spin of initial, intermediate, & final levels
           G4int    L1, L2;         // Angular momentum of excitation, de-excitation gammas
           G4double Delta1, Delta2; // mixing ratios for excitation, de-excitation
-          if(Verbose)
-          {
-            std::cout << std::setprecision(10) << E_gamma/(MeV) << std::endl;
-          }
 
           if (!force_isotropic_ang_corr) {
             SetupMultipolarityInfo(nLevel, E_gamma, jgamma, pLevel, pLevel_next, J0, J, Jf, L1, L2, Delta1, Delta2);

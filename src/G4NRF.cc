@@ -381,7 +381,7 @@ G4double G4NRF::NRF_xsec_calc(G4double GammaEnergy, G4NRFNuclearLevel* pLevel,
     fac4 = PsiIntegral(x, teff, nMeshpoints, sigmaBound);
     xsec = fac1 * fac2 * fac3 * fac4;
   }
-  if (Verbose && xsec/barn > 2.0) {
+  if (Verbose && xsec/barn > 2.0 && A == 235) {
     G4cout << std::setprecision(12);
     G4cout << "------------------------------------"    << G4endl;
     G4cout << "A:                  " << A               << G4endl;

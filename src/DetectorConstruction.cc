@@ -36,12 +36,12 @@ DetectorConstruction::DetectorConstruction(G4bool brem)
         DetectorViewOnly(false), material_verbose(false), // Messenger
         bremTest(brem), detectorM(NULL)
 {
-        detectorM = new DetectorMessenger(this);
+  detectorM = new DetectorMessenger(this);
 }
 
 DetectorConstruction::~DetectorConstruction()
 {
-        delete detectorM;
+  delete detectorM;
 }
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
@@ -54,7 +54,8 @@ G4NistManager* nist = G4NistManager::Instance();
 G4Material *air = nist->FindOrBuildMaterial("G4_AIR");
 G4Material *steel = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
 G4Material *poly = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
-G4Material *Water = nist->FindOrBuildMaterial("G4_WATER");
+//G4Material *Water = nist->FindOrBuildMaterial("G4_WATER");
+// Need to have water built by user for raleigh scattering 
 G4Material *tungsten = nist->FindOrBuildMaterial("G4_W");
 G4Material *lead = nist->FindOrBuildMaterial("G4_Pb");
 G4Material *gold = nist->FindOrBuildMaterial("G4_Au");
@@ -63,9 +64,12 @@ G4Material *attenuator = nist->FindOrBuildMaterial(attenuatorMat);
 G4Material *low_z_attenuator = nist->FindOrBuildMaterial(attenuatorMat2);
 G4Element *elPb = new G4Element("Lead", "Pb", 82, 207.2*g/mole);
 G4Element *elN = new G4Element("Nitrogen", "N2", 7, 14.01*g/mole);
-G4Element *elO = new G4Element("Oxygen", "O2", 8, 16.0*g/mole);
+G4Element *elO = new G4Element("Oxygen", "O", 8, 16.0*g/mole);
 G4Element *elC = new G4Element("Carbon", "C", 6, 12.0*g/mole);
-G4Element *elH = new G4Element("Hydrogen", "H2", 1, 1.0*g/mole);
+G4Element *elH = new G4Element("Hydrogen", "H", 1, 1.00794*g/mole);
+G4Material *Water = new G4Material("Water", 0.99802*g/cm3,2, kStateLiquid,273.15, 1); // Name, density, numComponents, state, Temperature, pressure 
+Water->AddElement(elH, 1);
+Water->AddElement(elO, 2);
 G4Material *plexiglass = nist->FindOrBuildMaterial("G4_PLEXIGLASS");
 
 

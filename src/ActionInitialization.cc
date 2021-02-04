@@ -32,18 +32,19 @@
 #include "HistoManager.hh"
 
 
-ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool brem_check, G4bool output_in, G4bool checkEvents_in, G4bool weight_histo_in)
-        : G4VUserActionInitialization(), fDetector(det), bremTest(brem_check), output(output_in), checkEvents(checkEvents_in), weightHisto(weight_histo_in)
+ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool brem_check, G4bool resonance_in, G4bool output_in, 
+                                           G4bool checkEvents_in, G4bool weight_histo_in)
+        : G4VUserActionInitialization(), fDetector(det), bremTest(brem_check), resonance_test(resonance_in), output(output_in), 
+          checkEvents(checkEvents_in), weightHisto(weight_histo_in)
 {}
 
 ActionInitialization::~ActionInitialization()
-{
-}
+{}
 
 void ActionInitialization::Build() const
 {
     HistoManager* histo = new HistoManager();
-    SetUserAction(new PrimaryGeneratorAction(bremTest));
+    SetUserAction(new PrimaryGeneratorAction(bremTest, resonance_test));
     RunAction* run = new RunAction(histo, bremTest, output, checkEvents, weightHisto);
     SetUserAction(run);
     EventAction* event = new EventAction(weightHisto);

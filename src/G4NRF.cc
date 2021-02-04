@@ -461,8 +461,7 @@ G4VParticleChange* G4NRF::PostStepDoIt(const G4Track& trackData,
           G4double Delta1, Delta2; // mixing ratios for excitation, de-excitation
           if(Verbose)
           {
-            G4cout << std::setprecision(12);
-            G4cout << "Gamma Energy: " << E_gamma/(MeV) << G4endl;
+            std::cout << std::setprecision(10) << E_gamma/(MeV) << std::endl;
           }
 
           if (!force_isotropic_ang_corr) {

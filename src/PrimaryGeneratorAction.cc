@@ -126,8 +126,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   const float pi=acos(-1);
   G4double beam_size = 1.3*mm;
   // Set beam position
-  G4double x_r = beam_size*acos(G4UniformRand())/pi*2.*cos(360.*G4UniformRand()*CLHEP::deg;);
-  G4double y_r = beam_size*acos(G4UniformRand())/pi*2.*sin(360.*G4UniformRand()*CLHEP::deg;);
+  G4double x_r = beam_size*acos(G4UniformRand())/pi*2.*cos(360.*G4UniformRand()*CLHEP::deg);
+  G4double y_r = beam_size*acos(G4UniformRand())/pi*2.*sin(360.*G4UniformRand()*CLHEP::deg);
   fParticleGun->SetParticlePosition(G4ThreeVector(x_r,y_r,100*cm));
 
 

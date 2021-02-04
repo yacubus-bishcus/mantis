@@ -99,7 +99,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 // Set Particle Energy (Must be in generate primaries)
 #if defined (G4ANALYSIS_USE_ROOT)
 
-  if(chosen_energy < 0 && !bremTest && !resonance)
+  if(chosen_energy < 0 && !bremTest && !resonance_test)
   {
     energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
   }

@@ -66,7 +66,7 @@ int main(int argc,char **argv)
   }
 
   // Evaluate Arguments
-  if ( argc > 19 )
+  if ( argc > 21)
   {
     PrintUsage();
     return 1;

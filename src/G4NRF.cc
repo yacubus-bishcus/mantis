@@ -389,7 +389,6 @@ G4double G4NRF::NRF_xsec_calc(G4double GammaEnergy, G4NRFNuclearLevel* pLevel,
     G4cout << "E_level (MeV):      " << E1/MeV          << G4endl;
     G4cout << "E_r (MeV):          " << E_r/MeV         << G4endl;
     G4cout << "E_recoil (eV):      " << E_recoil/eV     << G4endl;
-    G4cout << "E_emit (MeV):       " << G4endl;
     G4cout << "xsec (barn):        " << xsec/barn       << G4endl;
     G4cout << "------------------------------------"    << G4endl;
     G4cout << G4endl;
@@ -480,6 +479,8 @@ G4VParticleChange* G4NRF::PostStepDoIt(const G4Track& trackData,
         // IMPORTANT NOTE: this currently produces _monoenergetic_ photons with energy E_gamma, rather
         // than the incident energy minus the recoil!
         G4DynamicParticle* aGamma = new G4DynamicParticle(G4Gamma::Gamma(), emitted_gamma_direction, E_gamma);
+        if(Verbose)
+          std::cout << "E_emit: " << std::precision(12) << E_gamma << std::endl;
         aParticleChange.AddSecondary(aGamma);
       }  // gamma emission? (i.e. E_gamma > 0?)
 

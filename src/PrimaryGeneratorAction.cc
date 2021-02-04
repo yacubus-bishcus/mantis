@@ -158,9 +158,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
 G4double PrimaryGeneratorAction::SampleUResonances() {
   std::vector<double> er;
-  er.push_back(1.65623626565*MeV);
-  er.push_back(1.73354686426*MeV);
-  er.push_back(1.86231792191*MeV);
+  er.push_back(1.65624253132*MeV);
+  er.push_back(1.7335537285*MeV);
+  er.push_back(1.86232584382*MeV);
 
   G4int idx = Random.Integer(er.size());
   G4double de = 25.0*eV;

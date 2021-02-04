@@ -21,11 +21,11 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 		Evec.push_back(2.24501136709); // 14.2e-3
 
 		// U-235
-		Evec.push_back(1.65624253132); // 2.79 
-		Evec.push_back(1.7335537285); //22.4 1.73354686426
-		Evec.push_back(1.8152575266); // 8.9 1.8152575266 
-		Evec.push_back(1.86232584382); // 5.88 1.86231792191
-		Evec.push_back(2.00336916735); // 6.7
+		Evec.push_back(1.65624253132); // 2.79 1.65623626566 1.65624248786
+		Evec.push_back(1.73355368089); //22.4 1.73354686425 1.73355368089
+		Evec.push_back(1.8152575266); // 8.9 1.81525753275
+		Evec.push_back(1.86232578887); // 5.88 1.86231792191 1.86232578887
+		Evec.push_back(2.00336916735); // 6.7 2.00336916735
 	}
 	else if(sample_element == "Pu")
 	{

@@ -479,8 +479,6 @@ G4VParticleChange* G4NRF::PostStepDoIt(const G4Track& trackData,
         // IMPORTANT NOTE: this currently produces _monoenergetic_ photons with energy E_gamma, rather
         // than the incident energy minus the recoil!
         G4DynamicParticle* aGamma = new G4DynamicParticle(G4Gamma::Gamma(), emitted_gamma_direction, E_gamma);
-        if(Verbose)
-          std::cout << "E_emit: " << std::setprecision(12) << E_gamma << std::endl;
         aParticleChange.AddSecondary(aGamma);
       }  // gamma emission? (i.e. E_gamma > 0?)
 

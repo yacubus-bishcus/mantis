@@ -26,8 +26,8 @@
 #include "PrimaryGenActionMessenger.hh"
 extern G4long seed;
 
-PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest) : G4VUserPrimaryGeneratorAction(),
-        chosen_energy(-1), genM(NULL), fParticleGun(0)
+PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest, G4bool resonance_in) : G4VUserPrimaryGeneratorAction(),
+        chosen_energy(-1), genM(NULL), fParticleGun(0), resonance_test(resonance_in)
 {
 
   genM = new PrimaryGenActionMessenger(this);
@@ -53,7 +53,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest) : G4VUserPrimary
 
   // file contains the normalized brems distribution p(E), sampling distribution s(E),
   // and binary 0/1 for off/on resonance useful in weighting
-  if(!bremTest && chosen_energy < 0)
+
+  if(!bremTest && !resonance_test && chosen_energy < 0)
   {
      gRandom->SetSeed(seed);
      TFile *fin = TFile::Open("brems_distributions.root");
@@ -69,11 +70,17 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool bremTest) : G4VUserPrimary
           exit(1);
      }
   }
-  else if(!bremTest && chosen_energy > 0)
+  else if(!bremTest && !resonance_test && chosen_energy > 0)
   {
      G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction Chosen Energy set to: " << chosen_energy << " MeV" << G4endl;
      HistoManager* histo = new HistoManager;
      histo->SetChosenEnergy(chosen_energy);
+  }
+  else if(resonance_test)
+  {
+    G4cout << "Max Energy set to 2 MeV!" << G4endl;
+    HistoManager *histo = new HistoManager;
+    histo->SetChosenEnergy(2.0);
   }
 
 #endif
@@ -95,31 +102,33 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 
-  //std::cout << "PrimaryGeneratorAction::GeneratePrimaries" << std::endl;
 // Set Particle Energy (Must be in generate primaries)
 #if defined (G4ANALYSIS_USE_ROOT)
 
-  if(chosen_energy < 0 && !bremTest)
+  if(chosen_energy < 0 && !bremTest && !resonance)
   {
-          energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
-          //std::cout << "Beam Energy: " << energy << " MeV" << std::endl;
+    energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
   }
 #else
   if(chosen_energy < 0)
   {
-          G4cerr << "ERROR: G4ANALYSIS_USE_ROOT not defined in pre-compiler" << G4endl;
-          G4cerr << "SYSTEM EXITING" << G4endl;
-          exit(100);
+    G4cerr << "ERROR: G4ANALYSIS_USE_ROOT not defined in pre-compiler" << G4endl;
+    G4cerr << "SYSTEM EXITING" << G4endl;
+    exit(100);
   }
 
 #endif
 
-  if(chosen_energy > 0)
+  if(chosen_energy > 0 && !resonance_test)
   {
-          energy = chosen_energy;
+    energy = chosen_energy*MeV;
+  }
+  else if(resonance_test)
+  {
+    energy = SampleUResonances();
   }
 
-  fParticleGun->SetParticleEnergy(energy*MeV);
+  fParticleGun->SetParticleEnergy(energy);
 
 
   const float pi=acos(-1);
@@ -144,7 +153,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   G4double w = 1.0;
 
 #if defined (G4ANALYSIS_USE_ROOT)
-  if(chosen_energy < 0 && !bremTest)
+  if(chosen_energy < 0 && !bremTest && !resonance_test)
   {
     G4double s = hSample->GetBinContent(hSample->GetXaxis()->FindBin(energy));
     G4double dNdE = hBrems->GetBinContent(hBrems->GetXaxis()->FindBin(energy));
@@ -158,4 +167,16 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   anInfo->SetBeamEnergy(energy);
   anEvent->SetUserInformation(anInfo);
 
+}
+
+G4double PrimaryGeneratorAction::SampleUResonances() {
+  std::vector<double> er;
+  er.push_back(1.6562*MeV);
+  er.push_back(1.8152*MeV);
+  er.push_back(1.8623*MeV);
+
+  G4int idx = Random.Integer(er.size());
+  G4double de = 25.0*eV;
+
+  return Random.Uniform(er[idx]-de, er[idx]+de);
 }

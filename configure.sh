@@ -27,7 +27,6 @@ do
 done
 
 echo "Geant4 Directory: $GEANT4_DIR"
-echo "ROOT Directory: $ROOT_DIRECTORY"
 
 if [ $GEANT4_DIR = "None" ]
 then
@@ -44,6 +43,7 @@ export G4NRFGAMMADATA=$database_working_dir
 
 if [ $ROOT_DIRECTORY != "None" ]
 then
+    echo "ROOT DIRECTORY: $ROOT_DIRECTORY"
     VARROOTBIN=$ROOT_DIRECTORY
 else
     echo Using the following ROOT CERN Directory...

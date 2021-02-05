@@ -1,6 +1,6 @@
 #----------------------------------------------------------------------------
 # Setup the project
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(mantis)
 option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
 add_compile_options(-Wno-unused-variable -Wno-shadow -Wno-unused-parameter)
@@ -17,7 +17,7 @@ include(${Geant4_USE_FILE})
 
 #----------------------------------------------------------------------------
 # Find ROOT (required package)
-list(APPEND CMAKE_MODULE_PATH $ENV{ROOTCMAKEPATH})
+#list(APPEND CMAKE_MODULE_PATH $ENV{ROOTCMAKEPATH})
 find_package(ROOT REQUIRED)
 if(ROOT_FOUND)	
     message(STATUS "ROOT found. --> Compiling with ROOT enabled")	
@@ -28,6 +28,7 @@ endif()
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
 #
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/include
                     ${Geant4_INCLUDE_DIR}
                     ${ROOT_INCLUDE_DIR})

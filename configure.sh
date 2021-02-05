@@ -67,7 +67,7 @@ echo "Sourcing $VARGEANTMAKE"
 source $VARGEANTMAKE
 
 echo Building Mantis...
-pwd
+
 cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis && make -j4 && cd ../mantis/Input_Files
 
 echo Mantis built.

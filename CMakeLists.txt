@@ -51,7 +51,6 @@ target_link_libraries(mantis ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 # relies on these scripts being in the current working directory.
 #
 set(Input_SCRIPTS
-  brems_distributions.root
   mantis.in
   vis_save.mac
   )

@@ -1,10 +1,44 @@
+while configure $# -gt 0; do
+case "$1" in
+    -h|--help)
+      echo "Configure Script for Mantis"
+      echo "options:"
+      echo "-h, --help  show brief help"
+      echo "-g,         specify the Geant4 Install Directory (mandatory)"
+      echo "-r,         specify thisroot.sh Directory (optional)"
+      exit 0
+      ;;
+    -g)
+      shift
+      if test $# -gt 0; then
+        GEANT4_DIR=$1
+      else
+        echo "No Geant4 Directory Specified"
+        exit 1
+      fi
+      shift
+      ;;
+    -r)
+      shift
+      if test $# -gt 0; then
+        ROOT_CERN_DIR=$1
+      else
+        echo "No ROOT CERN thisroot.sh specified"
+        exit 1
+      fi
+      shift
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
 echo Configuring mantis...
 echo Using the following ROOT CERN Directory...
 which "root"
 VAR1=$(which "root")
 VAR2=${VAR1:0:${#VAR1}-4}
-echo Please Enter Geant4 install directory 
-read -p "The Geant4 Directory: " INVAR1
 current_dir="$(pwd)"
 cd ~ && mkdir MANTIS_MAIN_DIR && mv $current_dir MANTIS_MAIN_DIR && cd MANTIS_MAIN_DIR/mantis
 tar xfz NRF_Database.tar.gz && mv Database1.1 ../ && cd ../Database1.1
@@ -17,11 +51,11 @@ VARROOTBIN=$VAR2$VAR3
 echo "Sourcing $VARROOTBIN"
 source $VARROOTBIN
 VAR4="/geant4.sh"
-VARGEANTBIN=$INVAR1$VAR4
+VARGEANTBIN=$GEANT4_DIR$VAR4
 echo "Sourcing $VARGEANTBIN"
 source $VARGEANTBIN
 VAR5="/share/Geant4-10.5.1/geant4make/geant4make.sh"
-VARGEANTMAKE=$INVAR1$VAR5
+VARGEANTMAKE=$GEANT4_DIR$VAR5
 echo "Sourcing $VARGEANTMAKE"
 source $VARGEANTMAKE
 

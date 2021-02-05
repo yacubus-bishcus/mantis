@@ -37,12 +37,10 @@
 #include "G4Electron.hh"
 #include "eventInformation.hh"
 
-#if defined (G4ANALYSIS_USE_ROOT)
 #include "TFile.h"
 #include "TROOT.h"
 #include "TH1D.h"
 #include "TRandom1.h"
-#endif
 
 class G4Event;
 class PrimaryGenActionMessenger;
@@ -74,11 +72,10 @@ G4double chosen_energy;
 PrimaryGenActionMessenger* genM;
 G4ParticleGun* fParticleGun;
 HistoManager* histo;
-#if defined (G4ANALYSIS_USE_ROOT)
+
 TRandom1 Random;
 TH1D *hBrems;
 TH1D *hSample;
-#endif
 
 protected:
 G4float energy;

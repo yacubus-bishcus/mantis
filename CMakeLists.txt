@@ -2,7 +2,7 @@
 # Setup the project
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(mantis)
-option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
+option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON) // Can switch to OFF if not building with vis drivers --> NOT recommended 
 add_compile_options(-Wno-unused-variable -Wno-shadow -Wno-unused-parameter)
 if(WITH_GEANT4_UIVIS)
   find_package(Geant4 REQUIRED ui_all vis_all)
@@ -36,7 +36,7 @@ file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
 #----------------------------------------------------------------------------
-# Add the executable, and link it to the Geant4 libraries
+# Add the executable, and link it to the Geant4 and ROOT libraries
 #
 add_executable(mantis mantis.cc ${sources} ${headers})
 target_link_libraries(mantis ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})

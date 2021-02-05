@@ -75,6 +75,8 @@ echo Creating Default brems_distributions.root
 root -b -q -l 'Sampling.cc("Brem2.1_100M.root",2.1,"U")'
 cp brems_distributions.root ../../mantis_run && cd ../../mantis_run
 
+echo Testing a mantis run...
+
 ./mantis -m mantis.in -o test.root -s 1 
 
 echo "Mantis Configured and Test Run Complete. Test results can be found in test_error.log and test.log. Good Luck and try the README.md!"

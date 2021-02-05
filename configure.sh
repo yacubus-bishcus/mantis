@@ -1,8 +1,10 @@
 echo Configuring mantis...
-echo Please Enter CERN ROOT build directory 
-read -p "The ROOT Directory: " INVAR1
+echo Using the following ROOT CERN Directory...
+which "root"
+VAR1=$(which "root")
+VAR2=${VAR1:0:${#VAR1}-4}
 echo Please Enter Geant4 install directory 
-read -p "The Geant4 Directory: " INVAR2
+read -p "The Geant4 Directory: " INVAR1
 current_dir="$(pwd)"
 cd ~ && mkdir MANTIS_MAIN_DIR && mv $current_dir MANTIS_MAIN_DIR && cd MANTIS_MAIN_DIR/mantis
 tar xfz NRF_Database.tar.gz && mv Database1.1 ../ && cd ../Database1.1
@@ -10,16 +12,16 @@ database_working_dir="$(pwd)"
 echo "Exporting the Database working directory path: $database_working_dir"
 export G4NRFGAMMADATA=$database_working_dir
 
-VAR2="/bin/thisroot.sh"
-VARROOTBIN=$INVAR1$VAR2
+VAR3="thisroot.sh"
+VARROOTBIN=$VAR2$VAR3
 echo "Sourcing $VARROOTBIN"
 source $VARROOTBIN
-VAR3="/geant4.sh"
-VARGEANTBIN=$INVAR2$VAR3
+VAR4="/geant4.sh"
+VARGEANTBIN=$INVAR1$VAR4
 echo "Sourcing $VARGEANTBIN"
 source $VARGEANTBIN
-VAR4="/share/Geant4-10.5.1/geant4make/geant4make.sh"
-VARGEANTMAKE=$INVAR2$VAR4
+VAR5="/share/Geant4-10.5.1/geant4make/geant4make.sh"
+VARGEANTMAKE=$INVAR1$VAR5
 echo "Sourcing $VARGEANTMAKE"
 source $VARGEANTMAKE
 

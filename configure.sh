@@ -9,10 +9,7 @@ tar xfz NRF_Database.tar.gz && mv Database1.1 ../ && cd ../Database1.1
 database_working_dir="$(pwd)"
 echo "Exporting the Database working directory path: $database_working_dir"
 export G4NRFGAMMADATA=$database_working_dir
-VAR1="/etc/cmake"
-VARCMAKEPATH=$INVAR1$VAR1
-echo "Exporting the ROOT CERN Cmake path: $VARCMAKEPATH"
-export ROOTCMAKEPATH=$VARCMAKEPATH
+
 VAR2="/bin/thisroot.sh"
 VARROOTBIN=$INVAR1$VAR2
 echo "Sourcing $VARROOTBIN"
@@ -27,7 +24,12 @@ echo "Sourcing $VARGEANTMAKE"
 source $VARGEANTMAKE
 
 echo Building Mantis...
-cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis && make -j4 && cd ../mantis_run
+cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis && make -j4 && cd ../mantis/Input_Files
+
+echo Mantis built.
+echo Creating Default brems_distributions.root
+root -b -q -l 'Sampling.cc("Brem2.1_100M.root",2.1,"U")'
+cp brems_distributions.root ../../mantis_run && cd ../../mantis_run
 
 ./mantis -m mantis.in -o test.root -s 1 
 

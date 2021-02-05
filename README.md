@@ -123,7 +123,7 @@ Dependencies
   * CERN ROOT Installed 
   * Cmake 
   
-__Version__:  Mantis and been built against and tested with Geant4 10.3 and 10.5, and ROOT 6.22. 
+__Version__:  Mantis and been built against and tested with Geant4 10.3 and 10.5, and ROOT 6.22. ROOT Version must be greater than 6.18. 
 
 EASY SETUP WITH CONFIGURE FILE 
 ==
@@ -143,10 +143,6 @@ Be sure to untar the NRF Database using
 Export the path to the untarred NRF Database for example in the user's bash:
 
 `export G4NRFGAMMADATA=/path/to/Database/Database1.1`
-
-Also be sure to export the ROOT Cmake path in the directory where the user built ROOT for example in user's bash:
-
-`export ROOTCMAKEPATH=/path/to/root_build_directory/etc/cmake`
 
 Lastly some path issues may occur without the following lines in the user's bash:
 

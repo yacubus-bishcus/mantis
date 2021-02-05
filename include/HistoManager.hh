@@ -30,11 +30,9 @@
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 
-#if defined (G4ANALYSIS_USE_ROOT)
 #include "TFile.h"
 #include "TROOT.h"
 #include "TH1D.h"
-#endif
 
 
 class HistoManager
@@ -59,10 +57,7 @@ private:
 G4bool fFactoryOn;
 G4double chosen_energy;
 G4double xmax;
-#if defined (G4ANALYSIS_USE_ROOT)
 TH1D *hBrems;
-#endif
-
 };
 
 #endif

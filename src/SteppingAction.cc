@@ -326,7 +326,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           if(drawDetDataFlag && !bremTest)
           {
             manager->FillNtupleIColumn(4,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
-            manager->FillNtupleDColumn(4,1, theParticle->GetTotalEnergy()/(MeV));
+            manager->FillNtupleDColumn(4,1, theParticle->GetKineticEnergy()/(MeV));
             manager->FillNtupleDColumn(4,2, weight);
             G4String creatorProcess;
             if(theTrack->GetCreatorProcess() !=0)
@@ -340,7 +340,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           }
           if(WeightHisto)
           {
-            manager->FillH1(8,theParticle->GetTotalEnergy()/(MeV), weight);
+            manager->FillH1(8,theParticle->GetKineticEnergy()/(MeV), weight);
           } // for if WeightHisto
           
         } // for if opProc    

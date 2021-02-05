@@ -1,40 +1,38 @@
 #!/bin/bash
 
-while configure $# -gt 0; do
-case "$1" in
-    -h|--help)
-      echo "Configure Script for Mantis"
-      echo "options:"
-      echo "-h, --help  show brief help"
-      echo "-g,         specify the Geant4 Install Directory (mandatory)"
-      echo "-r,         specify thisroot.sh Directory (optional)"
-      exit 0
-      ;;
-    -g)
-      shift
-      if test $# -gt 0; then
-        GEANT4_DIR=$1
-      else
-        echo "No Geant4 Directory Specified"
-        exit 1
-      fi
-      shift
-      ;;
-    -r)
-      shift
-      if test $# -gt 0; then
-        ROOT_CERN_DIR=$1
-      else
-        echo "No ROOT CERN thisroot.sh specified"
-        exit 1
-      fi
-      shift
-      ;;
-    *)
-      break
-      ;;
-  esac
+# Default Arguments 
+GEANT4_DIR = "None"
+ROOT_CERN_DIR = "None"
+for arg in "$@"
+do 
+   case $arg in
+        -h|--help)
+        echo "Configure Script for Mantis"
+        echo "options:"
+        echo "-h, --help  show brief help"
+        echo "-g,         specify the Geant4 Install Directory (mandatory)"
+        echo "-r,         specify thisroot.sh Directory (optional)"
+        exit 0
+        ;;
+        shift # Remove --initialize from processing
+        ;;
+        -g|--geant4_dir=*)
+        GEANT4_DIR="$1"
+        shift 
+        ;;
+        -r|--root_dir)
+        ROOT_DIRECTORY="$2"
+        shift # Remove argument name from processing
+        ;;
+    esac
 done
+
+echo "Geant4 Directory: $GEANT4_DIR"
+echo "ROOT Directory: $ROOT_DIRECTORY"
+
+if($GEANT4_DIR = "None")
+    exit 0
+fi
 
 echo Configuring mantis...
 echo Using the following ROOT CERN Directory...
@@ -48,8 +46,13 @@ database_working_dir="$(pwd)"
 echo "Exporting the Database working directory path: $database_working_dir"
 export G4NRFGAMMADATA=$database_working_dir
 
-VAR3="thisroot.sh"
-VARROOTBIN=$VAR2$VAR3
+if($ROOT_DIRECTORY ~= "None")
+    VARROOTBIN=$ROOT_DIRECTORY
+else
+    VAR3="thisroot.sh"
+    VARROOTBIN=$VAR2$VAR3
+fi
+
 echo "Sourcing $VARROOTBIN"
 source $VARROOTBIN
 VAR4="/geant4.sh"

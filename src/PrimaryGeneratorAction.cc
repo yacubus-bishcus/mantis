@@ -49,8 +49,6 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
   // Default Kinematics
   fParticleGun->SetParticleTime(0.0*ns);
 
-#if defined (G4ANALYSIS_USE_ROOT)
-
   // file contains the normalized brems distribution p(E), sampling distribution s(E),
   // and binary 0/1 for off/on resonance useful in weighting
 
@@ -83,8 +81,6 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
     histo->SetChosenEnergy(2.0);
   }
 
-#endif
-
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
@@ -97,21 +93,11 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 
 // Set Particle Energy (Must be in generate primaries)
-#if defined (G4ANALYSIS_USE_ROOT)
 
   if(chosen_energy < 0 && !bremTest && !resonance_test)
   {
     energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
   }
-#else
-  if(chosen_energy < 0)
-  {
-    G4cerr << "ERROR: G4ANALYSIS_USE_ROOT not defined in pre-compiler" << G4endl;
-    G4cerr << "SYSTEM EXITING" << G4endl;
-    exit(100);
-  }
-
-#endif
 
   if(chosen_energy > 0 && !resonance_test)
   {
@@ -138,16 +124,14 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
   fParticleGun->GeneratePrimaryVertex(anEvent);
   G4double w = 1.0;
-
-#if defined (G4ANALYSIS_USE_ROOT)
+        
   if(chosen_energy < 0 && !bremTest && !resonance_test)
   {
     G4double s = hSample->GetBinContent(hSample->GetXaxis()->FindBin(energy));
     G4double dNdE = hBrems->GetBinContent(hBrems->GetXaxis()->FindBin(energy));
     w = dNdE/s;
   }
-
-#endif
+        
 // Pass the event information
   eventInformation *anInfo = new eventInformation(anEvent);
   anInfo->SetWeight(w);

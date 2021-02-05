@@ -29,7 +29,6 @@ endif()
 # Locate sources and headers for this project
 #
 
-target_link_libraries(mantis PUBLIC ROOT::RIO ROOT::Net)
 include_directories(${PROJECT_SOURCE_DIR}/include
                     ${Geant4_INCLUDE_DIR})
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)

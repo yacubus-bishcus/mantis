@@ -28,7 +28,7 @@ done
 echo "Geant4 Directory: $GEANT4_DIR"
 echo "ROOT Directory: $ROOT_DIRECTORY"
 
-if [$GEANT4_DIR = "None"]
+if [ $GEANT4_DIR = "None" ]
 then
     exit 0
 fi
@@ -45,7 +45,7 @@ database_working_dir="$(pwd)"
 echo "Exporting the Database working directory path: $database_working_dir"
 export G4NRFGAMMADATA=$database_working_dir
 
-if [$ROOT_DIRECTORY != "None"]
+if [ $ROOT_DIRECTORY != "None" ]
 then
     VARROOTBIN=$ROOT_DIRECTORY
 else

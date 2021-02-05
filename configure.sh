@@ -9,18 +9,18 @@ do
         -h|--help)
         echo "Configure Script for Mantis"
         echo "options:"
-        echo "-h, --help  show brief help"
-        echo "-g,         specify the Geant4 Install Directory (mandatory)"
-        echo "-r,         specify thisroot.sh Directory (optional)"
+        echo "-h, --help              show brief help"
+        echo "-g, --geant4_dir        specify the Geant4 Install Directory (mandatory)"
+        echo "-r, --root_dir          specify thisroot.sh Directory (optional)"
         shift
         exit 0
         ;;
         -g|--geant4_dir=*)
-        GEANT4_DIR="$1"
+        GEANT4_DIR="${arg#*=}"
         shift 
         ;;
         -r|--root_dir)
-        ROOT_DIRECTORY="$2"
+        ROOT_DIRECTORY="${arg#*=}"
         shift # Remove argument name from processing
         ;;
     esac

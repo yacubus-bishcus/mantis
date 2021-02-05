@@ -88,7 +88,7 @@ EventCheck::EventCheck()
     nrf_to_cher_to_det_tree->Branch("TimeCher",&timeCher);
  
     // Grab Cherenkov Events
-    num_entries = Cherenkov->Draw("EventID:Energy:Weight:NumSecondaries","","goff");
+    num_entries = Cherenkov->Draw("EventID:Energy:Weight","","goff");
     G4cout << "Cherenkov Entries: " << num_entries << G4endl;
     G4double *cherEvent = Cherenkov->GetVal(0);
     G4double *cherEnergy = Cherenkov->GetVal(1);

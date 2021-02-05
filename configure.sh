@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Default Arguments 
-GEANT4_DIR = "None"
-ROOT_CERN_DIR = "None"
+GEANT4_DIR="None"
+ROOT_CERN_DIR="None"
 for arg in "$@"
 do 
    case $arg in

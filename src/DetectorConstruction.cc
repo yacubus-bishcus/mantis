@@ -596,13 +596,15 @@ else
     
     // wavelenths 650, 600, 550, 500, 450, 400, 360 (approx peak), 350, 340, 300, 250
     G4double photonEnergyScintillation[] =
-    {1.90744*eV, 2.0664*eV, 2.25425*eV, 2.4796*eV, 2.75520*eV,
-     3.0996*eV, 3.44400*eV, 3.542405*eV, 3.64659*eV, 4.132806*eV, 4.95936*eV
-    }
+    {
+      1.90744*eV, 2.0664*eV, 2.25425*eV, 2.4796*eV, 2.75520*eV,
+      3.0996*eV, 3.44400*eV, 3.542405*eV, 3.64659*eV, 4.132806*eV, 4.95936*eV
+    };
     const G4int nEntriesScint = sizeof(photonEnergyScintillation)/sizeof(G4double);
     
     G4double scintilD[] =
-    { 0.007, 0.016, 0.028, 0.045, 0.25, 0.5, 0.95,
+    { 
+      0.007, 0.016, 0.028, 0.045, 0.25, 0.5, 0.95,
       0.5, 0.006, 0.001, 0.0001
     };
 
@@ -824,14 +826,16 @@ new G4LogicalSkinSurface("photocath_surf", logicPC, photocath_opsurf); // name, 
 new G4LogicalSkinSurface("PMT_surf", logicPMT, PMT_opsurf);
 // Air
 G4double refractiveIndex2[] =
-{ 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
+{ 
   1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
   1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
   1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
-  1.00, 1.00, 1.00, 1.00 };
+  1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00,
+  1.00, 1.00, 1.00, 1.00 
+};
 
 G4MaterialPropertiesTable* airMPT = new G4MaterialPropertiesTable();
-airMPT->AddProperty("RINDEX", photonEnergy, refractiveIndex2, nEntries);
+airMPT->AddProperty("RINDEX", photonEnergyIOF, refractiveIndex2, nEntriesIOF);
 
 air->SetMaterialPropertiesTable(airMPT);
 

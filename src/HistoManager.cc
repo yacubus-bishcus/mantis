@@ -40,25 +40,22 @@ void HistoManager::Book(G4bool bremTest)
   manager->SetVerboseLevel(0);
   manager->SetNtupleMerging(true);
   xmax = chosen_energy;
-  #if defined (G4ANALYSIS_USE_ROOT)
-      if(!bremTest && chosen_energy < 0)
+  if(!bremTest && chosen_energy < 0)
+  {
+      TFile *fin = TFile::Open("brems_distributions.root");
+      hBrems  = (TH1D*) fin->Get("hBrems");
+      if (hBrems)
       {
-          TFile *fin = TFile::Open("brems_distributions.root");
-          hBrems  = (TH1D*) fin->Get("hBrems");
-          if (hBrems)
-          {
-            xmax = hBrems->GetXaxis()->GetXmax();
-            G4cout << "Found Input Max Energy: " << xmax << " MeV" << G4endl;
-            fin->Close();
-          }
-          else
-          {
-            G4cerr << "Error reading from file " << fin->GetName() << G4endl;
-            exit(1);
-          }
+        xmax = hBrems->GetXaxis()->GetXmax();
+        G4cout << "Found Input Max Energy: " << xmax << " MeV" << G4endl;
+        fin->Close();
       }
-
-  #endif
+      else
+      {
+        G4cerr << "Error reading from file " << fin->GetName() << G4endl;
+        exit(1);
+      }
+  }
 
   // open output file
   G4bool fileOpen = manager->OpenFile(gOutName);

@@ -130,7 +130,10 @@ EASY SETUP WITH CONFIGURE FILE
 
 For Easy Set up run the following lines of code:
 `> git clone https://github.com/jacobbickus/mantis.git && cd mantis`
-`> ./configure.sh --geant4_dir=/path/to/Geant4_install`
+`> ./configure.sh --geant4_dir=/home/user/path/to/Geant4_install`
+
+Be sure to put the exact path in for ROOT CERN if you do not have thisroot.sh sourced in your bashrc. 
+`> ./configure.sh --geant4_dir=/home/user/path/to/Geant4_install --root_dir=/home/user/path/to/thisroot.sh`
 
 
 INSTALLATION WITHOUT CONFIGURE FILE 

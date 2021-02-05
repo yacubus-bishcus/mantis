@@ -19,7 +19,7 @@ do
         GEANT4_DIR="${arg#*=}"
         shift 
         ;;
-        -r|--root_dir)
+        -r|--root_dir=*)
         ROOT_DIRECTORY="${arg#*=}"
         shift # Remove argument name from processing
         ;;

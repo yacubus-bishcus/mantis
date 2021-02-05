@@ -128,8 +128,9 @@ __Version__:  Mantis and been built against and tested with Geant4 10.3 and 10.5
 EASY SETUP WITH CONFIGURE FILE 
 ==
 
-For Easy Set up run the following line of code:
-`> git clone https://github.com/jacobbickus/mantis.git && cd mantis && ./configure.sh --geant4_dir=/path/to/Geant4_install`
+For Easy Set up run the following lines of code:
+`> git clone https://github.com/jacobbickus/mantis.git && cd mantis`
+`> ./configure.sh --geant4_dir=/path/to/Geant4_install`
 
 
 INSTALLATION WITHOUT CONFIGURE FILE 

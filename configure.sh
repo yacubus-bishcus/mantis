@@ -2,7 +2,7 @@
 
 # Default Arguments 
 GEANT4_DIR="None"
-ROOT_CERN_DIR="None"
+ROOT_DIRECTORY="None"
 for arg in "$@"
 do 
    case $arg in

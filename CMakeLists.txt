@@ -17,7 +17,7 @@ include(${Geant4_USE_FILE})
 
 #----------------------------------------------------------------------------
 # Find ROOT (required package)
-#list(APPEND CMAKE_MODULE_PATH $ENV{ROOTCMAKEPATH})
+list(APPEND CMAKE_CURRENT_SOURCE_DIR $ENV{ROOTCMAKEPATH})
 find_package(ROOT REQUIRED COMPONENTS RIO Net)
 if(ROOT_FOUND)	
     message(STATUS "ROOT found. --> Compiling with ROOT enabled")	

@@ -19,6 +19,10 @@ include(${Geant4_USE_FILE})
 # Find ROOT (required package)
 list(APPEND CMAKE_MODULE_PATH $ENV{ROOTCMAKEPATH})
 find_package(ROOT REQUIRED)
+if(ROOT_FOUND)	
+    message(STATUS "ROOT found. --> Compiling with ROOT enabled")	
+else()	
+    message(STATUS "G4 ROOT NOT Found. --> MAKE WILL FAIL!")
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project

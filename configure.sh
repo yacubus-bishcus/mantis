@@ -14,8 +14,6 @@ do
         echo "-r,         specify thisroot.sh Directory (optional)"
         exit 0
         ;;
-        shift # Remove --initialize from processing
-        ;;
         -g|--geant4_dir=*)
         GEANT4_DIR="$1"
         shift 

@@ -2,7 +2,7 @@
 # Setup the project
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(mantis)
-option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON) // Can switch to OFF if not building with vis drivers --> NOT recommended 
+option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON) # Can switch to OFF if not building with vis drivers --> NOT recommended 
 add_compile_options(-Wno-unused-variable -Wno-shadow -Wno-unused-parameter)
 if(WITH_GEANT4_UIVIS)
   find_package(Geant4 REQUIRED ui_all vis_all)

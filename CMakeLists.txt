@@ -23,6 +23,7 @@ if(ROOT_FOUND)
     message(STATUS "ROOT found. --> Compiling with ROOT enabled")	
 else()	
     message(STATUS "G4 ROOT NOT Found. --> MAKE WILL FAIL!")
+endif()
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project

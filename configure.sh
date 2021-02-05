@@ -35,10 +35,6 @@ then
 fi
 
 echo Configuring mantis...
-echo Using the following ROOT CERN Directory...
-which "root"
-VAR1=$(which "root")
-VAR2=${VAR1:0:${#VAR1}-4}
 current_dir="$(pwd)"
 cd ~ && mkdir MANTIS_MAIN_DIR && mv $current_dir MANTIS_MAIN_DIR && cd MANTIS_MAIN_DIR/mantis
 tar xfz NRF_Database.tar.gz && mv Database1.1 ../ && cd ../Database1.1
@@ -50,13 +46,18 @@ if [ $ROOT_DIRECTORY != "None" ]
 then
     VARROOTBIN=$ROOT_DIRECTORY
 else
+    echo Using the following ROOT CERN Directory...
+    which "root"
+    VAR1=$(which "root")
+    VAR2=${VAR1:0:${#VAR1}-4}
     VAR3="thisroot.sh"
     VARROOTBIN=$VAR2$VAR3
 fi
 
 echo "Sourcing $VARROOTBIN"
 source $VARROOTBIN
-VAR4="/geant4.sh"
+
+VAR4="/bin/geant4.sh"
 VARGEANTBIN=$GEANT4_DIR$VAR4
 echo "Sourcing $VARGEANTBIN"
 source $VARGEANTBIN

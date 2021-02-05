@@ -12,6 +12,7 @@ do
         echo "-h, --help  show brief help"
         echo "-g,         specify the Geant4 Install Directory (mandatory)"
         echo "-r,         specify thisroot.sh Directory (optional)"
+        shift
         exit 0
         ;;
         -g|--geant4_dir=*)

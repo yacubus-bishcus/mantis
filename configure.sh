@@ -84,7 +84,7 @@ source $VARGEANTMAKE
 echo "source $VARGEANTMAKE" | tee -a $bash_file >/dev/null
 
 cp $bash_file ~
-echo "Old bash file saved in: $(pwd)"
+echo "Old bash file saved in: MANTIS_MAIN_DIR/mantis"
 
 # Build Mantis 
 echo Building Mantis...

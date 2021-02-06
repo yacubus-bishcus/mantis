@@ -47,15 +47,21 @@ old_bash_file=".old_bashrc"
 
 # Dealing with .bashrc
 mkdir MANTIS_MAIN_DIR && mv $current_dir MANTIS_MAIN_DIR 
-cp $bash_file MANTIS_MAIN_DIR/mantis && cd MANTIS_MAIN_DIR/mantis
-cp $bash_file $old_bash_file
+cd MANTIS_MAIN_DIR/mantis
+#if [ -f ~/.bashrc ]
+#then
+#   cp $bash_file MANTIS_MAIN_DIR/mantis && cd MANTIS_MAIN_DIR/mantis
+#   cp $bash_file $old_bash_file
+#else
+#   cd MANTIS_MAIN_DIR/mantis
+#fi
 
 # Export NRF Database
 tar xfz NRF_Database.tar.gz && mv Database1.1 ../ && cd ../Database1.1
 database_working_dir="$(pwd)"
 echo "Exporting the Database working directory path: $database_working_dir"
 cd ../mantis
-echo "export G4NRFGAMMADATA=$database_working_dir " | tee -a $bash_file >/dev/null
+#echo "export G4NRFGAMMADATA=$database_working_dir " | tee -a $bash_file >/dev/null
 export G4NRFGAMMADATA=$database_working_dir
 
 # Source ROOT CERN 
@@ -74,23 +80,23 @@ fi
 
 echo "Sourcing $VARROOTBIN"
 source $VARROOTBIN
-echo "source $VARROOTBIN " | tee -a $bash_file >/dev/null
+#echo "source $VARROOTBIN " | tee -a $bash_file >/dev/null
 
 # Source Required Geant4 Make Files 
 VAR4="/bin/geant4.sh"
 VARGEANTBIN=$GEANT4_DIR$VAR4
 echo "Sourcing $VARGEANTBIN"
 source $VARGEANTBIN
-echo "source $VARGEANTBIN " | tee -a $bash_file >/dev/null
+#echo "source $VARGEANTBIN " | tee -a $bash_file >/dev/null
 
 VAR5="/share/Geant4-10.5.1/geant4make/geant4make.sh"
 VARGEANTMAKE=$GEANT4_DIR$VAR5
 echo "Sourcing $VARGEANTMAKE"
 source $VARGEANTMAKE
-echo "source $VARGEANTMAKE " | tee -a $bash_file >/dev/null
+#echo "source $VARGEANTMAKE " | tee -a $bash_file >/dev/null
 
-cp $bash_file ~
-echo "Old bash file saved in: MANTIS_MAIN_DIR/mantis"
+#cp $bash_file ~
+#echo "Old bash file saved in: MANTIS_MAIN_DIR/mantis"
 
 # Build Mantis 
 echo Building Mantis...

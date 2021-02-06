@@ -109,6 +109,7 @@ if [ $RUN_TEST = "True" ] | [ $RUN_TEST = "true" ]
 then
    echo Testing a mantis run...
    ./mantis -m mantis.in -o test.root -s 1 
+   echo "Test Run Complete. Test results can be found in test_error.log and test.log."
 fi
 
-echo "Mantis Configured and Test Run Complete. Test results can be found in test_error.log and test.log. Good Luck and try the README.md!"
+echo "Mantis Configured. Good Luck and try the README.md!"

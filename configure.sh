@@ -11,8 +11,8 @@ do
         echo "Configure Script for Mantis"
         echo "options:"
         echo "h,--help              show brief help"
-        echo "--geant4_dir          specify the Geant4 Install Directory (mandatory)"
-        echo "--root_dir            specify thisroot.sh Directory (optional)"
+        echo "--geant4_dir          specify the Geant4 Install Directory to be sourced"
+        echo "--root_dir            specify thisroot.sh Directory to be sourced"
         echo "--run_test            choose to run a test at the end of the build (optional Default=true)"
         shift
         exit 0

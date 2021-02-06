@@ -117,7 +117,7 @@ then
    echo "Test Run Complete. Test results can be found in test_error.log and test.log."
 fi
 
-echo "Mantis Configured. Good Luck and try the README.md!"
 echo "Be sure to add the following to your bash profile: "
 echo "export G4NRFGAMMADATA=/path/to/Database1.1"
 echo "Be sure to have thisroot.sh, geant4make.sh and geant4.sh all sourced prior to running"
+echo "Mantis Configured. Good Luck and try the README.md!"

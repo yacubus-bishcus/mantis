@@ -32,18 +32,14 @@ do
     esac
 done
 
-echo "Geant4 Directory: $GEANT4_DIR"
-
-if [ $GEANT4_DIR = "None" ]
-then
-    exit 0
-fi
+#echo "Geant4 Directory: $GEANT4_DIR"
 
 echo Configuring mantis...
 current_dir="$(pwd)"
-cd ~ 
-bash_file=".bashrc"
-old_bash_file=".old_bashrc"
+cd ../
+#cd ~ 
+#bash_file=".bashrc"
+#old_bash_file=".old_bashrc"
 
 # Dealing with .bashrc
 mkdir MANTIS_MAIN_DIR && mv $current_dir MANTIS_MAIN_DIR 
@@ -69,30 +65,33 @@ if [ $ROOT_DIRECTORY != "None" ]
 then
     echo "ROOT DIRECTORY: $ROOT_DIRECTORY"
     VARROOTBIN=$ROOT_DIRECTORY
+    echo "Sourcing $VARROOTBIN"
+    source $VARROOTBIN
 else
     echo Using the following ROOT CERN Directory...
     which "root"
-    VAR1=$(which "root")
-    VAR2=${VAR1:0:${#VAR1}-4}
-    VAR3="thisroot.sh"
-    VARROOTBIN=$VAR2$VAR3
+    #VAR1=$(which "root")
+    #VAR2=${VAR1:0:${#VAR1}-4}
+    #VAR3="thisroot.sh"
+    #VARROOTBIN=$VAR2$VAR3
 fi
 
-echo "Sourcing $VARROOTBIN"
-source $VARROOTBIN
 #echo "source $VARROOTBIN " | tee -a $bash_file >/dev/null
 
 # Source Required Geant4 Make Files 
-VAR4="/bin/geant4.sh"
-VARGEANTBIN=$GEANT4_DIR$VAR4
-echo "Sourcing $VARGEANTBIN"
-source $VARGEANTBIN
+if [ $GEANT4_DIR != "None" ]
+then
+   VAR4="/bin/geant4.sh"
+   VARGEANTBIN=$GEANT4_DIR$VAR4
+   echo "Sourcing $VARGEANTBIN"
+   source $VARGEANTBIN
 #echo "source $VARGEANTBIN " | tee -a $bash_file >/dev/null
 
-VAR5="/share/Geant4-10.5.1/geant4make/geant4make.sh"
-VARGEANTMAKE=$GEANT4_DIR$VAR5
-echo "Sourcing $VARGEANTMAKE"
-source $VARGEANTMAKE
+   VAR5="/share/Geant4-10.5.1/geant4make/geant4make.sh"
+   VARGEANTMAKE=$GEANT4_DIR$VAR5
+   echo "Sourcing $VARGEANTMAKE"
+   source $VARGEANTMAKE
+fi
 #echo "source $VARGEANTMAKE " | tee -a $bash_file >/dev/null
 
 #cp $bash_file ~
@@ -119,3 +118,6 @@ then
 fi
 
 echo "Mantis Configured. Good Luck and try the README.md!"
+echo "Be sure to add the following to your bash profile: "
+echo "export G4NRFGAMMADATA=/path/to/Database1.1"
+echo "Be sure to have thisroot.sh, geant4make.sh and geant4.sh all sourced prior to running"

@@ -42,7 +42,7 @@ tar xfz NRF_Database.tar.gz && mv Database1.1 ../ && cd ../Database1.1
 database_working_dir="$(pwd)"
 echo "Exporting the Database working directory path: $database_working_dir"
 bash_file=$home_dir+"/.bashrc"
-echo bash_file
+echo $bash_file
 echo "export $database_working_dir" >> bash_file
 export G4NRFGAMMADATA=$database_working_dir
 

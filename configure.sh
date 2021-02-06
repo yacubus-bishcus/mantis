@@ -35,10 +35,15 @@ fi
 
 echo Configuring mantis...
 current_dir="$(pwd)"
-cd ~ && mkdir MANTIS_MAIN_DIR && mv $current_dir MANTIS_MAIN_DIR && cd MANTIS_MAIN_DIR/mantis
+cd ~ 
+home_dir="$(pwd)"
+mkdir MANTIS_MAIN_DIR && mv $current_dir MANTIS_MAIN_DIR && cd MANTIS_MAIN_DIR/mantis
 tar xfz NRF_Database.tar.gz && mv Database1.1 ../ && cd ../Database1.1
 database_working_dir="$(pwd)"
 echo "Exporting the Database working directory path: $database_working_dir"
+bash_file=$home_dir+"/.bashrc"
+echo bash_file
+echo "export $database_working_dir" >> bash_file
 export G4NRFGAMMADATA=$database_working_dir
 
 if [ $ROOT_DIRECTORY != "None" ]
@@ -56,15 +61,18 @@ fi
 
 echo "Sourcing $VARROOTBIN"
 source $VARROOTBIN
+echo "source $VARROOTBIN" >> bash_file
 
 VAR4="/bin/geant4.sh"
 VARGEANTBIN=$GEANT4_DIR$VAR4
 echo "Sourcing $VARGEANTBIN"
 source $VARGEANTBIN
+echo "source $VARGEANTBIN" >> bash_file
 VAR5="/share/Geant4-10.5.1/geant4make/geant4make.sh"
 VARGEANTMAKE=$GEANT4_DIR$VAR5
 echo "Sourcing $VARGEANTMAKE"
 source $VARGEANTMAKE
+echo "source $VARGEANTMAKE" >> bash_file
 
 echo Building Mantis...
 

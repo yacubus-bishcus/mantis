@@ -3,15 +3,17 @@
 # Default Arguments 
 GEANT4_DIR="None"
 ROOT_DIRECTORY="None"
+RUN_TEST="True"
 for arg in "$@"
 do 
    case $arg in
         -h|--help)
         echo "Configure Script for Mantis"
         echo "options:"
-        echo "-h, --help              show brief help"
-        echo "-g, --geant4_dir        specify the Geant4 Install Directory (mandatory)"
-        echo "-r, --root_dir          specify thisroot.sh Directory (optional)"
+        echo "h,--help              show brief help"
+        echo "--geant4_dir          specify the Geant4 Install Directory (mandatory)"
+        echo "--root_dir            specify thisroot.sh Directory (optional)"
+        echo "--run_test            choose to run a test at the end of the build (optional Default=true)"
         shift
         exit 0
         ;;
@@ -22,6 +24,10 @@ do
         -r|--root_dir=*)
         ROOT_DIRECTORY="${arg#*=}"
         shift # Remove argument name from processing
+        ;;
+        -t|--run_test=*)
+        RUN_TEST="${arg#*=}"
+        shift
         ;;
     esac
 done
@@ -98,9 +104,11 @@ echo Creating Default brems_distributions.root
 root -b -q -l 'Sampling.cc("Brem2.1_100M.root",2.1,"U")'
 cp brems_distributions.root ../../mantis_run && cd ../../mantis_run
 
-echo Testing a mantis run...
-
 # Run Test 
-./mantis -m mantis.in -o test.root -s 1 
+if [ $RUN_TEST = "True" ] | [ $RUN_TEST = "true" ]
+then
+   echo Testing a mantis run...
+   ./mantis -m mantis.in -o test.root -s 1 
+fi
 
 echo "Mantis Configured and Test Run Complete. Test results can be found in test_error.log and test.log. Good Luck and try the README.md!"

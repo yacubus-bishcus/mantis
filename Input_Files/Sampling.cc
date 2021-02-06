@@ -55,11 +55,6 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	  }
 	}
 	
-	for(int i=0;i<Evec_above_threshold.size();i++)
-	{
-	  std::cout << "Keeping energy: " << Evec_above_threshold[i] << std::endl;
-	}
-	
 	double maxNRF = *std::max_element(Evec_above_threshold.begin(), Evec_above_threshold.end());
 	double minNRF = *std::min_element(Evec_above_threshold.begin(), Evec_above_threshold.end());
 	std::cout << "Minimum NRF: " << minNRF << std::endl;

@@ -46,6 +46,7 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 		std::cout << "Sample element not found. Exiting..." << std::endl;
 		exit(100);
 	}
+	
 	for(int i=0;i<Evec.size();i++)
 	{
 	  if(Evec[i] <= Emax)
@@ -53,6 +54,7 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	    Evec_above_threshold.push_back(Evec[i]);
 	  }
 	}
+	
 	for(int i=0;i<Evec_above_threshold.size();i++)
 	{
 	  std::cout << "Keeping energy: " << Evec_above_threshold[i] << std::endl;
@@ -93,14 +95,14 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	hSample->Scale(1.0/(hSample->Integral()));
 
 
-    // also create a normalized brems spectrum for weighting
-    TFile *f = TFile::Open(bremInputFilename);
-    std::cout << "Root input File: " <<bremInputFilename << " being read..." << std::endl;
-    TTree *ChopperData;
-    f->GetObject("ChopperData", ChopperData);
-    ChopperData->Print();
-    int brems_nbin = 300;
-    TH1D *ho = new TH1D("ho","ho", brems_nbin, Emin, Emax);
+	// also create a normalized brems spectrum for weighting
+	TFile *f = TFile::Open(bremInputFilename);
+	std::cout << "Root input File: " <<bremInputFilename << " being read..." << std::endl;
+	TTree *ChopperData;
+	f->GetObject("ChopperData", ChopperData);
+	ChopperData->Print();
+	int brems_nbin = 300;
+	TH1D *ho = new TH1D("ho","ho", brems_nbin, Emin, Emax);
 	if (f != NULL) {
 		ChopperData->Draw("ChopperData>>ho", "", "goff");
 	} else {
@@ -109,22 +111,18 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	}
 
 	ho->Smooth(1024);
-    double xmin = ho->GetXaxis()->GetXmin();
-    double xmax = ho->GetXaxis()->GetXmax();
+	double xmin = ho->GetXaxis()->GetXmin();
+	double xmax = ho->GetXaxis()->GetXmax();
 	TH1D *hBrems = new TH1D("hBrems", "hBrems", nbins, xmin, xmax);
-    std::cout << "Creating hBrems with " << nbins << " bins..." << std::endl;
+	std::cout << "Creating hBrems with " << nbins << " bins..." << std::endl;
     
-	for (int i = 1; i <= nbins; ++i) {
-        //std::cout << i << std::endl;
+	for (int i = 1; i <= nbins; ++i) 
+	{
      double value = ho->GetBinContent(brems_nbin*(i-1)/nbins+1);
 		hBrems->SetBinContent(i, value);
-        if(i % 10000 == 0)
-        {
-            //std::cout << i << " bin set..." << std::endl;
-            std::cout << 100.*((double)i/nbins) << " percent complete" << std::endl;
-        }
+
 	}
-    std::cout << "Finished creating hBrems!" << std::endl;
+	std::cout << "Finished creating hBrems!" << std::endl;
 	hBrems->Scale(1.0/hBrems->Integral());
 
 
@@ -137,7 +135,7 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	hBrems->SetLineColor(kRed);
 	hBrems->SetTitle("bremsstrahlung distribution");
 	hBrems->Draw("HIST, same");
-    std::cout << "hBrems Drawn!" << std::endl;
+	std::cout << "hBrems Drawn!" << std::endl;
 
 	hSample->GetYaxis()->SetRangeUser(1e-9, 1e-1);
 	hSample->SetTitle("NRF importance sampling distribution");
@@ -145,13 +143,12 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	hSample->GetYaxis()->SetTitle("probability per 5 eV");
 	hSample->SetStats(0);
 	c0->SaveAs("brems_distributions.png");
-    std::cout << "brems_distributions.png created!" << std::endl;
+	std::cout << "brems_distributions.png created!" << std::endl;
 
 	// save everything to file
 	TFile *fout = new TFile("brems_distributions.root","recreate");
 	fout->cd();
 	hBrems->Write();
 	hSample->Write();
-    std::cout << "File Complete. Saved to brems_distributions.root" << std::endl;
- 
+	std::cout << "File Complete. Saved to brems_distributions.root" << std::endl;
 }

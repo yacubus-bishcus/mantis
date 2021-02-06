@@ -48,7 +48,7 @@ cp $bash_file $old_bash_file
 tar xfz NRF_Database.tar.gz && mv Database1.1 ../ && cd ../Database1.1
 database_working_dir="$(pwd)"
 echo "Exporting the Database working directory path: $database_working_dir"
-
+cd ../mantis
 echo "export $database_working_dir " | tee -a $bash_file >/dev/null
 export G4NRFGAMMADATA=$database_working_dir
 

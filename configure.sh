@@ -39,7 +39,12 @@ cd ~
 bash_file=".bashrc"
 old_bash_file=".old_bashrc"
 
-mkdir MANTIS_MAIN_DIR && mv $current_dir MANTIS_MAIN_DIR && cp $bash_file MANTIS_MAIN_DIR/mantis cd MANTIS_MAIN_DIR/mantis && cp $bash_file $old_bash_file
+# Dealing with .bashrc
+mkdir MANTIS_MAIN_DIR && mv $current_dir MANTIS_MAIN_DIR 
+cp $bash_file MANTIS_MAIN_DIR/mantis && cd MANTIS_MAIN_DIR/mantis
+cp $bash_file $old_bash_file
+
+# Export NRF Database
 tar xfz NRF_Database.tar.gz && mv Database1.1 ../ && cd ../Database1.1
 database_working_dir="$(pwd)"
 echo "Exporting the Database working directory path: $database_working_dir"
@@ -47,6 +52,7 @@ echo "Exporting the Database working directory path: $database_working_dir"
 echo "export $database_working_dir" | tee -a $bash_file >/dev/null
 export G4NRFGAMMADATA=$database_working_dir
 
+# Source ROOT CERN 
 if [ $ROOT_DIRECTORY != "None" ]
 then
     echo "ROOT DIRECTORY: $ROOT_DIRECTORY"
@@ -64,6 +70,7 @@ echo "Sourcing $VARROOTBIN"
 source $VARROOTBIN
 echo "source $VARROOTBIN" | tee -a $bash_file >/dev/null
 
+# Source Required Geant4 Make Files 
 VAR4="/bin/geant4.sh"
 VARGEANTBIN=$GEANT4_DIR$VAR4
 echo "Sourcing $VARGEANTBIN"
@@ -78,17 +85,22 @@ echo "source $VARGEANTMAKE" | tee -a $bash_file >/dev/null
 
 cp $bash_file ~
 echo "Old bash file saved in: $(pwd)"
+
+# Build Mantis 
 echo Building Mantis...
 
 cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis && make -j4 && cd ../mantis/Input_Files
 
 echo Mantis built.
+
+# Create Default Sampling Distribution
 echo Creating Default brems_distributions.root
 root -b -q -l 'Sampling.cc("Brem2.1_100M.root",2.1,"U")'
 cp brems_distributions.root ../../mantis_run && cd ../../mantis_run
 
 echo Testing a mantis run...
 
+# Run Test 
 ./mantis -m mantis.in -o test.root -s 1 
 
 echo "Mantis Configured and Test Run Complete. Test results can be found in test_error.log and test.log. Good Luck and try the README.md!"

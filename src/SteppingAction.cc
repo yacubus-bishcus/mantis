@@ -102,7 +102,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       manager->AddNtupleRow(2);
       if(WeightHisto)
       {
-        manager->FillH1(6, theTrack->GetKineticEnergy()/(MeV), weight);
+        manager->FillH1(8, theTrack->GetKineticEnergy()/(MeV), weight);
       }         
     }
   }
@@ -130,20 +130,27 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       manager->FillNtupleDColumn(0,1, weight);
       manager->FillNtupleIColumn(0,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
       manager->AddNtupleRow(0);
+      if(WeightHisto)
+      {
+        manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);     
+      }
     }
   }
  if(drawChopperOutDataFlag)
  {
     // Gammas Exiting Chopper Wheel 
     if(nextStep_VolumeName.compare(0,4,"Chop") != 0
-       && previousStep_VolumeName.compare(0,4,"Chop") == 0
-       && theTrack->GetParticleDefinition() == G4Gamma::Definition())
+       && previousStep_VolumeName.compare(0,4,"Chop") == 0)
     {
       manager->FillNtupleDColumn(1,0, theTrack->GetKineticEnergy()/(MeV));
       manager->FillNtupleDColumn(1,1, weight);
       manager->FillNtupleIColumn(1,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
       manager->FillNtupleIColumn(1,3,isNRF);
       manager->AddNtupleRow(1);
+      if(WeightHisto)
+      {
+        manager->FillH1(1, theTrack->GetKineticEnergy()/(MeV), weight);
+      }
     }
   }
 // *********************************************** Track Interrogation Object Interactions **************************************************** //
@@ -153,26 +160,24 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   {
     // Incident Interrogation Object
     if(nextStep_VolumeName.compare(0, 6,"IntObj") == 0
-       && previousStep_VolumeName.compare(0, 6, "IntObj") != 0
-       && theTrack->GetParticleDefinition() == G4Gamma::Definition())
+       && previousStep_VolumeName.compare(0, 6, "IntObj") != 0)
     {
-       manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
+       manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
        // NRF Incident Interrogation Object
        if(isNRF && drawNRFDataFlag)
        {
-         manager->FillH1(1, theTrack->GetKineticEnergy()/(MeV), weight);
+         manager->FillH1(3, theTrack->GetKineticEnergy()/(MeV), weight);
        }
     }
     // Exiting Interrogation Object
     if(nextStep_VolumeName.compare(0, 6,"IntObj") != 0
-       && previousStep_VolumeName.compare(0,6,"IntObj") == 0
-       && theTrack->GetParticleDefinition() == G4Gamma::Definition())
+       && previousStep_VolumeName.compare(0,6,"IntObj") == 0)
     {
-      manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
+      manager->FillH1(4, theTrack->GetKineticEnergy()/(MeV), weight);
       // NRF Exiting Interrogation Object
       if(isNRF && drawNRFDataFlag)
       {
-        manager->FillH1(3, theTrack->GetKineticEnergy()/(MeV), weight);
+        manager->FillH1(5, theTrack->GetKineticEnergy()/(MeV), weight);
       }
     }
   }
@@ -183,14 +188,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   if(drawWaterIncDataFlag && !bremTest)
   {
     if(nextStep_VolumeName.compare(0, 5,"Water") == 0
-       && previousStep_VolumeName.compare(0, 5, "Water") != 0
-       && theTrack->GetParticleDefinition() == G4Gamma::Definition())
+       && previousStep_VolumeName.compare(0, 5, "Water") != 0)
     {
-      manager->FillH1(4, theTrack->GetKineticEnergy()/(MeV),weight);
+      manager->FillH1(6, theTrack->GetKineticEnergy()/(MeV),weight);
       // NRF Incident Water Tank 
       if(isNRF && drawNRFDataFlag)
       {
-        manager->FillH1(5, theTrack->GetKineticEnergy()/(MeV), weight);
+        manager->FillH1(7, theTrack->GetKineticEnergy()/(MeV), weight);
       }
     }
   }
@@ -309,7 +313,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             manager->FillNtupleSColumn(4,3, creatorProcess);
             manager->FillNtupleDColumn(4,4, theTrack->GetGlobalTime()); // time units is nanoseconds 
             manager->AddNtupleRow(4);     
-            manager->FillH1(9, theParticle->GetTotalEnergy()/(MeV), weight);
+            manager->FillH1(11, theParticle->GetKineticEnergy()/(MeV), weight);
           }
           else if (theStatus == NotAtBoundary) 
           {
@@ -333,7 +337,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                    << " was none of the above." << G4endl;
             procCount = "noStatus";
           }
-          // Keep track of Detector Data 
+          // Keep track of Detector Process Data 
           if(drawDetDataFlag && !bremTest)
           {
             manager->FillNtupleIColumn(5,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
@@ -341,11 +345,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             manager->FillNtupleDColumn(5,2, weight);
             manager->FillNtupleSColumn(5,3, procCount);
             manager->AddNtupleRow(5);
-          }
-          if(WeightHisto)
-          {
-            manager->FillH1(8,theParticle->GetKineticEnergy()/(MeV), weight);
-          } // for if WeightHisto
+            if(WeightHisto)
+            {
+              manager->FillH1(10,theParticle->GetKineticEnergy()/(MeV), weight);
+            } // for if WeightHisto
+          } // for if keeping track of detector process data 
           
         } // for if opProc    
       } // for for loop

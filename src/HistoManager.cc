@@ -93,7 +93,6 @@ void HistoManager::Book(G4bool bremTest)
       // Create ID 2 Ntuple for NRF Materials 
       manager->CreateNtuple("NRFMatData","NRF Material vs Energy");
       manager->CreateNtupleIColumn("EventID");
-      manager->CreateNtupleIColumn("TrackID");
       manager->CreateNtupleDColumn("Energy");
       manager->CreateNtupleDColumn("Weight");
       manager->CreateNtupleSColumn("Material");
@@ -115,15 +114,21 @@ void HistoManager::Book(G4bool bremTest)
       // Create Histogram ID 7
       manager->CreateH1("Cherenkov_Weighted", "Cherenkov Weighted Energy Spectrum", nbins,0.,xmax,"MeV");
     
-      // Create ID 4 Ntuple for Reactions within detector
+      // Create ID 4 Ntuple for Detected Information
       manager->CreateNtuple("DetInfo","Detected Information");
       manager->CreateNtupleIColumn("EventID");
       manager->CreateNtupleDColumn("Energy");
       manager->CreateNtupleDColumn("Weight");
       manager->CreateNtupleSColumn("CreatorProcess");
-      manager->CreateNtupleSColumn("DetectionProcess");
       manager->CreateNtupleDColumn("Time");
       manager->FinishNtuple();
+    
+      // Create ID 5 Ntuple for Detector Process Information 
+      manager->CreateNtuple("IncDetInfo","Incident Detector Process Information");
+      manager->CreateNtupleIColumn("EventID");
+      manager->CreateNtupleDColumn("Energy");
+      manager->CreateNtupleDColumn("Weight");
+      manager->CreateNtupleSColumn("DetProcess");
     
       // Create ID 8 Histogram for Incident Detector 
       manager->CreateH1("Inc_Det_Weighted", "Incident Detector Weighted Energy Spectrum", nbins, 0., xmax, "MeV");

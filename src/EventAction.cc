@@ -66,7 +66,7 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
     manager->AddNtupleRow(3);
     if(weightHisto)
     {
-      manager->FillH1(7, maxE, weight);
+      manager->FillH1(9, maxE, weight);
     }
   }
 }

@@ -101,19 +101,19 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* WeightOn 
     std::cout << "*************************************" << std::endl << std::endl;
     // Chopper On Analysis
     onFile->cd();
-    onFile->GetObject("wChopIn",ChopInOn);
+    onFile->GetObject("ChopperIn_Weighted",ChopInOn);
     weighted_sum = ChopInOn->Integral();
     ChopInOn->Print();
-    onFile->GetObject("wChopOut",ChopOutOn);
+    onFile->GetObject("ChopperOut_Weighted",ChopOutOn);
     ChopOutOn->Print();
     weighted_sum2 = ChopOutOn->Integral();
 
     // Chopper Off Analysis
     offFile->cd();
-    offFile->GetObject("wChopIn",ChopInOff);
+    offFile->GetObject("ChopperIn_Weighted",ChopInOff);
     weighted_sum3 = ChopInOff->Integral();
     ChopInOff->Print();
-    offFile->GetObject("wChopOut",ChopOutOff);
+    offFile->GetObject("ChopperOut_Weighted",ChopOutOff);
     weighted_sum4 = ChopOutOff->Integral();
     ChopOutOff->Print();
 
@@ -194,13 +194,13 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* WeightOn 
     std::cout << "*************************************" << std::endl << std::endl;
     // Chopper On Analysis
     onFile->cd();
-    onFile->GetObject("wCher",CherenkovOn);
+    onFile->GetObject("Cherenkov_Weighted",CherenkovOn);
     weighted_sum = CherenkovOn->Integral();
     CherenkovOn->Print();
 
     // Chopper Off Analysis
     offFile->cd();
-    offFile->GetObject("wCher",CherenkovOff);
+    offFile->GetObject("Cherenkov_Weighted",CherenkovOff);
     weighted_sum2 = CherenkovOff->Integral();
     CherenkovOff->Print();
     double cher_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
@@ -213,13 +213,13 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* WeightOn 
     std::cout << "*************************************" << std::endl << std::endl;
     // Chopper On Analysis
     onFile->cd();
-    onFile->GetObject("wDet",DetData);
+    onFile->GetObject("Inc_Det_Weighted",DetData);
     weighted_sum = DetData->Integral();
     DetData->Print();
 
     // Chopper Off Analysis
     offFile->cd();
-    offFile->GetObject("wDet",DetDataOff);
+    offFile->GetObject("Inc_Det_Weighted",DetDataOff);
     weighted_sum2 = DetDataOff->Integral();
     DetDataOff->Print();
     double inc_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
@@ -233,13 +233,13 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* WeightOn 
     std::cout << "*************************************" << std::endl << std::endl;
     // Chopper On Analysis
     onFile->cd();
-    onFile->GetObject("Detected",DetOn);
+    onFile->GetObject("Detected_Weighted",DetOn);
     weighted_sum = DetOn->Integral();
     DetOn->Print();
 
     // Chopper Off Analysis
     offFile->cd();
-    offFile->GetObject("Detected",DetOff);
+    offFile->GetObject("Detected_Weighted",DetOff);
     weighted_sum2 = DetOff->Integral();
     DetOff->Print();
     double det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));

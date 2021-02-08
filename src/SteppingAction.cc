@@ -298,6 +298,17 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           else if (theStatus == Detection) 
           {
             procCount = "Det";
+            manager->FillNtupleIColumn(4,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+            manager->FillNtupleDColumn(4,1, theParticle->GetKineticEnergy()/(MeV));
+            manager->FillNtupleDColumn(4,2, weight);
+            G4String creatorProcess;
+            if(theTrack->GetCreatorProcess() !=0)
+              creatorProcess = theTrack->GetCreatorProcess()->GetProcessName();
+            else
+              creatorProcess = "Brem";
+            manager->FillNtupleSColumn(4,3, creatorProcess);
+            manager->FillNtupleDColumn(4,4, theTrack->GetGlobalTime()); // time units is nanoseconds 
+            manager->AddNtupleRow(4);     
             manager->FillH1(9, theParticle->GetTotalEnergy()/(MeV), weight);
           }
           else if (theStatus == NotAtBoundary) 
@@ -325,18 +336,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           // Keep track of Detector Data 
           if(drawDetDataFlag && !bremTest)
           {
-            manager->FillNtupleIColumn(4,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
-            manager->FillNtupleDColumn(4,1, theParticle->GetKineticEnergy()/(MeV));
-            manager->FillNtupleDColumn(4,2, weight);
-            G4String creatorProcess;
-            if(theTrack->GetCreatorProcess() !=0)
-              creatorProcess = theTrack->GetCreatorProcess()->GetProcessName();
-            else
-              creatorProcess = "Brem";
-            manager->FillNtupleSColumn(4,3, creatorProcess);
-            manager->FillNtupleSColumn(4,4, procCount);
-            manager->FillNtupleDColumn(4,5, theTrack->GetGlobalTime()); // time units is nanoseconds 
-            manager->AddNtupleRow(4);
+            manager->FillNtupleIColumn(5,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+            manager->FillNtupleDColumn(5,1, theParticle->GetKineticEnergy()/(MeV));
+            manager->FillNtupleDColumn(5,2, weight);
+            manager->FillNtupleSColumn(5,3, procCount);
+            manager->AddNtupleRow(5);
           }
           if(WeightHisto)
           {

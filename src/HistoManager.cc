@@ -79,14 +79,19 @@ void HistoManager::Book(G4bool bremTest)
   manager->CreateNtupleIColumn("isNRF");
   manager->FinishNtuple();
   
+  // Create ID 0 1D Histogram for Weighted Chopper Incident Data 
+  manager->CreateH1("ChopperIn_Weighted","Weighted Incident Chopper Energy Spectrum", nbins, 0., xmax, "MeV");
+  // Create ID 1 1D Histogram for Weighted Chopper Exiting Data 
+  manager->CreateH1("ChopperOut_Weighted", "Weighted Emission Chopper Energy Spectrum", nbins, 0., xmax, "MeV");
+  
   if(!bremTest)
   {
-      // Create ID 0,1,2,3 1D Histogram for Interogation Object Data
+      // Create ID 2,3,4,5 1D Histogram for Interogation Object Data
       manager->CreateH1("IntObjIn","Interrogation Object Incident Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
       manager->CreateH1("NRFIntObjIn", "Interrogation Object NRF Photons Incident Weighted Energy Spectrum",nbins,0.,xmax, "MeV");
       manager->CreateH1("IntObjOut", "Interrogation Object Exiting Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
       manager->CreateH1("NRFIntObjOut", "Interrogation Object NRF Photons Exiting Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
-      // Create ID 4,5 1D Histogram for incident water data
+      // Create ID 6,7 1D Histogram for incident water data
       manager->CreateH1("WaterIn", "Water Tank Incident Weighted Energy Spectrum", nbins,0., xmax, "MeV");
       manager->CreateH1("NRFWaterIn","Water Tank NRF Photons Incident Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
       
@@ -99,7 +104,7 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtupleDColumn("ZPos");
       manager->FinishNtuple();
     
-      // Create Histogram ID 6
+      // Create Histogram ID 8
       manager->CreateH1("NRF_Weighted","NRF Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
     
       // Create ID 3 Ntuple for cherenkov in water 
@@ -111,7 +116,7 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtupleDColumn("Time");
       manager->FinishNtuple();
     
-      // Create Histogram ID 7
+      // Create Histogram ID 9
       manager->CreateH1("Cherenkov_Weighted", "Cherenkov Weighted Energy Spectrum", nbins,0.,xmax,"MeV");
     
       // Create ID 4 Ntuple for Detected Information
@@ -130,11 +135,11 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtupleDColumn("Weight");
       manager->CreateNtupleSColumn("DetProcess");
     
-      // Create ID 8 Histogram for Incident Detector 
+      // Create ID 10 Histogram for Incident Detector 
       manager->CreateH1("Inc_Det_Weighted", "Incident Detector Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
     
-      // Create ID 9 Histogram for Energy if detected
-      manager->CreateH1("Detected","Photons Detected by Photocathode Weighted Energy Spectrum", nbins, 0., 2.1, "MeV");
+      // Create ID 11 Histogram for Energy if detected
+      manager->CreateH1("Detected_Weighted","Photons Detected by Photocathode Weighted Energy Spectrum", nbins, 0., xmax, "MeV");
     
   }
 

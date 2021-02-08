@@ -32,14 +32,8 @@ physicsList::physicsList(G4bool addNRF_in, G4bool use_xsec_tables_in, G4bool use
         force_isotropic(force_isotropic_in),
         standalone(standalone_in),
         NRF_Verbose(verbose_in)
-        {
-        defaultCutValue = 0.05*mm;
-        cutForElectron = defaultCutValue;
-        cutForPositron = defaultCutValue;
-        cutForProton = defaultCutValue;
-
+{
         G4HadronicProcessStore::Instance()->SetVerbose(0);
-
         ConstructPhysics();
 }
 
@@ -99,9 +93,9 @@ void physicsList::ConstructProcess() {
 }
 
 
-void physicsList::SetCuts() {
-        //SetCutValue(cutForGamma, "gamma");
-        SetCutValue(cutForElectron, "e-");
-        SetCutValue(cutForPositron, "e+");
-        SetCutValue(cutForProton, "proton");
+void physicsList::SetCuts() 
+{
+        SetCutValue(0.05*mm, "e-");
+        SetCutValue(0.05*mm, "e+");
+        SetCutValue(0.05*mm, "proton");
 }

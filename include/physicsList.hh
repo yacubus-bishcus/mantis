@@ -70,7 +70,6 @@ class physicsList: public G4VModularPhysicsList {
   void SetCuts();
 
  private:
-  G4double cutForGamma, cutForElectron, cutForPositron, cutForProton;
   G4bool addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose;
 };
 

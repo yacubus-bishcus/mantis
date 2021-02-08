@@ -71,7 +71,6 @@ G4bool bremTest, resonance_test;
 G4double chosen_energy;
 PrimaryGenActionMessenger* genM;
 G4ParticleGun* fParticleGun;
-HistoManager* histo;
 
 TRandom1 Random;
 TH1D *hBrems;

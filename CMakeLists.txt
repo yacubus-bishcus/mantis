@@ -18,7 +18,7 @@ include(${Geant4_USE_FILE})
 #----------------------------------------------------------------------------
 # Find ROOT (required package)
 
-find_package(ROOT 18.0 CONFIG REQUIRED)
+find_package(ROOT CONFIG REQUIRED)
 if(ROOT_FOUND)	
     message(STATUS "ROOT found. --> Compiling with ROOT enabled")	
 else()	

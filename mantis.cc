@@ -65,7 +65,6 @@ int main(int argc,char **argv)
   // grab geant4 version
   const char* theCmd = "geant4-config --version";
   my_geant4_version = exec(theCmd);
-  std::cout << my_geant4_version << std::endl;
   // Defaults
   G4int start_time = time(0);
   G4bool use_xsec_tables = true;

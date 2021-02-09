@@ -60,15 +60,15 @@ void physicsList::ConstructPhysics() {
           opticalPhysics->SetTrackSecondariesFirst(kCerenkov, true);
           opticalPhysics->SetTrackSecondariesFirst(kScintillation, true);
         }
-        else
-        {
-          auto opticalParams = G4OpticalParameters::Instance();
-          opticalParams->SetScintillationYieldFactor(1.0);
-          opticalParams->SetWLSTimeProfile("delta");
-          opticalParams->SetVerbose(0);
-          opticalParams->SetScintTrackSecondariesFirst(true);
-          opticalParams->SetCerenkovTrackSecondariesFirst(true);
-        }
+        //else
+        //{
+        //  auto opticalParams = G4OpticalParameters::Instance();
+        //  opticalParams->SetScintillationYieldFactor(1.0);
+        // opticalParams->SetWLSTimeProfile("delta");
+        //  opticalParams->SetVerbose(0);
+        //  opticalParams->SetScintTrackSecondariesFirst(true);
+        //  opticalParams->SetCerenkovTrackSecondariesFirst(true);
+        //}
         RegisterPhysics(opticalPhysics);
 
         // Add NRF to the physicsList

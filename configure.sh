@@ -102,8 +102,6 @@ echo Building Mantis...
 
 cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis && make -j4 && cd ../mantis/Input_Files
 
-echo Mantis built.
-
 # Create Default Sampling Distribution
 echo Creating Default brems_distributions.root
 root -b -q -l 'Sampling.cc("Brem2.1_100M.root",2.1,"U")'

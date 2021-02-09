@@ -9,7 +9,9 @@ execute_process(COMMAND bash -c "geant4-config --version"
                 )
 
 string(SUBSTRING MY_GEANT4_VERSION 0 3 THE_VERSION)
-if(string(COMPARE EQUAL THE_VERSION "10.7" VERSION_BOOL))
+string(COMPARE EQUAL THE_VERSION "10.7" VERSION_BOOL)
+
+if(VERSION_BOOL)
   message(STATUS "Version 10.7")
 else()
   message(STATUS "Not Version 10.7")

@@ -38,6 +38,9 @@ namespace
 
 int main(int argc,char **argv)
 {
+  #ifdef MY_GEANT4_VERSION
+  std::cout << MY_GEANT4_VERSION << std::endl;
+  #endif
   // Defaults
   G4int start_time = time(0);
   G4bool use_xsec_tables = true;

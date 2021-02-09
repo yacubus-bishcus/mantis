@@ -118,6 +118,6 @@ then
 fi
 
 echo "Be sure to add the following to your bash profile: "
-echo "export G4NRFGAMMADATA=/path/to/Database1.1"
+echo "export G4NRFGAMMADATA=$database_working_dir"
 echo "Be sure to have thisroot.sh, geant4make.sh and geant4.sh all sourced prior to running"
 echo "Mantis Configured. Good Luck and try the README.md!"

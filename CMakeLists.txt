@@ -89,5 +89,5 @@ endforeach()
 install(TARGETS mantis DESTINATION bin)
 
 # Pass version on
-geant4_version = $(geant4-config --version)
-echo $geant4_version
+set(MY_GEANT4_VERSION "${geant4-config --version}")
+message(STATUS "${MY_GEANT4_VERSION}")

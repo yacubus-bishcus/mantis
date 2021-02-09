@@ -2,7 +2,20 @@
 # Setup the project
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(mantis)
-option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON) # Can switch to OFF if not building with vis drivers --> NOT recommended 
+option(WITH_GEANT4_UIVIS "Build with Geant4 UI and Vis drivers" ON) # Can switch to OFF if not building with vis drivers --> NOT recommended 
+# Determine the Geant4 Version 
+execute_process(COMMAND bash -c "geant4-config --version"
+                OUTPUT_VARIABLE MY_GEANT4_VERSION
+                )
+
+string(SUBSTRING MY_GEANT4_VERSION 0 3 THE_VERSION)
+if(string(COMPARE EQUAL THE_VERSION "10.7" VERSION_BOOL))
+  message(STATUS "Version 10.7")
+else()
+  message(STATUS "Not Version 10.7")
+endif()
+
+option(WITH_GEANT4_VERSION_10_7 "Build for Geant4 Version 10.7" OFF) # 
 add_compile_options(-Wno-unused-variable -Wno-shadow -Wno-unused-parameter)
 if(WITH_GEANT4_UIVIS)
   find_package(Geant4 10.5 REQUIRED ui_all vis_all)
@@ -90,7 +103,4 @@ endforeach()
 install(TARGETS mantis DESTINATION bin)
 
 # Pass version on
-execute_process(COMMAND bash -c "geant4-config --version"
-                OUTPUT_VARIABLE MY_GEANT4_VERSION
-                )
 message(STATUS "Geant4 Version: ${MY_GEANT4_VERSION}")

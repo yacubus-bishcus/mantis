@@ -23,7 +23,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "physicsList.hh"
-
+extern G4String my_geant4_version;
 
 physicsList::physicsList(G4bool addNRF_in, G4bool use_xsec_tables_in, G4bool use_xsec_integration_in, G4bool force_isotropic_in, G4bool standalone_in, G4bool verbose_in)
         : addNRF(addNRF_in),
@@ -49,14 +49,26 @@ void physicsList::ConstructPhysics() {
 
         // Add OpticalPhysics to physicsList
         G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(0);
-        opticalPhysics->SetWLSTimeProfile("delta");
-        opticalPhysics->SetScintillationYieldFactor(1.0); // this would change if the yield changed based on particle type --> not relevant here 
+        if(my_geant4_version.compare(0,4,"10.7") != 0)
+        {
+          opticalPhysics->SetWLSTimeProfile("delta");
+          opticalPhysics->SetScintillationYieldFactor(1.0); // this would change if the yield changed based on particle type --> not relevant here 
         //opticalPhysics->SetScintillationExcitationRatio(0.0);
         //G4int maxNumber = 500;
         //opticalPhysics->SetMaxNumPhotonsPerStep(maxNumber);
         //opticalPhysics->SetMaxBetaChangePerStep(10.0);
-        opticalPhysics->SetTrackSecondariesFirst(kCerenkov, true);
-        opticalPhysics->SetTrackSecondariesFirst(kScintillation, true);
+          opticalPhysics->SetTrackSecondariesFirst(kCerenkov, true);
+          opticalPhysics->SetTrackSecondariesFirst(kScintillation, true);
+        }
+        else
+        {
+          auto opticalParams = G4OpticalParameters::Instance();
+          opticalParams->SetScintillationYieldFactor(1.0);
+          opticalParams->SetWLSTimeProfile("delta");
+          opticalParams->SetVerbose(0);
+          opticalParams->SetScintTrackSecondariesFirst(true);
+          opticalParams->SetCerenkovTrackSecondariesFirst(true);
+        }
         RegisterPhysics(opticalPhysics);
 
         // Add NRF to the physicsList

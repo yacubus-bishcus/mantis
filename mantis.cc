@@ -32,7 +32,7 @@ G4VisManager* visManager;
 // declare global variables
 G4long seed;
 G4String macro, root_output_name, gOutName, bremTest, resonance_in, standalone_in, verbose_in, addNRF_in, checkEvents_in, weight_histo_in; 
-G4String my_geant4_version;
+//G4String my_geant4_version;
 
 G4String exec(const char* cmd) 
 {
@@ -63,8 +63,8 @@ namespace
 int main(int argc,char **argv)
 {
   // grab geant4 version
-  const char* theCmd = "geant4-config --version";
-  my_geant4_version = exec(theCmd);
+  //const char* theCmd = "geant4-config --version";
+  //my_geant4_version = exec(theCmd);
   // Defaults
   G4int start_time = time(0);
   G4bool use_xsec_tables = true;

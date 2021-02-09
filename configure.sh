@@ -111,7 +111,7 @@ fi
 echo Building Mantis...
 
 cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis 
-if [ $DEBUGGING != "True" | $DEBUGGING != "true" ]
+if [ $DEBUGGING != "True" ] || [ $DEBUGGING != "true" ]
 then
    make -j4 && cd ../mantis/Input_Files
 
@@ -122,7 +122,7 @@ then
 
 # Run Test 
    echo $RUN_TEST
-   if [ $RUN_TEST = "True" ] | [ $RUN_TEST = "true" ]
+   if [ $RUN_TEST = "True" ] || [ $RUN_TEST = "true" ]
    then
       echo Testing a mantis run...
       ./mantis -m mantis.in -o test.root -s 1 

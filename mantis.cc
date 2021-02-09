@@ -22,6 +22,13 @@ G4VisManager* visManager;
 #include "G4ios.hh"
 #include "G4UIsession.hh"
 
+// For grabbing geant4 version 
+#include <cstdio>
+#include <iostream>
+#include <memory>
+#include <stdexcept>
+#include <array>
+
 // declare global variables
 G4long seed;
 G4String macro, root_output_name, gOutName, bremTest, resonance_in, standalone_in, verbose_in, addNRF_in, checkEvents_in, weight_histo_in; 

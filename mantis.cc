@@ -7,8 +7,6 @@
 // Typcially include
 #include "time.h"
 #include "Randomize.hh"
-//#include "vector"
-//#include <iostream>
 #include "G4Types.hh"
 
 #ifdef G4VIS_USE
@@ -183,11 +181,12 @@ int main(int argc,char **argv)
     ui->SessionStart();
     delete ui;
   }
-
+#ifdef G4VIS_USE
   if(ui || macro == "vis_save.mac")
   {
     delete visManager;
   }
+#endif
 
   G4int stop_time = time(0);
   G4cout << G4endl << "*-----------------------------------------------*" << G4endl;

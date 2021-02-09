@@ -48,6 +48,7 @@ target_link_libraries(mantis ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 #
 set(Input_SCRIPTS
   mantis.in
+  mantisOff.in
   vis_save.mac
   )
 

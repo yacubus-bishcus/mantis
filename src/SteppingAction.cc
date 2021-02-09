@@ -93,12 +93,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     {
       krun->AddNRF();
       manager->FillNtupleIColumn(2,0, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
-      manager->FillNtupleIColumn(2,1, theTrack->GetTrackID());
-      manager->FillNtupleDColumn(2,2,theTrack->GetTotalEnergy()/(MeV));
-      manager->FillNtupleDColumn(2,3,weight);
-      manager->FillNtupleSColumn(2,4,endPoint->GetPhysicalVolume()->GetName());
+      manager->FillNtupleDColumn(2,1,theTrack->GetTotalEnergy()/(MeV));
+      manager->FillNtupleDColumn(2,2,weight);
+      manager->FillNtupleSColumn(2,3,endPoint->GetPhysicalVolume()->GetName());
       G4ThreeVector NRF_loc = theTrack->GetPosition();
-      manager->FillNtupleDColumn(2,5, NRF_loc.z()/(cm));
+      manager->FillNtupleDColumn(2,4, NRF_loc.z()/(cm));
       manager->AddNtupleRow(2);
       if(WeightHisto)
       {

@@ -25,6 +25,23 @@ G4VisManager* visManager;
 // declare global variables
 G4long seed;
 G4String macro, root_output_name, gOutName, bremTest, resonance_in, standalone_in, verbose_in, addNRF_in, checkEvents_in, weight_histo_in; 
+G4String my_geant4_version;
+
+G4String exec(const char* cmd) 
+{
+  std::array<char, 128> buffer;
+  G4String result;
+  std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+  if (!pipe) 
+  {
+      throw std::runtime_error("popen() failed!");
+  }
+  while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) 
+  {
+      result += buffer.data();
+  }
+  return result;
+}
 
 namespace
 {
@@ -38,9 +55,8 @@ namespace
 
 int main(int argc,char **argv)
 {
-  #ifdef MY_GEANT4_VERSION
-  std::cout << MY_GEANT4_VERSION << std::endl;
-  #endif
+  // grab geant4 version
+  my_geant4_version = exec('geant4-config --version');
   // Defaults
   G4int start_time = time(0);
   G4bool use_xsec_tables = true;

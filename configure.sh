@@ -1,10 +1,14 @@
 #!/bin/bash
 
 # Default Arguments 
+
 GEANT4_DIR="None"
 ROOT_DIRECTORY="None"
 RUN_TEST="True"
 DEBUGGING="False"
+
+# Read Input Flags 
+
 for arg in "$@"
 do 
    case $arg in

@@ -4,8 +4,8 @@
 
 GEANT4_DIR="None"
 ROOT_DIRECTORY="None"
-RUN_TEST="True"
-DEBUGGING="False"
+RUN_TEST="true"
+DEBUGGING="false"
 
 # Read Input Flags 
 
@@ -111,7 +111,8 @@ fi
 echo Building Mantis...
 
 cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis 
-if [ $DEBUGGING != "true" ];
+echo $DEBUGGING
+if [ $DEBUGGING != "true" ]
 then
    make -j4 && cd ../mantis/Input_Files
 

@@ -3,11 +3,11 @@
 #SBATCH -n 1
 #SBATCH --time=6:00:00
 #SBATCH -p newnodes
-#SBATCH --job-name=$1
+#SBATCH --job-name=GEANT4
 #SBATCH --constraint=centos7
 MACRO=$1
 OUTFILENAME=$OUTFILE
 ARG=$envvar_bsh
-srun ./mantis -m ${MACRO} -o ${OUTFILENAME}-${ARG}.root -s ${ARG} &
+srun ./mantis -m ${MACRO} -o ${OUTFILENAME}-${ARG}.root -s ${ARG} -e true -w true &
 wait
 exit

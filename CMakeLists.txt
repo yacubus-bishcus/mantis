@@ -87,3 +87,7 @@ endforeach()
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
 install(TARGETS mantis DESTINATION bin)
+
+# Pass version on
+geant4_version = geant4-config --version
+echo $geant4_version

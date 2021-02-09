@@ -22,7 +22,7 @@ find_package(ROOT CONFIG REQUIRED)
 if(ROOT_FOUND)	
     message(STATUS "ROOT found. --> Compiling with ROOT enabled")	
 else()	
-    message(STATUS "G4 ROOT NOT Found. --> MAKE WILL FAIL!")
+    message(STATUS "ROOT NOT Found. --> MAKE WILL FAIL!")
 endif()
 
 #----------------------------------------------------------------------------
@@ -92,4 +92,4 @@ install(TARGETS mantis DESTINATION bin)
 execute_process(COMMAND bash -c "geant4-config --version"
                 OUTPUT_VARIABLE MY_GEANT4_VERSION
                 )
-message(STATUS "${MY_GEANT4_VERSION}")
+message(STATUS "Geant4 Version: ${MY_GEANT4_VERSION}")

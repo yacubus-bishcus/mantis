@@ -58,8 +58,10 @@ void physicsList::ConstructPhysics()
     opticalPhysics->SetScintillationYieldFactor(1.0); // this would change if the yield changed based on particle type --> not relevant here 
     opticalPhysics->SetTrackSecondariesFirst(kCerenkov, true);
     opticalPhysics->SetTrackSecondariesFirst(kScintillation, true);
+    G4cout << "Geant4 10.5 Optical Physics Set." << G4endl;
   #else
     auto opticalParams = G4OpticalParameters::Instance();
+    G4cout << "Geant4 10.7 Optical Physics Set." << G4endl;
   #endif
 
   RegisterPhysics(opticalPhysics);
@@ -67,8 +69,8 @@ void physicsList::ConstructPhysics()
   // Add NRF to the physicsList
   if(addNRF)
   {
-          RegisterPhysics(new G4NRFPhysics("NRF", use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose));
-          G4cout << "\nAdded NRF to the physicsList.\n" << G4endl;
+    RegisterPhysics(new G4NRFPhysics("NRF", use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose));
+    G4cout << "\nAdded NRF to the physicsList.\n" << G4endl;
   }
 
   // Add the rest of the usual suspects

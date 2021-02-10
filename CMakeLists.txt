@@ -23,6 +23,9 @@ if(${VERSION_BOOL})
 endif()
 
 if(${MY_VERBOSE})
+  message(STATUS "Running make with Full Verbosity")
+else()
+  message(STATUS "Subduing some verbosity.")
   add_compile_options(-Wno-unused-variable -Wno-shadow -Wno-unused-parameter)
 endif()
 

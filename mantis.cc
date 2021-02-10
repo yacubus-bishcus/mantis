@@ -186,18 +186,20 @@ int main(int argc,char **argv)
   // set mandatory initialization classes
   DetectorConstruction* det = new DetectorConstruction(brem);
   runManager->SetUserInitialization(det);
-  //std::cout << "Detector Constructed" << std::endl;
+
   // Set up Physics List
   if(geant4_version.compare(0,3,"10.7"))
-     PhysicsListNew *thePL = new PhysicsListNew(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
+  {
+    PhysicsListNew *thePLNew = new PhysicsListNew(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
+    runManager->SetUserInitialization(thePLNew);
+  }
   else
-     PhysicsListOld *thePL = new PhysicsListOld(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
-     
-  runManager->SetUserInitialization(thePL);
+  {
+     PhysicsListOld *thePLOld = new PhysicsListOld(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
+     runManager->SetUserInitialization(thePLOld);
+  }
   runManager->SetUserInitialization(new ActionInitialization(det, brem, resonance_test, output, checkEvents, weightHisto));
-  //std::cout << "Action Initialized" << std::endl;
-  // Run manager initialized in macros
-  //std::cout << "Initializing visManager"<<std::endl;
+
 #ifdef G4VIS_USE
   if(ui || macro == "vis_save.mac")
   {

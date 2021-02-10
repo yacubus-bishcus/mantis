@@ -17,7 +17,7 @@ if(${VERSION_BOOL})
 endif()
 
 if(INCLUDE_G4OPTPARAM)
-  set(BUILD_OPTPARAM DEFINE_OPTPARAM)
+  ADD_COMPILER_EXPORT_FLAGS(G4_OPTPARAM)
 endif()
 
 add_compile_options(-Wno-unused-variable -Wno-shadow -Wno-unused-parameter)

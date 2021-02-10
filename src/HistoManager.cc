@@ -144,7 +144,7 @@ void HistoManager::Book(G4bool bremTest)
   }
 
   fFactoryOn = true;
-  G4cout << "HistoManager::Book() --> Complete!" << G4endl;
+  std::cout << "HistoManager::Book() --> Complete!" << std::endl;
 
 }
 

@@ -112,7 +112,7 @@ EventCheck::EventCheck()
         }
 
         // Grab DetInfo Events
-        num_entries2 = DetData->Draw("EventID:Energy:Weight:Time","DetectionProcess == \"Det\" && (CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\")","goff");
+        num_entries2 = DetData->Draw("EventID:Energy:Weight:Time","CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\")","goff");
         G4cout << "Total Number of Detected Optical Photon entries: " << num_entries2 << G4endl << G4endl;
         G4double *detEvent = DetData->GetVal(0);
         G4double *detEnergy = DetData->GetVal(1);
@@ -126,7 +126,7 @@ EventCheck::EventCheck()
 
         if(num_entries != 0 && num_entries1 != 0)
         {
-                G4cout << "Finding NRF Events that Caused Cherenkov..." << G4endl;
+                G4cout << "Finding NRF Events that Caused Optical Photons..." << G4endl;
                 // if Cherenkov has more entries search with nrf events
                 if(num_entries1 < num_entries)
                 {
@@ -165,7 +165,7 @@ EventCheck::EventCheck()
                                 }
                         }
                 }
-                G4cout << G4endl << "NRF to Cherenkov Number of Events Found: " << nrf_to_cherEvents.size() << G4endl;
+                G4cout << G4endl << "NRF to Optical Photon Number of Events Found: " << nrf_to_cherEvents.size() << G4endl;
         }
 
         if(num_entries2 > 0)
@@ -207,7 +207,7 @@ EventCheck::EventCheck()
                 // Check if more cherenkov events of nrf events lead to detection if cherenkov > nrf then look at nrf->Detected events
                 if(cher_to_detEvents.size() > nrf_to_detEvents.size())
                 {
-                        G4cout << "More Cherenkov Events than nrf events lead to detection. Checking NRF Detected Events..." << G4endl;
+                        G4cout << "More Optical Photon Events than nrf events lead to detection. Checking NRF Detected Events..." << G4endl;
                         for(unsigned int i=0; i<nrf_to_detEvents.size(); ++i)
                         {
                                 x = nrf_to_detEvents[i];
@@ -227,7 +227,7 @@ EventCheck::EventCheck()
                 }
                 else if(nrf_to_detEvents.size() > cher_to_detEvents.size())
                 {
-                        G4cout << "More NRF Events than Cherenkov events lead to detection. Checking Cherenkov Events..." << G4endl;
+                        G4cout << "More NRF Events than Optical Photon events lead to detection. Checking Optical Photon Events..." << G4endl;
                         for(unsigned int i=0; i<cher_to_detEvents.size(); ++i)
                         {
                                 x = cher_to_detEvents[i];
@@ -246,7 +246,7 @@ EventCheck::EventCheck()
                         }
                 }
 
-                G4cout << G4endl << "NRF Events Leading to Cherenkov Leading to Detection: " << nrf_to_cherenkov_to_detEvents.size() << G4endl;
+                G4cout << G4endl << "NRF Events Leading to Optical Photons Leading to Detection: " << nrf_to_cherenkov_to_detEvents.size() << G4endl;
         }
 }
 EventCheck::~EventCheck()
@@ -261,7 +261,7 @@ void EventCheck::WriteEvents()
 {
         if(num_entries > 0 && num_entries1 > 0)
         {
-                G4cout << "Filling NRF to Cherenkov Tree..." << G4endl;
+                G4cout << "Filling NRF to Optical Photon Tree..." << G4endl;
                 // Fill nrf_to_cher_tree
                 for(unsigned int i=0; i<nrf_to_cherEvents.size(); i++)
                 {
@@ -276,7 +276,7 @@ void EventCheck::WriteEvents()
 
         if(num_entries2 > 0)
         {
-                G4cout << "Filling NRF to Cherenkov to Detected Tree..." << G4endl;
+                G4cout << "Filling NRF to Optical Photon to Detected Tree..." << G4endl;
                 // Fill nrf_to_cher_to_det_tree
                 for(unsigned int i=0; i<nrf_to_cherenkov_to_detEvents.size(); i++)
                 {
@@ -309,7 +309,7 @@ void EventCheck::WriteEvents()
         if(nrf_to_cherEvents.size() > 0)
         {
                 nrf_to_cher_tree->Write();
-                G4cout << "NRF to Cherenkov Events Written to file: " << OutFilename << G4endl;
+                G4cout << "NRF to Optical Photon Events Written to file: " << OutFilename << G4endl;
         }
         else
         {
@@ -323,7 +323,7 @@ void EventCheck::WriteEvents()
         if(nrf_to_cherenkov_to_detEvents.size() > 0)
         {
                 nrf_to_cher_to_det_tree->Write();
-                G4cout << "NRF to Cherenkov to Detected Events Written to file: " << OutFilename2 << G4endl;
+                G4cout << "NRF to Optical Photon to Detected Events Written to file: " << OutFilename2 << G4endl;
         }
         else
         {

@@ -30,6 +30,7 @@ SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, 
           drawIntObjDataFlag(0), drawWaterIncDataFlag(0), drawCherenkovDataFlag(0), drawDetDataFlag(0), 
           stepM(NULL)
 {
+  std::cout << "SteppingAction::SteppingAction" << std::endl;
   stepM = new StepMessenger(this);
   fExpectedNextStatus = Undefined;
 }

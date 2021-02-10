@@ -3,7 +3,9 @@
 #include "G4UImanager.hh"
 #include "DetectorConstruction.hh"
 #include "PhysicsListOld.hh"
-#include "PhysicsListNew.hh"
+#ifdef G4_OPTPARAM
+  #include "PhysicsListNew.hh"
+#endif
 #include "ActionInitialization.hh"
 // Typcially include
 #include "time.h"
@@ -188,16 +190,13 @@ int main(int argc,char **argv)
   runManager->SetUserInitialization(det);
 
   // Set up Physics List
-  if(geant4_version.compare(0,3,"10.7"))
-  {
+  #ifdef G4_OPTPARAM
     PhysicsListNew *thePLNew = new PhysicsListNew(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
     runManager->SetUserInitialization(thePLNew);
-  }
-  else
-  {
+  #else
      PhysicsListOld *thePLOld = new PhysicsListOld(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
      runManager->SetUserInitialization(thePLOld);
-  }
+  #endif
   runManager->SetUserInitialization(new ActionInitialization(det, brem, resonance_test, output, checkEvents, weightHisto));
 
 #ifdef G4VIS_USE

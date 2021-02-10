@@ -43,7 +43,7 @@ ActionInitialization::~ActionInitialization()
 
 void ActionInitialization::Build() const
 {
-    std::cout << "ActionInitialization::Build() -> Begin!" << std::endl;
+    //std::cout << "ActionInitialization::Build() -> Begin!" << std::endl;
     HistoManager* histo = new HistoManager();
     SetUserAction(new PrimaryGeneratorAction(bremTest, resonance_test));
     RunAction* run = new RunAction(histo, bremTest, output, checkEvents, weightHisto);
@@ -52,5 +52,5 @@ void ActionInitialization::Build() const
     SetUserAction(event);
     SetUserAction(new SteppingAction(fDetector, run, event, bremTest, weightHisto));
     SetUserAction(new StackingAction(fDetector, run));
-    std::cout << "ActionInitialization::Build() -> End!" << std::endl;
+    //std::cout << "ActionInitialization::Build() -> End!" << std::endl;
 }

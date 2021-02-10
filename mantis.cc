@@ -16,7 +16,13 @@ G4VisManager* visManager;
 #endif
 
 #include "G4UIExecutive.hh"
+
+// For Grabbing Geant4 Version
+#include <cstdio>
 #include <iostream>
+#include <memory>
+#include <stdexcept>
+#include <array>
 // For G4cout and G4cerr handling
 #include "MySession.hh"
 #include "G4ios.hh"
@@ -26,18 +32,42 @@ G4VisManager* visManager;
 G4long seed;
 G4String macro, root_output_name, gOutName, bremTest, resonance_in, standalone_in, verbose_in, addNRF_in, checkEvents_in, weight_histo_in; 
 
+G4String exec(const char* cmd)
+{
+  std::array<char, 128> buffer;
+  G4String result;
+  std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);	
+  
+  if (!pipe) 	 
+  {	
+      throw std::runtime_error("popen() failed!");	
+  }	
+  
+  while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) 	  
+  {	
+      result += buffer.data();
+  }	 
+  
+  return result;
+}
+ 
 namespace
 {
   void PrintUsage()
   {
     G4cerr << "Usage: " << G4endl;
-    G4cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false] [-r resonance_test=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] [-e checkEvents=false] [-w weightHisto=false]" 
+    G4cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false] " << 
+      "[-r resonance_test=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] " << 
+      "[-e checkEvents=false] [-w weightHisto=false]" 
               << G4endl;
   }
 }
 
 int main(int argc,char **argv)
 {
+  // Grab Geant4 Version 
+  const char* theCmd = 'geant4-config --version';
+  G4String geant4_version = exec(theCmd);
   // Defaults
   G4int start_time = time(0);
   G4bool use_xsec_tables = true;
@@ -157,7 +187,11 @@ int main(int argc,char **argv)
   runManager->SetUserInitialization(det);
   //std::cout << "Detector Constructed" << std::endl;
   // Set up Physics List
-  physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
+  if(geant4_version.compare(0,3,"10.7")
+     PhysicsListNew *thePL = new PhysicsListNew(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
+  else
+     PhysicsListOld *thePL = new PhysicsListOld(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
+     
   runManager->SetUserInitialization(thePL);
   runManager->SetUserInitialization(new ActionInitialization(det, brem, resonance_test, output, checkEvents, weightHisto));
   //std::cout << "Action Initialized" << std::endl;

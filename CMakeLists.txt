@@ -8,7 +8,11 @@ option(WITH_GEANT4_UIVIS "Build with Geant4 UI and Vis drivers" ON) # Can switch
 execute_process(COMMAND bash -c "geant4-config --version"
                 OUTPUT_VARIABLE MY_GEANT4_VERSION
                 )
-
+# Determine the ROOT CERN Version 
+execute_process(COMMAND bash -c "root --version"
+                OUTPUT_VARIABLE MY_ROOT_VERSION
+                )
+                
 string(SUBSTRING "${MY_GEANT4_VERSION}" 0 4 THE_VERSION)	
 string(COMPARE EQUAL "${THE_VERSION}" "10.7" VERSION_BOOL)	
 
@@ -37,7 +41,7 @@ include(${Geant4_USE_FILE})
 
 find_package(ROOT CONFIG REQUIRED)
 if(ROOT_FOUND)	
-    message(STATUS "ROOT found. --> Compiling with ROOT enabled")	
+    message(STATUS "${MY_ROOT_VERSION}")	
 else()	
     message(STATUS "ROOT NOT Found. --> MAKE WILL FAIL!")
 endif()

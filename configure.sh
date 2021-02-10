@@ -45,6 +45,9 @@ done
 #echo "Geant4 Directory: $GEANT4_DIR"
 
 echo Configuring mantis...
+# Lower inputs 
+echo $RUN_TEST | tr '[:upper:]' '[:lower:]'
+echo $DEBUGGING | tr '[:upper:]' '[:lower:]'
 current_dir="$(pwd)"
 cd ../
 #cd ~ 
@@ -111,6 +114,7 @@ fi
 echo Building Mantis...
 
 cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis 
+
 echo $DEBUGGING
 if [ $DEBUGGING != "true" ]
 then

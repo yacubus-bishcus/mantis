@@ -22,7 +22,10 @@ if(${VERSION_BOOL})
   message(STATUS "Version is at least 10.7")
 endif()
 
-add_compile_options(-Wno-unused-variable -Wno-shadow -Wno-unused-parameter)
+if(${MY_VERBOSE})
+  add_compile_options(-Wno-unused-variable -Wno-shadow -Wno-unused-parameter)
+endif()
+
 if(WITH_GEANT4_UIVIS)
   find_package(Geant4 10.5 REQUIRED ui_all vis_all)
   message(STATUS "Geant4 Version: ${MY_GEANT4_VERSION}")

@@ -8,7 +8,7 @@ execute_process(COMMAND bash -c "geant4-config --version"
                 OUTPUT_VARIABLE MY_GEANT4_VERSION
                 )
 
-string(SUBSTRING "${MY_GEANT4_VERSION}" 0 3 THE_VERSION)
+string(SUBSTRING "${MY_GEANT4_VERSION}" 1 4 THE_VERSION)
 message(STATUS "${THE_VERSION}")
 string(COMPARE EQUAL "${THE_VERSION}" "10.5" VERSION_BOOL)
 message(STATUS "${VERSION_BOOL}")

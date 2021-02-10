@@ -19,6 +19,7 @@ endif()
 add_compile_options(-Wno-unused-variable -Wno-shadow -Wno-unused-parameter)
 if(WITH_GEANT4_UIVIS)
   find_package(Geant4 10.5 REQUIRED ui_all vis_all)
+  message(STATUS "Geant4 Version: ${MY_GEANT4_VERSION}")
   message(STATUS "Built Geant4 with UI and Vis Drivers")
 else()
   find_package(Geant4 10.5 REQUIRED)
@@ -102,6 +103,3 @@ endforeach()
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
 install(TARGETS mantis DESTINATION bin)
-
-# Pass version on
-message(STATUS "Geant4 Version: ${MY_GEANT4_VERSION}")

@@ -39,12 +39,6 @@ namespace
 
 int main(int argc,char **argv)
 {
-  #ifdef G4_VERSION
-    std::cout << "G4_VERSION FOUND" << std::endl;
-  #else
-    std::cout << "G4_VERSION NOT FOUND" << std::endl;
-  #endif
-  
   // Defaults
   G4int start_time = time(0);
   G4bool use_xsec_tables = true;

@@ -17,12 +17,6 @@ G4VisManager* visManager;
 
 #include "G4UIExecutive.hh"
 
-// For Grabbing Geant4 Version
-#include <cstdio>
-#include <iostream>
-#include <memory>
-#include <stdexcept>
-#include <array>
 // For G4cout and G4cerr handling
 #include "MySession.hh"
 #include "G4ios.hh"
@@ -31,25 +25,6 @@ G4VisManager* visManager;
 // declare global variables
 G4long seed;
 G4String macro, root_output_name, gOutName, bremTest, resonance_in, standalone_in, verbose_in, addNRF_in, checkEvents_in, weight_histo_in; 
-
-G4String exec(const char* cmd)
-{
-  std::array<char, 128> buffer;
-  G4String result;
-  std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);	
-  
-  if (!pipe) 	 
-  {	
-      throw std::runtime_error("popen() failed!");	
-  }	
-  
-  while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) 	  
-  {	
-      result += buffer.data();
-  }	 
-  
-  return result;
-}
  
 namespace
 {
@@ -65,9 +40,6 @@ namespace
 
 int main(int argc,char **argv)
 {
-  // Grab Geant4 Version 
-  const char* the_version_cmd = "geant4-config --version";
-  G4String geant4_version = exec(the_version_cmd);
   // Defaults
   G4int start_time = time(0);
   G4bool use_xsec_tables = true;

@@ -13,10 +13,9 @@ string(COMPARE EQUAL "${THE_VERSION}" "10.5" VERSION_BOOL)
 
 if(${VERSION_BOOL})
   message(STATUS "Version 10.5")
-  option(G4_VERSION "On or Off" ON)
+  add_compile_definitions(G4_VERSION)
 else()
   message(STATUS "Not Version 10.5")
-  option(G4_VERSION "On or Off" OFF)
 endif()
 
 option(WITH_GEANT4_VERSION_10_7 "Build for Geant4 Version 10.7" OFF) # 

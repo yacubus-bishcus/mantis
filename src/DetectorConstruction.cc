@@ -105,7 +105,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         Lead_chopper->AddIsotope(Lead206, 24.1*perCent);
         Lead_chopper->AddIsotope(Lead207, 22.1*perCent);
         Lead_chopper->AddIsotope(Lead208, 52.4*perCent);
-        G4Element* Tungsten_chopper = new G4Element("Chopper_Tungsten","W",4);
+        G4Element* Tungsten_chopper = new G4Element("Chopper_Tungsten","W",5);
         Tungsten_chopper->AddIsotope(Tungsten180, 0.000012*perCent);
         Tungsten_chopper->AddIsotope(Tungsten182, 26.50*perCent);
         Tungsten_chopper->AddIsotope(Tungsten183, 14.31*perCent);

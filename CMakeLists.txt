@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(mantis)
 option(WITH_GEANT4_UIVIS "Build with Geant4 UI and Vis drivers" ON) # Can switch to OFF if not building with vis drivers --> NOT recommended 
-option(INCLUDE_G4OPTPARAM "Include Optical Parameters Header" OFF)
+
 # Determine the Geant4 Version 
 execute_process(COMMAND bash -c "geant4-config --version"
                 OUTPUT_VARIABLE MY_GEANT4_VERSION
@@ -13,13 +13,8 @@ string(SUBSTRING "${MY_GEANT4_VERSION}" 0 4 THE_VERSION)
 string(COMPARE EQUAL "${THE_VERSION}" "10.7" VERSION_BOOL)	
 
 if(${VERSION_BOOL})	
-  option(INCLUDE_G4OPTPARAM "Include Optical Parameters Header" ON)
-  message(STATUS "Version is at least 10.7")
-endif()
-
-if(INCLUDE_G4OPTPARAM)
-  message(STATUS "Adding G4_OPTPARAM Flag")
   ADD_COMPILER_EXPORT_FLAGS(G4_OPTPARAM)
+  message(STATUS "Version is at least 10.7")
 endif()
 
 add_compile_options(-Wno-unused-variable -Wno-shadow -Wno-unused-parameter)

@@ -12,6 +12,7 @@ execute_process(COMMAND bash -c "geant4-config --version"
 string(SUBSTRING "${MY_GEANT4_VERSION}" 0 4 THE_VERSION)	
 string(COMPARE EQUAL "${THE_VERSION}" "10.7" VERSION_BOOL)	
 
+# If the version if > 10.7 then add the compile definition to avoid depreceated code!
 if(${VERSION_BOOL})	
   add_compile_definitions(G4_OPTPARAM)
   message(STATUS "Version is at least 10.7")

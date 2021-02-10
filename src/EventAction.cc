@@ -36,6 +36,7 @@ void EventAction::BeginOfEventAction(const G4Event*)
   c_secondaries = 0;
   energyv.clear();
   timev.clear();
+  std::cout << "EventAction::BeginOfEventAction -> Ending" << std::endl;
 }
 
 void EventAction::EndOfEventAction(const G4Event* anEvent)

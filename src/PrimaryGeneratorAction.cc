@@ -26,129 +26,129 @@
 #include "PrimaryGenActionMessenger.hh"
 extern G4long seed;
 
-PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_in) 
+PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_in)
         : G4VUserPrimaryGeneratorAction(),
-        bremTest(brem_in), resonance_test(resonance_in), chosen_energy(-1), 
+        bremTest(brem_in), resonance_test(resonance_in), chosen_energy(-1),
         genM(NULL), fParticleGun(0)
 {
 
-  genM = new PrimaryGenActionMessenger(this);
-  fParticleGun = new G4ParticleGun(1);
+        genM = new PrimaryGenActionMessenger(this);
+        fParticleGun = new G4ParticleGun(1);
 
-  if(bremTest)
-  {
-    fParticleGun->SetParticleDefinition(G4Electron::Definition());
-    G4cout << "Particle Type set to Electron!" << G4endl << G4endl;
-  }
-  else
-  {
-    fParticleGun->SetParticleDefinition(G4Gamma::Definition());
-    G4cout << "Particle Type set to Gamma!"<< G4endl << G4endl;
-  }
+        if(bremTest)
+        {
+                fParticleGun->SetParticleDefinition(G4Electron::Definition());
+                G4cout << "Particle Type set to Electron!" << G4endl << G4endl;
+        }
+        else
+        {
+                fParticleGun->SetParticleDefinition(G4Gamma::Definition());
+                G4cout << "Particle Type set to Gamma!"<< G4endl << G4endl;
+        }
 
-  // Default Kinematics
-  fParticleGun->SetParticleTime(0.0*ns);
+        // Default Kinematics
+        fParticleGun->SetParticleTime(0.0*ns);
 
-  // file contains the normalized brems distribution p(E), sampling distribution s(E),
-  // and binary 0/1 for off/on resonance useful in weighting
+        // file contains the normalized brems distribution p(E), sampling distribution s(E),
+        // and binary 0/1 for off/on resonance useful in weighting
 
-  if(!bremTest && !resonance_test && chosen_energy < 0)
-  {
-     gRandom->SetSeed(seed);
-     TFile *fin = TFile::Open("brems_distributions.root");
-     hBrems  = (TH1D*) fin->Get("hBrems");
-     hSample = (TH1D*) fin->Get("hSample");
-     if (hBrems && hSample)
-     {
-          G4cout << "Imported brems and sampling distributions from " << fin->GetName() << G4endl << G4endl;
-     }
-     else
-     {
-          G4cerr << "Error reading from file " << fin->GetName() << G4endl;
-          exit(1);
-     }
-  }
-  else if(!bremTest && !resonance_test && chosen_energy > 0)
-  {
-     G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction Chosen Energy set to: " << chosen_energy << " MeV" << G4endl;
-     HistoManager* histo = new HistoManager;
-     histo->SetChosenEnergy(chosen_energy);
-  }
-  else if(resonance_test)
-  {
-    G4cout << "Max Energy set to 2 MeV!" << G4endl;
-    HistoManager *histo = new HistoManager;
-    histo->SetChosenEnergy(2.0);
-  }
+        if(!bremTest && !resonance_test && chosen_energy < 0)
+        {
+                gRandom->SetSeed(seed);
+                TFile *fin = TFile::Open("brems_distributions.root");
+                hBrems  = (TH1D*) fin->Get("hBrems");
+                hSample = (TH1D*) fin->Get("hSample");
+                if (hBrems && hSample)
+                {
+                        G4cout << "Imported brems and sampling distributions from " << fin->GetName() << G4endl << G4endl;
+                }
+                else
+                {
+                        G4cerr << "Error reading from file " << fin->GetName() << G4endl;
+                        exit(1);
+                }
+        }
+        else if(!bremTest && !resonance_test && chosen_energy > 0)
+        {
+                G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction Chosen Energy set to: " << chosen_energy << " MeV" << G4endl;
+                HistoManager* histo = new HistoManager;
+                histo->SetChosenEnergy(chosen_energy);
+        }
+        else if(resonance_test)
+        {
+                G4cout << "Max Energy set to 2 MeV!" << G4endl;
+                HistoManager *histo = new HistoManager;
+                histo->SetChosenEnergy(2.0);
+        }
 
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
-  delete fParticleGun;
-  delete genM;
+        delete fParticleGun;
+        delete genM;
 }
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 
 // Set Particle Energy (Must be in generate primaries)
-  //std::cout << "PrimaryGeneratorAction::GeneratePrimaries -> Begin!" << std::endl;
-  if(chosen_energy < 0 && !bremTest && !resonance_test)
-  {
-    energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
-  }
+        //std::cout << "PrimaryGeneratorAction::GeneratePrimaries -> Begin!" << std::endl;
+        if(chosen_energy < 0 && !bremTest && !resonance_test)
+        {
+                energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
+        }
 
-  if(chosen_energy > 0 && !resonance_test)
-  {
-    energy = chosen_energy*MeV;
-  }
-  else if(resonance_test)
-  {
-    energy = SampleUResonances();
-  }
+        if(chosen_energy > 0 && !resonance_test)
+        {
+                energy = chosen_energy*MeV;
+        }
+        else if(resonance_test)
+        {
+                energy = SampleUResonances();
+        }
 
-  fParticleGun->SetParticleEnergy(energy);
-
-
-  const float pi=acos(-1);
-  G4double beam_size = 1.3*mm;
-  // Set beam position
-  G4double x_r = beam_size*acos(G4UniformRand())/pi*2.*cos(360.*G4UniformRand()*CLHEP::deg);
-  G4double y_r = beam_size*acos(G4UniformRand())/pi*2.*sin(360.*G4UniformRand()*CLHEP::deg);
-  fParticleGun->SetParticlePosition(G4ThreeVector(x_r,y_r,100*cm));
+        fParticleGun->SetParticleEnergy(energy);
 
 
-  // Set beam momentum
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,1)); // along z axis 
+        const float pi=acos(-1);
+        G4double beam_size = 1.3*mm;
+        // Set beam position
+        G4double x_r = beam_size*acos(G4UniformRand())/pi*2.*cos(360.*G4UniformRand()*CLHEP::deg);
+        G4double y_r = beam_size*acos(G4UniformRand())/pi*2.*sin(360.*G4UniformRand()*CLHEP::deg);
+        fParticleGun->SetParticlePosition(G4ThreeVector(x_r,y_r,100*cm));
 
-  fParticleGun->GeneratePrimaryVertex(anEvent);
-  G4double w = 1.0;
-        
-  if(chosen_energy < 0 && !bremTest && !resonance_test)
-  {
-    G4double s = hSample->GetBinContent(hSample->GetXaxis()->FindBin(energy));
-    G4double dNdE = hBrems->GetBinContent(hBrems->GetXaxis()->FindBin(energy));
-    w = dNdE/s;
-  }
-        
+
+        // Set beam momentum
+        fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,1)); // along z axis
+
+        fParticleGun->GeneratePrimaryVertex(anEvent);
+        G4double w = 1.0;
+
+        if(chosen_energy < 0 && !bremTest && !resonance_test)
+        {
+                G4double s = hSample->GetBinContent(hSample->GetXaxis()->FindBin(energy));
+                G4double dNdE = hBrems->GetBinContent(hBrems->GetXaxis()->FindBin(energy));
+                w = dNdE/s;
+        }
+
 // Pass the event information
-  eventInformation *anInfo = new eventInformation(anEvent);
-  anInfo->SetWeight(w);
-  anInfo->SetBeamEnergy(energy);
-  anEvent->SetUserInformation(anInfo);
-  //std::cout << "PrimaryActionGenerator::GeneratePrimaries() -> End!" << std::endl;
+        eventInformation *anInfo = new eventInformation(anEvent);
+        anInfo->SetWeight(w);
+        anInfo->SetBeamEnergy(energy);
+        anEvent->SetUserInformation(anInfo);
+        //std::cout << "PrimaryActionGenerator::GeneratePrimaries() -> End!" << std::endl;
 
 }
 
 G4double PrimaryGeneratorAction::SampleUResonances() {
-  std::vector<double> er;
-  er.push_back(1.65624253132*MeV);
-  er.push_back(1.7335537285*MeV);
-  er.push_back(1.86232584382*MeV);
+        std::vector<double> er;
+        er.push_back(1.65624253132*MeV);
+        er.push_back(1.7335537285*MeV);
+        er.push_back(1.86232584382*MeV);
 
-  G4int idx = Random.Integer(er.size());
-  G4double de = 25.0*eV;
+        G4int idx = Random.Integer(er.size());
+        G4double de = 25.0*eV;
 
-  return Random.Uniform(er[idx]-de, er[idx]+de);
+        return Random.Uniform(er[idx]-de, er[idx]+de);
 }

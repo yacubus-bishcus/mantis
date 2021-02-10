@@ -28,74 +28,74 @@
 StepMessenger::StepMessenger(SteppingAction* stepAction)
         : stepA(stepAction)
 {
-  myDir = new G4UIdirectory("/output/");
-  myDir->SetGuidance("Output Commands");
-  Cmd = new G4UIcmdWithAString("/output/myoutput",this);
-  Cmd->SetGuidance("Choose Desired Outputs");
-  Cmd->SetGuidance("Choice: ChopIncData, ChopOutData, NRFData, IntObjData, WaterIncData, CherenkovData, DetData, none (default)");
-  Cmd->SetParameterName("choice",false);
-  Cmd->SetDefaultValue("none");
-  Cmd->SetCandidates("ChopIncData ChopOutData NRFData IntObjData WaterIncData CherenkovData DetData none");
+        myDir = new G4UIdirectory("/output/");
+        myDir->SetGuidance("Output Commands");
+        Cmd = new G4UIcmdWithAString("/output/myoutput",this);
+        Cmd->SetGuidance("Choose Desired Outputs");
+        Cmd->SetGuidance("Choice: ChopIncData, ChopOutData, NRFData, IntObjData, WaterIncData, CherenkovData, DetData, none (default)");
+        Cmd->SetParameterName("choice",false);
+        Cmd->SetDefaultValue("none");
+        Cmd->SetCandidates("ChopIncData ChopOutData NRFData IntObjData WaterIncData CherenkovData DetData none");
 }
 
 StepMessenger::~StepMessenger()
 {
-  delete Cmd;
+        delete Cmd;
 }
 
 
 void StepMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 { // this function only works if named SetNewValue
-  if(command == Cmd)
-  {
-    G4String theCommand = newValue;
-    if(theCommand == "ChopIncData")
-    {
-      stepA->SetChopperIncDataFlag(1);
-      G4cout << "User Selected Chopper Incident Data." << G4endl;
-    }
-    else if(theCommand == "ChopOutData")
-    {
-      stepA->SetChopperOutDataFlag(1);
-      G4cout << "User Selected Chopper Emission Data." << G4endl;
-    }
-    else if(theCommand == "NRFData")
-    {
-      stepA->SetNRFDataFlag(1);
-      G4cout << "User Selected NRF Data." << G4endl;
-    }
-    else if(theCommand == "IntObjData")
-    {
-      stepA->SetIntObjDataFlag(1);
-      G4cout << "User Selected Interrogation Object Incident Data." << G4endl;
-    }
-    else if(theCommand == "WaterIncData")
-    {
-      stepA->SetWaterIncDataFlag(1);
-      G4cout << "User Selected Incident Water Data." <<G4endl;
-    }
-    else if(theCommand == "CherenkovData")
-    {
-      stepA->SetCherenkovDataFlag(1);
-      G4cout << "User Selected Cherenkov Data." <<G4endl;
-    }
-    else if(theCommand == "DetData")
-    {
-      stepA->SetDetDataFlag(1);
-      G4cout << "User Selected Detected Data."<<G4endl;
-    }
-    else if(theCommand == "none")
-    {
-      G4cout << "No output requested." << G4endl;
-    }
-    else
-    {
-      G4cerr << "ERROR: StepMessenger::SetStepInputValue Command not found." << G4endl;
-    }
+        if(command == Cmd)
+        {
+                G4String theCommand = newValue;
+                if(theCommand == "ChopIncData")
+                {
+                        stepA->SetChopperIncDataFlag(1);
+                        G4cout << "User Selected Chopper Incident Data." << G4endl;
+                }
+                else if(theCommand == "ChopOutData")
+                {
+                        stepA->SetChopperOutDataFlag(1);
+                        G4cout << "User Selected Chopper Emission Data." << G4endl;
+                }
+                else if(theCommand == "NRFData")
+                {
+                        stepA->SetNRFDataFlag(1);
+                        G4cout << "User Selected NRF Data." << G4endl;
+                }
+                else if(theCommand == "IntObjData")
+                {
+                        stepA->SetIntObjDataFlag(1);
+                        G4cout << "User Selected Interrogation Object Incident Data." << G4endl;
+                }
+                else if(theCommand == "WaterIncData")
+                {
+                        stepA->SetWaterIncDataFlag(1);
+                        G4cout << "User Selected Incident Water Data." <<G4endl;
+                }
+                else if(theCommand == "CherenkovData")
+                {
+                        stepA->SetCherenkovDataFlag(1);
+                        G4cout << "User Selected Cherenkov Data." <<G4endl;
+                }
+                else if(theCommand == "DetData")
+                {
+                        stepA->SetDetDataFlag(1);
+                        G4cout << "User Selected Detected Data."<<G4endl;
+                }
+                else if(theCommand == "none")
+                {
+                        G4cout << "No output requested." << G4endl;
+                }
+                else
+                {
+                        G4cerr << "ERROR: StepMessenger::SetStepInputValue Command not found." << G4endl;
+                }
 
-  }
-  else
-  {
-    G4cerr << "ERROR StepMessenger :: SetStepInputValue command != Cmd" << G4endl;
-  }
+        }
+        else
+        {
+                G4cerr << "ERROR StepMessenger :: SetStepInputValue command != Cmd" << G4endl;
+        }
 }

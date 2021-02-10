@@ -313,7 +313,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                 manager->FillNtupleSColumn(4,3, creatorProcess);
                                                 manager->FillNtupleDColumn(4,4, theTrack->GetGlobalTime()); // time units is nanoseconds
                                                 manager->AddNtupleRow(4);
-                                                manager->FillH1(11, theParticle->GetKineticEnergy()/(MeV), weight);
+                                                if(theParticle->GetKineticEnergy()/(eV) < 10.0) 
+                                                        manager->FillH1(11, theParticle->GetKineticEnergy()/(MeV), weight);
                                         }
                                         else if (theStatus == NotAtBoundary)
                                         {

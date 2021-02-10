@@ -22,9 +22,9 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "physicsList.hh"
+#include "PhysicsListNew.hh"
 
-physicsList::physicsList(G4bool addNRF_in, G4bool use_xsec_tables_in, 
+PhysicsListNew::PhysicsListNew(G4bool addNRF_in, G4bool use_xsec_tables_in,
                          G4bool use_xsec_integration_in, G4bool force_isotropic_in, 
                          G4bool standalone_in, G4bool verbose_in)
                         : addNRF(addNRF_in), use_xsec_tables(use_xsec_tables_in),
@@ -38,32 +38,24 @@ physicsList::physicsList(G4bool addNRF_in, G4bool use_xsec_tables_in,
 }
 
 
-physicsList::~physicsList()
+PhysicsListNew::~PhysicsListNew()
 {
 }
 
-void physicsList::ConstructPhysics() 
+void PhysicsListNew::ConstructPhysics()
 {
   G4DecayPhysics *theDecayPhysics = new G4DecayPhysics();
   theDecayPhysics->ConstructParticle();
   RegisterPhysics(theDecayPhysics);
 
-  // Add OpticalPhysics to physicsList
+  // Add OpticalPhysics to PhysicsListNew
   G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(0);
-  #ifndef G4OpticalParameters 
-    opticalPhysics->SetWLSTimeProfile("delta");
-    opticalPhysics->SetScintillationYieldFactor(1.0); // this would change if the yield changed based on particle type --> not relevant here 
-    opticalPhysics->SetTrackSecondariesFirst(kCerenkov, true);
-    opticalPhysics->SetTrackSecondariesFirst(kScintillation, true);
-    G4cout << "Geant4 10.5 Optical Physics Set." << G4endl;
-  #else
-    auto opticalParams = G4OpticalParameters::Instance();
-    G4cout << "Geant4 10.7 Optical Physics Set." << G4endl;
-  #endif
+  auto optParam = G4OpticalParameters::Instance();
+  G4cout << "Geant4.10.7 Physics List Used!" << G4endl;
 
   RegisterPhysics(opticalPhysics);
 
-  // Add NRF to the physicsList
+  // Add NRF to the PhysicsListNew
   if(addNRF)
   {
     RegisterPhysics(new G4NRFPhysics("NRF", use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose));
@@ -85,7 +77,7 @@ void physicsList::ConstructPhysics()
 }
 
 
-void physicsList::ConstructParticle() 
+void PhysicsListNew::ConstructParticle()
 {
   G4Gamma::Definition();
   G4Electron::Definition();
@@ -93,15 +85,16 @@ void physicsList::ConstructParticle()
 }
 
 
-void physicsList::ConstructProcess() 
+void PhysicsListNew::ConstructProcess()
 {
   G4VModularPhysicsList::ConstructProcess();
 }
 
 
-void physicsList::SetCuts() 
+void PhysicsListNew::SetCuts()
 {
   SetCutValue(0.05*mm, "e-");
   SetCutValue(0.05*mm, "e+");
   SetCutValue(0.05*mm, "proton");
 }
+

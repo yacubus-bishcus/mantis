@@ -32,7 +32,9 @@
 #include "G4NRFPhysics.hh"
 
 #include "G4OpticalPhysics.hh"
-#include "G4OpticalParameters.hh"
+#ifdef G4_OPTPARAM
+ #include "G4OpticalParameters.hh"
+#endif
 #include "G4Cerenkov.hh"
 #include "G4OpAbsorption.hh"
 #include "G4OpRayleigh.hh"

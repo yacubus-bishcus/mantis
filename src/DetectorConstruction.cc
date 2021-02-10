@@ -405,6 +405,16 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 chopperMat->AddElement(Plutonium_chopper, 1);
                 G4cout << "The Chopper material selected was: Plutonium" << G4endl;
         }
+        else if(chopperDensity == 11.34*g/cm3)
+        {
+                chopperMat->AddElement(Lead_chopper,1);
+                G4cout << "The Chopper material selected was: Lead" << G4endl;
+        }
+        else if(chopperDensity == 19.3*g/cm3)
+        {
+                chopperMat->AddElement(Tungsten_chopper,1);
+                G4cout << "The Chopper material selected was: Tungsten" << G4endl;
+        }
         else{G4cerr << "ERROR Chopper Density not found!" << G4endl; exit(100);}
 
         G4cout << "The Chopper material density selected was: " << chopperDensity/(g/cm3) << " g/cm3" << G4endl;

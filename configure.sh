@@ -115,6 +115,7 @@ echo Building Mantis...
 
 cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis 
 
+echo $DEBUGGING
 if [ $DEBUGGING != "true" ]
 then
    make -j4 && cd ../mantis/Input_Files

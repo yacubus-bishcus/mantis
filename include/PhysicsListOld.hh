@@ -22,8 +22,8 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 #ifdef PhysicsListOld
-#ifndef physicsList_hh
-#define physicsList_hh 1
+#ifndef PhysicsListOld_hh
+#define PhysicsListOld_hh 1
 
 #include "G4VModularPhysicsList.hh"
 #include "G4SystemOfUnits.hh"

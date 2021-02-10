@@ -333,8 +333,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           }
           else 
           {
-            G4cout << "theStatus: " << theStatus
-                   << " was none of the above." << G4endl;
             procCount = "noStatus";
           }
           // Keep track of Detector Process Data 

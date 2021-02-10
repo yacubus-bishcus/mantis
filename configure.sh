@@ -6,6 +6,7 @@ GEANT4_DIR="None"
 ROOT_DIRECTORY="None"
 RUN_TEST="true"
 DEBUGGING="false"
+VERBOSE="false"
 
 # Read Input Flags 
 
@@ -20,6 +21,7 @@ do
         echo "--root_dir            specify thisroot.sh Directory to be sourced"
         echo "--run_test            choose to run a test at the end of the build (optional Default=true)"
         echo "--debug               choose debugging mode for configure script (optional Default=false)"
+        echo "--verbose             choose verbosity mode for cmake (optional Default=false)"
         shift
         exit 0
         ;;
@@ -39,6 +41,10 @@ do
         DEBUGGING="${arg#*=}"
         shift
         ;;
+       -v|--verbose=*)
+       VERBOSE="${arg#*=}"
+       shift
+       ;;
     esac
 done
 
@@ -113,7 +119,14 @@ fi
 # Build Mantis 
 echo Building Mantis...
 
-cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis 
+cd ../ && mkdir mantis_run && cd mantis_run
+if [ $VERBOSE = "true" ]
+then
+   echo "Passing verbosity argument to cmake"
+   cmake -DVERBOSE=true ../mantis 
+else
+   cmake -DVERBOSE=false ../mantis
+fi
 
 if [ $DEBUGGING != "true" ]
 then

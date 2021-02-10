@@ -32,7 +32,7 @@ RunAction::~RunAction()
 {
 }
 
-void RunAction::BeginOfRunAction(const G4Run* aRun)
+void RunAction::BeginOfRunAction(const G4Run*)
 {
         if(output)
         {

@@ -26,12 +26,10 @@
 
 extern G4String gOutName;
 HistoManager::HistoManager(): fFactoryOn(false), chosen_energy(-1)
-{
-}
+{}
 
 HistoManager::~HistoManager()
-{
-}
+{}
 
 void HistoManager::Book(G4bool bremTest)
 {
@@ -60,7 +58,8 @@ void HistoManager::Book(G4bool bremTest)
   // open output file
   G4bool fileOpen = manager->OpenFile(gOutName);
 
-  if(! fileOpen){
+  if(! fileOpen)
+  {
     G4cerr << "HistoManager::Book(): Cannot Open " <<manager->GetFileName()<<G4endl;
     return;
   }
@@ -134,6 +133,7 @@ void HistoManager::Book(G4bool bremTest)
       manager->CreateNtupleDColumn("Energy");
       manager->CreateNtupleDColumn("Weight");
       manager->CreateNtupleSColumn("DetProcess");
+      manager->FinishNtuple();
     
       // Create ID 10 Histogram for Incident Detector 
       manager->CreateH1("Inc_Det_Weighted", "Incident Detector Weighted Energy Spectrum", nbins, 0., xmax, "MeV");

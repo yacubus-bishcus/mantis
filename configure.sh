@@ -119,22 +119,19 @@ echo $DEBUGGING
 if [ $DEBUGGING != "true" ]
 then
    make -j4 && cd ../mantis/Input_Files
-
-# Create Default Sampling Distribution
    echo Creating Default brems_distributions.root
    root -b -q -l 'Sampling.cc("Brem2.1_100M.root",2.1,"U")'
    cp brems_distributions.root ../../mantis_run && cd ../../mantis_run
 
-# Run Test 
    if [ $RUN_TEST = "true" ]
    then
       echo Testing a mantis run...
       ./mantis -m mantis.in -o test.root -s 1 
       echo "Test Run Complete. Test results can be found in test_error.log and test.log."
    fi
-
-   echo "Be sure to add the following to your bash profile: "
-   echo "export G4NRFGAMMADATA=$database_working_dir"
-   echo "Be sure to have thisroot.sh, geant4make.sh and geant4.sh all sourced prior to running"
-   echo "Mantis Configured. Good Luck and try the README.md!"
 fi
+
+echo "Be sure to add the following to your bash profile: "
+echo "export G4NRFGAMMADATA=$database_working_dir"
+echo "Be sure to have thisroot.sh, geant4make.sh and geant4.sh all sourced prior to running"
+echo "Mantis Configured. Good Luck and try the README.md!"

@@ -31,7 +31,7 @@ eventInformation::eventInformation()
         beamEnergy = 0.;
 }
 
-eventInformation::eventInformation(const G4Event* anEvent)
+eventInformation::eventInformation(const G4Event*)
 {
         weight = 0.; //aTrack->GetWeight();
         beamEnergy = 0.;

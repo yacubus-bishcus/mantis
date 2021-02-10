@@ -123,9 +123,9 @@ cd ../ && mkdir mantis_run && cd mantis_run
 if [ $VERBOSE = "true" ]
 then
    echo "Passing verbosity argument to cmake"
-   cmake -DVERBOSE=true ../mantis 
+   cmake -DMYVERBOSE=ON ../mantis 
 else
-   cmake -DVERBOSE=false ../mantis
+   cmake -DMYVERBOSE=OFF ../mantis
 fi
 
 if [ $DEBUGGING != "true" ]

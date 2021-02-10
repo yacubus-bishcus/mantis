@@ -93,7 +93,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 
 // Set Particle Energy (Must be in generate primaries)
-
+  std::cout << "PrimaryGeneratorAction::GeneratePrimaries -> Begin!" << std::endl;
   if(chosen_energy < 0 && !bremTest && !resonance_test)
   {
     energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
@@ -137,6 +137,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   anInfo->SetWeight(w);
   anInfo->SetBeamEnergy(energy);
   anEvent->SetUserInformation(anInfo);
+  std::cout << "PrimaryActionGenerator::GeneratePrimaries() -> End!" << std::endl;
 
 }
 

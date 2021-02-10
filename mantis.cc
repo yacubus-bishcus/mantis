@@ -95,7 +95,7 @@ int main(int argc,char **argv)
   }
   else gOutName=(std::string)root_output_name;
 
-  std::cout << "G4UImanager::GetUIpointer()" << std::endl;
+  //std::cout << "G4UImanager::GetUIpointer()" << std::endl;
   G4UImanager* UI = G4UImanager::GetUIpointer();
   MySession* LoggedSession = new MySession;
   
@@ -104,7 +104,7 @@ int main(int argc,char **argv)
     output = true;
     UI->SetCoutDestination(LoggedSession);
   }
-  std::cout << "UI->SetCoutDestination" << std::endl;
+  //std::cout << "UI->SetCoutDestination" << std::endl;
   // Write option selection to Outfile 
   if(standalone_in == "True" || standalone_in == "true")
   {
@@ -155,14 +155,14 @@ int main(int argc,char **argv)
   // set mandatory initialization classes
   DetectorConstruction* det = new DetectorConstruction(brem);
   runManager->SetUserInitialization(det);
-  std::cout << "Detector Constructed" << std::endl;
+  //std::cout << "Detector Constructed" << std::endl;
   // Set up Physics List
   physicsList *thePL = new physicsList(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
   runManager->SetUserInitialization(thePL);
   runManager->SetUserInitialization(new ActionInitialization(det, brem, resonance_test, output, checkEvents, weightHisto));
-  std::cout << "Action Initialized" << std::endl;
+  //std::cout << "Action Initialized" << std::endl;
   // Run manager initialized in macros
-  std::cout << "Initializing visManager"<<std::endl;
+  //std::cout << "Initializing visManager"<<std::endl;
 #ifdef G4VIS_USE
   if(ui || macro == "vis_save.mac")
   {
@@ -170,7 +170,7 @@ int main(int argc,char **argv)
     visManager->Initialize();
   }
 #endif
-  std::cout << "visManager Initialized" << std::endl;
+  //std::cout << "visManager Initialized" << std::endl;
   if(! ui)
   {
     G4String command = "/control/execute ";
@@ -183,7 +183,7 @@ int main(int argc,char **argv)
     ui->SessionStart();
     delete ui;
   }
-std::cout << "Deleting visManager..." << std::endl;
+//std::cout << "Deleting visManager..." << std::endl;
 #ifdef G4VIS_USE
   if(ui || macro == "vis_save.mac")
   {

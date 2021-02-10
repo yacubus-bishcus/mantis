@@ -9,13 +9,13 @@ execute_process(COMMAND bash -c "geant4-config --version"
                 )
 
 string(SUBSTRING "${MY_GEANT4_VERSION}" 0 4 THE_VERSION)
-string(COMPARE EQUAL "${THE_VERSION}" "10.5" VERSION_BOOL)
+string(COMPARE EQUAL "${THE_VERSION}" "10.7" VERSION_BOOL)
 
 if(${VERSION_BOOL})
-  message(STATUS "Version 10.5")
-  add_definitions(G4_VERSION)
+  message(STATUS "Version 10.7")
+  add_definitions(G4OpticalParameters)
 else()
-  message(STATUS "Not Version 10.5")
+  message(STATUS "Not Version 10.7")
 endif()
 
 option(WITH_GEANT4_VERSION_10_7 "Build for Geant4 Version 10.7" OFF) # 

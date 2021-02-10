@@ -127,9 +127,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
         if(chosen_energy < 0 && !bremTest && !resonance_test)
         {
-                G4double s = hSample->GetBinContent(hSample->GetXaxis()->FindBin(energy));
+                G4double theSampling = hSample->GetBinContent(hSample->GetXaxis()->FindBin(energy));
                 G4double dNdE = hBrems->GetBinContent(hBrems->GetXaxis()->FindBin(energy));
-                w = dNdE/s;
+                w = dNdE/theSampling;
         }
 
 // Pass the event information

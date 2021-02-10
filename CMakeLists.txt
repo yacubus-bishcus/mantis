@@ -13,7 +13,7 @@ string(COMPARE EQUAL "${THE_VERSION}" "10.5" VERSION_BOOL)
 
 if(${VERSION_BOOL})
   message(STATUS "Version 10.5")
-  add_compile_definitions(G4_VERSION)
+  add_definitions(G4_VERSION)
 else()
   message(STATUS "Not Version 10.5")
 endif()

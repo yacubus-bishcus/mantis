@@ -91,11 +91,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4Isotope* Lead207 = new G4Isotope("Lead207", 82, 207, 206.975897*g/mole);
         G4Isotope* Lead208 = new G4Isotope("Lead208", 82, 208, 207.976652*g/mole);
         
-        G4Isotope* Tungsten180 = new G4Isotope("Tung180", 74, 179.94671*g/mole);
-        G4Isotope* Tungsten182 = new G4Isotope("Tung182", 74, 181.948206*g/mole);
-        G4Isotope* Tungsten183 = new G4Isotope("Tung183", 74, 182.950224*g/mole);
-        G4Isotope* Tungsten184 = new G4Isotope("Tung182", 74, 183.950933*g/mole);
-        G4Isotope* Tungsten186 = new G4Isotope("Tung186", 74, 185.954365*g/mole);
+        G4Isotope* Tungsten180 = new G4Isotope("Tung180", 74, 179.9467*g/mole);
+        G4Isotope* Tungsten182 = new G4Isotope("Tung182", 74, 181.9482*g/mole);
+        G4Isotope* Tungsten183 = new G4Isotope("Tung183", 74, 182.9502*g/mole);
+        G4Isotope* Tungsten184 = new G4Isotope("Tung182", 74, 183.9509*g/mole);
+        G4Isotope* Tungsten186 = new G4Isotope("Tung186", 74, 185.9543*g/mole);
         
 // Setting up Chopper Materials 
         G4Element* Uranium_chopper = new G4Element("Chopper_Uranium", "U", 2); // name, element symbol, #isotopes

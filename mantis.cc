@@ -16,7 +16,7 @@ G4VisManager* visManager;
 #endif
 
 #include "G4UIExecutive.hh"
-
+#include <iostream>
 // For G4cout and G4cerr handling
 #include "MySession.hh"
 #include "G4ios.hh"
@@ -95,6 +95,7 @@ int main(int argc,char **argv)
   }
   else gOutName=(std::string)root_output_name;
 
+  std::cout << "G4UImanager::GetUIpointer()" << std::endl;
   G4UImanager* UI = G4UImanager::GetUIpointer();
   MySession* LoggedSession = new MySession;
   
@@ -103,7 +104,7 @@ int main(int argc,char **argv)
     output = true;
     UI->SetCoutDestination(LoggedSession);
   }
-  
+  std::cout << "UI->SetCoutDestination" << std::endl;
   // Write option selection to Outfile 
   if(standalone_in == "True" || standalone_in == "true")
   {
@@ -181,6 +182,7 @@ int main(int argc,char **argv)
     ui->SessionStart();
     delete ui;
   }
+std::cout << "Deleting visManager..." << std::endl;
 #ifdef G4VIS_USE
   if(ui || macro == "vis_save.mac")
   {

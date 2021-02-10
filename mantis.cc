@@ -16,7 +16,6 @@ G4VisManager* visManager;
 #endif
 
 #include "G4UIExecutive.hh"
-#include <iostream>
 
 // For G4cout and G4cerr handling
 #include "MySession.hh"

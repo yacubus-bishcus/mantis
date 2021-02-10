@@ -23,9 +23,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "physicsList.hh"
-#ifdef G4OpticalParameters
-  #include "G4OpticalParameters.hh"
-#endif
 
 physicsList::physicsList(G4bool addNRF_in, G4bool use_xsec_tables_in, 
                          G4bool use_xsec_integration_in, G4bool force_isotropic_in, 

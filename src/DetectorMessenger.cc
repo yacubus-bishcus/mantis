@@ -130,7 +130,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         Cmdtsel->SetCandidates("Uranium NaturalU Plutonium NaturalPu Lead Steel Plastic");
         Cmdpcmat->SetCandidates("GaAsP Bialkali");
         CmdChopperOn->SetCandidates("On on Off off");
-        CmdChopMaterial->SetCandidates("Uranium Plutonium");
+        CmdChopMaterial->SetCandidates("Uranium Plutonium Lead Tungsten");
         CmdAttenOn->SetCandidates("On on Off off");
         CmdAttenMat->SetCandidates("G4_Pb G4_Cu G4_Zn G4_Ag G4_Cd G4_Th G4_U G4_Au G4_W G4_Fe");
         CmdAttenMat2->SetCandidates("G4_POLYETHYLENE G4_POLYPROPYLENE G4_POLYSTYRENE G4_POLYVINYL_CHLORIDE G4_POLYCARBONATE");

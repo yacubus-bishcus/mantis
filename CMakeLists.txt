@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(mantis)
 option(WITH_GEANT4_UIVIS "Build with Geant4 UI and Vis drivers" ON) # Can switch to OFF if not building with vis drivers --> NOT recommended 
-if
+
 # Determine the Geant4 Version 
 execute_process(COMMAND bash -c "geant4-config --version"
                 OUTPUT_VARIABLE MY_GEANT4_VERSION

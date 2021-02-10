@@ -16,39 +16,16 @@ G4VisManager* visManager;
 #endif
 
 #include "G4UIExecutive.hh"
+#include <iostream>
 
 // For G4cout and G4cerr handling
 #include "MySession.hh"
 #include "G4ios.hh"
 #include "G4UIsession.hh"
 
-// For grabbing geant4 version 
-#include <cstdio>
-#include <iostream>
-#include <memory>
-#include <stdexcept>
-#include <array>
-
 // declare global variables
 G4long seed;
 G4String macro, root_output_name, gOutName, bremTest, resonance_in, standalone_in, verbose_in, addNRF_in, checkEvents_in, weight_histo_in; 
-//G4String my_geant4_version;
-
-G4String exec(const char* cmd) 
-{
-  std::array<char, 128> buffer;
-  G4String result;
-  std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
-  if (!pipe) 
-  {
-      throw std::runtime_error("popen() failed!");
-  }
-  while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) 
-  {
-      result += buffer.data();
-  }
-  return result;
-}
 
 namespace
 {
@@ -62,9 +39,12 @@ namespace
 
 int main(int argc,char **argv)
 {
-  // grab geant4 version
-  //const char* theCmd = "geant4-config --version";
-  //my_geant4_version = exec(theCmd);
+  #ifdef G4_VERSION
+    std::cout << "G4_VERSION FOUND" << std::endl;
+  #else
+    std::cout << "G4_VERSION NOT FOUND" << std::endl;
+  #endif
+  
   // Defaults
   G4int start_time = time(0);
   G4bool use_xsec_tables = true;

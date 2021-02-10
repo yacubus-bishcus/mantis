@@ -36,7 +36,7 @@ void HistoManager::Book(G4bool bremTest)
   G4AnalysisManager* manager = G4AnalysisManager::Instance();
   G4int nbins = 100000;
   manager->SetVerboseLevel(0);
-  #ifdef G4_OPTPARAM
+  #ifndef G4_OPTPARAM
     manager->SetNtupleMerging(true);
   #endif
   xmax = chosen_energy;

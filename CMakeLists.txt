@@ -14,9 +14,11 @@ string(COMPARE EQUAL "${THE_VERSION}" "10.7" VERSION_BOOL)
 
 if(${VERSION_BOOL})	
   option(INCLUDE_G4OPTPARAM "Include Optical Parameters Header" ON)
+  message(STATUS "Version is at least 10.7")
 endif()
 
 if(INCLUDE_G4OPTPARAM)
+  message(STATUS "Adding G4_OPTPARAM Flag")
   ADD_COMPILER_EXPORT_FLAGS(G4_OPTPARAM)
 endif()
 

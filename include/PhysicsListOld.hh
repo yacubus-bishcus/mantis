@@ -21,7 +21,7 @@
 // jbickus@mit.edu
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
-#ifdef PhysicsListOld
+
 #ifndef PhysicsListOld_hh
 #define PhysicsListOld_hh 1
 
@@ -73,5 +73,4 @@ class PhysicsListOld: public G4VModularPhysicsList {
   G4bool addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose;
 };
 
-#endif
 #endif

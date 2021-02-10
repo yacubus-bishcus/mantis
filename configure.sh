@@ -36,7 +36,7 @@ do
         shift
         ;;
         -d|--debug=*)
-        DEBUGGING="{arg#*=}"
+        DEBUGGING="${arg#*=}"
         shift
         ;;
     esac

@@ -199,6 +199,18 @@ void SetChopperMaterial(G4String val)
   {
     chopperDensity = 19.6*g/cm3;
   }
+  else if(val == "Lead")
+  {
+    chopperDensity = 11.34*g/cm3;
+  }
+  else if(val == "Tungsten")
+  {
+    chopperDensity = 19.3*g/cm3;
+  }
+  else
+  {
+    G4cerr << "DetectorConstruction::SetChopperMaterial --> Chopper Density not Found." << G4endl;
+  }
 }
 
 void setEndIntObj(G4double z_pos_con, G4double con_z_size)

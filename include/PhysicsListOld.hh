@@ -21,7 +21,7 @@
 // jbickus@mit.edu
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
-
+#ifdef PhysicsListOld
 #ifndef physicsList_hh
 #define physicsList_hh 1
 
@@ -59,10 +59,10 @@
 #include "G4Positron.hh"
 
 
-class physicsList: public G4VModularPhysicsList {
+class PhysicsListOld: public G4VModularPhysicsList {
  public:
-  physicsList(G4bool, G4bool, G4bool, G4bool, G4bool, G4bool);
-  ~physicsList();
+  PhysicsListOld(G4bool, G4bool, G4bool, G4bool, G4bool, G4bool);
+  ~PhysicsListOld();
 
   void ConstructParticle();
   void ConstructPhysics();
@@ -73,4 +73,5 @@ class physicsList: public G4VModularPhysicsList {
   G4bool addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose;
 };
 
+#endif
 #endif

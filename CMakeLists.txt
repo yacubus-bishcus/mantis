@@ -9,13 +9,6 @@ execute_process(COMMAND bash -c "geant4-config --version"
                 OUTPUT_VARIABLE MY_GEANT4_VERSION
                 )
 
-string(SUBSTRING "${MY_GEANT4_VERSION}" 0 4 THE_VERSION)
-string(COMPARE EQUAL "${THE_VERSION}" "10.7" VERSION_BOOL)
-
-if(${VERSION_BOOL})
-  add_definitions(G4OpticalParameters)
-endif()
-
 add_compile_options(-Wno-unused-variable -Wno-shadow -Wno-unused-parameter)
 if(WITH_GEANT4_UIVIS)
   find_package(Geant4 10.5 REQUIRED ui_all vis_all)

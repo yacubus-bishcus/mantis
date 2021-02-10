@@ -52,7 +52,6 @@ void PhysicsListNew::ConstructPhysics()
   G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(0);
   #ifdef G4_OPTPARAM
     auto optParam = G4OpticalParameters::Instance();
-    optParam->SetVerbose(0);
     G4cout << "Geant4.10.7 Physics List Used!" << G4endl;
   #else
     opticalPhysics->SetWLSTimeProfile("delta");

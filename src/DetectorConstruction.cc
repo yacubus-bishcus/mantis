@@ -445,7 +445,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         else{G4cerr << "ERROR Chopper Density not found!" << G4endl; exit(100);}
 
         G4cout << "The Chopper material density selected was: " << chopperDensity/(g/cm3) << " g/cm3" << G4endl;
-        G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
+        
+        if(chopperDensity == 19.6*g/cm3 || chopperDensity == 19.1*g/cm3)
+        {
+                G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
+        }
 
         G4cout << "The Chopper thickness was: " << chopper_thick/(mm) << " mm" << G4endl;
         G4cout << "The Chopper distance from the source was set as: " << chopper_z/(cm) << " cm" << G4endl;

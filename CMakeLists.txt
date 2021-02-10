@@ -13,10 +13,7 @@ string(SUBSTRING "${MY_GEANT4_VERSION}" 0 4 THE_VERSION)
 string(COMPARE EQUAL "${THE_VERSION}" "10.7" VERSION_BOOL)
 
 if(${VERSION_BOOL})
-  message(STATUS "Version 10.7")
   add_definitions(G4OpticalParameters)
-else()
-  message(STATUS "Not Version 10.7")
 endif()
 
 add_compile_options(-Wno-unused-variable -Wno-shadow -Wno-unused-parameter)

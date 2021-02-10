@@ -9,14 +9,14 @@ execute_process(COMMAND bash -c "geant4-config --version"
                 )
 
 string(SUBSTRING "${MY_GEANT4_VERSION}" 0 4 THE_VERSION)
-message(STATUS "${THE_VERSION}")
-string(COMPARE EQUAL "${THE_VERSION}" "10.7" VERSION_BOOL)
-message(STATUS "${VERSION_BOOL}")
+string(COMPARE EQUAL "${THE_VERSION}" "10.5" VERSION_BOOL)
 
 if(${VERSION_BOOL})
-  message(STATUS "Version 10.7")
+  message(STATUS "Version 10.5")
+  option(G4_VERSION "On or Off" ON)
 else()
-  message(STATUS "Not Version 10.7")
+  message(STATUS "Not Version 10.5")
+  option(G4_VERSION "On or Off" OFF)
 endif()
 
 option(WITH_GEANT4_VERSION_10_7 "Build for Geant4 Version 10.7" OFF) # 

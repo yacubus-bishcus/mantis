@@ -54,24 +54,25 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4Material *air = nist->FindOrBuildMaterial("G4_AIR");
         G4Material *steel = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
         G4Material *poly = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
-//G4Material *Water = nist->FindOrBuildMaterial("G4_WATER");
-// Need to have water built by user for raleigh scattering
+
+        // Materials For NIST Shielding 
         G4Material *tungsten = nist->FindOrBuildMaterial("G4_W");
         G4Material *lead = nist->FindOrBuildMaterial("G4_Pb");
         G4Material *gold = nist->FindOrBuildMaterial("G4_Au");
         G4Material *copper = nist->FindOrBuildMaterial("G4_Cu");
         G4Material *attenuator = nist->FindOrBuildMaterial(attenuatorMat);
         G4Material *low_z_attenuator = nist->FindOrBuildMaterial(attenuatorMat2);
-        G4Element *elPb = new G4Element("Lead", "Pb", 82, 207.2*g/mole);
+        
+        //G4Element *elPb = new G4Element("Lead", "Pb", 82, 207.2*g/mole);
         G4Element *elN = new G4Element("Nitrogen", "N2", 7, 14.01*g/mole);
         G4Element *elO = new G4Element("Oxygen", "O", 8, 16.0*g/mole);
         G4Element *elC = new G4Element("Carbon", "C", 6, 12.0*g/mole);
         G4Element *elH = new G4Element("Hydrogen", "H", 1, 1.00794*g/mole);
+        // Need to have water built by user for raleigh scattering
         G4Material *Water = new G4Material("Water", 0.99802*g/cm3,2, kStateLiquid,273.15, 1); // Name, density, numComponents, state, Temperature, pressure
         Water->AddElement(elH, 1);
         Water->AddElement(elO, 2);
         G4Material *plexiglass = nist->FindOrBuildMaterial("G4_PLEXIGLASS");
-
 
         G4Material *myVacuum = new G4Material("Vacuum", 1.e-5*g/cm3, 1, kStateGas, 273.15, 2.e-2*bar);
         myVacuum->AddMaterial(air,1);
@@ -79,13 +80,39 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // but pyrex is close enough as a borosilicate glass
         G4Material* PMT_mat = nist->FindOrBuildMaterial("G4_Pyrex_Glass");
 
-// Setting up weapons grade materials
+// Setting up weapons grade material Isotopes
         G4Isotope* Uranium235 = new G4Isotope("Uranium235", 92, 235, 235.04393*g/mole); // atomicnumber, number of nucleons, mass of mole
         G4Isotope* Uranium238 = new G4Isotope("Uranium238", 92, 238, 238.02891*g/mole);
         G4Isotope* Plutonium239 = new G4Isotope("Plutonium239",94, 239, 239.0521634*g/mole);
         G4Isotope* Plutonium240 = new G4Isotope("Plutonium240", 94, 240, 240.05381*g/mole);
+// Setting up Chopper Isotopes 
+        G4Isotope* Lead204 = new G4Isotope("Lead204", 82, 204, 203.973043*g/mole);
+        G4Isotope* Lead206 = new G4Isotope("Lead206", 82, 206, 205.974465*g/mole);
+        G4Isotope* Lead207 = new G4Isotope("Lead207", 82, 207, 206.975897*g/mole);
+        G4Isotope* Lead208 = new G4Isotope("Lead208", 82, 208, 207.976652*g/mole);
+        
+        G4Isotope* Tungsten180 = new G4Isotope("Tung180", 74, 179.94671*g/mole);
+        G4Isotope* Tungsten182 = new G4Isotope("Tung182", 74, 181.948206*g/mole);
+        G4Isotope* Tungsten183 = new G4Isotope("Tung183", 74, 182.950224*g/mole);
+        G4Isotope* Tungsten184 = new G4Isotope("Tung182", 74, 183.950933*g/mole);
+        G4Isotope* Tungsten186 = new G4Isotope("Tung186", 74, 185.954365*g/mole);
+        
+// Setting up Chopper Materials 
         G4Element* Uranium_chopper = new G4Element("Chopper_Uranium", "U", 2); // name, element symbol, #isotopes
         G4Element* Plutonium_chopper = new G4Element("Chopper_Plutonium","Pu",2);
+        G4Element* Lead_chopper = new G4Element("Chopper_Lead","Pb",4);
+        Lead_chopper->AddIsotope(Lead204, 1.4*perCent);
+        Lead_chopper->AddIsotope(Lead206, 24.1*perCent);
+        Lead_chopper->AddIsotope(Lead207, 22.1*perCent);
+        Lead_chopper->AddIsotope(Lead208, 52.4*perCent);
+        G4Element* Tungsten_chopper = new G4Element("Chopper_Tungsten","W",4);
+        Tungsten_chopper->AddIsotope(Tungsten180, 0.000012*perCent);
+        Tungsten_chopper->AddIsotope(Tungsten182, 26.50*perCent);
+        Tungsten_chopper->AddIsotope(Tungsten183, 14.31*perCent);
+        Tungsten_chopper->AddIsotope(Tungsten184, 30.759988*perCent);
+        Tungsten_chopper->AddIsotope(Tungsten186, 28.43*perCent);
+        
+// Setting up Interrogation object materials 
         G4Element* Uranium_interrogation = new G4Element("Interrogation_Uranium","U",2);
         G4Element* Plutonium_interrogation = new G4Element("Interrogation_Plutonium","Pu",2);
         G4Material* natural_uranium = nist->FindOrBuildMaterial("G4_U");

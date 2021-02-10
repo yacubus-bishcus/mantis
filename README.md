@@ -123,20 +123,17 @@ Dependencies
   * CERN ROOT Installed 
   * Cmake 
   
-__Version__:  Mantis and been built against and tested with Geant4 10.3 and 10.5, and ROOT 6.22. ROOT Version must be greater than 6.18. 
+__Version__:  Mantis and been built against and tested with Geant4 10.5 and 10.7, and ROOT 6.22. ROOT Version must be greater than 6.18. 
 
 EASY SETUP WITH CONFIGURE FILE 
 ==
 
 For Easy Set up run the following lines of code:
 `> git clone https://github.com/jacobbickus/mantis.git && cd mantis`
-`> ./configure.sh --geant4_dir=/home/user/path/to/Geant4_install`
-
-Be sure to put the exact path in for ROOT CERN if you do not have thisroot.sh sourced in your bashrc. 
-`> ./configure.sh --geant4_dir=/home/user/path/to/Geant4_install --root_dir=/home/user/path/to/thisroot.sh`
+`> ./configure.sh `
 
 
-INSTALLATION WITHOUT CONFIGURE FILE 
+INSTALLATION WITHOUT CONFIGURE FILE (ONLY NECESSARY IF YOU DID NOT RUN ./configure.sh)
 ==
 
 The Following Instructions should work once the Geant4 and CERN ROOT are installed:
@@ -223,7 +220,7 @@ Analysis
 Several helper scripts are included:
 1. runBatch.sh
 * The main call for running in batch mode on PSFC engaging cluster through slurm
-* Takes input <start Seed> <Last Seed> <Output FileName Root> where the number of jobs submitted = <Last Seed> - <start Seed>
+* Takes input <start Seed> <Last Seed> <Input Macro FileName> <Output FileName Root> where the number of jobs submitted = <Last Seed> - <start Seed>
  
 2. submit_geant4.slurm
 * This is the file for the slurm scheduler. Adjusting the time limit on each run can be important for scheduling 
@@ -232,36 +229,9 @@ Several helper scripts are included:
 * This merges the output files.
 * Takes inputs <"Output_FileName_Root*.root"> <merged_FileName.root> 
 
-3. Cherenkov.cc
-* This merges Cherenkov Events 
-* Outputs ROOT file: filename_CherenkovMerged(On/Off).root
-* Can be run in CERN ROOT with the command:
 
-`> root -b -q 'Cherenkov.cc("filenameBase", maxInputEnergy, ChopperState(true/false))'`
-
-4. EventCheck.cc
-* This checks for matching EventIDs across the Cherenkov, NRF and DetInfo TTrees.
-* Outputs two ROOT files: filename_NRF_to_Cher(On/Off).root and filename__NRF_to_Cher_to_Det(On/Off).root 
-* can be run in CERN ROOT with the command:
-
-`> root -b -q 'EventCheck.cc("filenameBase", ChopperState(true/false))'`
-
-5. WeightHisto.cc
-* This weights histograms from the various TTree branches "Energy:Weight"
-* Outputs ROOT file: filename_WeightedHistogram(On/Off).root 
-* can be run in CERN ROOT with the command:
-
-`> root -b -q 'WeightHisto.cc("filenameBase", InputEnergyMax, ChopperState(true/false))'`
-
-6. PrintResults.cc
+4. PrintResults.cc
 * This prints the Chopper On/Off Comparison results and Z-Scores
 * can be run in CERN ROOT with the command:
 
 `> root -b -q 'PrintResults.cc("filenameOnBase", "filenameOffBase", checkWeighted_Histograms_File, check_Cherenkov, check_EventCheck)'`
-
-7. Analysis.cc 
-* This runs Cherenkov.cc, EventCheck.cc, WeightHisto.cc and PrintResults.cc 
-* The Analysis.cc file can be run in CERN ROOT with the command:
-
-`> root -b -q 'Analysis.cc("ChopperOn","ChopperOff", maxInputEnergy)'`
-

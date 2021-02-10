@@ -64,9 +64,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4Material *low_z_attenuator = nist->FindOrBuildMaterial(attenuatorMat2);
         
         //G4Element *elPb = new G4Element("Lead", "Pb", 82, 207.2*g/mole);
-        G4Element *elN = new G4Element("Nitrogen", "N2", 7, 14.01*g/mole);
+        //G4Element *elN = new G4Element("Nitrogen", "N2", 7, 14.01*g/mole);
         G4Element *elO = new G4Element("Oxygen", "O", 8, 16.0*g/mole);
-        G4Element *elC = new G4Element("Carbon", "C", 6, 12.0*g/mole);
+        //G4Element *elC = new G4Element("Carbon", "C", 6, 12.0*g/mole);
         G4Element *elH = new G4Element("Hydrogen", "H", 1, 1.00794*g/mole);
         // Need to have water built by user for raleigh scattering
         G4Material *Water = new G4Material("Water", 0.99802*g/cm3,2, kStateLiquid,273.15, 1); // Name, density, numComponents, state, Temperature, pressure

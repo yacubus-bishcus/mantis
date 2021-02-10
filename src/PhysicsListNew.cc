@@ -44,7 +44,7 @@ PhysicsListNew::~PhysicsListNew()
 
 void PhysicsListNew::ConstructPhysics()
 {
-  G4DecayPhysics *theDecayPhysics = new G4DecayPhysics();
+  G4DecayPhysics *theDecayPhysics = new G4DecayPhysics(0);
   theDecayPhysics->ConstructParticle();
   RegisterPhysics(theDecayPhysics);
 

@@ -188,7 +188,7 @@ int main(int argc,char **argv)
   runManager->SetUserInitialization(det);
   //std::cout << "Detector Constructed" << std::endl;
   // Set up Physics List
-  if(geant4_version.compare(0,3,"10.7")
+  if(geant4_version.compare(0,3,"10.7"))
      PhysicsListNew *thePL = new PhysicsListNew(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
   else
      PhysicsListOld *thePL = new PhysicsListOld(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);

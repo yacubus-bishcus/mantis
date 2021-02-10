@@ -22,7 +22,7 @@ if(${VERSION_BOOL})
   message(STATUS "Version is at least 10.7")
 endif()
 
-if(${MY_VERBOSE})
+if(${MYVERBOSE})
   message(STATUS "Running make with Full Verbosity")
 else()
   message(STATUS "Subduing some verbosity.")

@@ -67,8 +67,8 @@ namespace
 int main(int argc,char **argv)
 {
   // Grab Geant4 Version 
-  const char* theCmd = 'geant4-config --version';
-  G4String geant4_version = exec(theCmd);
+  const char* the_version_cmd = "geant4-config --version";
+  G4String geant4_version = exec(the_version_cmd);
   // Defaults
   G4int start_time = time(0);
   G4bool use_xsec_tables = true;

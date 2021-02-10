@@ -22,7 +22,6 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifdef PhysicsListNew
 #ifndef PhysicsListNew_hh
 #define PhysicsListNew_hh 1
 
@@ -75,5 +74,4 @@ class PhysicsListNew: public G4VModularPhysicsList {
   G4bool addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose;
 };
 
-#endif
 #endif

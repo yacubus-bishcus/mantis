@@ -41,7 +41,7 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
-
+  std::cout << "SteppingAction::UserSteppingAction --> Beginning" << std::endl;
   G4StepPoint* endPoint   = aStep->GetPostStepPoint();
   G4StepPoint* startPoint = aStep->GetPreStepPoint();
   G4Track* theTrack = aStep->GetTrack();
@@ -354,4 +354,5 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       } // for for loop
     } // for if statement if first time in photocathode
   } // for if at boundary
-} // end of user steepping action function
+  std::cout << "SteppingAction::UserSteppingAction()-> Ending!" <<std::endl;
+} // end of user stepping action function

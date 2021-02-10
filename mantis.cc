@@ -2,10 +2,7 @@
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
 #include "DetectorConstruction.hh"
-#include "PhysicsListOld.hh"
-#ifdef G4_OPTPARAM
-  #include "PhysicsListNew.hh"
-#endif
+#include "PhysicsListNew.hh"
 #include "ActionInitialization.hh"
 // Typcially include
 #include "time.h"
@@ -186,17 +183,14 @@ int main(int argc,char **argv)
   G4RunManager* runManager = new G4RunManager;
   
   // set mandatory initialization classes
+  
   DetectorConstruction* det = new DetectorConstruction(brem);
   runManager->SetUserInitialization(det);
 
   // Set up Physics List
-  #ifdef G4_OPTPARAM
-    PhysicsListNew *thePLNew = new PhysicsListNew(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
-    runManager->SetUserInitialization(thePLNew);
-  #else
-     PhysicsListOld *thePLOld = new PhysicsListOld(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
-     runManager->SetUserInitialization(thePLOld);
-  #endif
+  PhysicsListNew *thePLNew = new PhysicsListNew(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
+  runManager->SetUserInitialization(thePLNew);
+  
   runManager->SetUserInitialization(new ActionInitialization(det, brem, resonance_test, output, checkEvents, weightHisto));
 
 #ifdef G4VIS_USE

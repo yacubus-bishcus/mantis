@@ -46,8 +46,8 @@ done
 
 echo Configuring mantis...
 # Lower inputs 
-echo $RUN_TEST | tr '[:upper:]' '[:lower:]'
-echo $DEBUGGING | tr '[:upper:]' '[:lower:]'
+echo $RUN_TEST | tr '[:upper:]' '[:lower:]' > /dev/null
+echo $DEBUGGING | tr '[:upper:]' '[:lower:]' > /dev/null
 current_dir="$(pwd)"
 cd ../
 #cd ~ 
@@ -115,7 +115,6 @@ echo Building Mantis...
 
 cd ../ && mkdir mantis_run && cd mantis_run && cmake ../mantis 
 
-echo $DEBUGGING
 if [ $DEBUGGING != "true" ]
 then
    make -j4 && cd ../mantis/Input_Files
@@ -126,7 +125,6 @@ then
    cp brems_distributions.root ../../mantis_run && cd ../../mantis_run
 
 # Run Test 
-   echo $RUN_TEST
    if [ $RUN_TEST = "true" ]
    then
       echo Testing a mantis run...

@@ -2,7 +2,8 @@
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
 #include "DetectorConstruction.hh"
-#include "physicsList.hh"
+#include "PhysicsListOld.hh"
+#include "PhysicsListNew.hh"
 #include "ActionInitialization.hh"
 // Typcially include
 #include "time.h"

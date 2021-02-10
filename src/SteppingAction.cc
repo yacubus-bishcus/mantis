@@ -30,7 +30,7 @@ SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, 
           drawIntObjDataFlag(0), drawWaterIncDataFlag(0), drawCherenkovDataFlag(0), drawDetDataFlag(0), 
           stepM(NULL)
 {
-  std::cout << "SteppingAction::SteppingAction" << std::endl;
+  //std::cout << "SteppingAction::SteppingAction" << std::endl;
   stepM = new StepMessenger(this);
   fExpectedNextStatus = Undefined;
 }
@@ -42,7 +42,7 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
-  std::cout << "SteppingAction::UserSteppingAction --> Beginning" << std::endl;
+  //std::cout << "SteppingAction::UserSteppingAction --> Beginning" << std::endl;
   G4StepPoint* endPoint   = aStep->GetPostStepPoint();
   G4StepPoint* startPoint = aStep->GetPreStepPoint();
   G4Track* theTrack = aStep->GetTrack();
@@ -353,5 +353,5 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       } // for for loop
     } // for if statement if first time in photocathode
   } // for if at boundary
-  std::cout << "SteppingAction::UserSteppingAction()-> Ending!" <<std::endl;
+  //std::cout << "SteppingAction::UserSteppingAction()-> Ending!" <<std::endl;
 } // end of user stepping action function

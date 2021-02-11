@@ -45,7 +45,7 @@ void PrintResults(const char* ChopOn, const char* ChopOff, std::string WeightOn 
         exit(100);
     }
     
-    if(WeightOn.compare(0,2,"NA") || WeightOff.compare(0,2,"NA"))
+    if(!WeightOn.compare(0,2,"NA") || !WeightOff.compare(0,2,"NA"))
     {
         std::cout << "Not analyzing Weighted Histogram files." << std::endl;
     }

@@ -250,63 +250,69 @@ void PrintResults(const char* ChopOn, const char* ChopOff, std::string WeightOn 
   // ******************************************************************************************************************************** //
   // Quick NRF to Cherenkov Analysis from Added Histograms File
   // ******************************************************************************************************************************** //
-  if(weightOnFile != NULL)
+  if(!WeightOn.compare(0,2,"NA") || !WeightOff.compare(0,2,"NA"))
   {
-    // NRF On Analysis
-    weightOnFile->cd();
-    weightOnFile->GetObject("wNRF_NRF_to_Cher",wNRF_NRF_to_Cher);
-    weighted_sum = wNRF_NRF_to_Cher->Integral();
-    wNRF_NRF_to_Cher->Print();
-
-    // NRF Off Analysis
-    weightOffFile->cd();
-    weightOffFile->GetObject("wNRF_NRF_to_Cher",wNRF_NRF_to_CherOff);
-    weighted_sum2 = wNRF_NRF_to_CherOff->Integral();
-    wNRF_NRF_to_CherOff->Print();
-
-    // Cher On Analysis
-    weightOnFile->cd();
-    weightOnFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_Cher);
-    weighted_sum3 = wCher_NRF_to_Cher->Integral();
-    wCher_NRF_to_Cher->Print();
-    // Cher Off Analysis
-    weightOffFile->cd();
-    weightOffFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_CherOff);
-    weighted_sum4 = wCher_NRF_to_CherOff->Integral();
-    wCher_NRF_to_CherOff->Print();
-    wNRFCher_to_NRF_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
-    wCherCher_to_NRF_z = abs(weighted_sum3 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum3),2) + pow(sqrt(weighted_sum4),2)));
-
-  // ******************************************************************************************************************************** //
-  // Quick NRF to Cherenkov to Detected Analysis from Added Histograms File
-  // ******************************************************************************************************************************** //
-
-    // NRF On Analysis
-    weightOnFile->cd();
-    weightOnFile->GetObject("wNRF_NRF_to_Cher_to_Det",wNRF_NRF_to_Cher_to_Det);
-    weighted_sum = wNRF_NRF_to_Cher_to_Det->Integral();
-    wNRF_NRF_to_Cher_to_Det->Print();
-
-    // NRF Off
-    weightOffFile->cd();
-    weightOffFile->GetObject("wNRF_NRF_to_Cher_to_Det",wNRF_NRF_to_Cher_to_DetOff);
-    weighted_sum2 = wNRF_NRF_to_Cher_to_DetOff->Integral();
-    wNRF_NRF_to_Cher_to_DetOff->Print();
-
-    // Cher On Analysis
-    weightOnFile->cd();
-    weightOnFile->GetObject("wCher_NRF_to_Cher_to_Det",wCher_NRF_to_Cher_to_Det);
-    weighted_sum3 = wCher_NRF_to_Cher_to_Det->Integral();
-    wCher_NRF_to_Cher_to_Det->Print();
-    // Cher Off Analysis
-    weightOffFile->cd();
-    weightOffFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_CherOff);
-    weighted_sum4 = wCher_NRF_to_CherOff->Integral();
-    wCher_NRF_to_CherOff->Print();
-    wNRFCher_to_NRF_to_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
-    wCherCher_to_NRF_to_det_z = abs(weighted_sum3 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum3),2) + pow(sqrt(weighted_sum4),2)));
+      std::cout << "Conducting Z-Score Tests..." << std::endl;
   }
-  
+  else
+  {
+      if(weightOnFile != NULL)
+      {
+        // NRF On Analysis
+        weightOnFile->cd();
+        weightOnFile->GetObject("wNRF_NRF_to_Cher",wNRF_NRF_to_Cher);
+        weighted_sum = wNRF_NRF_to_Cher->Integral();
+        wNRF_NRF_to_Cher->Print();
+
+        // NRF Off Analysis
+        weightOffFile->cd();
+        weightOffFile->GetObject("wNRF_NRF_to_Cher",wNRF_NRF_to_CherOff);
+        weighted_sum2 = wNRF_NRF_to_CherOff->Integral();
+        wNRF_NRF_to_CherOff->Print();
+
+        // Cher On Analysis
+        weightOnFile->cd();
+        weightOnFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_Cher);
+        weighted_sum3 = wCher_NRF_to_Cher->Integral();
+        wCher_NRF_to_Cher->Print();
+        // Cher Off Analysis
+        weightOffFile->cd();
+        weightOffFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_CherOff);
+        weighted_sum4 = wCher_NRF_to_CherOff->Integral();
+        wCher_NRF_to_CherOff->Print();
+        wNRFCher_to_NRF_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
+        wCherCher_to_NRF_z = abs(weighted_sum3 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum3),2) + pow(sqrt(weighted_sum4),2)));
+
+      // ******************************************************************************************************************************** //
+      // Quick NRF to Cherenkov to Detected Analysis from Added Histograms File
+      // ******************************************************************************************************************************** //
+
+        // NRF On Analysis
+        weightOnFile->cd();
+        weightOnFile->GetObject("wNRF_NRF_to_Cher_to_Det",wNRF_NRF_to_Cher_to_Det);
+        weighted_sum = wNRF_NRF_to_Cher_to_Det->Integral();
+        wNRF_NRF_to_Cher_to_Det->Print();
+
+        // NRF Off
+        weightOffFile->cd();
+        weightOffFile->GetObject("wNRF_NRF_to_Cher_to_Det",wNRF_NRF_to_Cher_to_DetOff);
+        weighted_sum2 = wNRF_NRF_to_Cher_to_DetOff->Integral();
+        wNRF_NRF_to_Cher_to_DetOff->Print();
+
+        // Cher On Analysis
+        weightOnFile->cd();
+        weightOnFile->GetObject("wCher_NRF_to_Cher_to_Det",wCher_NRF_to_Cher_to_Det);
+        weighted_sum3 = wCher_NRF_to_Cher_to_Det->Integral();
+        wCher_NRF_to_Cher_to_Det->Print();
+        // Cher Off Analysis
+        weightOffFile->cd();
+        weightOffFile->GetObject("wCher_NRF_to_Cher",wCher_NRF_to_CherOff);
+        weighted_sum4 = wCher_NRF_to_CherOff->Integral();
+        wCher_NRF_to_CherOff->Print();
+        wNRFCher_to_NRF_to_det_z = abs(weighted_sum - weighted_sum2)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum2),2)));
+        wCherCher_to_NRF_to_det_z = abs(weighted_sum3 - weighted_sum4)/(sqrt(pow(sqrt(weighted_sum3),2) + pow(sqrt(weighted_sum4),2)));
+      }
+  }
 
 // ******************************************************************************************************************************** //
 // Conduct Z Score Tests
@@ -326,13 +332,17 @@ void PrintResults(const char* ChopOn, const char* ChopOff, std::string WeightOn 
     std::cout << "Created Cherenkov Energy Z-Score: " << cher_z << std::endl;
     std::cout << "Incident Photocathode Z-Score: " << inc_det_z << std::endl;
     std::cout << "Detected Z-Score: " << det_z << std::endl;
+    
     // Weighted File
-    if(weightOnFile != NULL)
+    if(WeightOn.compare(0,2,"NA") && WeightOff.compare(0,2,"NA"))
     {
-        std::cout << "NRF to Cherenkov NRF Spectrum Z-Score: " << wNRFCher_to_NRF_z << std::endl;
-        std::cout << "NRF to Cherenkov Cherenkov Spectrum Z-Score: " << wCherCher_to_NRF_z << std::endl;
-        std::cout << "NRF to Cherenkov to Detector NRF Spectrum Z-Score: " << wNRFCher_to_NRF_to_det_z << std::endl;
-        std::cout << "NRF to Cherenkov to Detector Cherenkov Spectrum Z-Score: " << wCherCher_to_NRF_to_det_z << std::endl << std::endl;
+        if(weightOnFile != NULL)
+        {
+            std::cout << "NRF to Cherenkov NRF Spectrum Z-Score: " << wNRFCher_to_NRF_z << std::endl;
+            std::cout << "NRF to Cherenkov Cherenkov Spectrum Z-Score: " << wCherCher_to_NRF_z << std::endl;
+            std::cout << "NRF to Cherenkov to Detector NRF Spectrum Z-Score: " << wNRFCher_to_NRF_to_det_z << std::endl;
+            std::cout << "NRF to Cherenkov to Detector Cherenkov Spectrum Z-Score: " << wCherCher_to_NRF_to_det_z << std::endl << std::endl;
+        }
     }
     
 // End of Analysis

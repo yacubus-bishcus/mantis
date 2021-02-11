@@ -113,10 +113,10 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
     
 	for (int i = 1; i <= nbins; ++i) 
 	{
-     double value = ho->GetBinContent(brems_nbin*(i-1)/nbins+1);
+     		double value = ho->GetBinContent(brems_nbin*(i-1)/nbins+1);
 		hBrems->SetBinContent(i, value);
-
 	}
+	
 	std::cout << "Finished creating hBrems!" << std::endl;
 	hBrems->Scale(1.0/hBrems->Integral());
 

@@ -45,7 +45,7 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* WeightOn 
         exit(100);
     }
     
-    if(WeightOn == "NA" || WeightOff == "NA")
+    if(WeightOn.compare(0,2,"NA") || WeightOff.compare(0,2,"NA"))
     {
         std::cout << "Not analyzing Weighted Histogram files." << std::endl;
     }
@@ -80,6 +80,7 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* WeightOn 
     TH1D *IntObjInOn, *IntObjOutOn, *IntObjInOff, *IntObjOutOff, *IntNRFInOn, *IntNRFOutOn, *IntNRFInOff, *IntNRFOutOff;
     TH1D *CherenkovOn, *CherenkovOff;
     TH1D *WaterInOn, *WaterInOff, *WaterNRFOn, *WaterNRFOff;
+    TH1D *DetData, *DetDataOff;
     TH1D *DetOn, *DetOff;
 
     // Potential Histograms from Added Weighted Histograms File

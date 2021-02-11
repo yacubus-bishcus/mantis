@@ -426,11 +426,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         {
                 chopperMat->AddElement(Uranium_chopper,1);
                 G4cout << "The Chopper material selected was: Uranium" << G4endl;
+                G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
         }
         else if(chopperDensity == 19.6*g/cm3)
         {
                 chopperMat->AddElement(Plutonium_chopper, 1);
                 G4cout << "The Chopper material selected was: Plutonium" << G4endl;
+                G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
         }
         else if(chopperDensity == 11.34*g/cm3)
         {
@@ -446,10 +448,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
         G4cout << "The Chopper material density selected was: " << chopperDensity/(g/cm3) << " g/cm3" << G4endl;
         
-        if(chopperDensity == 19.6*g/cm3 || chopperDensity == 19.1*g/cm3)
-        {
-                G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
-        }
 
         G4cout << "The Chopper thickness was: " << chopper_thick/(mm) << " mm" << G4endl;
         G4cout << "The Chopper distance from the source was set as: " << chopper_z/(cm) << " cm" << G4endl;

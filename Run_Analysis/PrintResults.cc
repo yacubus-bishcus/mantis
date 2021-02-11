@@ -18,7 +18,7 @@
 // entries, weighted sums, and Z-Scores.
 //
 
-void PrintResults(const char* ChopOn, const char* ChopOff, const char* WeightOn = "NA", const char* WeightOff = "NA")
+void PrintResults(const char* ChopOn, const char* ChopOff, std::string WeightOn = "NA", std::string WeightOff = "NA")
 {
     TFile *onFile, *offFile, *weightOnFile, *weightOffFile;
     
@@ -52,20 +52,22 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* WeightOn 
     else
     {
         std::cout << "Analyzing Weighted Histogram files." << std::endl;
-        if(!gSystem->AccessPathName(WeightOn))
+        const char* WeightOnChar = WeightOn.c_str();
+        const char* WeightOffChar = WeightOff.c_str();
+        if(!gSystem->AccessPathName(WeightOnChar))
         {
             std::cout << "Weight Histogram File On Found." << std::endl;
-            weightOnFile = new TFile(WeightOn);
+            weightOnFile = new TFile(WeightOnChar);
         }
         else
         {
             std::cerr << "Weight Histogram File not found. " << std::endl;
             exit(100);
         }
-        if(!gSystem->AccessPathName(WeightOff))
+        if(!gSystem->AccessPathName(WeightOffChar))
         {
             std::cout << "Weight Histogram File Off Found." << std::endl;
-            weightOffFile = new TFile(WeightOff);
+            weightOffFile = new TFile(WeightOffChar);
         }
         else
         {

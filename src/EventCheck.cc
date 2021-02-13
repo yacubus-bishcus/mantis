@@ -112,7 +112,7 @@ EventCheck::EventCheck()
         }
 
         // Grab DetInfo Events
-        num_entries2 = DetData->Draw("EventID:Energy:Weight:Time","CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\")","goff");
+        num_entries2 = DetData->Draw("EventID:Energy:Weight:Time","CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\"","goff");
         G4cout << "Total Number of Detected Optical Photon entries: " << num_entries2 << G4endl << G4endl;
         G4double *detEvent = DetData->GetVal(0);
         G4double *detEnergy = DetData->GetVal(1);

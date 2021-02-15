@@ -26,9 +26,9 @@
 #include "PrimaryGenActionMessenger.hh"
 extern G4long seed;
 
-PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_in)
+PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_in, G4String inFile_in)
         : G4VUserPrimaryGeneratorAction(),
-        bremTest(brem_in), resonance_test(resonance_in), chosen_energy(-1),
+        bremTest(brem_in), resonance_test(resonance_in), inFile(inFile_in), chosen_energy(-1),
         genM(NULL), fParticleGun(0)
 {
 
@@ -55,7 +55,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
         if(!bremTest && !resonance_test && chosen_energy < 0)
         {
                 gRandom->SetSeed(seed);
-                TFile *fin = TFile::Open("brems_distributions.root");
+                TFile *fin = TFile::Open(inFile.c_str());
                 hBrems  = (TH1D*) fin->Get("hBrems");
                 hSample = (TH1D*) fin->Get("hSample");
                 if (hBrems && hSample)

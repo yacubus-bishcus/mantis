@@ -90,7 +90,8 @@ int main(int argc,char **argv)
                         return 1;
                 }
         }
-
+        
+        std::cout << root_output_name << std::endl;
         std::string RootOutputFile = (std::string)root_output_name;
         if(RootOutputFile.find(".root")<RootOutputFile.length()) {
                 gOutName=(std::string)RootOutputFile.substr(0, RootOutputFile.find(".root"));
@@ -146,6 +147,7 @@ int main(int argc,char **argv)
         }
 
         G4cout << "Seed set to: " << seed << G4endl;
+        std::cout << "Seed set to: " << seed << std::endl;
 
         // choose the Random engine
         CLHEP::HepRandom::setTheEngine(new CLHEP::RanluxEngine);

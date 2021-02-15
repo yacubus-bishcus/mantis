@@ -30,6 +30,7 @@
 #include "StackingAction.hh"
 #include "EventAction.hh"
 #include "HistoManager.hh"
+#include "G4Types.hh"
 
 
 ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool brem_check, G4bool resonance_in,

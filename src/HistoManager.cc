@@ -25,6 +25,8 @@
 #include "HistoManager.hh"
 
 extern G4String gOutName;
+extern G4String inFile;
+
 HistoManager::HistoManager() : fFactoryOn(false), chosen_energy(-1)
 {
 }
@@ -44,19 +46,24 @@ void HistoManager::Book(G4bool bremTest)
         xmax = chosen_energy;
         if(!bremTest && chosen_energy < 0)
         {
-                TFile *fin = TFile::Open("brems_distributions.root");
-                hBrems  = (TH1D*) fin->Get("hBrems");
-                if (hBrems)
+                TFile *fin = TFile::Open(inFile.c_str());
+                if(inFile.compare(0,24, "brems_distributions.root"))
                 {
-                        xmax = hBrems->GetXaxis()->GetXmax();
-                        G4cout << "Found Input Max Energy: " << xmax << " MeV" << G4endl;
-                        fin->Close();
+                        hBrems  = (TH1D*) fin->Get("hBrems");
+                        if (hBrems)
+                        {
+                                xmax = hBrems->GetXaxis()->GetXmax();
+                                G4cout << "Found Input Max Energy: " << xmax << " MeV" << G4endl;
+                                fin->Close();
+                        }
+                        else
+                        {
+                                G4cerr << "Error reading from file " << fin->GetName() << G4endl;
+                                exit(1);
+                        }
                 }
                 else
-                {
-                        G4cerr << "Error reading from file " << fin->GetName() << G4endl;
-                        exit(1);
-                }
+                        xmax = 2.1;
         }
 
         // open output file

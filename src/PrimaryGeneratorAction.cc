@@ -56,16 +56,35 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
         {
                 gRandom->SetSeed(seed);
                 TFile *fin = TFile::Open(inFile.c_str());
-                hBrems  = (TH1D*) fin->Get("hBrems");
-                hSample = (TH1D*) fin->Get("hSample");
-                if (hBrems && hSample)
+                if(fin->GetName().compare(0,24,"brems_distributions.root") == 0)
                 {
-                        G4cout << "Imported brems and sampling distributions from " << fin->GetName() << G4endl << G4endl;
+                        hBrems  = (TH1D*) fin->Get("hBrems");
+                        hSample = (TH1D*) fin->Get("hSample");
+                
+                        if (hBrems && hSample)
+                        {
+                                G4cout << "Imported brems and sampling distributions from " << fin->GetName() << G4endl << G4endl;
+                        }
+               
+                        else
+                        {
+                                G4cerr << "Error reading from file " << fin->GetName() << G4endl;
+                                exit(1);
+                        }
                 }
                 else
                 {
-                        G4cerr << "Error reading from file " << fin->GetName() << G4endl;
-                        exit(1);
+                        hBrems = (TH1D*) fin->Get("ChopperData");
+                        if(hBrems)
+                        {
+                                G4cout << "Imported brems distribution from " << fin->GetName() << G4endl;
+                                file_check = true;
+                        }
+                        else
+                        {
+                                G4cerr << "Error reading from file " << fin->GetName() << G4endl;
+                                exit(1);
+                        }
                 }
         }
         else if(!bremTest && !resonance_test && chosen_energy > 0)
@@ -94,12 +113,16 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
 // Set Particle Energy (Must be in generate primaries)
         //std::cout << "PrimaryGeneratorAction::GeneratePrimaries -> Begin!" << std::endl;
-        if(chosen_energy < 0 && !bremTest && !resonance_test)
+        if(file_check)
+        {
+                energy = hBrems->GetRandom()*MeV;
+        }
+        else if(chosen_energy < 0 && !bremTest && !resonance_test)
         {
                 energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
         }
 
-        if(chosen_energy > 0 && !resonance_test)
+        else if(chosen_energy > 0 && !resonance_test)
         {
                 energy = chosen_energy*MeV;
         }
@@ -125,7 +148,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         fParticleGun->GeneratePrimaryVertex(anEvent);
         G4double w = 1.0;
 
-        if(chosen_energy < 0 && !bremTest && !resonance_test)
+        if(chosen_energy < 0 && !bremTest && !resonance_test && !file_check)
         {
                 G4double theSampling = hSample->GetBinContent(hSample->GetXaxis()->FindBin(energy));
                 G4double dNdE = hBrems->GetBinContent(hBrems->GetXaxis()->FindBin(energy));
@@ -138,7 +161,6 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         anInfo->SetBeamEnergy(energy);
         anEvent->SetUserInformation(anInfo);
         //std::cout << "PrimaryActionGenerator::GeneratePrimaries() -> End!" << std::endl;
-
 }
 
 G4double PrimaryGeneratorAction::SampleUResonances() {

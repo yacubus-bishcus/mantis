@@ -33,9 +33,9 @@
 
 
 ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool brem_check, G4bool resonance_in,
-                                           G4bool output_in, G4bool checkEvents_in, G4bool weight_histo_in)
+                                           G4bool output_in, G4bool checkEvents_in, G4bool weight_histo_in, G4String inFile_in)
         : G4VUserActionInitialization(), fDetector(det), bremTest(brem_check), resonance_test(resonance_in), output(output_in),
-        checkEvents(checkEvents_in), weightHisto(weight_histo_in)
+        checkEvents(checkEvents_in), weightHisto(weight_histo_in), inFile(inFile_in)
 {
 }
 
@@ -47,7 +47,7 @@ void ActionInitialization::Build() const
 {
         //std::cout << "ActionInitialization::Build() -> Begin!" << std::endl;
         HistoManager* histo = new HistoManager();
-        SetUserAction(new PrimaryGeneratorAction(bremTest, resonance_test));
+        SetUserAction(new PrimaryGeneratorAction(bremTest, resonance_test, inFile));
         RunAction* run = new RunAction(histo, bremTest, output, checkEvents, weightHisto);
         SetUserAction(run);
         EventAction* event = new EventAction(weightHisto);

@@ -68,7 +68,7 @@ void SetEnergyValue(G4double val)
 G4double SampleUResonances();
 
 private:
-G4bool bremTest, resonance_test;
+G4bool bremTest, resonance_test, file_check;
 G4String inFile;
 G4double chosen_energy;
 PrimaryGenActionMessenger* genM;

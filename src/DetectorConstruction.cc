@@ -164,7 +164,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         {
                 G4Tubs *solidLinac = new G4Tubs("Linac",0, 10*cm, 2*cm, 0*deg, 360*deg);
                 logicalLinac = new G4LogicalVolume(solidLinac, tungsten, "Linac");
-                new G4PVPlacement(0, G4ThreeVector(0,0, 3*cm), logicalLinac, "Linac", logicWorld, false, 0, checkOverlaps);
+                new G4PVPlacement(0, G4ThreeVector(0,0, 200*cm), logicalLinac, "Linac", logicWorld, false, 0, checkOverlaps);
                 G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 20*mm, 2*cm, 0*deg, 360*deg);
                 logicalVacuum = new G4LogicalVolume(solidVacuum, myVacuum, "Vacuum");
                 new G4PVPlacement(0, G4ThreeVector(0,0,0), logicalVacuum, "Vac", logicalLinac, false,0,checkOverlaps);

@@ -35,6 +35,9 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
 
         genM = new PrimaryGenActionMessenger(this);
         fParticleGun = new G4ParticleGun(1);
+        if(chosen_energy > 0)
+                G4cout << "PrimaryGeneratorAction::Beam Energy > 0" << G4endl;
+                
         G4cout << "PrimaryGeneratorAction::Beam Position Set to: (0,0,149.0)cm" << G4endl;
         if(bremTest)
         {

@@ -65,6 +65,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdTape = new G4UIcmdWithADouble("/mydet/OpticalTapeThickness",this);
         CmdVis = new G4UIcmdWithAString("/myvisualization/DetectorViewOnly", this);
         CmdVerbose = new G4UIcmdWithAString("/material/verbose",this);
+        CmdCheckOverlaps = new G4UIcmdWithAString("/material/CheckOverlaps",this);
 
 
         Cmd->SetGuidance("Choose Desired PhotoCathode Radius");
@@ -94,6 +95,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdPlexi->SetGuidance("Choose desired plexiglass thickness in mm");
         CmdTape->SetGuidance("Choose desired optical tape wrap thickness in cm");
         CmdVis->SetGuidance("Choose if visualization will show Cherenkov Detector Only");
+        CmdCheckOverlaps->SetGuidance("Choose to check for geometric overlaps");
         Cmd->SetParameterName("radius",false);
         CmdX->SetParameterName("waterx",false);
         CmdY->SetParameterName("watery",false);
@@ -126,6 +128,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdTape->SetParameterName("TapeThickness",false);
         CmdVis->SetParameterName("visualization",false);
         CmdVerbose->SetParameterName("verbosity",false);
+        CmdCheckOverlaps->SetParameterName("overlaps",false);
 
         Cmdtsel->SetCandidates("Uranium NaturalU Plutonium NaturalPu Lead Steel Plastic");
         Cmdpcmat->SetCandidates("GaAsP Bialkali");
@@ -136,6 +139,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdAttenMat2->SetCandidates("G4_POLYETHYLENE G4_POLYPROPYLENE G4_POLYSTYRENE G4_POLYVINYL_CHLORIDE G4_POLYCARBONATE");
         CmdVis->SetCandidates("True true False false");
         CmdVerbose->SetCandidates("True true False false On on Off off");
+        CmdCheckOverlaps->SetCandidates("True true False false");
 
 }
 
@@ -169,6 +173,7 @@ DetectorMessenger::~DetectorMessenger()
         delete CmdVis;
         delete CmdChopMaterial;
         delete CmdVerbose;
+        delete CmdCheckOverlaps;
 }
 
 
@@ -389,6 +394,17 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
                         theVerbositybool = true;
                 }
                 DetectorA->SetMaterialVerbosity(theVerbositybool);
+        }
+        else if(command == CmdCheckOverlaps)
+        {
+                G4String theCheck = newValue;
+                G4bool theCheckBool = true;
+                if(theCheck == "false" || theCheck == "False")
+                {
+                        G4cout << "CheckOverlaps set to off!" << G4endl;
+                        theCheckBool = false;
+                }
+                DetectorA->SetCheckOverlaps(theCheckBool);
         }
         else
         {

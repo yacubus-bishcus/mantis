@@ -484,7 +484,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
                 
         setBeginChopper((100 + chopper_z/(cm)) - chopper_thick/(cm)/2.);
-        G4cout << "Beginning of Chopper set to: " << (100 + chopper_z/(cm)) - chopper_thick/(cm)/2. << " cm" << G4endl;
+        G4cout << "Beginning of Chopper set to: " << (150 + chopper_z/(cm)) - chopper_thick/(cm)/2. << " cm" << G4endl;
 
 // **************************************************** Construct PMTs ********************************************************** //
         

@@ -181,15 +181,17 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 // Set up Collimator
         G4double container_z_pos = 2.4384*m +water_size_x + 1.0*m;
-        G4Box *solidCollimator = new G4Box("Collimator", 1*cm, water_size_y, 50*cm);
+        G4double colimator_size = 50*cm;
+        G4Box *solidCollimator = new G4Box("Collimator", 1*cm, water_size_y, colimator_size);
         G4Box *solidCollimatorRear = new G4Box("Collimator",0.6096*m - 2*cm, 2.5908*m, 1*cm);
         G4LogicalVolume *logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
         G4LogicalVolume *logicCollimatorRear = new G4LogicalVolume(solidCollimatorRear, lead, "Collimator");
-        std::cout << "Col placement: " << ((2.4384*m + 1.0*m + water_size_x)/2.0) - 50*cm << std::endl;
-        new G4PVPlacement(0, G4ThreeVector(-0.6096*m, 0, ((2.4384*m + 1.0*m + water_size_x)/2.0) - 50*cm),
+        G4double col_position = container_z_pos/2.0 - colimator_size*2.0;
+        std::cout << "Col placement: " << col_position << std::endl;
+        new G4PVPlacement(0, G4ThreeVector(-0.6096*m, 0, col_position),
                           logicCollimator, "ColL-Pb", logicWorld,
                           false, 0, checkOverlaps);
-        new G4PVPlacement(0, G4ThreeVector(0.6096*m, 0, 150*cm),
+        new G4PVPlacement(0, G4ThreeVector(0.6096*m, 0, 100*cm),
                           logicCollimator, "ColRi-Pb", logicWorld,
                           false, 0, checkOverlaps);
         new G4PVPlacement(0, G4ThreeVector(0,0,140*cm),

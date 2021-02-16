@@ -47,7 +47,7 @@ void HistoManager::Book(G4bool bremTest)
         
         if(!bremTest && chosen_energy < 0)
         {
-                if(gSystem->GetAccessPath(inFile.c_str()) == 0)
+                if(gSystem->AccessPathName(inFile.c_str()) == 0)
                 {
                         TFile *fin = TFile::Open(inFile.c_str());
                         if(inFile.compare(0,24, "brems_distributions.root") == 0)

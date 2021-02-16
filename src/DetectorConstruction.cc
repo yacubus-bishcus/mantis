@@ -469,15 +469,16 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         
         logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chop");
 
-        new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,100*cm + chopper_z),
+        new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,150*cm + chopper_z),
                         logicChopper, "Chop", logicWorld, false,
                         0, checkOverlaps);
-
 
                 
         setBeginChopper((100 + chopper_z/(cm)) - chopper_thick/(cm)/2.);
         G4cout << "Beginning of Chopper set to: " << (100 + chopper_z/(cm)) - chopper_thick/(cm)/2. << " cm" << G4endl;
 
+// **************************************************** Construct PMTs ********************************************************** //
+        
         G4double PMT_rmin = 0*cm;
         G4cout << G4endl << "The PC Radius was set to " << PMT_rmax/(cm) << " cm" << G4endl;
         G4double PMT_z = 7.62*cm; // 3 in PMT
@@ -518,7 +519,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                   checkOverlaps);
         }
 
-// ************************************** Construct Photocathode *********************************** //
+// **************************************************** Construct Photocathode ****************************************************** //
 
         G4double PC_z = 20*nm;
         G4cout << "The Photocathode material was set as: " << pc_mat << G4endl;

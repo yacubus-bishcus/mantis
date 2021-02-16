@@ -47,7 +47,7 @@ void HistoManager::Book(G4bool bremTest)
         if(!bremTest && chosen_energy < 0)
         {
                 TFile *fin = TFile::Open(inFile.c_str());
-                if(inFile.compare(0,24, "brems_distributions.root"))
+                if(inFile.compare(0,24, "brems_distributions.root") == 0)
                 {
                         hBrems  = (TH1D*) fin->Get("hBrems");
                         if (hBrems)
@@ -58,7 +58,7 @@ void HistoManager::Book(G4bool bremTest)
                         }
                         else
                         {
-                                G4cerr << "Error reading from file " << fin->GetName() << G4endl;
+                                G4cerr << "HistoManager::Error reading from file " << fin->GetName() << G4endl;
                                 exit(1);
                         }
                 }

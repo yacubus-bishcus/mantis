@@ -85,6 +85,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
                         if(hBrems)
                         {
                                 G4cout << "PrimaryGeneratorAction::Imported brems distribution from " << fin->GetName() << G4endl;
+                                HistoManager* histo = new HistoManager;
+                                histo->SetChosenEnergy(chosen_energy);
                                 file_check = true;
                         }
                         else

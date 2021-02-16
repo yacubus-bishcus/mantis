@@ -210,7 +210,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                           false,0,checkOverlaps);
         
         if(col_edge_position < container_edge_position)
+        {
                 G4cerr << "ERROR: Collimator does not cover to edge of Cargo Container!!!" << G4endl;
+                exit(1);
+        }
 
 // make container hollow
         G4Box *hollowContainer = new G4Box("ContainerAir", 0.6096*m -c_thick, 2.5908*m -c_thick, 2.4384*m -c_thick);
@@ -398,9 +401,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 // ************************************* Set up Chopper Wheel ************************************** //
 
-        if(chopper_z > water_z_pos)
+        G4double begin_chopper = (150 + chopper_z/(cm)) - chopper_thick/(cm)/2.;  
+        setBeginChopper(begin_chopper);
+        G4cout << "Chopper Edge Set to: " << begin_chopper/(cm) << " cm" << G4endl;
+        if(begin_chopper > container_edge_position)
         {
-                G4cerr << "ERROR: Chopper wheel location should be behind water detectors, exiting." << G4endl;
+                G4cerr << "ERROR: Chopper wheel location should be behind cargo container, exiting." << G4endl;
                 exit(100);
         }
         
@@ -481,10 +487,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,150*cm + chopper_z),
                         logicChopper, "Chop", logicWorld, false,
                         0, checkOverlaps);
-
-                
-        setBeginChopper((100 + chopper_z/(cm)) - chopper_thick/(cm)/2.);
-        G4cout << "Beginning of Chopper set to: " << (150 + chopper_z/(cm)) - chopper_thick/(cm)/2. << " cm" << G4endl;
 
 // **************************************************** Construct PMTs ********************************************************** //
         

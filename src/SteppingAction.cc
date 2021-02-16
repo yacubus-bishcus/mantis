@@ -136,6 +136,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         {
                                 manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV));
                                 theTrack->SetTrackStatus(fStopAndKill); // kill track only intersted in incident chopper Data 
+                                krun->AddStatusKilled();
                         }
                 }
         }
@@ -179,8 +180,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         if(isNRF && drawNRFDataFlag)
                                 manager->FillH1(5, theTrack->GetKineticEnergy()/(MeV), weight);
                 }
-        else if(bremTest)
-                theTrack->SetTrackStatus(fStopAndKill); // speeds up brem simulation
         }
 // *********************************************** Track Water Tank Interactions **************************************************** //
 
@@ -196,14 +195,19 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         if(isNRF && drawNRFDataFlag)
                                 manager->FillH1(7, theTrack->GetKineticEnergy()/(MeV), weight);
                 }
-        else if(bremTest)
-                theTrack->SetTrackStatus(fStopAndKill); // speeds up simulations 
         }
+
 // *********************************************** Track Cherenkov Interactions **************************************************** //
 
         // While in water keep track of cherenkov and pass number of cherenkov to EventAction
         if(startPoint->GetPhysicalVolume()->GetName().compare(0,5,"Water")==0) {
                 // only care about secondaries that occur in water volume
+                if(bremTest)
+                {
+                        theTrack->SetTrackStatus(fStopAndKill); // kill track only intersted in incident chopper Data 
+                        krun->AddStatusKilled();
+                }
+                        
                 const std::vector<const G4Track*>* secondaries = aStep->GetSecondaryInCurrentStep();
                 if(secondaries->size()>0)
                 {
@@ -237,7 +241,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 } // end of optical photons if statement
         } // end of if loop while inside water
 
-        // *********************************************** Track Photocathode Interactions **************************************************** //
+// *********************************************** Track Photocathode Interactions **************************************************** //
 
         // Photocathode Analysis
 

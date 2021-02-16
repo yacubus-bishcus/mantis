@@ -401,10 +401,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 // ************************************* Set up Chopper Wheel ************************************** //
 
-        G4double begin_chopper = (150 + chopper_z/(cm)) - chopper_thick/(cm)/2.;  
-        setBeginChopper(begin_chopper);
-        G4cout << "Chopper Edge Set to: " << begin_chopper/(cm) << " cm" << G4endl;
-        if(begin_chopper > container_edge_position)
+        G4double chopper_beginning_edge_position = (150*cm + chopper_z) - chopper_thick/2.;  
+        G4double chopper_end_edge_position = (150*cm + chopper_z) + chopper_thick/2.;
+        setBeginChopper(chopper_beginning_edge_position);
+        G4cout << "Chopper Beginning Edge Set to: " << chopper_beginning_edge_position/(cm) << " cm" << G4endl;
+        G4cout << "Chopper End Edge Set to: " << chopper_end_edge_position/(cm) << " cm" << G4endl;
+        if(chopper_end_edge_position > container_edge_position)
         {
                 G4cerr << "ERROR: Chopper wheel location should be behind cargo container, exiting." << G4endl;
                 exit(100);

@@ -57,43 +57,51 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
         if(!bremTest && !resonance_test && chosen_energy < 0)
         {
                 gRandom->SetSeed(seed);
-                TFile *fin = TFile::Open(inFile.c_str());
-                G4String fileName = (G4String)fin->GetName();
-                if(fileName.compare(0,24,"brems_distributions.root") == 0)
+                if(gSystem->AccessPathName(inFile.c_str()) == 0)
                 {
-                        file_check = false;
-                        hBrems  = (TH1D*) fin->Get("hBrems");
-                        hSample = (TH1D*) fin->Get("hSample");
-                
-                        if (hBrems && hSample)
+                        TFile *fin = TFile::Open(inFile.c_str());
+                        G4String fileName = (G4String)fin->GetName();
+                        if(fileName.compare(0,24,"brems_distributions.root") == 0)
                         {
-                                G4cout << "PrimaryGeneratorAction::Imported brems and sampling distributions from " << fin->GetName() << G4endl << G4endl;
+                                file_check = false;
+                                hBrems  = (TH1D*) fin->Get("hBrems");
+                                hSample = (TH1D*) fin->Get("hSample");
+
+                                if (hBrems && hSample)
+                                {
+                                        G4cout << "PrimaryGeneratorAction::Imported brems and sampling distributions from " << fin->GetName() << G4endl << G4endl;
+                                }
+
+                                else
+                                {
+                                        G4cerr << "Error reading from file " << fin->GetName() << G4endl;
+                                        exit(1);
+                                }
                         }
-               
                         else
                         {
-                                G4cerr << "Error reading from file " << fin->GetName() << G4endl;
-                                exit(1);
+
+                                hBrems = (TH1D*) fin->Get("ChopperIn_Weighted"); // the purpose of this functionality is to sample from a bremsstrahlung beam without importance sampling
+                                //std::cout << "here" << std::endl;
+                                //hBrems->Print();
+                                if(hBrems)
+                                {
+                                        G4cout << "PrimaryGeneratorAction::Imported brems distribution from " << fin->GetName() << G4endl;
+                                        HistoManager* histo = new HistoManager;
+                                        histo->SetChosenEnergy(chosen_energy);
+                                        file_check = true;
+                                }
+                                else
+                                {
+                                        G4cerr << "PrimaryGeneratorAction::Error reading from file " << fin->GetName() << G4endl;
+                                        exit(1);
+                                }
                         }
                 }
                 else
                 {
-                        
-                        hBrems = (TH1D*) fin->Get("ChopperIn_Weighted"); // the purpose of this functionality is to sample from a bremsstrahlung beam without importance sampling
-                        //std::cout << "here" << std::endl;
-                        //hBrems->Print();
-                        if(hBrems)
-                        {
-                                G4cout << "PrimaryGeneratorAction::Imported brems distribution from " << fin->GetName() << G4endl;
-                                HistoManager* histo = new HistoManager;
-                                histo->SetChosenEnergy(chosen_energy);
-                                file_check = true;
-                        }
-                        else
-                        {
-                                G4cerr << "PrimaryGeneratorAction::Error reading from file " << fin->GetName() << G4endl;
-                                exit(1);
-                        }
+                        G4cerr << "FATAL ERROR: PrimaryGeneratorAction:: " << inFile << " NOT FOUND!" << G4endl;
+                        exit(1);
                 }
         }
         else if(!bremTest && !resonance_test && chosen_energy > 0)

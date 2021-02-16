@@ -51,7 +51,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
 
 public:
-PrimaryGeneratorAction(G4bool, G4bool, G4String);
+PrimaryGeneratorAction(G4bool, G4bool);
 virtual ~PrimaryGeneratorAction();
 
 public:
@@ -69,7 +69,6 @@ G4double SampleUResonances();
 
 private:
 G4bool bremTest, resonance_test, file_check;
-G4String inFile;
 G4double chosen_energy;
 PrimaryGenActionMessenger* genM;
 G4ParticleGun* fParticleGun;

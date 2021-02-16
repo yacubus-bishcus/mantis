@@ -29,7 +29,7 @@ extern G4String inFile;
 
 PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_in)
         : G4VUserPrimaryGeneratorAction(),
-        bremTest(brem_in), resonance_test(resonance_in), file_check(false), chosen_energy(-1),
+        bremTest(brem_in), resonance_test(resonance_in), chosen_energy(-1),
         genM(NULL), fParticleGun(0)
 {
 
@@ -40,6 +40,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
         {
                 fParticleGun->SetParticleDefinition(G4Electron::Definition());
                 G4cout << "Particle Type set to Electron!" << G4endl << G4endl;
+                file_check = false;
         }
         else
         {
@@ -60,6 +61,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
                 G4String fileName = (G4String)fin->GetName();
                 if(fileName.compare(0,24,"brems_distributions.root") == 0)
                 {
+                        file_check = false;
                         hBrems  = (TH1D*) fin->Get("hBrems");
                         hSample = (TH1D*) fin->Get("hSample");
                 
@@ -94,12 +96,14 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
         }
         else if(!bremTest && !resonance_test && chosen_energy > 0)
         {
+                file_check = false;
                 G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction Chosen Energy set to: " << chosen_energy << " MeV" << G4endl;
                 HistoManager* histo = new HistoManager;
                 histo->SetChosenEnergy(chosen_energy);
         }
         else if(resonance_test)
         {
+                file_check = false;
                 G4cout << "Max Energy set to 2 MeV!" << G4endl;
                 HistoManager *histo = new HistoManager;
                 histo->SetChosenEnergy(2.0);

@@ -84,7 +84,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
                         }
                         else
                         {
-                                G4cerr << "Error reading from file " << fin->GetName() << G4endl;
+                                G4cerr << "PrimaryGeneratorAction::Error reading from file " << fin->GetName() << G4endl;
                                 exit(1);
                         }
                 }

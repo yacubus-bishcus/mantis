@@ -79,7 +79,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
                 else
                 {
                         
-                        hBrems = (TH1D*) fin->Get("ChopperData");
+                        hBrems = (TH1D*) fin->Get("ChopperIn_Weighted");
                         //std::cout << "here" << std::endl;
                         //hBrems->Print();
                         if(hBrems)

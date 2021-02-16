@@ -1,3 +1,4 @@
+/input/energy 2.1
 /chopper/state On
 /chopper/material Uranium
 /chopper/abundance 90
@@ -7,9 +8,8 @@
 /tracking/verbose 0
 /run/verbose 0
 /event/verbose 0
-/chopper/thickness 10
-/chopper/distance 50
-/mytar/IntObjRad 10 
+/chopper/thickness 30
+/chopper/distance 2 
 /mydet/Angle 120
 /mydet/attenuator Off
 /mydet/attenuator2 Off
@@ -36,4 +36,4 @@
 
 /vis/viewer/update
 /vis/viewer/set/autoRefresh true
-/run/beamOn 100
+/run/beamOn 1000

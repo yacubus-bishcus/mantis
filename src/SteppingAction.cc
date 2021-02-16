@@ -134,6 +134,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         {
                                 manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
                         }
+                        if(bremTest)
+                        {
+                                manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV));
+                        }
                 }
         }
         if(drawChopperOutDataFlag)

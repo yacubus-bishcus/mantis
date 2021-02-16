@@ -44,6 +44,7 @@ void HistoManager::Book(G4bool bremTest)
         manager->SetNtupleMerging(true);
   #endif
         xmax = chosen_energy;
+        
         if(!bremTest && chosen_energy < 0)
         {
                 TFile *fin = TFile::Open(inFile.c_str());
@@ -68,7 +69,9 @@ void HistoManager::Book(G4bool bremTest)
 
         // open output file
         G4bool fileOpen = manager->OpenFile(gOutName);
-
+        
+        std::cout << "Energy for xMax: " << xmax << std::endl;
+        
         if(!fileOpen)
         {
                 G4cerr << "HistoManager::Book(): Cannot Open " <<manager->GetFileName()<<G4endl;

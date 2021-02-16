@@ -65,7 +65,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
                 
                         if (hBrems && hSample)
                         {
-                                G4cout << "Imported brems and sampling distributions from " << fin->GetName() << G4endl << G4endl;
+                                G4cout << "PrimaryGeneratorAction::Imported brems and sampling distributions from " << fin->GetName() << G4endl << G4endl;
                         }
                
                         else
@@ -76,10 +76,10 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
                 }
                 else
                 {
-                        hBrems = (TH1D*) fin->Get("ChopperData");
+                        fin->GetObject("ChopperData", hBrems);
                         if(hBrems)
                         {
-                                G4cout << "Imported brems distribution from " << fin->GetName() << G4endl;
+                                G4cout << "PrimaryGeneratorAction::Imported brems distribution from " << fin->GetName() << G4endl;
                                 file_check = true;
                         }
                         else

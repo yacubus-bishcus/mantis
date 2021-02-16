@@ -281,6 +281,10 @@ void SetMaterialVerbosity(G4bool val)
 {
   material_verbose = val;
 }
+void SetCheckOverlaps(G4bool val)
+{
+  checkOverlaps = val;
+}
 
 private:
 
@@ -331,7 +335,7 @@ G4int nPMT;
 G4String pc_mat;
 
 // Output Properties 
-G4bool DetectorViewOnly, material_verbose, bremTest;
+G4bool DetectorViewOnly, material_verbose, checkOverlaps, bremTest;
 
 // Messenger 
 DetectorMessenger* detectorM;

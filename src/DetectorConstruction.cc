@@ -185,10 +185,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4Box *solidCollimatorRear = new G4Box("Collimator",0.6096*m - 2*cm, 2.5908*m, 1*cm);
         G4LogicalVolume *logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
         G4LogicalVolume *logicCollimatorRear = new G4LogicalVolume(solidCollimatorRear, lead, "Collimator");
-        new G4PVPlacement(0, G4ThreeVector(-0.6096*m, 0, 100*cm),
+        new G4PVPlacement(0, G4ThreeVector(-0.6096*m, 0, 150*cm),
                           logicCollimator, "ColL-Pb", logicWorld,
                           false, 0, checkOverlaps);
-        new G4PVPlacement(0, G4ThreeVector(0.6096*m, 0, 100*cm),
+        new G4PVPlacement(0, G4ThreeVector(0.6096*m, 0, 150*cm),
                           logicCollimator, "ColRi-Pb", logicWorld,
                           false, 0, checkOverlaps);
         new G4PVPlacement(0, G4ThreeVector(0,0,140*cm),

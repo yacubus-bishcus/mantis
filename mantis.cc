@@ -167,7 +167,7 @@ int main(int argc,char **argv)
         PhysicsListNew *thePLNew = new PhysicsListNew(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
         runManager->SetUserInitialization(thePLNew);
 
-        runManager->SetUserInitialization(new ActionInitialization(det, brem, resonance_test, output, checkEvents, weightHisto, inFile));
+        runManager->SetUserInitialization(new ActionInitialization(det, brem, resonance_test, output, checkEvents, weightHisto));
 
 #ifdef G4VIS_USE
         if(ui || macro == "vis_save.mac")

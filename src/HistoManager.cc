@@ -47,21 +47,29 @@ void HistoManager::Book(G4bool bremTest)
         
         if(!bremTest && chosen_energy < 0)
         {
-                TFile *fin = TFile::Open(inFile.c_str());
-                if(inFile.compare(0,24, "brems_distributions.root") == 0)
+                if(gSystem->GetAccessPath(inFile.c_str()) == 0)
                 {
-                        hBrems  = (TH1D*) fin->Get("hBrems");
-                        if (hBrems)
+                        TFile *fin = TFile::Open(inFile.c_str());
+                        if(inFile.compare(0,24, "brems_distributions.root") == 0)
                         {
-                                xmax = hBrems->GetXaxis()->GetXmax();
-                                G4cout << "Found Input Max Energy: " << xmax << " MeV" << G4endl;
-                                fin->Close();
+                                hBrems  = (TH1D*) fin->Get("hBrems");
+                                if (hBrems)
+                                {
+                                        xmax = hBrems->GetXaxis()->GetXmax();
+                                        G4cout << "Found Input Max Energy: " << xmax << " MeV" << G4endl;
+                                        fin->Close();
+                                }
+                                else
+                                {
+                                        G4cerr << "HistoManager::Error reading from file " << fin->GetName() << G4endl;
+                                        exit(1);
+                                }
                         }
-                        else
-                        {
-                                G4cerr << "HistoManager::Error reading from file " << fin->GetName() << G4endl;
-                                exit(1);
-                        }
+                }
+                else
+                {
+                        G4cerr << "FATAL ERROR: HistoManager:: " << inFile << " not Found!" << G4endl;
+                        exit(1);
                 }
         }
         else if(bremTest)

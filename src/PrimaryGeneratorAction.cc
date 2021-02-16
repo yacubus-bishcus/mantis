@@ -35,7 +35,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
 
         genM = new PrimaryGenActionMessenger(this);
         fParticleGun = new G4ParticleGun(1);
-
+        G4cout << "PrimaryGeneratorAction::Beam Position Set to: (0,0,148.5)cm" << G4endl;
         if(bremTest)
         {
                 fParticleGun->SetParticleDefinition(G4Electron::Definition());

@@ -187,7 +187,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4LogicalVolume *logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
         G4LogicalVolume *logicCollimatorRear = new G4LogicalVolume(solidCollimatorRear, lead, "Collimator");
         G4double col_position = container_z_pos - 2.4384*m - colimator_size;
-        G4double col_edge_position = col_position + colimator_size/2.0;
+        G4double col_edge_position = col_position + colimator_size;
         G4cout << "Edge of Colimator placement: " << col_edge_position/(cm) << " cm" << G4endl;
         new G4PVPlacement(0, G4ThreeVector(-0.6096*m - 1*cm, 0, col_position),
                           logicCollimator, "ColL-Pb", logicWorld,
@@ -200,7 +200,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                           false, 0, checkOverlaps);
 // Set up shipping container environment (8ft wide and 8.5ft high)
         G4double c_thick = 0.1905*cm; // approx 0.075 inch thick
-        G4double container_edge_position = container_z_pos - 2.4384*m/2.0;
+        G4double container_edge_position = container_z_pos - 2.4384*m;
         G4Box *solidContainer = new G4Box("Container", 0.6096*m, 2.5908*m, 2.4384*m);
         G4cout << "Edge of Container Placement: " << container_edge_position/(cm) << " cm" << G4endl;
         G4LogicalVolume *logicContainer = new G4LogicalVolume(solidContainer, steel, "Container");

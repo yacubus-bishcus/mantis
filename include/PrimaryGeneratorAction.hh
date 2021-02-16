@@ -36,7 +36,6 @@
 #include "G4Gamma.hh"
 #include "G4Electron.hh"
 #include "eventInformation.hh"
-#include "G4String.hh"
 
 #include "TFile.h"
 #include "TROOT.h"
@@ -80,6 +79,5 @@ TH1D *hSample;
 protected:
 G4float energy;
 };
-
 
 #endif

@@ -469,18 +469,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         
         logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chop");
 
-        if(!bremTest)
-        {
-                new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,100*cm + chopper_z),
-                                logicChopper, "Chop", logicWorld, false,
-                                0, checkOverlaps);
-        }
-        else
-        {                
-                new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm, chopper_z),
-                                logicChopper, "Chop", logicWorld, false,
-                                0, checkOverlaps);
-        }
+        new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,100*cm + chopper_z),
+                        logicChopper, "Chop", logicWorld, false,
+                        0, checkOverlaps);
+
+
                 
         setBeginChopper((100 + chopper_z/(cm)) - chopper_thick/(cm)/2.);
         G4cout << "Beginning of Chopper set to: " << (100 + chopper_z/(cm)) - chopper_thick/(cm)/2. << " cm" << G4endl;

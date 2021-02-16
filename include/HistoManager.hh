@@ -33,6 +33,7 @@
 #include "TFile.h"
 #include "TROOT.h"
 #include "TH1D.h"
+#include "TSystem.h"
 
 
 class HistoManager

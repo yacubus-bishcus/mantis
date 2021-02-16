@@ -186,7 +186,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4Box *solidCollimatorRear = new G4Box("Collimator",0.6096*m - 2*cm, 2.5908*m, 1*cm);
         G4LogicalVolume *logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
         G4LogicalVolume *logicCollimatorRear = new G4LogicalVolume(solidCollimatorRear, lead, "Collimator");
-        G4double col_position = container_z_pos - 2.4384/2.0 - colimator_size;
+        G4double col_position = container_z_pos - 2.4384*m - colimator_size;
         G4cout << "Colimator placement: " << col_position/(cm) << " cm" << G4endl;
         new G4PVPlacement(0, G4ThreeVector(-0.6096*m, 0, col_position),
                           logicCollimator, "ColL-Pb", logicWorld,

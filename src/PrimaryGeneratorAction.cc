@@ -56,7 +56,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
         {
                 gRandom->SetSeed(seed);
                 TFile *fin = TFile::Open(inFile.c_str());
-                if(fin->GetName().compare(0,24,"brems_distributions.root") == 0)
+                if((std::string)fin->GetName().compare(0,24,"brems_distributions.root") == 0)
                 {
                         hBrems  = (TH1D*) fin->Get("hBrems");
                         hSample = (TH1D*) fin->Get("hSample");

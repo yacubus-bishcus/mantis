@@ -63,14 +63,16 @@ void HistoManager::Book(G4bool bremTest)
                                 exit(1);
                         }
                 }
-                else
-                        xmax = 2.1;
+        }
+        else if(bremTest)
+        {
+                xmax = 2.1;
         }
 
         // open output file
         G4bool fileOpen = manager->OpenFile(gOutName);
         
-        std::cout << "Energy for xMax: " << xmax << std::endl;
+        //std::cout << "Energy for xMax: " << xmax << std::endl;
         
         if(!fileOpen)
         {

@@ -160,12 +160,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // ************************************ World and Materials Complete ***************************************//
 
 // Set up Linac configuration
+        G4double linac_size = 2*cm;
         if(bremTest)
         {
-                G4Tubs *solidLinac = new G4Tubs("Linac",0, 10*cm, 2*cm, 0*deg, 360*deg);
+                G4Tubs *solidLinac = new G4Tubs("Linac",0, 10*cm, linac_size, 0*deg, 360*deg);
                 logicalLinac = new G4LogicalVolume(solidLinac, tungsten, "Linac");
                 new G4PVPlacement(0, G4ThreeVector(0,0, 150*cm), logicalLinac, "Linac", logicWorld, false, 0, checkOverlaps);
-                G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 20*mm, 2*cm, 0*deg, 360*deg);
+                G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 20*mm, linac_size, 0*deg, 360*deg);
                 logicalVacuum = new G4LogicalVolume(solidVacuum, myVacuum, "Vacuum");
                 new G4PVPlacement(0, G4ThreeVector(0,0,0), logicalVacuum, "Vac", logicalLinac, false,0,checkOverlaps);
 // Make Brem target
@@ -401,8 +402,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 // ************************************* Set up Chopper Wheel ************************************** //
 
-        G4double chopper_beginning_edge_position = (150*cm + chopper_z) - chopper_thick/2.;  
-        G4double chopper_end_edge_position = (150*cm + chopper_z) + chopper_thick/2.;
+        G4double chopper_beginning_edge_position = (150*cm + chopper_z + linac_size) - chopper_thick/2.;  
+        G4double chopper_end_edge_position = (150*cm + chopper_z + linac_size) + chopper_thick/2.;
         setBeginChopper(chopper_beginning_edge_position);
         G4cout << "Chopper Beginning Edge Set to: " << chopper_beginning_edge_position/(cm) << " cm" << G4endl;
         G4cout << "Chopper End Edge Set to: " << chopper_end_edge_position/(cm) << " cm" << G4endl;
@@ -486,7 +487,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         
         logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chop");
 
-        new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,150*cm + chopper_z),
+        new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,150*cm + chopper_z + linac_size),
                         logicChopper, "Chop", logicWorld, false,
                         0, checkOverlaps);
 

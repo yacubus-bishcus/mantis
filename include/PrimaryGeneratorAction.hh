@@ -41,6 +41,7 @@
 #include "TROOT.h"
 #include "TH1D.h"
 #include "TRandom1.h"
+#include "TSystem.h"
 
 class G4Event;
 class PrimaryGenActionMessenger;

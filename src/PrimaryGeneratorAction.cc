@@ -35,7 +35,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
 
         genM = new PrimaryGenActionMessenger(this);
         fParticleGun = new G4ParticleGun(1);
-        G4cout << "PrimaryGeneratorAction::Beam Position Set to: (0,0,148.5)cm" << G4endl;
+        G4cout << "PrimaryGeneratorAction::Beam Position Set to: (0,0,149.0)cm" << G4endl;
         if(bremTest)
         {
                 fParticleGun->SetParticleDefinition(G4Electron::Definition());
@@ -150,7 +150,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         // Set beam position
         G4double x_r = beam_size*acos(G4UniformRand())/pi*2.*cos(360.*G4UniformRand()*CLHEP::deg);
         G4double y_r = beam_size*acos(G4UniformRand())/pi*2.*sin(360.*G4UniformRand()*CLHEP::deg);
-        fParticleGun->SetParticlePosition(G4ThreeVector(x_r,y_r,148.5*cm)); // set the electron beam far enough back behind brem radiator
+        fParticleGun->SetParticlePosition(G4ThreeVector(x_r,y_r,149.0*cm)); // set the electron beam far enough back behind brem radiator
 
 
         // Set beam momentum

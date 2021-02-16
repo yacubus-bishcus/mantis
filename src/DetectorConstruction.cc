@@ -33,7 +33,7 @@ DetectorConstruction::DetectorConstruction(G4bool brem)
         theAngle(120.0), water_size_x(60*cm), water_size_y(2.5908*m), water_size_z(40*cm), // plexi/tape properties
         plexiThickness(0.18*mm), tapeThick(0.01*cm), // PMT Properties
         PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), // Output Properties
-        DetectorViewOnly(false), material_verbose(false), // Messenger
+        DetectorViewOnly(false), material_verbose(false), checkOverlaps(true), // Messenger
         bremTest(brem), detectorM(NULL)
 {
         detectorM = new DetectorMessenger(this);
@@ -133,8 +133,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         bialkali->AddElement(elCs,1);
         bialkali->AddElement(elK,2);
         bialkali->AddElement(elSb,1);
-
-        G4bool checkOverlaps = true;
 
         G4double world_size_x = 5.*m;
         G4double world_size_z = 10.*m;

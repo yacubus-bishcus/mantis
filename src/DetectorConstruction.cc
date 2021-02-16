@@ -191,7 +191,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         new G4PVPlacement(0, G4ThreeVector(0.6096*m, 0, 0),
                           logicCollimator, "ColRi-Pb", logicWorld,
                           false, 0, checkOverlaps);
-        new G4PVPlacement(0, G4ThreeVector(0,0,-(container_z_pos - 2.4384*m)/2),
+        new G4PVPlacement(0, G4ThreeVector(0,0,100*cm),
                           logicCollimatorRear, "ColRe-Pb", logicWorld,
                           false, 0, checkOverlaps);
 // Set up shipping container environment (8ft wide and 8.5ft high)

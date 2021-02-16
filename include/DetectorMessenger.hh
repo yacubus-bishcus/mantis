@@ -78,6 +78,7 @@ private:
   G4UIcmdWithADouble* CmdTape;
   G4UIcmdWithAString* CmdVis;
   G4UIcmdWithAString* CmdVerbose;
+  G4UIcmdWithAString* CmdCheckOverlaps;
   G4UIdirectory *myDir;
   G4UIdirectory *myDir2;
   G4UIdirectory *myDir3;

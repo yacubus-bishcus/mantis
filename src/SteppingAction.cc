@@ -137,6 +137,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         if(bremTest)
                         {
                                 manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV));
+                                theTrack->SetTrackStatus(fStopAndKill); // kill track only intersted in incident chopper Data 
                         }
                 }
         }

@@ -81,6 +81,7 @@
 # OUTPUT OPTIONS 
 
 #/material/verbose false
+#/material/checkOverlaps true
 
 /run/initialize
 

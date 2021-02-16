@@ -78,8 +78,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
                 {
                         
                         hBrems = (TH1D*) fin->Get("ChopperData");
-                        std::cout << "here" << std::endl;
-                        hBrems->Print();
+                        //std::cout << "here" << std::endl;
+                        //hBrems->Print();
                         if(hBrems)
                         {
                                 G4cout << "PrimaryGeneratorAction::Imported brems distribution from " << fin->GetName() << G4endl;

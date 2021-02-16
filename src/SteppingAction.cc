@@ -131,9 +131,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         manager->FillNtupleIColumn(0,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
                         manager->AddNtupleRow(0);
                         if(WeightHisto)
-                        {
                                 manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
-                        }
                         if(bremTest)
                         {
                                 manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV));
@@ -153,9 +151,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         manager->FillNtupleIColumn(1,3,isNRF);
                         manager->AddNtupleRow(1);
                         if(WeightHisto)
-                        {
                                 manager->FillH1(1, theTrack->GetKineticEnergy()/(MeV), weight);
-                        }
                 }
         }
 // *********************************************** Track Interrogation Object Interactions **************************************************** //
@@ -181,10 +177,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         manager->FillH1(4, theTrack->GetKineticEnergy()/(MeV), weight);
                         // NRF Exiting Interrogation Object
                         if(isNRF && drawNRFDataFlag)
-                        {
                                 manager->FillH1(5, theTrack->GetKineticEnergy()/(MeV), weight);
-                        }
                 }
+        else if(bremTest)
+                theTrack->SetTrackStatus(fStopAndKill); // speeds up brem simulation
         }
 // *********************************************** Track Water Tank Interactions **************************************************** //
 
@@ -198,10 +194,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         manager->FillH1(6, theTrack->GetKineticEnergy()/(MeV),weight);
                         // NRF Incident Water Tank
                         if(isNRF && drawNRFDataFlag)
-                        {
                                 manager->FillH1(7, theTrack->GetKineticEnergy()/(MeV), weight);
-                        }
                 }
+        else if(bremTest)
+                theTrack->SetTrackStatus(fStopAndKill); // speeds up simulations 
         }
 // *********************************************** Track Cherenkov Interactions **************************************************** //
 
@@ -352,9 +348,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                 manager->FillNtupleSColumn(5,3, procCount);
                                                 manager->AddNtupleRow(5);
                                                 if(WeightHisto)
-                                                {
                                                         manager->FillH1(10,theParticle->GetKineticEnergy()/(MeV), weight);
-                                                } // for if WeightHisto
                                         } // for if keeping track of detector process data
 
                                 } // for if opProc

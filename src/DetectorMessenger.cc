@@ -370,6 +370,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
                 if(theCmdVis == "True" || theCmdVis == "true")
                 {
                         DetectorA->SetDetectorViewOnly(true);
+                        G4cout << "Detector Visualization View Only set to True!" << G4endl;
                 }
         }
         else if(command == CmdChopMaterial)

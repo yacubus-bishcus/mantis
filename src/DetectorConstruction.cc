@@ -483,7 +483,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         
 
         G4cout << "The Chopper thickness was: " << chopper_thick/(mm) << " mm" << G4endl;
-        G4cout << "The Chopper distance from the source was set as: " << chopper_z/(cm) << " cm" << G4endl;
+        G4cout << "The Chopper center distance from the source was set as: " << (linac_size + chopper_z)/(cm) << " cm" << G4endl;
         
         logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chop");
 

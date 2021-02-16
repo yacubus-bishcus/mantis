@@ -170,11 +170,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 logicalVacuum = new G4LogicalVolume(solidVacuum, myVacuum, "Vacuum");
                 new G4PVPlacement(0, G4ThreeVector(0,0,0), logicalVacuum, "Vac", logicalLinac, false,0,checkOverlaps);
 // Make Brem target
+                
+// Brem Backing
+                G4double bremBacking_thickness = 0.75*cm;
+                G4Box *solidBremTargetBacking = new G4Box("BremBacking", 3*mm, 3*mm, bremBacking_thickness);
+                logicBremTargetBacking = new G4LogicalVolume(solidBremTargetBacking, copper, "BremBacking");
+                new G4PVPlacement(0, G4ThreeVector(0, 0, 0*cm), logicBremTargetBacking, "BremBacking", logicalVacuum, false, 0, checkOverlaps);
+                
+// Brem Radiator 
                 G4double bremTarget_thickness = 0.102*mm;
+                G4double brem_target_position = -bremBacking_thickness/2.0 + bremTarget_thickness/2.0;
                 G4Box *solidBremTarget = new G4Box("Brem", 2*mm, 2*mm, bremTarget_thickness);
                 logicBremTarget = new G4LogicalVolume(solidBremTarget, gold, "Brem");
-                G4double brem_target_position = -1.1*cm;
-                new G4PVPlacement(0, G4ThreeVector(0, 0, brem_target_position),logicBremTarget,"Brem", logicalVacuum, false, 0, checkOverlaps);
+                new G4PVPlacement(0, G4ThreeVector(0, 0, brem_target_position),logicBremTarget,"Brem", logicalBremTargetBacking, false, 0, checkOverlaps);
+                
                 G4double brem_target_edge_position = 150*cm + brem_target_position + bremTarget_thickness/2.0;
                 G4cout << "Brem Target Beginning Edge Position: " << brem_target_edge_position/(cm) << " cm" << G4endl << G4endl;
                 if(brem_target_edge_position/(cm) < 148.5)
@@ -182,9 +191,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                         G4cerr << "FATAL ERROR DURING BREM TEST: Beam Started behind Brem Radiator!" << G4endl << G4endl;
                         exit(1);
                 }
-                G4Box *solidBremTargetBacking = new G4Box("BremBacking", 3*mm, 3*mm, 1*cm);
-                logicBremTargetBacking = new G4LogicalVolume(solidBremTargetBacking, copper, "BremBacking");
-                new G4PVPlacement(0, G4ThreeVector(0, 0, 0*cm), logicBremTargetBacking, "BremBacking", logicalVacuum, false, 0, checkOverlaps);
         }
 
 // ***************************************** End of Brem Test Materials ***************************************** //

@@ -43,7 +43,7 @@ HistoManager();
 ~HistoManager();
 
 void finish();     // close root file
-void Book(G4bool);
+void Book();
 
 G4double GetEmax()const
 {

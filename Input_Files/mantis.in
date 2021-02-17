@@ -24,11 +24,6 @@
 #################################################################################################
 ## OPTIONAL USER INPUTS 
 
-# Default is read from brems_distribution.root where any positive energy input
-# by user will give monoenergetic beam
-# Change following lines of code for monoenergetic beam (MeV)
-# input and histo energies should be the same!
-#/input/energy 2
 
 #################################################################################################
 # CHOPPER WHEEL OPTIONS 

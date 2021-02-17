@@ -39,8 +39,7 @@ HistoManager::~HistoManager()
 
 void HistoManager::Book()
 {
-        G4AnalysisManager* manager = G4AnalysisManager::Instance();
-        G4int nbins = 100000;
+        G4AnalysisManager* manager = G4AnalysisManager::Instance(); 
         manager->SetVerboseLevel(0);
         xmax = chosen_energy;
         
@@ -84,6 +83,7 @@ void HistoManager::Book()
                 return;
         }
 
+        G4int n_bins = xmax/(10.0e-6/2.0);
         // Create ID 0 Ntuple for Incident Chopper Data
         manager->CreateNtuple("ChopIn", "Chopper Wheel Incident Data");
         manager->CreateNtupleDColumn("Energy");

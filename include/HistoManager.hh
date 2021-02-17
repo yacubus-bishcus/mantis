@@ -44,10 +44,6 @@ HistoManager();
 
 void finish();     // close root file
 void Book(G4bool);
-void SetChosenEnergy(G4double val)
-{
-  chosen_energy = val;
-}
 
 G4double GetEmax()const
 {

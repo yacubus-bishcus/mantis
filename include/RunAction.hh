@@ -39,7 +39,7 @@
 class RunAction : public G4UserRunAction
 {
   public:
-    RunAction(HistoManager* histoAnalysis, G4bool, G4bool, G4bool, G4bool);
+    RunAction(HistoManager* histoAnalysis, G4bool);
     virtual ~RunAction();
 
   public:
@@ -57,7 +57,7 @@ class RunAction : public G4UserRunAction
 
   private:
     HistoManager* fHistoManager;
-    G4bool bremTest, output, checkEvents, weightHisto;
+    G4bool bremTest, checkEvents, weightHisto;
     G4double fCerenkovEnergy, fScintEnergy, fCerenkovCount;
     G4int fScintCount, fTotalSurface, fNRF, fStatusKilled;
 };

@@ -77,7 +77,6 @@ G4double calcAvg()
 G4int c_secondaries;
 G4double sum;
 std::vector<double> energyv, timev;
-G4bool weightHisto;
 };
 
 #endif

@@ -78,7 +78,7 @@ int main(int argc,char **argv)
         for (G4int i=1; i<argc; i=i+2)
         {
                 if (G4String(argv[i]) == "-m") macro = argv[i+1];
-                else if (G4String(argv[i]) == "-a") chosen_energy = stod(argv[i+1]);
+                else if (G4String(argv[i]) == "-a") chosen_energy = std::stod(argv[i+1]);
                 else if (G4String(argv[i]) == "-s") seed = atoi(argv[i+1]);
                 else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];
                 else if (G4String(argv[i]) == "-t") bremTest = argv[i+1];

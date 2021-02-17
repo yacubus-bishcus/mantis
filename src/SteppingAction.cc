@@ -23,9 +23,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "SteppingAction.hh"
+extern G4bool bremTest;
 
-SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, EventAction* event, G4bool brem)
-        : G4UserSteppingAction(), kdet(det), krun(run), kevent(event), bremTest(brem)
+SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, EventAction* event)
+        : G4UserSteppingAction(), kdet(det), krun(run), kevent(event)
         drawChopperIncDataFlag(0), drawChopperOutDataFlag(0), drawNRFDataFlag(0),
         drawIntObjDataFlag(0), drawWaterIncDataFlag(0), drawCherenkovDataFlag(0), drawDetDataFlag(0),
         stepM(NULL)

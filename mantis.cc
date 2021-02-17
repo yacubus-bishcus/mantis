@@ -24,7 +24,7 @@ G4VisManager* visManager;
 
 // declare global variables
 G4long seed;
-G4String macro, root_output_name, gOutName, bremTest, resonance_in, standalone_in, verbose_in, addNRF_in, checkEvents_in, weight_histo_in, inFile;
+G4String macro, root_output_name, gOutName, bremTest, resonance_in, standalone_in, verbose_in, addNRF_in, checkEvents_in, weightHisto_in, inFile;
 G4double chosen_energy;
 G4bool output;
 
@@ -44,20 +44,26 @@ int main(int argc,char **argv)
 {
         // Defaults
         G4int start_time = time(0);
+        // Physics List Defaults 
         G4bool use_xsec_tables = true;
         G4bool use_xsec_integration = true;
         G4bool force_isotropic = false;
         G4bool standalone = false;
         G4bool NRF_Verbose = false;
         G4bool addNRF = true;
+        // Run Defaults 
         macro = "mantis.in";
-        chosen_energy = -1.;
         seed = 1;
-        output = false;
+        inFile = "brems_distributions.root";
+        // Primary Generator Defaults 
         resonance_in = "false";
+        chosen_energy = -1.;
         bremTest = "false";
         G4bool brem = false;
-        inFile = "brems_distributions.root";
+        // Output Defaults 
+        output = false;
+        checkEvents_in = false;
+        weightHisto_in = false;
 
         // Detect interactive mode (if no arguments) and define UI session
         //

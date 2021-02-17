@@ -123,7 +123,6 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
         delete fParticleGun;
-        delete genM;
 }
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)

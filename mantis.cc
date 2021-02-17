@@ -185,7 +185,7 @@ int main(int argc,char **argv)
 
         // set mandatory initialization classes
 
-        DetectorConstruction* det = new DetectorConstruction(brem);
+        DetectorConstruction* det = new DetectorConstruction();
         runManager->SetUserInitialization(det);
 
         // Set up Physics List

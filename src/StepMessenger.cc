@@ -36,6 +36,8 @@ StepMessenger::StepMessenger(SteppingAction* stepAction)
         Cmd->SetParameterName("choice",false);
         Cmd->SetDefaultValue("none");
         Cmd->SetCandidates("ChopIncData ChopOutData NRFData IntObjData WaterIncData CherenkovData DetData none");
+        G4cout << G4endl <<  "User Output Selections" << G4endl;
+        G4cout << "----------------------------------------------------------------------" << G4endl;
 }
 
 StepMessenger::~StepMessenger()

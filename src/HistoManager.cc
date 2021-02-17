@@ -42,9 +42,6 @@ void HistoManager::Book()
         G4AnalysisManager* manager = G4AnalysisManager::Instance();
         G4int nbins = 100000;
         manager->SetVerboseLevel(0);
-  #ifndef G4_OPTPARAM
-        manager->SetNtupleMerging(true);
-  #endif
         xmax = chosen_energy;
         
         if(!bremTest && chosen_energy < 0)
@@ -180,7 +177,8 @@ void HistoManager::finish()
         G4AnalysisManager* manager = G4AnalysisManager::Instance();
         manager->Write();
         manager->CloseFile();
-        G4cout << "Ntuples are saved. " << G4endl;
+        std::cout << "HistoManager::finish -> Ntuples are saved." << std::endl;
+        G4cout << "HistoManager::finish -> Ntuples are saved. " << G4endl;
         delete manager;
         fFactoryOn = false;
 }

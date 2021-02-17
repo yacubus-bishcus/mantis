@@ -55,7 +55,6 @@ public:
 public:
     void Fill_NRF_to_Cherenkov();
     void Fill_to_Det();
-    void Write();
     
 private:
 
@@ -63,7 +62,7 @@ private:
     TFile *f, *f1, *fout;
     TTree *nrf_to_cher_tree, *nrf_to_cher_to_det_tree;
     TH1D *wNRF_NRF_to_Cher, *wCher_NRF_to_Cher, *wNRF_to_Det, *wCher_to_Det;
-
+    G4double Emax;
 };
 
 #endif

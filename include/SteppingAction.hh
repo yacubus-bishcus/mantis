@@ -59,7 +59,7 @@ class StepMessenger;
 class SteppingAction : public G4UserSteppingAction
 {
 public:
-SteppingAction(const DetectorConstruction*, RunAction*, EventAction*, G4bool, G4bool);
+SteppingAction(const DetectorConstruction*, RunAction*, EventAction*, G4bool);
 virtual ~SteppingAction();
 
 // method from the base class

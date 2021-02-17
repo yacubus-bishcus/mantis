@@ -25,13 +25,14 @@ G4VisManager* visManager;
 // declare global variables
 G4long seed;
 G4String macro, root_output_name, gOutName, bremTest, resonance_in, standalone_in, verbose_in, addNRF_in, checkEvents_in, weight_histo_in, inFile;
+G4double chosen_energy;
 
 namespace
 {
 void PrintUsage()
 {
         G4cerr << "Usage: " << G4endl;
-        G4cerr << "mantis [-m macro=mantis.in] [-s seed=1] [-o output_name] [-t bremTest=false] " <<
+        G4cerr << "mantis [-m macro=mantis.in] [-a chosen_energy=-1.] [-s seed=1] [-o output_name] [-t bremTest=false] " <<
                 "[-r resonance_test=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] " <<
                 "[-e checkEvents=false] [-w weightHisto=false] [-i inFile]"
                << G4endl;
@@ -51,6 +52,7 @@ int main(int argc,char **argv)
         G4bool checkEvents = false;
         G4bool weightHisto = false;
         macro = "mantis.in";
+        chosen_energy = -1.;
         seed = 1;
         G4bool output = false;
         G4bool resonance_test = false;
@@ -76,6 +78,7 @@ int main(int argc,char **argv)
         for (G4int i=1; i<argc; i=i+2)
         {
                 if (G4String(argv[i]) == "-m") macro = argv[i+1];
+                else if (G4String(argv[i]) == "-a") chosen_energy = stod(argv[i+1]);
                 else if (G4String(argv[i]) == "-s") seed = atoi(argv[i+1]);
                 else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];
                 else if (G4String(argv[i]) == "-t") bremTest = argv[i+1];

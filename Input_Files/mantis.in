@@ -5,9 +5,10 @@
 # Chopper Inputs 
 # Turn chopper wheel On/off
 /chopper/state On
-# Chopper base material either Uranium or Plutonium 
+# Chopper base material either Uranium, Plutonium, Lead or Tungsten
 /chopper/material Uranium
-# Chopper base material isotope abundance percentage (U235/238 abundance if chopper On/off Pu239/240 if chopper On/Off)
+# Chopper base material isotope abundance percentage REQUIRED for Uranium and Plutonium 
+# U235/238 abundance if chopper On/off Pu239/240 if chopper On/Off
 /chopper/abundance 90
 
 # Interrogation Object Inputs 
@@ -50,14 +51,14 @@
 
 # Attenuator Settings Surrounding Cherenkov Detector (optional)
 
-#/mydet/attenuator On
+/mydet/attenuator Off
 # Attenuator Thickness in cm
 #/mydet/attenuatorThickness 1
 # Attenuator Material Options from NIST materials 
 # First Attenuator Layer (first material to be impacted by particles)
 #/mydet/attenuatorMaterial G4_Pb
 # Second Attenuator material automatically removed if attenuator layer 1 set to "off"
-#/mydet/attenuator2 On
+/mydet/attenuator2 Off
 # Second Attenuator Layer thickness in cm
 #/mydet/attenuatorThickness2 1 
 # Second Attenuator Layer (second material to be impacted by particles after first layer 
@@ -76,7 +77,7 @@
 # OUTPUT OPTIONS 
 
 #/material/verbose false
-#/material/CheckOverlaps true
+/material/CheckOverlaps false
 
 /run/initialize
 

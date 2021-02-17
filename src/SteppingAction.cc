@@ -24,6 +24,7 @@
 
 #include "SteppingAction.hh"
 extern G4bool bremTest;
+extern G4bool weightHisto;
 
 SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, EventAction* event)
         : G4UserSteppingAction(), kdet(det), krun(run), kevent(event)
@@ -33,14 +34,6 @@ SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, 
 {
         stepM = new StepMessenger(this);
         fExpectedNextStatus = Undefined;
-                
-        if(weightHisto_in == "True" || weightHisto_in == "true")
-        {
-                WeightHisto = true;
-                G4cout << "SteppingAction::SteppingAction -> Weight Histo set to: " << weightHisto_in << G4endl;
-        }
-        else
-                WeightHisto = false;
 }
 
 SteppingAction::~SteppingAction()
@@ -108,7 +101,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         G4ThreeVector NRF_loc = theTrack->GetPosition();
                         manager->FillNtupleDColumn(2,4, NRF_loc.z()/(cm));
                         manager->AddNtupleRow(2);
-                        if(WeightHisto)
+                        if(weightHisto)
                         {
                                 manager->FillH1(8, theTrack->GetKineticEnergy()/(MeV), weight);
                         }
@@ -138,7 +131,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         manager->FillNtupleDColumn(0,1, weight);
                         manager->FillNtupleIColumn(0,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
                         manager->AddNtupleRow(0);
-                        if(WeightHisto)
+                        if(weightHisto)
                                 manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
                         if(bremTest)
                         {
@@ -159,7 +152,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         manager->FillNtupleIColumn(1,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
                         manager->FillNtupleIColumn(1,3,isNRF);
                         manager->AddNtupleRow(1);
-                        if(WeightHisto)
+                        if(weightHisto)
                                 manager->FillH1(1, theTrack->GetKineticEnergy()/(MeV), weight);
                 }
         }
@@ -321,10 +314,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                         manager->FillNtupleDColumn(4,1, theParticle->GetKineticEnergy()/(MeV));
                                                         manager->FillNtupleDColumn(4,2, weight);
                                                         G4String creatorProcess;
+                                                        
                                                         if(theTrack->GetCreatorProcess() !=0)
                                                                 creatorProcess = theTrack->GetCreatorProcess()->GetProcessName();
                                                         else
                                                                 creatorProcess = "Brem";
+                                                        
                                                         manager->FillNtupleSColumn(4,3, creatorProcess);
                                                         manager->FillNtupleDColumn(4,4, theTrack->GetGlobalTime()); // time units is nanoseconds
                                                         manager->AddNtupleRow(4); 
@@ -359,7 +354,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                 manager->FillNtupleDColumn(5,2, weight);
                                                 manager->FillNtupleSColumn(5,3, procCount);
                                                 manager->AddNtupleRow(5);
-                                                if(WeightHisto)
+                                                
+                                                if(weightHisto)
                                                         manager->FillH1(10,theParticle->GetKineticEnergy()/(MeV), weight);
                                         } // for if keeping track of detector process data
 

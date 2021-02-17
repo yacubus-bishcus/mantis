@@ -60,16 +60,11 @@ G4ParticleGun* GetParticleGun()
 {
   return fParticleGun;
 };
-void SetEnergyValue(G4double val)
-{
-  chosen_energy = val;
-}
 
 G4double SampleUResonances();
 
 private:
 G4bool bremTest, resonance_test, file_check;
-G4double chosen_energy;
 PrimaryGenActionMessenger* genM;
 G4ParticleGun* fParticleGun;
 

@@ -27,12 +27,17 @@
 extern G4long seed;
 extern G4String inFile;
 extern G4double chosen_energy;
+extern G4String resonance_in;
 
-PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_in)
+PrimaryGeneratorAction::PrimaryGeneratorAction()
         : G4VUserPrimaryGeneratorAction(),
-        bremTest(brem_in), resonance_test(resonance_in),
         fParticleGun(0)
 {
+        if(resonance_in == "True" || resonance_in == "true")
+                resonance_test = true;
+        else 
+                resonance_test = false;
+                
         fParticleGun = new G4ParticleGun(1);
         if(chosen_energy > 0)
                 G4cout << "PrimaryGeneratorAction::Beam Energy > 0" << G4endl;
@@ -53,7 +58,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
         // Default Kinematics
         fParticleGun->SetParticleTime(0.0*ns);
 
-        if(!bremTest && !resonance_test && chosen_energy < 0)
+        if(chosen_energy < 0)
         {
                 gRandom->SetSeed(seed);
                 if(gSystem->AccessPathName(inFile.c_str()) == 0)
@@ -81,13 +86,10 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
                         {
 
                                 hBrems = (TH1D*) fin->Get("ChopperIn_Weighted"); // the purpose of this functionality is to sample from a bremsstrahlung beam without importance sampling
-                                //std::cout << "here" << std::endl;
-                                //hBrems->Print();
+
                                 if(hBrems)
                                 {
                                         G4cout << "PrimaryGeneratorAction::Imported brems distribution from " << fin->GetName() << G4endl;
-                                        HistoManager* histo = new HistoManager;
-                                        histo->SetChosenEnergy(chosen_energy);
                                         file_check = true;
                                 }
                                 else
@@ -103,21 +105,11 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
                         exit(1);
                 }
         }
-        else if(!bremTest && !resonance_test && chosen_energy > 0)
+        else
         {
                 file_check = false;
                 G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction Chosen Energy set to: " << chosen_energy << " MeV" << G4endl;
-                HistoManager* histo = new HistoManager;
-                histo->SetChosenEnergy(chosen_energy);
         }
-        else if(resonance_test)
-        {
-                file_check = false;
-                G4cout << "Max Energy set to 2 MeV!" << G4endl;
-                HistoManager *histo = new HistoManager;
-                histo->SetChosenEnergy(2.0);
-        }
-
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
@@ -134,16 +126,16 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         {
                 energy = hBrems->GetRandom()*MeV;
         }
-        else if(chosen_energy < 0 && !bremTest && !resonance_test)
+        else if(chosen_energy < 0 && !file_check)
         {
                 energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
         }
 
-        else if(chosen_energy > 0 && !resonance_test)
+        else if(chosen_energy > 0 && !file_check)
         {
                 energy = chosen_energy*MeV;
         }
-        else if(resonance_test)
+        else if(resonance_test && !file_check)
         {
                 energy = SampleUResonances();
         }
@@ -165,7 +157,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         fParticleGun->GeneratePrimaryVertex(anEvent);
         G4double w = 1.0;
 
-        if(chosen_energy < 0 && !bremTest && !resonance_test && !file_check)
+        if(chosen_energy < 0 && !file_check)
         {
                 G4double theSampling = hSample->GetBinContent(hSample->GetXaxis()->FindBin(energy));
                 G4double dNdE = hBrems->GetBinContent(hBrems->GetXaxis()->FindBin(energy));

@@ -33,8 +33,8 @@
 #include "G4Types.hh"
 
 
-ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool brem_check)
-        : G4VUserActionInitialization(), fDetector(det), bremTest(brem_check)
+ActionInitialization::ActionInitialization(const DetectorConstruction* det)
+        : G4VUserActionInitialization(), fDetector(det)
 {
 }
 
@@ -47,11 +47,11 @@ void ActionInitialization::Build() const
         //std::cout << "ActionInitialization::Build() -> Begin!" << std::endl;
         HistoManager* histo = new HistoManager();
         SetUserAction(new PrimaryGeneratorAction());
-        RunAction* run = new RunAction(histo, bremTest);
+        RunAction* run = new RunAction(histo);
         SetUserAction(run);
         EventAction* event = new EventAction();
         SetUserAction(event);
-        SetUserAction(new SteppingAction(fDetector, run, event, bremTest));
+        SetUserAction(new SteppingAction(fDetector, run, event));
         SetUserAction(new StackingAction(fDetector, run));
         //std::cout << "ActionInitialization::Build() -> End!" << std::endl;
 }

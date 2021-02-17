@@ -204,6 +204,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4LogicalVolume *logicCollimatorRear = new G4LogicalVolume(solidCollimatorRear, lead, "Collimator");
         G4double col_position = 1.0*cm + container_z_pos - 2.4384*m - colimator_size; // should go 1cm past the container 
         G4double col_edge_position = col_position + colimator_size;
+        G4cout << G4endl << "Container and Collimator Information" << G4endl;
+        G4cout << "----------------------------------------------------------------------" << G4endl;
         G4cout << "Edge of Colimator placement: " << col_edge_position/(cm) << " cm" << G4endl << G4endl;
         new G4PVPlacement(0, G4ThreeVector(-0.6096*m - 1*cm, 0, col_position),
                           logicCollimator, "ColL-Pb", logicWorld,
@@ -249,6 +251,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         intObj_Pu240_abundance = 100. - intObj_radio_abundance;
         G4Material* intObjMat = new G4Material("IntObj", intObjDensity, 1);
         intObjMat->SetName(IntObj_Selection);
+        G4cout << G4endl << "Interrogation Object Information" << G4endl;
+        G4cout << "----------------------------------------------------------------------" << G4endl;
         if(IntObj_Selection == "Uranium")
         {
                 if(intObj_radio_abundance <= 0.0)
@@ -324,6 +328,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4LogicalVolume* logicAttenuator = new G4LogicalVolume(solidAttenuator, attenuator, "Attenuator");
         if(attenuatorState)
         {
+                G4cout << G4endl << "Attenuator Information" << G4endl;
+                G4cout << "----------------------------------------------------------------------" << G4endl;
                 G4cout << "Attenuator Thickness set to: " << attenThickness << " cm of " << attenuator->GetName() << G4endl;
         }
         else
@@ -365,7 +371,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4Box* solidCasing = new G4Box("Plexiglass", water_size_x, water_size_y, water_size_z);
         G4LogicalVolume* logicCasing = new G4LogicalVolume(solidCasing, plexiglass, "Plexiglass");
         new G4PVPlacement(0,G4ThreeVector(0,0,0), logicCasing, "Pglass", logicSecondAttenuator, false, 0, checkOverlaps);
-
+        G4cout << G4endl << "Water Tank Information" << G4endl;
+        G4cout << "----------------------------------------------------------------------" << G4endl;
         if(plexiThickness != 0.18*mm)
         {
                 G4cout << G4endl << "Plexiglass Thickness Changed to: " << plexiThickness << " mm" << G4endl;
@@ -417,6 +424,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 // ************************************* Set up Chopper Wheel ************************************** //
 
+        G4cout << G4endl << "Chopper Wheel Information" << G4endl;
+        G4cout << "----------------------------------------------------------------------" << G4endl;
         G4double chopper_beginning_edge_position = (150*cm + chopper_z + linac_size) - chopper_thick/2.;  
         G4double chopper_end_edge_position = (150*cm + chopper_z + linac_size) + chopper_thick/2.;
         setBeginChopper(chopper_beginning_edge_position);
@@ -508,6 +517,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 // **************************************************** Construct PMTs ********************************************************** //
         
+        G4cout << G4endl << "PC and PMT Information" << G4endl;
+        G4cout << "----------------------------------------------------------------------" << G4endl;
         G4double PMT_rmin = 0*cm;
         G4cout << G4endl << "The PC Radius was set to " << PMT_rmax/(cm) << " cm" << G4endl;
         G4double PMT_z = 7.62*cm; // 3 in PMT

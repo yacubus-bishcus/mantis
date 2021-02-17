@@ -26,6 +26,7 @@ G4VisManager* visManager;
 G4long seed;
 G4String macro, root_output_name, gOutName, bremTest, resonance_in, standalone_in, verbose_in, addNRF_in, checkEvents_in, weight_histo_in, inFile;
 G4double chosen_energy;
+G4bool output;
 
 namespace
 {
@@ -49,13 +50,11 @@ int main(int argc,char **argv)
         G4bool standalone = false;
         G4bool NRF_Verbose = false;
         G4bool addNRF = true;
-        G4bool checkEvents = false;
-        G4bool weightHisto = false;
         macro = "mantis.in";
         chosen_energy = -1.;
         seed = 1;
-        G4bool output = false;
-        G4bool resonance_test = false;
+        output = false;
+        resonance_in = "false";
         bremTest = "false";
         G4bool brem = false;
         inFile = "brems_distributions.root";
@@ -103,7 +102,7 @@ int main(int argc,char **argv)
         }
         else gOutName=(std::string)root_output_name;
 
-        //std::cout << "G4UImanager::GetUIpointer()" << std::endl;
+
         G4UImanager* UI = G4UImanager::GetUIpointer();
         MySession* LoggedSession = new MySession;
 
@@ -127,12 +126,10 @@ int main(int argc,char **argv)
         if(checkEvents_in == "True" || checkEvents_in == "true")
         {
                 G4cout << "Check Events set to: " << checkEvents_in << G4endl;
-                checkEvents = true;
         }
         if(weight_histo_in == "True" || weight_histo_in == "true")
         {
                 G4cout << "Weight Histograms set to: " << weight_histo_in << G4endl;
-                weightHisto = true;
         }
         if(addNRF_in == "False" || addNRF_in == "false")
         {
@@ -148,7 +145,6 @@ int main(int argc,char **argv)
         if(resonance_in == "True" || resonance_in == "true")
         {
                 G4cout << "Conducting Resonance Test!" << G4endl;
-                resonance_test = true;
         }
 
         G4cout << "Seed set to: " << seed << G4endl;
@@ -170,7 +166,7 @@ int main(int argc,char **argv)
         PhysicsListNew *thePLNew = new PhysicsListNew(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
         runManager->SetUserInitialization(thePLNew);
 
-        runManager->SetUserInitialization(new ActionInitialization(det, brem, resonance_test, output, checkEvents, weightHisto));
+        runManager->SetUserInitialization(new ActionInitialization(det, brem));
 
 #ifdef G4VIS_USE
         if(ui || macro == "vis_save.mac")

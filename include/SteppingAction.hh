@@ -59,7 +59,7 @@ class StepMessenger;
 class SteppingAction : public G4UserSteppingAction
 {
 public:
-SteppingAction(const DetectorConstruction*, RunAction*, EventAction*, G4bool);
+SteppingAction(const DetectorConstruction*, RunAction*, EventAction*);
 virtual ~SteppingAction();
 
 // method from the base class
@@ -101,7 +101,6 @@ G4double weight;
 const DetectorConstruction* kdet;
 RunAction* krun;
 EventAction* kevent;
-G4bool bremTest, WeightHisto;
 G4OpBoundaryProcessStatus fExpectedNextStatus;
 G4String procCount;
 G4int drawChopperIncDataFlag, drawChopperOutDataFlag, drawNRFDataFlag, drawIntObjDataFlag, drawWaterIncDataFlag, drawCherenkovDataFlag, drawDetDataFlag;

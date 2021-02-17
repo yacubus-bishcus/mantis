@@ -26,8 +26,9 @@
 
 extern G4String gOutName;
 extern G4String inFile;
+extern G4double chosen_energy;
 
-HistoManager::HistoManager() : fFactoryOn(false), chosen_energy(-1)
+HistoManager::HistoManager() : fFactoryOn(false)
 {
 }
 
@@ -71,10 +72,6 @@ void HistoManager::Book(G4bool bremTest)
                         G4cerr << "FATAL ERROR: HistoManager:: " << inFile << " not Found!" << G4endl;
                         exit(1);
                 }
-        }
-        else if(bremTest)
-        {
-                xmax = 2.1;
         }
 
         // open output file

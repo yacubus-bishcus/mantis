@@ -115,7 +115,7 @@ int main(int argc,char **argv)
         } 
         
         // Handle Output File
-        std::cout << root_output_name << std::endl;
+        std::cout << "Output Filename: " << root_output_name << std::endl;
         std::string RootOutputFile = (std::string)root_output_name;
         if(RootOutputFile.find(".root")<RootOutputFile.length()) {
                 gOutName=(std::string)RootOutputFile.substr(0, RootOutputFile.find(".root"));

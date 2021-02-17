@@ -58,7 +58,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
         std::ios::fmtflags mode = G4cout.flags();
         G4int prec = G4cout.precision(2);
         G4cout << G4endl << "Run Summary" << G4endl;
-        G4cout <<   "----------------------------------------------------------------" << G4endl;
+        G4cout << "----------------------------------------------------------------------" << G4endl;
         G4cout << "Total Number of Events:                                " << TotNbofEvents << G4endl;
         G4cout << "Total number of Surface Events:                        " << fTotalSurface << G4endl;
         G4cout << "Total number of NRF Photons:                           " << fNRF << G4endl;
@@ -83,7 +83,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
                        << (fScintEnergy/eV)/fScintCount << " eV." << G4endl;
         }
 
-        G4cout <<   "----------------------------------------------------------------" << G4endl;
+        G4cout << "----------------------------------------------------------------------" << G4endl;
 
         G4cout.setf(mode, std::ios::floatfield);
 

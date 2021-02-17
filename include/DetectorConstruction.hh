@@ -71,7 +71,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 {
 
 public:
-DetectorConstruction(G4bool);
+DetectorConstruction();
 virtual ~DetectorConstruction();
 
 
@@ -335,7 +335,7 @@ G4int nPMT;
 G4String pc_mat;
 
 // Output Properties 
-G4bool DetectorViewOnly, material_verbose, checkOverlaps, bremTest;
+G4bool DetectorViewOnly, material_verbose, checkOverlaps;
 
 // Messenger 
 DetectorMessenger* detectorM;

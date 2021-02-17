@@ -57,7 +57,6 @@ class RunAction : public G4UserRunAction
 
   private:
     HistoManager* fHistoManager;
-    G4bool bremTest, checkEvents, weightHisto;
     G4double fCerenkovEnergy, fScintEnergy, fCerenkovCount;
     G4int fScintCount, fTotalSurface, fNRF, fStatusKilled;
 };

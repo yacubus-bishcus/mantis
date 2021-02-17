@@ -34,7 +34,7 @@ WeightHisto::WeightHisto(G4double Em)
         time_start = std::time(&timer);
         std::string cher_to_nrf_infile = gOutName + "_NRF_to_Cher.root";
         std::string to_det_infile = gOutName + "_NRF_to_Cher_to_Det.root";
-        std::string fileOut = gOutName + "_WeightedHisto.root";
+        fileOut = gOutName + "_WeightedHisto.root";
                 
         if(gSystem->AccessPathName(cher_to_nrf_infile.c_str()))
         {

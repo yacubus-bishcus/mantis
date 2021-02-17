@@ -111,7 +111,7 @@ int main(int argc,char **argv)
                         PrintUsage();
                         return 1;
                 }
-        }
+        } 
         
         // Handle Output File
         std::cout << root_output_name << std::endl;
@@ -172,6 +172,12 @@ int main(int argc,char **argv)
         {
                 G4cout << "Completing Resonance Test!" << G4endl;
                 resonanceTest = true;
+        }
+        
+        if(bremTest && resonanceTest)
+        {
+                G4cerr << "FATAL ERROR mantis.cc -> Cannot test bremsstrahlung and resonance during the same run!" << G4endl;
+                exit(1);
         }
 
         G4cout << "Seed set to: " << seed << G4endl;

@@ -44,7 +44,6 @@
 #include "TSystem.h"
 
 class G4Event;
-class PrimaryGenActionMessenger;
 class HistoManager;
 
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
@@ -65,7 +64,6 @@ G4double SampleUResonances();
 
 private:
 G4bool bremTest, resonance_test, file_check;
-PrimaryGenActionMessenger* genM;
 G4ParticleGun* fParticleGun;
 
 TRandom1 Random;

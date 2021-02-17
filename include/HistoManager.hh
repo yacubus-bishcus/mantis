@@ -56,7 +56,6 @@ G4double GetEmax()const
 
 private:
 G4bool fFactoryOn;
-G4double chosen_energy;
 G4double xmax;
 TH1D *hBrems;
 };

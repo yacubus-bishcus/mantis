@@ -98,7 +98,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
                 EventCheck *eCheck = new EventCheck();
                 eCheck->WriteEvents();
         }
-        if(weightHisto)
+        if(weightHisto && checkEvents && output)
         {
                 WeightHisto *wHisto = new WeightHisto(fHistoManager->GetEmax());
                 wHisto->Fill_NRF_to_Cherenkov();

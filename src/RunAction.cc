@@ -103,6 +103,5 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
                 WeightHisto *wHisto = new WeightHisto(fHistoManager->GetEmax());
                 wHisto->Fill_NRF_to_Cherenkov();
                 wHisto->Fill_to_Det();
-                wHisto->Write();
         }
 }

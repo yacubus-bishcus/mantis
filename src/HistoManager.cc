@@ -27,6 +27,7 @@
 extern G4String gOutName;
 extern G4String inFile;
 extern G4double chosen_energy;
+extern G4bool bremTest;
 
 HistoManager::HistoManager() : fFactoryOn(false)
 {
@@ -36,7 +37,7 @@ HistoManager::~HistoManager()
 {
 }
 
-void HistoManager::Book(G4bool bremTest)
+void HistoManager::Book()
 {
         G4AnalysisManager* manager = G4AnalysisManager::Instance();
         G4int nbins = 100000;

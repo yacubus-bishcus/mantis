@@ -297,7 +297,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         }
         else{G4cerr << "ERROR: Interogation Material not found."<<G4endl;}
 
-        G4cout << G4endl << "The User's Interogation Object Material: "
+        G4cout << "The User's Interogation Object Material: "
                << intObjMat->GetName() << G4endl;
         if(IntObj_Selection == "Uranium" || IntObj_Selection == "Plutonium")
         {
@@ -375,7 +375,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4cout << "----------------------------------------------------------------------" << G4endl;
         if(plexiThickness != 0.18*mm)
         {
-                G4cout << G4endl << "Plexiglass Thickness Changed to: " << plexiThickness << " mm" << G4endl;
+                G4cout << "Plexiglass Thickness Changed to: " << plexiThickness << " mm" << G4endl;
         }
         else
         {
@@ -520,7 +520,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4cout << G4endl << "PC and PMT Information" << G4endl;
         G4cout << "----------------------------------------------------------------------" << G4endl;
         G4double PMT_rmin = 0*cm;
-        G4cout << G4endl << "The PC Radius was set to " << PMT_rmax/(cm) << " cm" << G4endl;
+        G4cout << "The PC Radius was set to " << PMT_rmax/(cm) << " cm" << G4endl;
         G4double PMT_z = 7.62*cm; // 3 in PMT
         G4Tubs* solidPMT = new G4Tubs("PMT", PMT_rmin, PMT_rmax, PMT_z, 0*deg, 360*deg);
         logicPMT = new G4LogicalVolume(solidPMT, PMT_mat, "PMT");
@@ -562,7 +562,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // **************************************************** Construct Photocathode ****************************************************** //
 
         G4double PC_z = 20*nm;
-        G4cout << "The Photocathode material was set as: " << pc_mat << G4endl;
+        G4cout << "The Photocathode material was set as: " << pc_mat << G4endl << G4endl;
         if(pc_mat == "GaAsP")
         {
                 PC_mat = GaAsP;

@@ -24,7 +24,9 @@
 
 #include "DetectorConstruction.hh"
 
-DetectorConstruction::DetectorConstruction(G4bool brem)
+extern G4bool bremTest;
+
+DetectorConstruction::DetectorConstruction()
         : G4VUserDetectorConstruction(), // chopper properties
         chopperDensity(19.1*g/cm3), chopper_thick(30*mm), chopper_z(2*cm), chopperOn(false), // interrogation object properties
         IntObj_rad(4.5*cm), intObjDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm), IntObj_Selection("Uranium"), // radio abundances
@@ -34,7 +36,7 @@ DetectorConstruction::DetectorConstruction(G4bool brem)
         plexiThickness(0.18*mm), tapeThick(0.01*cm), // PMT Properties
         PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), // Output Properties
         DetectorViewOnly(false), material_verbose(false), checkOverlaps(true), // Messenger
-        bremTest(brem), detectorM(NULL)
+        detectorM(NULL)
 {
         detectorM = new DetectorMessenger(this);
 }

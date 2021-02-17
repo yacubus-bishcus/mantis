@@ -53,27 +53,28 @@ void HistoManager::Book()
                 {
                         TFile *fin = TFile::Open(inFile.c_str());
                         if(inFile.compare(0,24, "brems_distributions.root") == 0)
-                        {
                                 hBrems  = (TH1D*) fin->Get("hBrems");
-                                if (hBrems)
-                                {
-                                        xmax = hBrems->GetXaxis()->GetXmax();
-                                        G4cout << "Found Input Max Energy: " << xmax << " MeV" << G4endl;
-                                        fin->Close();
-                                }
-                                else
-                                {
-                                        G4cerr << "HistoManager::Error reading from file " << fin->GetName() << G4endl;
-                                        exit(1);
-                                }
+                        else
+                                hBrems = (TH1D*) fin->Get("ChopperIn_Weighted");
+                        
+                        if (!hBrems)
+                        {
+                                G4cerr << "HistoManager::Error reading from file " << fin->GetName() << G4endl;
+                                exit(1);
                         }
-                }
+                        else
+                        {
+                                xmax = hBrems->GetXaxis()->GetXmax();
+                                G4cout << "Found Input Max Energy: " << xmax << " MeV" << G4endl;
+                                fin->Close();
+                        } // for if !hBrems            
+                } // for if gSystem
                 else
                 {
                         G4cerr << "FATAL ERROR: HistoManager:: " << inFile << " not Found!" << G4endl;
                         exit(1);
-                }
-        }
+                } // for if !gSystem 
+        } // for if not bremTest and chosen_energy < 0
 
         // open output file
         G4bool fileOpen = manager->OpenFile(gOutName);

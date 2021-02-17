@@ -36,7 +36,7 @@ namespace
 void PrintUsage()
 {
         G4cerr << "Usage: " << G4endl;
-        G4cerr << "mantis [-m macro=mantis.in] [-a chosen_energy=-1.] [-s seed=1] [-o output_name] [-t bremTest=false] " <<
+        G4cerr << "mantis [-h help] [-m macro=mantis.in] [-a chosen_energy=-1.] [-s seed=1] [-o output_name] [-t bremTest=false] " <<
                 "[-r resonance_test=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] " <<
                 "[-e checkEvents_in=false] [-w weightHisto_in=false] [-i inFile]"
                << G4endl;
@@ -93,7 +93,8 @@ int main(int argc,char **argv)
 
         for (G4int i=1; i<argc; i=i+2)
         {
-                if (G4String(argv[i]) == "-m") macro = argv[i+1];
+                if      (G4String(argv[i]) == "-h") PrintUsage();
+                else if (G4String(argv[i]) == "-m") macro = argv[i+1];
                 else if (G4String(argv[i]) == "-a") chosen_energy = std::stod(argv[i+1]);
                 else if (G4String(argv[i]) == "-s") seed = atoi(argv[i+1]);
                 else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];

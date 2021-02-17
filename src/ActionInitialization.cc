@@ -49,7 +49,7 @@ void ActionInitialization::Build() const
         SetUserAction(new PrimaryGeneratorAction());
         RunAction* run = new RunAction(histo, bremTest);
         SetUserAction(run);
-        EventAction* event = new EventAction(weightHisto);
+        EventAction* event = new EventAction();
         SetUserAction(event);
         SetUserAction(new SteppingAction(fDetector, run, event, bremTest));
         SetUserAction(new StackingAction(fDetector, run));

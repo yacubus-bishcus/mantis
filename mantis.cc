@@ -40,6 +40,7 @@ void PrintUsage()
                 "[-r resonance_test=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] " <<
                 "[-e checkEvents_in=false] [-w weightHisto_in=false] [-i inFile]"
                << G4endl;
+        exit(1);
 }
 }
 

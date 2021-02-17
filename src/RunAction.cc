@@ -24,27 +24,13 @@
 
 #include "RunAction.hh"
 extern G4bool output;
-extern G4String checkEvents_in;
-extern G4String weightHisto_in;
+extern G4bool checkEvents;
+extern G4bool weightHisto;
+extern G4bool bremTest;
 
-RunAction::RunAction(HistoManager* histoAnalysis, G4bool brem)
-        : G4UserRunAction(), fHistoManager(histoAnalysis), bremTest(brem)
+RunAction::RunAction(HistoManager* histoAnalysis)
+        : G4UserRunAction(), fHistoManager(histoAnalysis)
 {
-                if(checkEvents_in == "True" || checkEvents_in == "true")
-                {
-                        checkEvents = true;
-                        G4cout << "RunAction::RunAction:: -> Check Events set to: " << checkEvents_in << G4endl;
-                }
-                else
-                        checkEvents = false;
-                
-                if(weightHisto_in == "True" || weightHisto_in == "true")
-                {
-                        weightHisto = true;
-                        G4cout << "RunAction::RunAction -> Weight Histo set to: " << weightHisto_in << G4endl;
-                }
-                else
-                        weightHisto = false;
 }
 
 RunAction::~RunAction()

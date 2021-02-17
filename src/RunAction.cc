@@ -23,9 +23,28 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "RunAction.hh"
-RunAction::RunAction(HistoManager* histoAnalysis, G4bool brem, G4bool output_in, G4bool checkEvents_in, G4bool weight_histo_in)
-        : G4UserRunAction(), fHistoManager(histoAnalysis), bremTest(brem), output(output_in), checkEvents(checkEvents_in), weightHisto(weight_histo_in)
+extern G4bool output;
+extern G4String checkEvents_in;
+extern G4String weightHisto_in;
+
+RunAction::RunAction(HistoManager* histoAnalysis, G4bool brem)
+        : G4UserRunAction(), fHistoManager(histoAnalysis), bremTest(brem)
 {
+                if(checkEvents_in == "True" || checkEvents_in == "true")
+                {
+                        checkEvents = true;
+                        G4cout << "RunAction::RunAction:: -> Check Events set to: " << checkEvents_in << G4endl;
+                }
+                else
+                        checkEvents = false;
+                
+                if(weightHisto_in == "True" || weightHisto_in == "true")
+                {
+                        weightHisto = true;
+                        G4cout << "RunAction::RunAction -> Weight Histo set to: " << weightHisto_in << G4endl;
+                }
+                else
+                        weightHisto = false;
 }
 
 RunAction::~RunAction()

@@ -34,8 +34,6 @@ SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, 
 {
         stepM = new StepMessenger(this);
         fExpectedNextStatus = Undefined;
-        G4cout << G4endl <<  "User Output Selections" << G4endl;
-        G4cout << "----------------------------------------------------------------------" << G4endl;
 }
 
 SteppingAction::~SteppingAction()

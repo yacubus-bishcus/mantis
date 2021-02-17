@@ -23,7 +23,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "PrimaryGeneratorAction.hh"
-#include "PrimaryGenActionMessenger.hh"
+
 extern G4long seed;
 extern G4String inFile;
 extern G4double chosen_energy;

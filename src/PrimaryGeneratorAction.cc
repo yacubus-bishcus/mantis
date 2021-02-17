@@ -31,10 +31,8 @@ extern G4double chosen_energy;
 PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_in)
         : G4VUserPrimaryGeneratorAction(),
         bremTest(brem_in), resonance_test(resonance_in),
-        genM(NULL), fParticleGun(0)
+        fParticleGun(0)
 {
-
-        genM = new PrimaryGenActionMessenger(this);
         fParticleGun = new G4ParticleGun(1);
         if(chosen_energy > 0)
                 G4cout << "PrimaryGeneratorAction::Beam Energy > 0" << G4endl;

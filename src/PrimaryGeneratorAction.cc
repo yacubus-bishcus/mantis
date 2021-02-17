@@ -26,10 +26,11 @@
 #include "PrimaryGenActionMessenger.hh"
 extern G4long seed;
 extern G4String inFile;
+extern G4double chosen_energy;
 
 PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_in)
         : G4VUserPrimaryGeneratorAction(),
-        bremTest(brem_in), resonance_test(resonance_in), chosen_energy(-1),
+        bremTest(brem_in), resonance_test(resonance_in),
         genM(NULL), fParticleGun(0)
 {
 
@@ -53,9 +54,6 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(G4bool brem_in, G4bool resonance_
 
         // Default Kinematics
         fParticleGun->SetParticleTime(0.0*ns);
-
-        // file contains the normalized brems distribution p(E), sampling distribution s(E),
-        // and binary 0/1 for off/on resonance useful in weighting
 
         if(!bremTest && !resonance_test && chosen_energy < 0)
         {

@@ -42,13 +42,13 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
         if(bremTest)
         {
                 fParticleGun->SetParticleDefinition(G4Electron::Definition());
-                G4cout << "Particle Type set to Electron!" << G4endl << G4endl;
+                G4cout << "Particle Type set to Electron!" << G4endl;
                 file_check = false;
         }
         else
         {
                 fParticleGun->SetParticleDefinition(G4Gamma::Definition());
-                G4cout << "Particle Type set to Gamma!"<< G4endl << G4endl;
+                G4cout << "Particle Type set to Gamma!" << G4endl;
         }
 
         // Default Kinematics
@@ -106,6 +106,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                 file_check = false;
                 G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction Chosen Energy set to: " << chosen_energy << " MeV" << G4endl;
         }
+        G4cout << G4endl << "User Macro Inputs" << G4endl;
+        G4cout << "----------------------------------------------------------------------" << G4endl;
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()

@@ -33,10 +33,8 @@
 #include "G4Types.hh"
 
 
-ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool brem_check, G4bool resonance_in,
-                                           G4bool output_in, G4bool checkEvents_in, G4bool weight_histo_in)
-        : G4VUserActionInitialization(), fDetector(det), bremTest(brem_check), resonance_test(resonance_in), output(output_in),
-        checkEvents(checkEvents_in), weightHisto(weight_histo_in)
+ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool brem_check)
+        : G4VUserActionInitialization(), fDetector(det), bremTest(brem_check)
 {
 }
 
@@ -48,12 +46,12 @@ void ActionInitialization::Build() const
 {
         //std::cout << "ActionInitialization::Build() -> Begin!" << std::endl;
         HistoManager* histo = new HistoManager();
-        SetUserAction(new PrimaryGeneratorAction(bremTest, resonance_test));
-        RunAction* run = new RunAction(histo, bremTest, output, checkEvents, weightHisto);
+        SetUserAction(new PrimaryGeneratorAction());
+        RunAction* run = new RunAction(histo, bremTest);
         SetUserAction(run);
         EventAction* event = new EventAction(weightHisto);
         SetUserAction(event);
-        SetUserAction(new SteppingAction(fDetector, run, event, bremTest, weightHisto));
+        SetUserAction(new SteppingAction(fDetector, run, event, bremTest));
         SetUserAction(new StackingAction(fDetector, run));
         //std::cout << "ActionInitialization::Build() -> End!" << std::endl;
 }

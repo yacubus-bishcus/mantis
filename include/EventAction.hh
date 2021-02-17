@@ -43,7 +43,7 @@ class G4Event;
 class EventAction : public G4UserEventAction
 {
 public:
-EventAction(G4bool);
+EventAction();
 ~EventAction();
 
 public:

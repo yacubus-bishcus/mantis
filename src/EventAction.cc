@@ -22,10 +22,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "EventAction.hh"
+extern G4String weightHisto_in;
 
-EventAction::EventAction(G4bool weight_histo_in)
-        : weightHisto(weight_histo_in)
+EventAction::EventAction()
 {
+        if(weightHisto_in == "True" || weightHisto_in == "true")
+        {
+                weightHisto = true;
+                G4cout << "Weight Histograms set to: " << weight_histo_in << G4endl;
+        }
+        else
+                weightHisto = false;
 }
 
 EventAction::~EventAction()

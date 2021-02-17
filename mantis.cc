@@ -24,9 +24,12 @@ G4VisManager* visManager;
 
 // declare global variables
 G4long seed;
-G4String macro, root_output_name, gOutName, bremTest, resonance_in, standalone_in, verbose_in, addNRF_in, checkEvents_in, weightHisto_in, inFile;
 G4double chosen_energy;
 G4bool output;
+// String global variables
+G4String macro, root_output_name, gOutName, inFile;
+// boolean global variables 
+G4bool bremTest, resonanceTest, checkEvents, weightHisto;
 
 namespace
 {
@@ -35,7 +38,7 @@ void PrintUsage()
         G4cerr << "Usage: " << G4endl;
         G4cerr << "mantis [-m macro=mantis.in] [-a chosen_energy=-1.] [-s seed=1] [-o output_name] [-t bremTest=false] " <<
                 "[-r resonance_test=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] " <<
-                "[-e checkEvents=false] [-w weightHisto=false] [-i inFile]"
+                "[-e checkEvents_in=false] [-w weightHisto_in=false] [-i inFile]"
                << G4endl;
 }
 }
@@ -48,6 +51,10 @@ int main(int argc,char **argv)
         G4bool use_xsec_tables = true;
         G4bool use_xsec_integration = true;
         G4bool force_isotropic = false;
+        G4String standalone_in = "false";
+        G4String verbose_in = "false";
+        G4String addNRF_in = "true";
+        
         G4bool standalone = false;
         G4bool NRF_Verbose = false;
         G4bool addNRF = true;
@@ -56,14 +63,18 @@ int main(int argc,char **argv)
         seed = 1;
         inFile = "brems_distributions.root";
         // Primary Generator Defaults 
-        resonance_in = "false";
+        G4String resonance_in = "false";
+        resonanceTest = false;
         chosen_energy = -1.;
-        bremTest = "false";
-        G4bool brem = false;
+        G4String bremTest_in = "false";
+        bremTest = false;
+        
         // Output Defaults 
         output = false;
-        checkEvents_in = false;
-        weightHisto_in = false;
+        G4String checkEvents_in = "false";
+        G4String weightHisto_in = "false";
+        checkEvents = false;
+        weightHisto = false;
 
         // Detect interactive mode (if no arguments) and define UI session
         //
@@ -86,13 +97,13 @@ int main(int argc,char **argv)
                 else if (G4String(argv[i]) == "-a") chosen_energy = std::stod(argv[i+1]);
                 else if (G4String(argv[i]) == "-s") seed = atoi(argv[i+1]);
                 else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];
-                else if (G4String(argv[i]) == "-t") bremTest = argv[i+1];
+                else if (G4String(argv[i]) == "-t") bremTest_in = argv[i+1];
                 else if (G4String(argv[i]) == "-r") resonance_in = argv[i+1];
                 else if (G4String(argv[i]) == "-p") standalone_in = argv[i+1];
                 else if (G4String(argv[i]) == "-v") verbose_in = argv[i+1];
                 else if (G4String(argv[i]) == "-n") addNRF_in = argv[i+1];
                 else if (G4String(argv[i]) == "-e") checkEvents_in = argv[i+1];
-                else if (G4String(argv[i]) == "-w") weight_histo_in = argv[i+1];
+                else if (G4String(argv[i]) == "-w") weightHisto_in = argv[i+1];
                 else if (G4String(argv[i]) == "-i") inFile = argv[i+1];
                 else
                 {
@@ -101,6 +112,7 @@ int main(int argc,char **argv)
                 }
         }
         
+        // Handle Output File
         std::cout << root_output_name << std::endl;
         std::string RootOutputFile = (std::string)root_output_name;
         if(RootOutputFile.find(".root")<RootOutputFile.length()) {
@@ -117,8 +129,8 @@ int main(int argc,char **argv)
                 output = true;
                 UI->SetCoutDestination(LoggedSession);
         }
-        //std::cout << "UI->SetCoutDestination" << std::endl;
-        // Write option selection to Outfile
+
+        // Physics List Options 
         if(standalone_in == "True" || standalone_in == "true")
         {
                 G4cout << "Standalone File Requested." << G4endl;
@@ -129,28 +141,36 @@ int main(int argc,char **argv)
                 G4cout << "NRF Verbose set to: " << verbose_in << G4endl;
                 NRF_Verbose = true;
         }
-        if(checkEvents_in == "True" || checkEvents_in == "true")
-        {
-                G4cout << "Check Events set to: " << checkEvents_in << G4endl;
-        }
-        if(weight_histo_in == "True" || weight_histo_in == "true")
-        {
-                G4cout << "Weight Histograms set to: " << weight_histo_in << G4endl;
-        }
         if(addNRF_in == "False" || addNRF_in == "false")
         {
                 //std::cout << "NRF Physics turned OFF!" << std::endl;
                 G4cout << "NRF Physics turned OFF!" << G4endl;
                 addNRF = false;
         }
-        if(bremTest == "True" || bremTest == "true")
+        
+        // Primary Generator Options 
+        if(bremTest_in == "True" || bremTest_in == "true")
         {
                 G4cout << "Conducting Brem Test!" << G4endl;
-                brem = true;
+                bremTest = true;
         }
+        
+        if(weightHisto_in == "True" || weightHisto_in == "true")
+        {
+                G4cout << "Producing Weighted Histograms!" << G4endl;
+                weightHisto = true;
+        }
+        
+        if(eventCheck_in == "True" || eventCheck_in == "true")
+        {
+                G4cout << "Checking Events!" << G4endl;
+                checkEvents = true;
+        }
+        
         if(resonance_in == "True" || resonance_in == "true")
         {
-                G4cout << "Conducting Resonance Test!" << G4endl;
+                G4cout << "Completing Resonance Test!" << G4endl;
+                resonanceTest = true;
         }
 
         G4cout << "Seed set to: " << seed << G4endl;

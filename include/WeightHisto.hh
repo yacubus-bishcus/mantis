@@ -63,6 +63,7 @@ private:
     TTree *nrf_to_cher_tree, *nrf_to_cher_to_det_tree;
     TH1D *wNRF_NRF_to_Cher, *wCher_NRF_to_Cher, *wNRF_to_Det, *wCher_to_Det;
     G4double Emax;
+    std::string fileOut;
 };
 
 #endif

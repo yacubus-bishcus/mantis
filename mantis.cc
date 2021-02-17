@@ -161,7 +161,7 @@ int main(int argc,char **argv)
                 weightHisto = true;
         }
         
-        if(eventCheck_in == "True" || eventCheck_in == "true")
+        if(checkEvents_in == "True" || checkEvents_in == "true")
         {
                 G4cout << "Checking Events!" << G4endl;
                 checkEvents = true;

@@ -24,15 +24,22 @@
 
 #include "SteppingAction.hh"
 
-SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, EventAction* event, G4bool brem, G4bool weightHisto)
-        : G4UserSteppingAction(), kdet(det), krun(run), kevent(event), bremTest(brem), WeightHisto(weightHisto),
+SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, EventAction* event, G4bool brem)
+        : G4UserSteppingAction(), kdet(det), krun(run), kevent(event), bremTest(brem)
         drawChopperIncDataFlag(0), drawChopperOutDataFlag(0), drawNRFDataFlag(0),
         drawIntObjDataFlag(0), drawWaterIncDataFlag(0), drawCherenkovDataFlag(0), drawDetDataFlag(0),
         stepM(NULL)
 {
-        //std::cout << "SteppingAction::SteppingAction" << std::endl;
         stepM = new StepMessenger(this);
         fExpectedNextStatus = Undefined;
+                
+        if(weightHisto_in == "True" || weightHisto_in == "true")
+        {
+                WeightHisto = true;
+                G4cout << "SteppingAction::SteppingAction -> Weight Histo set to: " << weightHisto_in << G4endl;
+        }
+        else
+                WeightHisto = false;
 }
 
 SteppingAction::~SteppingAction()

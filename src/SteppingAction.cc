@@ -156,18 +156,20 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                 manager->FillH1(1, theTrack->GetKineticEnergy()/(MeV), weight);
                 }
         }
+
 // *********************************************** Track Interrogation Object Interactions **************************************************** //
 
         // Interrogation Object Analysis
         if(drawIntObjDataFlag && !bremTest)
         {
-                // Incident Interrogation Object
+                // Incident Interrogation Object USER MUST ADD Histograms to get full spectrum 
                 if(nextStep_VolumeName.compare(0, 6,"IntObj") == 0
                    && previousStep_VolumeName.compare(0, 6, "IntObj") != 0)
                 {
-                        manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
+                        if(theTrack->GetParticleDefinition() == G4Gamma::Definition() && !isNRF) // only add non NRF Gammas 
+                                manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
                         // NRF Incident Interrogation Object
-                        if(isNRF && drawNRFDataFlag)
+                        if(isNRF && drawNRFDataFlag) // only add NRF 
                         {
                                 manager->FillH1(3, theTrack->GetKineticEnergy()/(MeV), weight);
                         }
@@ -176,12 +178,14 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 if(nextStep_VolumeName.compare(0, 6,"IntObj") != 0
                    && previousStep_VolumeName.compare(0,6,"IntObj") == 0)
                 {
-                        manager->FillH1(4, theTrack->GetKineticEnergy()/(MeV), weight);
+                        if(theTrack->GetParticleDefinition() == G4Gamma::Definition() && !isNRF)
+                                manager->FillH1(4, theTrack->GetKineticEnergy()/(MeV), weight);
                         // NRF Exiting Interrogation Object
                         if(isNRF && drawNRFDataFlag)
                                 manager->FillH1(5, theTrack->GetKineticEnergy()/(MeV), weight);
                 }
         }
+
 // *********************************************** Track Water Tank Interactions **************************************************** //
 
         // Water Analysis

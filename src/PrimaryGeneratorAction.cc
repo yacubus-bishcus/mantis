@@ -27,17 +27,13 @@
 extern G4long seed;
 extern G4String inFile;
 extern G4double chosen_energy;
-extern G4String resonance_in;
+extern G4bool resonanceTest;
+extern G4bool bremTest;
 
 PrimaryGeneratorAction::PrimaryGeneratorAction()
         : G4VUserPrimaryGeneratorAction(),
         fParticleGun(0)
 {
-        if(resonance_in == "True" || resonance_in == "true")
-                resonance_test = true;
-        else 
-                resonance_test = false;
-                
         fParticleGun = new G4ParticleGun(1);
         if(chosen_energy > 0)
                 G4cout << "PrimaryGeneratorAction::Beam Energy > 0" << G4endl;
@@ -135,7 +131,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         {
                 energy = chosen_energy*MeV;
         }
-        else if(resonance_test && !file_check)
+        else if(resonanceTest && !file_check)
         {
                 energy = SampleUResonances();
         }

@@ -40,7 +40,7 @@ WeightHisto::WeightHisto(G4double Em)
         {
                 G4cerr << "WeightHisto::WeightHisto -> File: " << cher_to_nrf_infile << " NOT FOUND!" << G4endl;
                 std::cerr << "WeightHisto::WeightHisto -> File: " << cher_to_nrf_infile << " NOT FOUND!" << std::endl;
-                return;
+                exit(1);
         }
         else
         {
@@ -52,7 +52,7 @@ WeightHisto::WeightHisto(G4double Em)
         {
                 G4cerr << "WeightHisto::WeightHisto -> File: " << to_det_infile << " NOT FOUND!" << G4endl;
                 std::cerr << "WeightHisto::WeightHisto -> File: " << to_det_infile << " NOT FOUND!" << std::endl;
-                return;
+                exit(1);
         }
         else
         {
@@ -69,7 +69,7 @@ WeightHisto::WeightHisto(G4double Em)
         {
                 G4cerr << "ERROR: WeightHisto::WeightHisto --> Failure to Change into NRF to Cher Directory!" << G4endl;
                 std::cerr << "ERROR: WeightHisto::WeightHisto --> Failure to Change into NRF to Cher Directory!" << std::endl;
-                return;
+                exit(1);
         }
 
         confirm = f1->cd();
@@ -82,7 +82,7 @@ WeightHisto::WeightHisto(G4double Em)
         {
                 G4cerr << "ERROR: WeightHisto::WeightHisto --> Failure to Change into NRF to Cher to Det Directory!" << G4endl;
                 std::cerr << "ERROR: WeightHisto::WeightHisto --> Failure to Change into NRF to Cher to Det Directory!" << std::endl;
-                return;
+                exit(1);
         }
         
         G4cout << "WeightHisto::WeightHisto --> Objects Obtained." << G4endl;
@@ -105,7 +105,7 @@ void WeightHisto::Fill_NRF_to_Cherenkov()
         {
                 G4cerr << "WeightHisto::Fill_NRF_to_Cherenkov -> NRF to Cherenkov Tree Empty. Exiting..." << G4endl;
                 std::cerr << "WeightHisto::Fill_NRF_to_Cherenkov -> NRF to Cherenkov Tree Empty. Exiting..." << std::endl;
-                return;
+                exit(1);
         }
 
         // Grab data from in file 
@@ -151,7 +151,7 @@ void WeightHisto::Fill_NRF_to_Cherenkov()
         {
                 G4cerr << "ERROR: WeightHisto::Fill_NRF_to_Cherenkov --> Failure to change into NRF to Cherenkov OutFile Directory!" << G4endl;
                 std::cerr << "ERROR: WeightHisto::Fill_NRF_to_Cherenkov --> Failure to change into NRF to Cherenkov OutFile Directory!" << std::endl;
-                return;
+                exit(1);
         }
                 
 
@@ -171,7 +171,7 @@ void WeightHisto::Fill_to_Det()
         {
                 G4cout << "WeightHisto::Fill_to_Det -> To Detection Tree Empty. Exiting..." << G4endl;
                 std::cout << "WeightHisto::Fill_to_Det -> To Detection Tree Empty. Exiting..." << std::endl;
-                return;
+                exit(1);
         }
         
         // Grab data from in file 
@@ -213,7 +213,7 @@ void WeightHisto::Fill_to_Det()
         {
                 G4cerr << "ERROR: WeightHisto::Fill_to_Det -> Fail to change into Output Directory" << G4endl;
                 std::cerr << "ERROR: WeightHisto::Fill_to_Det -> Fail to change into Output Directory" << std::endl;
-                return;
+                exit(1);
         }
                 
         G4cout << "WeightHisto::Fill_to_Det --> Complete!" << G4endl;

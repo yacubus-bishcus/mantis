@@ -5,9 +5,10 @@
 # Chopper Inputs 
 # Turn chopper wheel On/off
 /chopper/state Off
-# Chopper base material either Uranium or Plutonium 
+# Chopper base material either Uranium, Plutonium, lead or tungsten
 /chopper/material Uranium
-# Chopper base material isotope abundance percentage (U235/238 abundance if chopper On/off Pu239/240 if chopper On/Off)
+# Chopper base material isotope abundance percentage REQUIRED for Uranium or Plutonium 
+# U235/238 abundance if chopper On/off Pu239/240 if chopper On/Off
 /chopper/abundance 99.8
 
 # Interrogation Object Inputs 

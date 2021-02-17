@@ -26,7 +26,6 @@
 extern G4bool output;
 extern G4bool checkEvents;
 extern G4bool weightHisto;
-extern G4bool bremTest;
 
 RunAction::RunAction(HistoManager* histoAnalysis)
         : G4UserRunAction(), fHistoManager(histoAnalysis)
@@ -41,7 +40,7 @@ void RunAction::BeginOfRunAction(const G4Run*)
 {
         if(output)
         {
-                fHistoManager->Book(bremTest);
+                fHistoManager->Book();
         }
         fTotalSurface = 0;
         fCerenkovCount = 0;

@@ -63,7 +63,7 @@ G4ParticleGun* GetParticleGun()
 G4double SampleUResonances();
 
 private:
-G4bool resonance_test, file_check;
+G4bool file_check;
 G4ParticleGun* fParticleGun;
 
 TRandom1 Random;

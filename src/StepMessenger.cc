@@ -36,8 +36,6 @@ StepMessenger::StepMessenger(SteppingAction* stepAction)
         Cmd->SetParameterName("choice",false);
         Cmd->SetDefaultValue("none");
         Cmd->SetCandidates("ChopIncData ChopOutData NRFData IntObjData WaterIncData CherenkovData DetData none");
-        G4cout << G4endl <<  "User Output Selections" << G4endl;
-        G4cout << "----------------------------------------------------------------------" << G4endl;
 }
 
 StepMessenger::~StepMessenger()
@@ -54,41 +52,41 @@ void StepMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
                 if(theCommand == "ChopIncData")
                 {
                         stepA->SetChopperIncDataFlag(1);
-                        G4cout << "User Selected Chopper Incident Data." << G4endl;
+                        G4cout << G4endl << "User Selected Chopper Incident Data." << G4endl;
                 }
                 else if(theCommand == "ChopOutData")
                 {
                         stepA->SetChopperOutDataFlag(1);
-                        G4cout << "User Selected Chopper Emission Data." << G4endl;
+                        G4cout << G4endl << "User Selected Chopper Emission Data." << G4endl;
                 }
                 else if(theCommand == "NRFData")
                 {
                         stepA->SetNRFDataFlag(1);
-                        G4cout << "User Selected NRF Data." << G4endl;
+                        G4cout << G4endl << "User Selected NRF Data." << G4endl;
                 }
                 else if(theCommand == "IntObjData")
                 {
                         stepA->SetIntObjDataFlag(1);
-                        G4cout << "User Selected Interrogation Object Incident Data." << G4endl;
+                        G4cout << G4endl << "User Selected Interrogation Object Incident Data." << G4endl;
                 }
                 else if(theCommand == "WaterIncData")
                 {
                         stepA->SetWaterIncDataFlag(1);
-                        G4cout << "User Selected Incident Water Data." <<G4endl;
+                        G4cout << G4endl << "User Selected Incident Water Data." <<G4endl;
                 }
                 else if(theCommand == "CherenkovData")
                 {
                         stepA->SetCherenkovDataFlag(1);
-                        G4cout << "User Selected Cherenkov Data." <<G4endl;
+                        G4cout << G4endl << "User Selected Cherenkov Data." <<G4endl;
                 }
                 else if(theCommand == "DetData")
                 {
                         stepA->SetDetDataFlag(1);
-                        G4cout << "User Selected Detected Data."<<G4endl;
+                        G4cout << G4endl << "User Selected Detected Data."<<G4endl;
                 }
                 else if(theCommand == "none")
                 {
-                        G4cout << "No output requested." << G4endl;
+                        G4cout << G4endl << "No output requested." << G4endl;
                 }
                 else
                 {

@@ -76,7 +76,7 @@
 # OUTPUT OPTIONS 
 
 #/material/verbose false
-#/material/checkOverlaps true
+#/material/CheckOverlaps true
 
 /run/initialize
 

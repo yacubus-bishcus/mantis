@@ -34,6 +34,8 @@ WeightHisto::WeightHisto(G4double Em)
         time_start = std::time(&timer);
         std::string cher_to_nrf_infile = gOutName + "_NRF_to_Cher.root";
         std::string to_det_infile = gOutName + "_NRF_to_Cher_to_Det.root";
+        std::string fileOut = gOutName + "_WeightedHisto.root";
+                
         if(gSystem->AccessPathName(cher_to_nrf_infile.c_str()))
         {
                 G4cerr << "WeightHisto::WeightHisto -> File: " << cher_to_nrf_infile << " NOT FOUND!" << G4endl;
@@ -120,9 +122,8 @@ void WeightHisto::Fill_NRF_to_Cherenkov()
         
 
         // Create Out File 
-        std::string fileOut = gOutName + "_WeightedHisto.root";
         fout = new TFile(fileOut.c_str(), "recreate");
-        confirm = fout->cd();
+        bool confirm = fout->cd();
         wNRF_NRF_to_Cher = new TH1D("wNRF_NRF_to_Cher","Weighted NRF Spectrum that Lead to Cherenkov",100000, 0., Emax);
         wCher_NRF_to_Cher = new TH1D("wCher_NRF_to_Cher","Weighted Cherenkov Spectrum caused by NRF",100000,0.,Emax);
         

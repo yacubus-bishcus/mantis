@@ -63,6 +63,7 @@ G4ParticleGun* GetParticleGun()
 G4double SampleUResonances();
 
 private:
+G4double beamStart = 129.0;
 G4bool file_check;
 G4ParticleGun* fParticleGun;
 

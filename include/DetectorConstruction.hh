@@ -288,6 +288,9 @@ void SetCheckOverlaps(G4bool val)
 
 private:
 
+// Brem Properties 
+G4double linac_size = 2*cm;
+
 // Chopper Properties 
 G4double chopperDensity, chopper_thick, chopper_z;
 G4bool chopperOn;

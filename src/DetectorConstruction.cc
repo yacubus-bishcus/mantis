@@ -157,9 +157,103 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                   0, //copy number
                                   false); //overlaps checking
 
-// ************************************ World and Materials Complete ***************************************//
+// ********************************************************** World and Materials Complete ************************************************************//
 
-// Set up Linac configuration
+        
+// *********************************************************** Set up Chopper Wheel ****************************************************************** //
+
+        G4cout << G4endl << "Chopper Wheel Information" << G4endl;
+        G4cout << "----------------------------------------------------------------------" << G4endl;
+        G4double chopper_beginning_edge_position = (150*cm + chopper_z + linac_size) - chopper_thick/2.;  
+        G4double chopper_end_edge_position = (150*cm + chopper_z + linac_size) + chopper_thick/2.;
+        setBeginChopper(chopper_beginning_edge_position);
+        G4cout << "Chopper Beginning Edge Set to: " << chopper_beginning_edge_position/(cm) << " cm" << G4endl;
+        G4cout << "Chopper End Edge Set to: " << chopper_end_edge_position/(cm) << " cm" << G4endl;
+        if(chopper_end_edge_position > container_edge_position)
+        {
+                G4cerr << "ERROR: Chopper wheel location should be behind cargo container, exiting." << G4endl;
+                exit(100);
+        }
+
+        G4Tubs *solidChopper = new G4Tubs("Chop", 0*cm, 10*cm, chopper_thick/2, 0.*deg, 180.*deg);
+        G4Material *chopperMat = new G4Material("chopperMaterial", chopperDensity, 1);
+        G4cout << "The Chopper State was set to: " << chopperOn << G4endl;
+
+        if(chopperDensity == 19.1*g/cm3)
+        {
+                if(chopper_radio_abundance <= 0.0)
+                {
+                        G4cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << G4endl;
+                        exit(100);
+                }
+
+                if(chopperOn)
+                {
+                        chopper_U235_abundance = chopper_radio_abundance;
+                        chopper_U238_abundance = 100. - chopper_radio_abundance;
+                }
+                else
+                {
+                        chopper_U235_abundance = 100. - chopper_radio_abundance;
+                        chopper_U238_abundance = chopper_radio_abundance;     
+                }
+
+                Uranium_chopper->AddIsotope(Uranium235, chopper_U235_abundance*perCent);
+                Uranium_chopper->AddIsotope(Uranium238, chopper_U238_abundance*perCent);
+                chopperMat->AddElement(Uranium_chopper,1);
+                G4cout << "The Chopper material selected was: Uranium" << G4endl;
+                G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
+        }
+        else if(chopperDensity == 19.6*g/cm3)
+        {
+                if(chopper_radio_abundance <= 0.0)
+                {
+                        G4cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << G4endl;
+                        exit(100);
+                }
+
+                if(chopperOn)
+                {
+                        chopper_Pu239_abundance = chopper_radio_abundance;
+                        chopper_Pu240_abundance = 100. - chopper_radio_abundance;      
+                }
+                else
+                {
+                        chopper_Pu239_abundance = 100. - chopper_radio_abundance;
+                        chopper_Pu240_abundance = chopper_radio_abundance;       
+                }
+
+                Plutonium_chopper->AddIsotope(Plutonium239, chopper_Pu239_abundance*perCent);
+                Plutonium_chopper->AddIsotope(Plutonium240, chopper_Pu240_abundance*perCent);
+                chopperMat->AddElement(Plutonium_chopper, 1);
+                G4cout << "The Chopper material selected was: Plutonium" << G4endl;
+                G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
+        }
+        else if(chopperDensity == 11.34*g/cm3)
+        {
+                chopperMat->AddElement(Lead_chopper,1);
+                G4cout << "The Chopper material selected was: Lead" << G4endl;
+        }
+        else if(chopperDensity == 19.3*g/cm3)
+        {
+                chopperMat->AddElement(Tungsten_chopper,1);
+                G4cout << "The Chopper material selected was: Tungsten" << G4endl;
+        }
+        else{G4cerr << "ERROR Chopper Density not found!" << G4endl; exit(100);}
+
+        G4cout << "The Chopper material density selected was: " << chopperDensity/(g/cm3) << " g/cm3" << G4endl;
+
+
+        G4cout << "The Chopper thickness was: " << chopper_thick/(mm) << " mm" << G4endl;
+        G4cout << "The Chopper center distance from the source was set as: " << (linac_size + chopper_z)/(cm) << " cm" << G4endl;
+
+        logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chop");
+
+        new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,150*cm + chopper_z + linac_size),
+                        logicChopper, "Chop", logicWorld, false,
+                        0, checkOverlaps);
+        
+// Set up Linac configuration if Brem Test 
         G4double linac_size = 2*cm;
         if(bremTest)
         {
@@ -241,9 +335,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 new G4PVPlacement(0, G4ThreeVector(),
                                   logicHollowC, "Con-Air",logicContainer, false,0,checkOverlaps);
 
-        // ************************** End of Shipping Container and Collimator Geometries **************************** //
+// *********************************************** End of Shipping Container and Collimator Geometries ************************************ //
 
-        // ************************************* Set up Interrogation Object ************************************** //
+// *********************************************** Set up Interrogation Object **************************************************** //
 
                 G4Sphere* solidIntObj = new G4Sphere("InterogationObject", 0, IntObj_rad, 0, 2*pi, 0, pi);
 
@@ -319,9 +413,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                                0, checkOverlaps);
 
 
-        // *************************** Interrogation Object Setup Complete ***************************** //
+// ******************************************************** Interrogation Object Setup Complete ******************************************************* //
 
-        // ********************************** Begin Detector Construction ********************************** //
+// ******************************************************** Begin Detector Construction *************************************************************** //
 
         // First Attenuation Layer
 
@@ -422,102 +516,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                               0, //copy number
                                               checkOverlaps); //overlaps checking
 
-        // ******************************* End of Detector Construction Setup ********************************* //
-
-        // ************************************* Set up Chopper Wheel ************************************** //
-
-                G4cout << G4endl << "Chopper Wheel Information" << G4endl;
-                G4cout << "----------------------------------------------------------------------" << G4endl;
-                G4double chopper_beginning_edge_position = (150*cm + chopper_z + linac_size) - chopper_thick/2.;  
-                G4double chopper_end_edge_position = (150*cm + chopper_z + linac_size) + chopper_thick/2.;
-                setBeginChopper(chopper_beginning_edge_position);
-                G4cout << "Chopper Beginning Edge Set to: " << chopper_beginning_edge_position/(cm) << " cm" << G4endl;
-                G4cout << "Chopper End Edge Set to: " << chopper_end_edge_position/(cm) << " cm" << G4endl;
-                if(chopper_end_edge_position > container_edge_position)
-                {
-                        G4cerr << "ERROR: Chopper wheel location should be behind cargo container, exiting." << G4endl;
-                        exit(100);
-                }
-
-                G4Tubs *solidChopper = new G4Tubs("Chop", 0*cm, 10*cm, chopper_thick/2, 0.*deg, 180.*deg);
-                G4Material *chopperMat = new G4Material("chopperMaterial", chopperDensity, 1);
-                G4cout << "The Chopper State was set to: " << chopperOn << G4endl;
-
-                if(chopperDensity == 19.1*g/cm3)
-                {
-                        if(chopper_radio_abundance <= 0.0)
-                        {
-                                G4cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << G4endl;
-                                exit(100);
-                        }
-
-                        if(chopperOn)
-                        {
-                                chopper_U235_abundance = chopper_radio_abundance;
-                                chopper_U238_abundance = 100. - chopper_radio_abundance;
-                        }
-                        else
-                        {
-                                chopper_U235_abundance = 100. - chopper_radio_abundance;
-                                chopper_U238_abundance = chopper_radio_abundance;     
-                        }
-
-                        Uranium_chopper->AddIsotope(Uranium235, chopper_U235_abundance*perCent);
-                        Uranium_chopper->AddIsotope(Uranium238, chopper_U238_abundance*perCent);
-                        chopperMat->AddElement(Uranium_chopper,1);
-                        G4cout << "The Chopper material selected was: Uranium" << G4endl;
-                        G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
-                }
-                else if(chopperDensity == 19.6*g/cm3)
-                {
-                        if(chopper_radio_abundance <= 0.0)
-                        {
-                                G4cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << G4endl;
-                                exit(100);
-                        }
-
-                        if(chopperOn)
-                        {
-                                chopper_Pu239_abundance = chopper_radio_abundance;
-                                chopper_Pu240_abundance = 100. - chopper_radio_abundance;      
-                        }
-                        else
-                        {
-                                chopper_Pu239_abundance = 100. - chopper_radio_abundance;
-                                chopper_Pu240_abundance = chopper_radio_abundance;       
-                        }
-
-                        Plutonium_chopper->AddIsotope(Plutonium239, chopper_Pu239_abundance*perCent);
-                        Plutonium_chopper->AddIsotope(Plutonium240, chopper_Pu240_abundance*perCent);
-                        chopperMat->AddElement(Plutonium_chopper, 1);
-                        G4cout << "The Chopper material selected was: Plutonium" << G4endl;
-                        G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
-                }
-                else if(chopperDensity == 11.34*g/cm3)
-                {
-                        chopperMat->AddElement(Lead_chopper,1);
-                        G4cout << "The Chopper material selected was: Lead" << G4endl;
-                }
-                else if(chopperDensity == 19.3*g/cm3)
-                {
-                        chopperMat->AddElement(Tungsten_chopper,1);
-                        G4cout << "The Chopper material selected was: Tungsten" << G4endl;
-                }
-                else{G4cerr << "ERROR Chopper Density not found!" << G4endl; exit(100);}
-
-                G4cout << "The Chopper material density selected was: " << chopperDensity/(g/cm3) << " g/cm3" << G4endl;
+// **************************************************** End of Water Tank Construction Setup ********************************************************* //
 
 
-                G4cout << "The Chopper thickness was: " << chopper_thick/(mm) << " mm" << G4endl;
-                G4cout << "The Chopper center distance from the source was set as: " << (linac_size + chopper_z)/(cm) << " cm" << G4endl;
-
-                logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chop");
-
-                new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,150*cm + chopper_z + linac_size),
-                                logicChopper, "Chop", logicWorld, false,
-                                0, checkOverlaps);
-
-        // **************************************************** Construct PMTs ********************************************************** //
+// ************************************************************** Construct PMTs ********************************************************************* //
 
                 G4cout << G4endl << "PC and PMT Information" << G4endl;
                 G4cout << "----------------------------------------------------------------------" << G4endl;

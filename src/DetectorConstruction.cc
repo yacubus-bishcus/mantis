@@ -164,8 +164,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4double colimator_size = 50*cm;
         G4double col_position = 1.0*cm + container_z_pos - 2.4384*m - colimator_size; // should go 1cm past the container 
         G4double col_edge_position = col_position + colimator_size;
-        G4double bremStartPos = 130*cm;
-        G4double beamStart = 124.0;
+        G4double bremStartPos = 135*cm;
+        G4double bremBacking_thickness = 100.0*mm;
+        G4double beamStart = bremStartPos - bremBacking_thickness/2.0 - 0.1*cm;
+        G4cout << "DetectorConstruction::Build -> Beam Should Start at " << beamStart/(cm) << " cm" << G4endl;
         
 // *********************************************************** Set up Chopper Wheel ****************************************************************** //
 
@@ -273,7 +275,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // Make Brem target
                 
 // Brem Backing
-                G4double bremBacking_thickness = 100.0*mm;
                 G4Box *solidBremTargetBacking = new G4Box("BremBacking", 20.1*mm/2.0, bremBacking_thickness/2.0, bremBacking_thickness/2.0);
                 logicBremTargetBacking = new G4LogicalVolume(solidBremTargetBacking, copper, "BremBacking");
                 new G4PVPlacement(0, G4ThreeVector(0, 0, 0), logicBremTargetBacking, "BremBacking", logicalVacuum, false, 0, checkOverlaps);
@@ -287,7 +288,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 
                 G4double brem_target_edge_position = bremStartPos + brem_target_position + bremTarget_thickness/2.0;
                 G4cout << "Brem Target Beginning Edge Position: " << brem_target_edge_position/(cm) << " cm" << G4endl << G4endl;
-                if(brem_target_edge_position/(cm) < beamStart)
+                if(brem_target_edge_position/(cm) < beamStart/(cm))
                 {
                         G4cerr << "DetectorConstruction::Build::291 -> FATAL ERROR DURING BREM TEST: Beam Started downstream of Brem Radiator!" << G4endl << G4endl;
                         exit(1);
@@ -299,6 +300,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // ***************************************** End of Brem Test Materials ***************************************** //
 
         // Set up Collimator
+                G4double rearCol_Z_pos = bremStartPos - linac_size;
                 G4Box *solidCollimator = new G4Box("Collimator", 1*cm, water_size_y, colimator_size);
                 G4Box *solidCollimatorRear = new G4Box("Collimator",0.6096*m - 2*cm, 2.5908*m, 1*cm);
                 G4LogicalVolume *logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
@@ -312,7 +314,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 new G4PVPlacement(0, G4ThreeVector(0.6096*m + 1*cm, 0, col_position),
                                   logicCollimator, "ColRi-Pb", logicWorld,
                                   false, 0, checkOverlaps);
-                new G4PVPlacement(0, G4ThreeVector(0,0,140*cm),
+                new G4PVPlacement(0, G4ThreeVector(0,0,rearCol_Z_pos),
                                   logicCollimatorRear, "ColRe-Pb", logicWorld,
                                   false, 0, checkOverlaps);
         // Set up shipping container environment (8ft wide and 8.5ft high)

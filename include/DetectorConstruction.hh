@@ -229,6 +229,16 @@ G4double getBeginChopper()const
   return BeginChopper;
 }
 
+void setEndChop(G4double z_pos)
+{
+  EndChop = z_pos;
+}
+
+G4double getEndChop()const
+{
+  return EndChop;
+}
+
 G4double getEndIntObj()const
 {
         return EndIntObj;
@@ -296,6 +306,7 @@ G4double chopperDensity, chopper_thick, chopper_z;
 G4bool chopperOn;
 G4double chopper_U235_abundance, chopper_U238_abundance, chopper_Pu239_abundance, chopper_Pu240_abundance;
 G4double BeginChopper;
+G4double EndChop;
 
 // Interrogation Object Properties 
 G4double EndIntObj, IntObj_rad, intObjDensity, intObj_x_pos, intObj_y_pos, intObj_z_pos;

@@ -164,6 +164,7 @@ void HistoManager::Book()
                 manager->CreateNtupleDColumn("Z_Position");
                 manager->CreateNtupleDColumn("Cos_theta");
                 manager->CreateNtupleDColumn("Time");
+                manager->FinishNtuple();
 
                 // Create ID 10 Histogram for Incident Detector
                 manager->CreateH1("Inc_Det_Weighted", "Incident Detector Weighted Energy Spectrum", nbins, 0., xmax, "MeV");

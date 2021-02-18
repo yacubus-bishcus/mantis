@@ -256,7 +256,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
         logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chop");
 
-        new G4PVPlacement(0, G4ThreeVector(0, -6*cm,bremStartPos + chopper_z + linac_size),
+        new G4PVPlacement(0, G4ThreeVector(0, -7*cm,bremStartPos + chopper_z + linac_size),
                         logicChopper, "Chop", logicWorld, false,
                         0, checkOverlaps);
         

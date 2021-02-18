@@ -293,8 +293,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                         exit(1);
                 }
         }
-        else
-        {
+        //else
+        //{
 
 // ***************************************** End of Brem Test Materials ***************************************** //
 
@@ -960,7 +960,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                         G4cout << "Material Properties Table for: " << plexiglass->GetName() << G4endl;
                         casingOPMPT->DumpTable();
                 }
-        } // for if !bremTest
+       // } // for if !bremTest
 
 //always return the physical World!!!
         G4cout << "DetectorConstruction::Construct -> Constructed!" << G4endl << G4endl;

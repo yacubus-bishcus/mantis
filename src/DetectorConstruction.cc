@@ -172,21 +172,21 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // Make Brem target
                 
 // Brem Backing
-                G4double bremBacking_thickness = 0.75*cm;
-                G4Box *solidBremTargetBacking = new G4Box("BremBacking", 3*mm, 3*mm, bremBacking_thickness);
+                G4double bremBacking_thickness = 100.0*mm;
+                G4Box *solidBremTargetBacking = new G4Box("BremBacking", bremBacking_thickness/2.0, bremBacking_thickness/2.0, bremBacking_thickness/2.0);
                 logicBremTargetBacking = new G4LogicalVolume(solidBremTargetBacking, copper, "BremBacking");
-                new G4PVPlacement(0, G4ThreeVector(0, 0, 0*cm), logicBremTargetBacking, "BremBacking", logicalVacuum, false, 0, checkOverlaps);
+                new G4PVPlacement(0, G4ThreeVector(0, 0, 0), logicBremTargetBacking, "BremBacking", logicalVacuum, false, 0, checkOverlaps);
                 
 // Brem Radiator 
                 G4double bremTarget_thickness = 0.102*mm;
-                G4double brem_target_position = -bremBacking_thickness + bremTarget_thickness;
-                G4Box *solidBremTarget = new G4Box("Brem", 2*mm, 2*mm, bremTarget_thickness);
+                G4double brem_target_position = -(bremTarget_thickness/2.0);
+                G4Tubs *solidBremTarget = new G4Tubs("Brem", 0.*mm, 5.0*mm, bremTarget_thickness/2.0,0.*degree,360.*degree);
                 logicBremTarget = new G4LogicalVolume(solidBremTarget, gold, "Brem");
                 new G4PVPlacement(0, G4ThreeVector(0, 0, brem_target_position),logicBremTarget,"Brem", logicBremTargetBacking, false, 0, checkOverlaps);
                 
                 G4double brem_target_edge_position = 150*cm + brem_target_position + bremTarget_thickness/2.0;
                 G4cout << "Brem Target Beginning Edge Position: " << brem_target_edge_position/(cm) << " cm" << G4endl << G4endl;
-                if(brem_target_edge_position/(cm) < 148.5)
+                if(brem_target_edge_position/(cm) < 149.0)
                 {
                         G4cerr << "FATAL ERROR DURING BREM TEST: Beam Started behind Brem Radiator!" << G4endl << G4endl;
                         exit(1);

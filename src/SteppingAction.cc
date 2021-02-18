@@ -66,6 +66,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         // Run Cuts
         if(bremTest)
         {
+                G4double EndChop = kdet->getEndChop();
                 G4ThreeVector pB = aStep->GetPreStepPoint()->GetMomentum();
                 G4double tB = asin(sqrt(pow(pB.x(),2)+pow(pB.y(),2))/pB.mag()); //the angle of the particle relative to the Z axis
                 if(theTrack->GetPosition().z() > EndChop)

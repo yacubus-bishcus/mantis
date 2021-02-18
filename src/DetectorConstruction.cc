@@ -273,7 +273,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 
 // Brem Backing
                 G4double bremBacking_thickness = 100.0*mm;
-                G4Box *solidBremTargetBacking = new G4Box("BremBacking", bremBacking_thickness/2.0, bremBacking_thickness/2.0, bremBacking_thickness/2.0);
+                G4Box *solidBremTargetBacking = new G4Box("BremBacking", 20.1*mm/2.0, bremBacking_thickness/2.0, bremBacking_thickness/2.0);
                 logicBremTargetBacking = new G4LogicalVolume(solidBremTargetBacking, copper, "BremBacking");
                 new G4PVPlacement(0, G4ThreeVector(0, 0, 0), logicBremTargetBacking, "BremBacking", logicalVacuum, false, 0, checkOverlaps);
                 

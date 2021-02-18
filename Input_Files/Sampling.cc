@@ -24,7 +24,7 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 		Evec.push_back(1.73354686425); // Vavrek
 		Evec.push_back(1.81525753275); // Vavrek
 		Evec.push_back(1.86231786689); // Me
-		Evec.push_back(2.00336916735); // Vavrek
+		//Evec.push_back(2.00336916735); // Vavrek
 		Evec.push_back(2.00619912943); // Me
 	}
 	else if(sample_element == "Pu")

@@ -182,7 +182,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 exit(100);
         }
 
-        G4Tubs *solidChopper = new G4Tubs("Chop", 0*cm, 10*cm, chopper_thick/2, 0.*deg, 180.*deg);
+        G4Tubs *solidChopper = new G4Tubs("Chop", 0*cm, 15*cm, chopper_thick/2, 0.*deg, 180.*deg);
         G4Material *chopperMat = new G4Material("chopperMaterial", chopperDensity, 1);
         G4cout << "The Chopper State was set to: " << chopperOn << G4endl;
 
@@ -256,7 +256,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
         logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chop");
 
-        new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,bremStartPos + chopper_z + linac_size),
+        new G4PVPlacement(0, G4ThreeVector(0, -5*cm,bremStartPos + chopper_z + linac_size),
                         logicChopper, "Chop", logicWorld, false,
                         0, checkOverlaps);
         
@@ -264,10 +264,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         
         if(bremTest)
         {
-                G4Tubs *solidLinac = new G4Tubs("Linac",0, 8*cm, linac_size, 0*deg, 360*deg);
+                G4Tubs *solidLinac = new G4Tubs("Linac",0, 7*cm, linac_size, 0*deg, 360*deg);
                 logicalLinac = new G4LogicalVolume(solidLinac, tungsten, "Linac");
                 new G4PVPlacement(0, G4ThreeVector(0,0, bremStartPos), logicalLinac, "Linac", logicWorld, false, 0, checkOverlaps);
-                G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 7*cm, linac_size, 0*deg, 360*deg);
+                G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 6*cm, linac_size, 0*deg, 360*deg);
                 logicalVacuum = new G4LogicalVolume(solidVacuum, myVacuum, "Vacuum");
                 new G4PVPlacement(0, G4ThreeVector(0,0,0), logicalVacuum, "Vac", logicalLinac, false,0,checkOverlaps);
 // Make Brem target

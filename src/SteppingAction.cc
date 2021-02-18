@@ -64,7 +64,23 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         G4double EndIntObj = kdet->getEndIntObj();
 
         // Run Cuts
-        if(theTrack->GetPosition().z()/(cm) > EndIntObj/(cm))
+        if(bremTest)
+        {
+                G4ThreeVector pB = aStep->GetPreStepPoint()->GetMomentum();
+                G4double tB = asin(sqrt(pow(pB.x(),2)+pow(pB.y(),2))/pB.mag()); //the angle of the particle relative to the Z axis
+                if(theTrack->GetPosition().z() > EndChop)
+                {
+                        theTrack->SetTrackStatus(fStopAndKill);
+                        krun->AddStatusKilled();
+                }
+                if(tB/(radian) < M_PI || tB/(radian) > M_PI/2.0) // if the track is not heading forward kill it 
+                {
+                        theTrack->SetTrackStatus(fStopAndKill);
+                        krun->AddStatusKilled();
+                }
+        }
+                
+        if(theTrack->GetPosition().z() > EndIntObj)
         {
                 // kill photons that go beyond the interrogation object
                 theTrack->SetTrackStatus(fStopAndKill);

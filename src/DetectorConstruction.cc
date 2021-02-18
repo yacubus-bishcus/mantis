@@ -165,7 +165,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4double col_position = 1.0*cm + container_z_pos - 2.4384*m - colimator_size; // should go 1cm past the container 
         G4double col_edge_position = col_position + colimator_size;
         G4double bremStartPos = 130*cm;
-        G4double beamStart = 120.0;
+        G4double beamStart = 124.0;
         
 // *********************************************************** Set up Chopper Wheel ****************************************************************** //
 
@@ -256,7 +256,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
         logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chop");
 
-        new G4PVPlacement(0, G4ThreeVector(0, -5*cm,bremStartPos + chopper_z + linac_size),
+        new G4PVPlacement(0, G4ThreeVector(0, -6*cm,bremStartPos + chopper_z + linac_size),
                         logicChopper, "Chop", logicWorld, false,
                         0, checkOverlaps);
         

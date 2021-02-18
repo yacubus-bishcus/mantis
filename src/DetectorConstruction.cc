@@ -164,7 +164,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4double colimator_size = 50*cm;
         G4double col_position = 1.0*cm + container_z_pos - 2.4384*m - colimator_size; // should go 1cm past the container 
         G4double col_edge_position = col_position + colimator_size;
-        G4double beamStartPos = 140*cm;
+        G4double beamStartPos = 130*cm;
         
 // *********************************************************** Set up Chopper Wheel ****************************************************************** //
 

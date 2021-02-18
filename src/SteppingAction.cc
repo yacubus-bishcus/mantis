@@ -74,11 +74,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         theTrack->SetTrackStatus(fStopAndKill);
                         krun->AddStatusKilled();
                 }
-                if(cos(tB) < 0) // if the track is not heading forward kill it 
-                {
-                        theTrack->SetTrackStatus(fStopAndKill);
-                        krun->AddStatusKilled();
-                }
+                //if(cos(tB) < 0) // if the track is not heading forward kill it 
+                //{
+                //        theTrack->SetTrackStatus(fStopAndKill);
+                //        krun->AddStatusKilled();
+                // }
         }
                 
         if(theTrack->GetPosition().z() > EndIntObj)

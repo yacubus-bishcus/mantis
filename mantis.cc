@@ -175,9 +175,15 @@ int main(int argc,char **argv)
                 resonanceTest = true;
         }
         
+        // Some User Error Checking 
         if(bremTest && resonanceTest)
         {
                 G4cerr << "FATAL ERROR mantis.cc -> Cannot test bremsstrahlung and resonance during the same run!" << G4endl;
+                exit(1);
+        }
+        if(bremTest && chosen_energy < 0)
+        {
+                G4cerr << "FATAL ERROR mantis.cc -> Cannot test bremsstrahlung without option -a input energy!" << G4endl;
                 exit(1);
         }
 

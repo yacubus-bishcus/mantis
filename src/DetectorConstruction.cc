@@ -158,7 +158,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                   false); //overlaps checking
 
 // ********************************************************** World and Materials Complete ************************************************************//
-
+        // Parameters used later 
+        G4double container_z_pos = 2.4384*m +water_size_x + 1.0*m;
+        G4double colimator_size = 50*cm;
+        G4double col_position = 1.0*cm + container_z_pos - 2.4384*m - colimator_size; // should go 1cm past the container 
+        G4double col_edge_position = col_position + colimator_size;
         
 // *********************************************************** Set up Chopper Wheel ****************************************************************** //
 
@@ -254,7 +258,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                         0, checkOverlaps);
         
 // Set up Linac configuration if Brem Test 
-        G4double linac_size = 2*cm;
+        
         if(bremTest)
         {
                 G4Tubs *solidLinac = new G4Tubs("Linac",0, 10*cm, linac_size, 0*deg, 360*deg);
@@ -292,14 +296,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // ***************************************** End of Brem Test Materials ***************************************** //
 
         // Set up Collimator
-                G4double container_z_pos = 2.4384*m +water_size_x + 1.0*m;
-                G4double colimator_size = 50*cm;
                 G4Box *solidCollimator = new G4Box("Collimator", 1*cm, water_size_y, colimator_size);
                 G4Box *solidCollimatorRear = new G4Box("Collimator",0.6096*m - 2*cm, 2.5908*m, 1*cm);
                 G4LogicalVolume *logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
                 G4LogicalVolume *logicCollimatorRear = new G4LogicalVolume(solidCollimatorRear, lead, "Collimator");
-                G4double col_position = 1.0*cm + container_z_pos - 2.4384*m - colimator_size; // should go 1cm past the container 
-                G4double col_edge_position = col_position + colimator_size;
                 G4cout << G4endl << "Container and Collimator Information" << G4endl;
                 G4cout << "----------------------------------------------------------------------" << G4endl;
                 G4cout << "Edge of Colimator placement: " << col_edge_position/(cm) << " cm" << G4endl << G4endl;

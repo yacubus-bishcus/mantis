@@ -170,8 +170,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
         G4cout << G4endl << "Chopper Wheel Information" << G4endl;
         G4cout << "----------------------------------------------------------------------" << G4endl;
-        G4double chopper_beginning_edge_position = (150*cm + chopper_z + linac_size) - chopper_thick/2.;  
-        G4double chopper_end_edge_position = (150*cm + chopper_z + linac_size) + chopper_thick/2.;
+        G4double chopper_beginning_edge_position = (beamStartPos+ chopper_z + linac_size) - chopper_thick/2.;  
+        G4double chopper_end_edge_position = (beamStartPos + chopper_z + linac_size) + chopper_thick/2.;
         setBeginChopper(chopper_beginning_edge_position);
         G4cout << "Chopper Beginning Edge Set to: " << chopper_beginning_edge_position/(cm) << " cm" << G4endl;
         G4cout << "Chopper End Edge Set to: " << chopper_end_edge_position/(cm) << " cm" << G4endl;

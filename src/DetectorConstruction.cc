@@ -164,14 +164,15 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4double colimator_size = 50*cm;
         G4double col_position = 1.0*cm + container_z_pos - 2.4384*m - colimator_size; // should go 1cm past the container 
         G4double col_edge_position = col_position + colimator_size;
-        G4double beamStartPos = 130*cm;
+        G4double bremStartPos = 130*cm;
+        G4double beamStart = 120*cm;
         
 // *********************************************************** Set up Chopper Wheel ****************************************************************** //
 
         G4cout << G4endl << "Chopper Wheel Information" << G4endl;
         G4cout << "----------------------------------------------------------------------" << G4endl;
-        G4double chopper_beginning_edge_position = (beamStartPos+ chopper_z + linac_size) - chopper_thick/2.;  
-        G4double chopper_end_edge_position = (beamStartPos + chopper_z + linac_size) + chopper_thick/2.;
+        G4double chopper_beginning_edge_position = (bremStartPos+ chopper_z + linac_size) - chopper_thick/2.;  
+        G4double chopper_end_edge_position = (bremStartPos + chopper_z + linac_size) + chopper_thick/2.;
         setBeginChopper(chopper_beginning_edge_position);
         G4cout << "Chopper Beginning Edge Set to: " << chopper_beginning_edge_position/(cm) << " cm" << G4endl;
         G4cout << "Chopper End Edge Set to: " << chopper_end_edge_position/(cm) << " cm" << G4endl;
@@ -255,7 +256,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
         logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chop");
 
-        new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,beamStartPos + chopper_z + linac_size),
+        new G4PVPlacement(0, G4ThreeVector(0, -2.5*cm,bremStartPos + chopper_z + linac_size),
                         logicChopper, "Chop", logicWorld, false,
                         0, checkOverlaps);
         
@@ -265,7 +266,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         {
                 G4Tubs *solidLinac = new G4Tubs("Linac",0, 8*cm, linac_size, 0*deg, 360*deg);
                 logicalLinac = new G4LogicalVolume(solidLinac, tungsten, "Linac");
-                new G4PVPlacement(0, G4ThreeVector(0,0, beamStartPos), logicalLinac, "Linac", logicWorld, false, 0, checkOverlaps);
+                new G4PVPlacement(0, G4ThreeVector(0,0, bremStartPos), logicalLinac, "Linac", logicWorld, false, 0, checkOverlaps);
                 G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 7*cm, linac_size, 0*deg, 360*deg);
                 logicalVacuum = new G4LogicalVolume(solidVacuum, myVacuum, "Vacuum");
                 new G4PVPlacement(0, G4ThreeVector(0,0,0), logicalVacuum, "Vac", logicalLinac, false,0,checkOverlaps);
@@ -284,9 +285,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 logicBremTarget = new G4LogicalVolume(solidBremTarget, gold, "Brem");
                 new G4PVPlacement(0, G4ThreeVector(0, 0, brem_target_position),logicBremTarget,"Brem", logicBremTargetBacking, false, 0, checkOverlaps);
                 
-                G4double brem_target_edge_position = beamStartPos + brem_target_position + bremTarget_thickness/2.0;
+                G4double brem_target_edge_position = bremStartPos + brem_target_position + bremTarget_thickness/2.0;
                 G4cout << "Brem Target Beginning Edge Position: " << brem_target_edge_position/(cm) << " cm" << G4endl << G4endl;
-                if(brem_target_edge_position/(cm) < beamStartPos - 1.0)
+                if(brem_target_edge_position/(cm) < beamStart)
                 {
                         G4cerr << "DetectorConstruction::Build::291 -> FATAL ERROR DURING BREM TEST: Beam Started behind Brem Radiator!" << G4endl << G4endl;
                         exit(1);

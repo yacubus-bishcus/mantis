@@ -263,10 +263,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         
         if(bremTest)
         {
-                G4Tubs *solidLinac = new G4Tubs("Linac",0, 10*cm, linac_size, 0*deg, 360*deg);
+                G4Tubs *solidLinac = new G4Tubs("Linac",0, 8*cm, linac_size, 0*deg, 360*deg);
                 logicalLinac = new G4LogicalVolume(solidLinac, tungsten, "Linac");
                 new G4PVPlacement(0, G4ThreeVector(0,0, beamStartPos), logicalLinac, "Linac", logicWorld, false, 0, checkOverlaps);
-                G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 8*cm, linac_size, 0*deg, 360*deg);
+                G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 7*cm, linac_size, 0*deg, 360*deg);
                 logicalVacuum = new G4LogicalVolume(solidVacuum, myVacuum, "Vacuum");
                 new G4PVPlacement(0, G4ThreeVector(0,0,0), logicalVacuum, "Vac", logicalLinac, false,0,checkOverlaps);
 // Make Brem target
@@ -279,7 +279,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 
 // Brem Radiator 
                 G4double bremTarget_thickness = 0.102*mm;
-                G4double brem_target_position = -(bremTarget_thickness/2.0);
+                G4double brem_target_position = -(bremBacking_thickness/2.0);
                 G4Tubs *solidBremTarget = new G4Tubs("Brem", 0.*mm, 5.0*mm, bremTarget_thickness/2.0,0.*degree,360.*degree);
                 logicBremTarget = new G4LogicalVolume(solidBremTarget, gold, "Brem");
                 new G4PVPlacement(0, G4ThreeVector(0, 0, brem_target_position),logicBremTarget,"Brem", logicBremTargetBacking, false, 0, checkOverlaps);

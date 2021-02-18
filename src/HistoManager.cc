@@ -157,14 +157,14 @@ void HistoManager::Book()
                 
                 // Create ID 6 NTuple for Incident Interrogation Object Information
                 // Added on later as a test 
-                manager->CreateNtuple("IncIntObjInfo","Incident Interrogation Object Information");
-                manager->CreateNtupleDColumn("Energy");
-                manager->CreateNtupleDColumn("Weight");
-                manager->CreateNtupleSColumn("CreatorProcess");
-                manager->CreateNtupleDColumn("Z_Position");
-                manager->CreateNtupleDColumn("Cos_theta");
-                manager->CreateNtupleDColumn("Time");
-                manager->FinishNtuple();
+                //manager->CreateNtuple("IncIntObjInfo","Incident Interrogation Object Information");
+                //manager->CreateNtupleDColumn("Energy");
+                //manager->CreateNtupleDColumn("Weight");
+                //manager->CreateNtupleSColumn("CreatorProcess");
+                //manager->CreateNtupleDColumn("Z_Position");
+                //manager->CreateNtupleDColumn("Cos_theta");
+                //manager->CreateNtupleDColumn("Time");
+                //manager->FinishNtuple();
 
                 // Create ID 10 Histogram for Incident Detector
                 manager->CreateH1("Inc_Det_Weighted", "Incident Detector Weighted Energy Spectrum", nbins, 0., xmax, "MeV");

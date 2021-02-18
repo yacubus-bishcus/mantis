@@ -284,9 +284,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 logicBremTarget = new G4LogicalVolume(solidBremTarget, gold, "Brem");
                 new G4PVPlacement(0, G4ThreeVector(0, 0, brem_target_position),logicBremTarget,"Brem", logicBremTargetBacking, false, 0, checkOverlaps);
                 
-                G4double brem_target_edge_position = bremStartPos + brem_target_position + bremTarget_thickness/2.0;
+                G4double brem_target_edge_position = beamStartPos + brem_target_position + bremTarget_thickness/2.0;
                 G4cout << "Brem Target Beginning Edge Position: " << brem_target_edge_position/(cm) << " cm" << G4endl << G4endl;
-                if(brem_target_edge_position/(cm) < bremStartPos - 1.0)
+                if(brem_target_edge_position/(cm) < beamStartPos - 1.0)
                 {
                         G4cerr << "DetectorConstruction::Build::291 -> FATAL ERROR DURING BREM TEST: Beam Started behind Brem Radiator!" << G4endl << G4endl;
                         exit(1);

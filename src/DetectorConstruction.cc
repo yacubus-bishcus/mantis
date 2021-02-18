@@ -160,6 +160,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // ********************************************************** World and Materials Complete ************************************************************//
         // Parameters used later 
         G4double container_z_pos = 2.4384*m +water_size_x + 1.0*m;
+        G4double container_edge_position = container_z_pos - 2.4384*m;
         G4double colimator_size = 50*cm;
         G4double col_position = 1.0*cm + container_z_pos - 2.4384*m - colimator_size; // should go 1cm past the container 
         G4double col_edge_position = col_position + colimator_size;
@@ -314,7 +315,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                   false, 0, checkOverlaps);
         // Set up shipping container environment (8ft wide and 8.5ft high)
                 G4double c_thick = 0.1905*cm; // approx 0.075 inch thick
-                G4double container_edge_position = container_z_pos - 2.4384*m;
                 G4Box *solidContainer = new G4Box("Container", 0.6096*m, 2.5908*m, 2.4384*m);
                 G4cout << "Edge of Container Placement: " << container_edge_position/(cm) << " cm" << G4endl << G4endl;
                 G4LogicalVolume *logicContainer = new G4LogicalVolume(solidContainer, steel, "Container");

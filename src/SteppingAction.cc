@@ -179,6 +179,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                 G4double theta = asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()); //the angle of the particle relative to the Z axis
                                 manager->FillNtupleDColumn(6,4,cos(theta)); // Cos(theta)
                                 manager->FillNtupleDColumn(6,5,theTrack->GetGlobalTime());
+                                manager->AddNtupleRow(6);
                         }
                                 
                         // NRF Incident Interrogation Object

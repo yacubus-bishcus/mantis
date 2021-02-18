@@ -279,7 +279,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 
 // Brem Radiator 
                 G4double bremTarget_thickness = 0.102*mm;
-                G4double brem_target_position = -(bremBacking_thickness/2.0);
+                G4double brem_target_position = -(bremBacking_thickness/2.0) + bremTarget_thickness/2.0;
                 G4Tubs *solidBremTarget = new G4Tubs("Brem", 0.*mm, 5.0*mm, bremTarget_thickness/2.0,0.*degree,360.*degree);
                 logicBremTarget = new G4LogicalVolume(solidBremTarget, gold, "Brem");
                 new G4PVPlacement(0, G4ThreeVector(0, 0, brem_target_position),logicBremTarget,"Brem", logicBremTargetBacking, false, 0, checkOverlaps);

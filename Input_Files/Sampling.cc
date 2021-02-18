@@ -13,18 +13,19 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	{
 		std::cout << "Sampling for Uranium!" << std::endl;
 		// U-238
-		Evec.push_back(1.78200711223); // 33
-		Evec.push_back(1.84600763227); // 31
-		Evec.push_back(2.17601067909); // 24e-3
-		Evec.push_back(2.20901100546); // 18e-3
-		Evec.push_back(2.24501136709); // 14.2e-3
+		Evec.push_back(1.78200716196); // Vavrek
+		Evec.push_back(1.84600768563); // Vavrek
+		Evec.push_back(2.17601067909); // Vavrek
+		Evec.push_back(2.20901100546); // Vavrek
+		Evec.push_back(2.24501136709); // Vavrek
 
 		// U-235
-		Evec.push_back(1.65623622215); // 2.79 1.6562362 6566 1.65624248786
-		Evec.push_back(1.73354686425); //22.4 1.73354686425 1.73355368089
-		Evec.push_back(1.81525747433); // 8.9 1.8152575 3275
-		Evec.push_back(1.86231786689); // 5.88 1.862317 92191 1.86232578887
-		Evec.push_back(2.00619912943); // 6.7 2.00336916735
+		Evec.push_back(1.65623622215); // Me
+		Evec.push_back(1.73354686425); // Vavrek
+		Evec.push_back(1.81525753275); // Vavrek
+		Evec.push_back(1.86231786689); // Me
+		Evec.push_back(2.00336916735); // Vavrek
+		Evec.push_back(2.00619912943); // Me
 	}
 	else if(sample_element == "Pu")
 	{

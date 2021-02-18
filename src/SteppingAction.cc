@@ -170,7 +170,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         if(theTrack->GetParticleDefinition() == G4Gamma::Definition() && !isNRF) // only add non NRF Gammas 
                         {
                                 manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
-                                manager->FillNtupleDColumn(6,0, theTrack->GetKineticEnergy()/(Mev));
+                                manager->FillNtupleDColumn(6,0, theTrack->GetKineticEnergy()/(MeV));
                                 manager->FillNtupleDColumn(6,1, weight);
                                 manager->FillNtupleSColumn(6,2, CPName);
                                 G4ThreeVector inc_loc = theTrack->GetPosition();

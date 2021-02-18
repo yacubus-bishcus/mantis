@@ -170,16 +170,16 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         if(theTrack->GetParticleDefinition() == G4Gamma::Definition() && !isNRF) // only add non NRF Gammas 
                         {
                                 manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
-                                manager->FillNtupleDColumn(6,0, theTrack->GetKineticEnergy()/(MeV));
-                                manager->FillNtupleDColumn(6,1, weight);
-                                manager->FillNtupleSColumn(6,2, CPName);
-                                G4ThreeVector inc_loc = theTrack->GetPosition();
-                                manager->FillNtupleDColumn(6,3, inc_loc.z()/(cm));
-                                G4ThreeVector p = aStep->GetPreStepPoint()->GetMomentum();
-                                G4double theta = asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()); //the angle of the particle relative to the Z axis
-                                manager->FillNtupleDColumn(6,4,cos(theta)); // Cos(theta)
-                                manager->FillNtupleDColumn(6,5,theTrack->GetGlobalTime());
-                                manager->AddNtupleRow(6);
+                                //manager->FillNtupleDColumn(6,0, theTrack->GetKineticEnergy()/(MeV));
+                                //manager->FillNtupleDColumn(6,1, weight);
+                                //manager->FillNtupleSColumn(6,2, CPName);
+                                //G4ThreeVector inc_loc = theTrack->GetPosition();
+                                //manager->FillNtupleDColumn(6,3, inc_loc.z()/(cm));
+                                //G4ThreeVector p = aStep->GetPreStepPoint()->GetMomentum();
+                                //G4double theta = asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()); //the angle of the particle relative to the Z axis
+                                //manager->FillNtupleDColumn(6,4,cos(theta)); // Cos(theta)
+                                //manager->FillNtupleDColumn(6,5,theTrack->GetGlobalTime());
+                                //manager->AddNtupleRow(6);
                         }
                                 
                         // NRF Incident Interrogation Object

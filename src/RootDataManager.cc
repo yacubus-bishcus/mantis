@@ -67,8 +67,8 @@ void RootDataManager::Book()
   ROOTOutFile = new TFile(ROOTFileName.c_str(),"recreate");
   ROOTChopperIn = new TGraph();
   ROOTIntObj = new TGraph();
-  ROOTChopperIn->SetTitle("Incident Chopper Wheel Weighted Energy Spectrum");
-  ROOTIntObj->SetTitle("Incident Interrogation Object Weighted Energy Spectrum");
+  ROOTChopperIn->SetNameTitle("ChopIn","Incident Chopper Wheel Weighted Energy Spectrum");
+  ROOTIntObj->SetNameTitle("IntObjIn","Incident Interrogation Object Weighted Energy Spectrum");
 
   ROOTObjectsExist = true;
 }
@@ -130,5 +130,6 @@ void RootDataManager::WriteToFile()
   ROOTObjectsExist = false;
   ROOTOutFile->Close();
   delete manager;
-  std::cout << "File Closed." << std::endl;
+  std::cout << "Output Files Closed." << std::endl;
+  G4cout << "Output Files Closed." << G4endl;
 }

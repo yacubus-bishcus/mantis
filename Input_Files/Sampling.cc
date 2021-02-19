@@ -86,7 +86,7 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 
 		for (int j = 0; j < Evec_above_threshold.size(); ++j) {
 			if (e < 1.5) {
-				hSample->SetBinContent(i, 0.0001);
+				hSample->SetBinContent(i, 0.001);
 			}
             		else if (e > Evec_above_threshold[j] - deltaE && e < Evec_above_threshold[j] + deltaE)
             		{
@@ -95,7 +95,7 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
             		}
             		else
             		{
-				hSample->SetBinContent(i, 0.01);
+				hSample->SetBinContent(i, 0.1);
 			}
 		}
 	}

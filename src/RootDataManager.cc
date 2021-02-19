@@ -49,7 +49,7 @@ ROOTObjectsExist(false)
 
 RootDataManager::~RootDataManager()
 {
-  delete ROOTOutFile;
+  //delete ROOTOutFile;
 }
 
 // Method that creates ROOT File at the beginning of a G4Run

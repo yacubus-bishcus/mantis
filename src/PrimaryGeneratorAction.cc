@@ -35,8 +35,12 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
         fParticleGun(0)
 {
         fParticleGun = new G4ParticleGun(1);
-        if(chosen_energy > 0)
-                G4cout << "PrimaryGeneratorAction::Beam Energy > 0" << G4endl;
+        if(!bremTest)
+          beam_size = 100.0*mm;
+        else
+          beam_size = 1.3*mm;
+
+        G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction -> Beam Size set to: " << beam_size << " mm" << G4endl;
 
         G4cout << "PrimaryGeneratorAction::Beam Position Set to: (0,0," << beamStart << ")cm" << G4endl;
 
@@ -141,11 +145,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         fParticleGun->SetParticleEnergy(energy);
 
         const float pi=acos(-1);
-        // Beam Size depends on whether User is conducting brem test or not
-        if(!bremTest)
-          beam_size = 100.0*mm;
-        else
-          beam_size = 1.3*mm;
+
         // Set beam position
         G4double x_r = beam_size*acos(G4UniformRand())/pi*2.*cos(360.*G4UniformRand()*CLHEP::deg);
         G4double y_r = beam_size*acos(G4UniformRand())/pi*2.*sin(360.*G4UniformRand()*CLHEP::deg);

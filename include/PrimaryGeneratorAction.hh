@@ -78,7 +78,7 @@ TGraph *gSample;
 TH1D *hBrems;
 TH1D *hSample;
 
-G4float energy;
+G4double energy;
 };
 
 #endif

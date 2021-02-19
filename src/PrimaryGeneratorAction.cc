@@ -58,7 +58,6 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
         if(chosen_energy < 0)
         {
                 gRandom->SetSeed(seed);
-                r->SetSeed(seed); // setting the seed for TRandom1
 
                 if(gSystem->AccessPathName(inFile.c_str()) != 0)
                 {
@@ -67,20 +66,20 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                 }
                 TFile *fin = TFile::Open(inFile.c_str());
                 G4String fileName = (G4String)fin->GetName();
-                hBrems  = (TGraph*) fin->Get("Graph_from_hBrems");
+                hBrems  = (TH1D*) fin->Get("hBrems");
                 if(!hBrems)
                 {
                   G4cerr << "PrimaryGeneratorAction::PrimaryActionGenerator FATAL ERROR -> hBrems Fail." << G4endl;
                   exit(1);
                 }
-                // Find Max Energy
-                G4double *xvalues = hBrems->GetX();
-                MaxE = TMath::MaxElement(hBrems->GetN(), xvalues);
+
                 if(fileName.compare(0,24,"brems_distributions.root") == 0)
                 {
                     file_check = false;
-                    hSample = (TGraph*) fin->Get("Graph_from_hSample");
-                    if(!hSample)
+                    gBrems = (TGraph*) fin->Get("gBrems");
+                    hSample = (TH1D*) fin->Get("hSample");
+                    gSample = (TGraph*) fin->Get("gSample");
+                    if(!hSample || !gSample || !gBrems)
                     {
                       G4cerr << "PrimaryGeneratorAction::PrimaryGeneratorAction() -> FATAL ERROR Failure to grab TGraphs from File: " << fileName << G4endl;
                       exit(1);
@@ -108,27 +107,33 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
   // ******************** Energy Sampling Options *************************** //
 
-        // This option reads from a input file of user's choice and samples
-        // from bremsstrahlung TGraph without any importance sampling
-        G4double e = 0.;
         G4double w = 1.;
         if(!resonanceTest && chosen_energy < 0)
         {
-          e = MaxE*r->Rndm();
-          G4double dNdE = hBrems->Eval(e)*MeV;
-          // User is not importance sampling
-          if(file_check)
-            energy = hBrems->Eval(e)*MeV;
-          // User IS using importance sampling
+          // User IS USING importance sampling
+          if(!file_check)
+          {
+            // Grab random from importance sampling distribution
+            eSample = hSample->GetRandom()*MeV;
+            // Grab contents of bin closest
+            // TGraph::Eval -> Description: linear interpolation between the
+            // two points close to x is computed. If x is outside the graph
+            // range, a linear extrapolation is computed. Eval here returns the
+            // probability per 5 eV for each respective distribution
+            G4double dNdE = gBrems->Eval(eSample);
+            G4double importanceSampling = gSample->Eval(eSample);
+            // Create importance weighting based on the two distributions probability
+            w = dNdE/importanceSampling;
+          }
+          // User IS NOT USING importance sampling
           else
-            energy = hSample->Eval(e)*MeV;
-
-          w = dNdE/energy;
+            eSample = hBrems->GetRandom()*MeV;
         }
         // The user has selected a mono-energetic beam
         else if(chosen_energy > 0)
           energy = chosen_energy*MeV;
-        // User wishes to sample from Uranium resonance energies
+        // User wishes to sample from Uranium resonance energies. dNdE will not
+        // be used here
         else
           energy = SampleUResonances();
 
@@ -136,7 +141,11 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         fParticleGun->SetParticleEnergy(energy);
 
         const float pi=acos(-1);
-        G4double beam_size = 100.0*mm;
+        // Beam Size depends on whether User is conducting brem test or not
+        if(!bremTest)
+          beam_size = 100.0*mm;
+        else
+          beam_size = 1.3*mm;
         // Set beam position
         G4double x_r = beam_size*acos(G4UniformRand())/pi*2.*cos(360.*G4UniformRand()*CLHEP::deg);
         G4double y_r = beam_size*acos(G4UniformRand())/pi*2.*sin(360.*G4UniformRand()*CLHEP::deg);
@@ -155,7 +164,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         //std::cout << "PrimaryActionGenerator::GeneratePrimaries() -> End!" << std::endl;
 }
 
-G4double PrimaryGeneratorAction::SampleUResonances() {
+G4double PrimaryGeneratorAction::SampleUResonances()
+ {
         std::vector<double> er;
         er.push_back(1.65624253132*MeV);
         er.push_back(1.7335537285*MeV);

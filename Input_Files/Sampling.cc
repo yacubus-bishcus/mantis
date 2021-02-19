@@ -102,8 +102,7 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 
 	// normalize hSample so that its integral is 1
 	hSample->Scale(1.0/(hSample->Integral()));
-	// Convert Sample histogram to TGraph
-	TGraph *sampleGraph = new TGraph(hSample);
+	TGraph *gSample = new TGraph(hSample);
 	std::cout << "Importance Sampling Distribution Created!" << std::endl << std::endl;
 
 	// Convert Input Bremsstrahlung Spectrum Histogram to TGraph
@@ -112,7 +111,7 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 		std::cerr << "ERROR Reading: " << bremInputFilename << std::endl;
 		exit(1);
 	}
-	std::cout << "Converting hBrems to TGraph..." << std::endl;
+
 	TFile *f = TFile::Open(bremInputFilename);
 	bool confirm = f->cd();
 	if(!confirm)
@@ -120,39 +119,29 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	TTree *ChopperData;
 	f->GetObject("ChopIn", ChopperData);
 	ChopperData->Print();
-
-	nbins = sqrt(ChopperData->GetEntries()); // set number of bins to sqrt(entries)
-	TH1D *hBrems = new TH1D("hBrems","Brem Histo",nbins,0.,Emax);
-	// Convert TTree to Histo
+	TH1D *hBrems = new TH1D("hBrems","Bremsstrahlung Data",nbins, 0.,Emax);
 	ChopperData->Draw("Energy>>hBrems","","goff");
-	// normalize hBrems so that its integral is 1
-	hBrems->Scale(1.0/(hBrems->Integral()));
-	hBrems->Smooth(1024);
-	// Convert Histo to TGraph
-	TGraph *bremsGraph = new TGraph(hBrems);
-	bremsGraph->SetTitle("Bremsstrahlung Distribution");
-
+	TGraph *gBrems = new TGraph(hBrems);
 
 	TCanvas *c0 = new TCanvas();
 	c0->cd();
 	gPad->SetTicks(1,1);
 	gPad->SetLogy();
 
-	sampleGraph->Draw();
-	bremsGraph->SetLineColor(kRed);
-	bremsGraph->Draw("same");
-	sampleGraph->GetYaxis()->SetRangeUser(1e-8, 1e-1);
-	sampleGraph->SetTitle("NRF importance sampling distribution");
-	sampleGraph->GetXaxis()->SetTitle("energy #it{E} [MeV]");
-	sampleGraph->GetYaxis()->SetTitle("probability per 5 eV");
-	//sampleGraph->SetStats(0);
-	c0->SaveAs("brems_distributions.png");
-	std::cout << "brems_distributions.png created!" << std::endl;
+	gBrems->Draw();
+	hSample->SetLineColor(kRed);
+	hSample->Draw("HIST,SAME");
+	hSample->GetYaxis()->SetRangeUser(1e-8, 1e-1);
+	hSample->SetTitle("NRF importance sampling distribution");
+	hSample->GetXaxis()->SetTitle("energy #it{E} [MeV]");
+	hSample->GetYaxis()->SetTitle("probability per 5 eV");
 
 	// save everything to file
 	TFile *fout = new TFile("brems_distributions.root","recreate");
 	fout->cd();
-	bremsGraph->Write();
-	sampleGraph->Write();
+	gBrems->Write();
+	hBrems->Write();
+	gSample->Write();
+	hSample->Write();
 	std::cout << "File Complete. Saved to brems_distributions.root" << std::endl;
 }

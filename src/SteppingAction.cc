@@ -59,6 +59,28 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 return;
         }
 
+        // Grab Relevant event information including the particle weight 
+        eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
+        weight = info->GetWeight();
+        G4double beamEnergy = info->GetBeamEnergy();
+
+        // throw a warning if energy conservation appears to be broken for gammas
+        // small deviations have been observed; attribute to a likely mismatch in database energies
+        if (theTrack->GetKineticEnergy() > beamEnergy) {
+          G4cerr << G4endl;
+          G4cerr << "Warning: gammaEnergy " << theTrack->GetKineticEnergy() << " MeV > beamEnergy " << beamEnergy << " MeV!!" << G4endl;
+          G4cerr << "  energy difference (keV) = " << (theTrack->GetKineticEnergy()-beamEnergy)/keV << G4endl;
+          G4cerr << "  creator process = " << theTrack->GetCreatorProcess()->GetProcessName() << G4endl;
+          G4cerr << "  material = " << theTrack->GetMaterial()->GetName() << G4endl;
+
+          // if the discrepancy is > 1.0 keV, throw an actual error
+          if (theTrack->GetKineticEnergy()-beamEnergy > 1.0*keV) {
+            G4cerr << "  energy difference > 1.0 keV. Aborting..." << G4endl;
+            exit(111);
+          } else {
+            G4cerr << "  energy difference < 1.0 keV likely due to NRF database mismatch. Carrying on..." << G4endl;
+          }
+        }
         G4String nextStep_VolumeName = endPoint->GetPhysicalVolume()->GetName();
         G4String previousStep_VolumeName = startPoint->GetPhysicalVolume()->GetName();
         // kill photons past IntObj
@@ -98,9 +120,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 // ************************************************* Checks and Cuts Complete ************************************************** //
 
         G4int isNRF = 0;
-        // Grab Weights from PrimaryGenerator
-        eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
-        weight = info->GetWeight();
         G4AnalysisManager* manager = G4AnalysisManager::Instance();
 
 // **************************************************** Track NRF Materials **************************************************** //

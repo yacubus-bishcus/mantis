@@ -22,46 +22,43 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef RunAction_h
-#define RunAction_h 1
+#ifndef RootDataManager_hh
+#define RootDataManager_hh 1
 
-#include "globals.hh"
-#include "G4UserRunAction.hh"
 #include <vector>
+#include "G4Event.hh"
 #include "G4Run.hh"
-#include "HistoManager.hh"
-#include "RootDataManager.hh"
-#include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4UnitsTable.hh"
-#include "EventCheck.hh"
-#include "WeightHisto.hh"
+#include "G4PhysicalConstants.hh"
 
-class RunAction : public G4UserRunAction
+#include "TFile.h"
+#include "TGraph.h"
+
+class RootDataManager
 {
-  public:
-    RunAction(HistoManager*, RootDataManager*);
-    virtual ~RunAction();
+public:
+  RootDataManager();
+  ~RootDataManager();
 
-  public:
+  static RootDataManager *GetInstance();
 
-    virtual void BeginOfRunAction(const G4Run*);
-    virtual void EndOfRunAction(const G4Run*);
+  void Book();
+  void ChopperAddPoint(G4int, G4double, G4double);
+  void IntObjAddPoint(G4int, G4double, G4double);
+  void WriteToFile();
 
-    void AddCerenkovEnergy(G4double en) {fCerenkovEnergy += en;}
-    void AddScintillationEnergy(G4double en) {fScintEnergy += en;}
-    void AddCerenkov(void) {fCerenkovCount++;} // changed from +=
-    void AddScintillation(void) {fScintCount++;}
-    void AddTotalSurface(void) {fTotalSurface += 1;}
-    void AddNRF(void){fNRF++;}
-    void AddStatusKilled(void){fStatusKilled++;}
+  void SetFileName(G4String FN){ROOTFileName = FN;}
+  G4String GetFileName() {return ROOTFileName;}
 
-  private:
-    HistoManager* fHistoManager;
-    RootDataManager* fRootManager;
-    G4double fCerenkovEnergy, fScintEnergy, fCerenkovCount;
-    G4int fScintCount, fTotalSurface, fNRF, fStatusKilled;
+  G4bool CheckForTGraphObject(){return ROOTObjectsExist;}
+
+private:
+  static RootDataManager *theRootDataManager;
+  G4String ROOTFileName;
+  TFile *ROOTOutFile;
+  TGraph *ROOTChopperIn, *ROOTIntObj;
+  G4bool ROOTObjectsExist;
+
 };
-
 
 #endif

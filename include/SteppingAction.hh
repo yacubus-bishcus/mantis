@@ -33,6 +33,7 @@
 #include "RunAction.hh"
 #include "StackingAction.hh"
 #include "HistoManager.hh"
+#include "RootDataManager.hh"
 #include "StepMessenger.hh"
 #include "EventAction.hh"
 #include "DetectorConstruction.hh"
@@ -105,6 +106,7 @@ G4OpBoundaryProcessStatus fExpectedNextStatus;
 G4String procCount;
 G4int drawChopperIncDataFlag, drawChopperOutDataFlag, drawNRFDataFlag, drawIntObjDataFlag, drawWaterIncDataFlag, drawCherenkovDataFlag, drawDetDataFlag;
 StepMessenger* stepM;
+G4int chopCount, intCount;
 };
 
 #endif

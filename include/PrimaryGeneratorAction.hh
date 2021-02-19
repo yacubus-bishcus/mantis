@@ -40,7 +40,9 @@
 #include "TFile.h"
 #include "TROOT.h"
 #include "TH1D.h"
-#include "TRandom1.h"
+#include "TGraph.h"
+#include "TRandom2.h"
+#include "TMath.h"
 #include "TSystem.h"
 
 class G4Event;
@@ -64,12 +66,14 @@ G4double SampleUResonances();
 
 private:
 G4double beamStart = 129.9;
+G4double MaxE;
 G4bool file_check;
 G4ParticleGun* fParticleGun;
 
-TRandom1 Random;
-TH1D *hBrems;
-TH1D *hSample;
+TRandom2 *r; // TRandom2 has 5ns/call with 10^26 period
+TRandom2 Random;
+TGraph *hBrems;
+TGraph *hSample;
 
 protected:
 G4float energy;

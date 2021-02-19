@@ -34,6 +34,8 @@ SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, 
 {
         stepM = new StepMessenger(this);
         fExpectedNextStatus = Undefined;
+        chopCount = 0;
+        intCount = 0;
 }
 
 SteppingAction::~SteppingAction()
@@ -74,13 +76,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         theTrack->SetTrackStatus(fStopAndKill);
                         krun->AddStatusKilled();
                 }
-                //if(cos(tB) < 0) // if the track is not heading forward kill it 
+                //if(cos(tB) < 0) // if the track is not heading forward kill it
                 //{
                 //        theTrack->SetTrackStatus(fStopAndKill);
                 //        krun->AddStatusKilled();
                 // }
         }
-                
+
         if(theTrack->GetPosition().z() > EndIntObj)
         {
                 // kill photons that go beyond the interrogation object
@@ -150,11 +152,16 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         manager->FillNtupleIColumn(0,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
                         manager->AddNtupleRow(0);
                         if(weightHisto)
-                                manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
+                        {
+                          manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
+                          RootDataManager::GetInstance()->ChopperAddPoint(chopCount, theTrack->GetKineticEnergy()/(MeV),weight);
+                          chopCount++;
+                        }
+
                         if(bremTest)
                         {
                                 manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV));
-                                theTrack->SetTrackStatus(fStopAndKill); // kill track only intersted in incident chopper Data 
+                                theTrack->SetTrackStatus(fStopAndKill); // kill track only intersted in incident chopper Data
                                 krun->AddStatusKilled();
                         }
                 }
@@ -180,13 +187,15 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         // Interrogation Object Analysis
         if(drawIntObjDataFlag && !bremTest)
         {
-                // Incident Interrogation Object USER MUST ADD Histograms to get full spectrum 
+                // Incident Interrogation Object USER MUST ADD Histograms to get full spectrum
                 if(nextStep_VolumeName.compare(0, 6,"IntObj") == 0
                    && previousStep_VolumeName.compare(0, 6, "IntObj") != 0)
                 {
-                        if(theTrack->GetParticleDefinition() == G4Gamma::Definition() && !isNRF) // only add non NRF Gammas 
+                        if(theTrack->GetParticleDefinition() == G4Gamma::Definition() && !isNRF) // only add non NRF Gammas
                         {
                                 manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
+                                RootDataManager::GetInstance()->IntObjAddPoint(intCount, theTrack->GetKineticEnergy()/(MeV),weight);
+                                intCount++;
                                 //manager->FillNtupleDColumn(6,0, theTrack->GetKineticEnergy()/(MeV));
                                 //manager->FillNtupleDColumn(6,1, weight);
                                 //manager->FillNtupleSColumn(6,2, CPName);
@@ -198,9 +207,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                 //manager->FillNtupleDColumn(6,5,theTrack->GetGlobalTime());
                                 //manager->AddNtupleRow(6);
                         }
-                                
+
                         // NRF Incident Interrogation Object
-                        if(isNRF && drawNRFDataFlag) // only add NRF 
+                        if(isNRF && drawNRFDataFlag) // only add NRF
                         {
                                 manager->FillH1(3, theTrack->GetKineticEnergy()/(MeV), weight);
                         }
@@ -240,10 +249,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 // only care about secondaries that occur in water volume
                 if(bremTest)
                 {
-                        theTrack->SetTrackStatus(fStopAndKill); // kill track only intersted in incident chopper Data 
+                        theTrack->SetTrackStatus(fStopAndKill); // kill track only intersted in incident chopper Data
                         krun->AddStatusKilled();
                 }
-                        
+
                 const std::vector<const G4Track*>* secondaries = aStep->GetSecondaryInCurrentStep();
                 if(secondaries->size()>0)
                 {
@@ -342,22 +351,22 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                         // Keep track of detected photons
                                         else if (theStatus == Detection)
                                         {
-                                                if(theParticle->GetKineticEnergy()/(eV) < 10.0) 
+                                                if(theParticle->GetKineticEnergy()/(eV) < 10.0)
                                                 {
                                                         procCount = "Det";
                                                         manager->FillNtupleIColumn(4,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
                                                         manager->FillNtupleDColumn(4,1, theParticle->GetKineticEnergy()/(MeV));
                                                         manager->FillNtupleDColumn(4,2, weight);
                                                         G4String creatorProcess;
-                                                        
+
                                                         if(theTrack->GetCreatorProcess() !=0)
                                                                 creatorProcess = theTrack->GetCreatorProcess()->GetProcessName();
                                                         else
                                                                 creatorProcess = "Brem";
-                                                        
+
                                                         manager->FillNtupleSColumn(4,3, creatorProcess);
                                                         manager->FillNtupleDColumn(4,4, theTrack->GetGlobalTime()); // time units is nanoseconds
-                                                        manager->AddNtupleRow(4); 
+                                                        manager->AddNtupleRow(4);
                                                         manager->FillH1(11, theParticle->GetKineticEnergy()/(eV), weight);
                                                 }
                                         }
@@ -389,7 +398,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                                                 manager->FillNtupleDColumn(5,2, weight);
                                                 manager->FillNtupleSColumn(5,3, procCount);
                                                 manager->AddNtupleRow(5);
-                                                
+
                                                 if(weightHisto)
                                                         manager->FillH1(10,theParticle->GetKineticEnergy()/(MeV), weight);
                                         } // for if keeping track of detector process data

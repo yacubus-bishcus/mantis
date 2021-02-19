@@ -27,8 +27,8 @@ extern G4bool output;
 extern G4bool checkEvents;
 extern G4bool weightHisto;
 
-RunAction::RunAction(HistoManager* histoAnalysis)
-        : G4UserRunAction(), fHistoManager(histoAnalysis)
+RunAction::RunAction(HistoManager* histoAnalysis, RootDataManager* RootAnalysis)
+        : G4UserRunAction(), fHistoManager(histoAnalysis), fRootManager(RootAnalysis)
 {
 }
 
@@ -41,7 +41,9 @@ void RunAction::BeginOfRunAction(const G4Run*)
         if(output)
         {
                 fHistoManager->Book();
+                fRootManager->Book();
         }
+
         fTotalSurface = 0;
         fCerenkovCount = 0;
         fScintCount = 0;
@@ -92,6 +94,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
         if(output)
         {
                 fHistoManager->finish();
+                fRootManager->WriteToFile();
         }
         if(checkEvents)
         {

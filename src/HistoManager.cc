@@ -39,10 +39,10 @@ HistoManager::~HistoManager()
 
 void HistoManager::Book()
 {
-        G4AnalysisManager* manager = G4AnalysisManager::Instance(); 
+        G4AnalysisManager* manager = G4AnalysisManager::Instance();
         manager->SetVerboseLevel(0);
         xmax = chosen_energy;
-        
+
         if(!bremTest && chosen_energy < 0)
         {
                 if(gSystem->AccessPathName(inFile.c_str()) == 0)
@@ -52,7 +52,7 @@ void HistoManager::Book()
                                 hBrems  = (TH1D*) fin->Get("hBrems");
                         else
                                 hBrems = (TH1D*) fin->Get("ChopperIn_Weighted");
-                        
+
                         if (!hBrems)
                         {
                                 G4cerr << "HistoManager::Error reading from file " << fin->GetName() << G4endl;
@@ -63,27 +63,27 @@ void HistoManager::Book()
                                 xmax = hBrems->GetXaxis()->GetXmax();
                                 G4cout << "Found Input Max Energy: " << xmax << " MeV" << G4endl;
                                 fin->Close();
-                        } // for if !hBrems            
+                        } // for if !hBrems
                 } // for if gSystem
                 else
                 {
                         G4cerr << "FATAL ERROR: HistoManager:: " << inFile << " not Found!" << G4endl;
                         exit(1);
-                } // for if !gSystem 
+                } // for if !gSystem
         } // for if not bremTest and chosen_energy < 0
 
         // open output file
         G4bool fileOpen = manager->OpenFile(gOutName);
-        
+
         //std::cout << "Energy for xMax: " << xmax << std::endl;
-        
+
         if(!fileOpen)
         {
                 G4cerr << "HistoManager::Book(): Cannot Open " <<manager->GetFileName()<<G4endl;
                 return;
         }
 
-        G4int nbins = xmax/(10.0e-6/2.0);
+        G4int nbins = xmax/(10.0e-6); // this sets the bin width to 10 eV 
         // Create ID 0 Ntuple for Incident Chopper Data
         manager->CreateNtuple("ChopIn", "Chopper Wheel Incident Data");
         manager->CreateNtupleDColumn("Energy");
@@ -154,9 +154,9 @@ void HistoManager::Book()
                 manager->CreateNtupleDColumn("Weight");
                 manager->CreateNtupleSColumn("DetProcess");
                 manager->FinishNtuple();
-                
+
                 // Create ID 6 NTuple for Incident Interrogation Object Information
-                // Added on later as a test 
+                // Added on later as a test
                 //manager->CreateNtuple("IncIntObjInfo","Incident Interrogation Object Information");
                 //manager->CreateNtupleDColumn("Energy");
                 //manager->CreateNtupleDColumn("Weight");

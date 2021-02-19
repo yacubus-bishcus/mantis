@@ -37,8 +37,9 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
         fParticleGun = new G4ParticleGun(1);
         if(chosen_energy > 0)
                 G4cout << "PrimaryGeneratorAction::Beam Energy > 0" << G4endl;
-        
+
         G4cout << "PrimaryGeneratorAction::Beam Position Set to: (0,0," << beamStart << ")cm" << G4endl;
+
         if(bremTest)
         {
                 fParticleGun->SetParticleDefinition(G4Electron::Definition());
@@ -57,55 +58,43 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
         if(chosen_energy < 0)
         {
                 gRandom->SetSeed(seed);
-                if(gSystem->AccessPathName(inFile.c_str()) == 0)
+                r->SetSeed(seed); // setting the seed for TRandom1
+
+                if(gSystem->AccessPathName(inFile.c_str()) != 0)
                 {
-                        TFile *fin = TFile::Open(inFile.c_str());
-                        G4String fileName = (G4String)fin->GetName();
-                        if(fileName.compare(0,24,"brems_distributions.root") == 0)
-                        {
-                                file_check = false;
-                                hBrems  = (TH1D*) fin->Get("hBrems");
-                                hSample = (TH1D*) fin->Get("hSample");
-
-                                if (hBrems && hSample)
-                                {
-                                        G4cout << "PrimaryGeneratorAction::Imported brems and sampling distributions from " << fin->GetName() << G4endl << G4endl;
-                                }
-
-                                else
-                                {
-                                        G4cerr << "Error reading from file " << fin->GetName() << G4endl;
-                                        exit(1);
-                                }
-                        }
-                        else
-                        {
-
-                                hBrems = (TH1D*) fin->Get("ChopperIn_Weighted"); // the purpose of this functionality is to sample from a bremsstrahlung beam without importance sampling
-
-                                if(hBrems)
-                                {
-                                        G4cout << "PrimaryGeneratorAction::Imported brems distribution from " << fin->GetName() << G4endl;
-                                        file_check = true;
-                                }
-                                else
-                                {
-                                        G4cerr << "PrimaryGeneratorAction::Error reading from file " << fin->GetName() << G4endl;
-                                        exit(1);
-                                }
-                        }
+                  G4cerr << "PrimaryGeneratorAction::PrimaryActionGenerator FATAL ERROR -> " << inFile << " NOT FOUND!" << G4endl;
+                  exit(1);
+                }
+                TFile *fin = TFile::Open(inFile.c_str());
+                G4String fileName = (G4String)fin->GetName();
+                hBrems  = (TGraph*) fin->Get("sampleBrems");
+                if(!hBrems)
+                {
+                  G4cerr << "PrimaryGeneratorAction::PrimaryActionGenerator FATAL ERROR -> hBrems Fail." << G4endl;
+                  exit(1);
+                }
+                // Find Max Energy
+                G4double *xvalues = hBrems->GetX();
+                MaxE = TMath::MaxElement(hBrems->GetN(), xvalues);
+                if(fileName.compare(0,24,"brems_distributions.root") == 0)
+                {
+                    file_check = false;
+                    hSample = (TGraph*) fin->Get("sampleGraph");
+                    if(!hSample)
+                    {
+                      G4cerr << "PrimaryGeneratorAction::PrimaryGeneratorAction() -> FATAL ERROR Failure to grab TGraphs from File: " << fileName << G4endl;
+                      exit(1);
+                    }
                 }
                 else
-                {
-                        G4cerr << "FATAL ERROR: PrimaryGeneratorAction:: " << inFile << " NOT FOUND!" << G4endl;
-                        exit(1);
-                }
+                  file_check = true;
         }
         else
         {
                 file_check = false;
                 G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction Chosen Energy set to: " << chosen_energy << " MeV" << G4endl;
         }
+
         G4cout << G4endl << "User Macro Inputs" << G4endl;
         G4cout << "----------------------------------------------------------------------" << G4endl;
 }
@@ -117,50 +106,46 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
+  // ******************** Energy Sampling Options *************************** //
 
-// Set Particle Energy (Must be in generate primaries)
-        //std::cout << "PrimaryGeneratorAction::GeneratePrimaries -> Begin!" << std::endl;
-        if(file_check)
+        // This option reads from a input file of user's choice and samples
+        // from bremsstrahlung TGraph without any importance sampling
+        G4double e = 0.;
+        G4double w = 1.;
+        if(!resonanceTest && chosen_energy < 0)
         {
-                energy = hBrems->GetRandom()*MeV;
-        }
-        else if(chosen_energy < 0 && !file_check)
-        {
-                energy = hSample->GetRandom()*MeV; // sample the resonances specified by hSample
-        }
+          e = MaxE*r->Rndm();
+          G4double dNdE = hBrems->Eval(e)*MeV;
+          // User is not importance sampling
+          if(file_check)
+            energy = hBrems->Eval(e)*MeV;
+          // User IS using importance sampling
+          else
+            energy = hSample->Eval(e)*MeV;
 
-        else if(chosen_energy > 0 && !file_check)
-        {
-                energy = chosen_energy*MeV;
+          w = dNdE/energy;
         }
-        else if(resonanceTest && !file_check)
-        {
-                energy = SampleUResonances();
-        }
+        // The user has selected a mono-energetic beam
+        else if(chosen_energy > 0)
+          energy = chosen_energy*MeV;
+        // User wishes to sample from Uranium resonance energies
+        else
+          energy = SampleUResonances();
 
+        // Set the energy
         fParticleGun->SetParticleEnergy(energy);
 
-
         const float pi=acos(-1);
-        G4double beam_size = 1.3*mm;
+        G4double beam_size = 100.0*mm;
         // Set beam position
         G4double x_r = beam_size*acos(G4UniformRand())/pi*2.*cos(360.*G4UniformRand()*CLHEP::deg);
         G4double y_r = beam_size*acos(G4UniformRand())/pi*2.*sin(360.*G4UniformRand()*CLHEP::deg);
         fParticleGun->SetParticlePosition(G4ThreeVector(x_r,y_r,beamStart*cm)); // set the electron beam far enough back behind brem radiator
 
-
         // Set beam momentum
         fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,1)); // along z axis
 
         fParticleGun->GeneratePrimaryVertex(anEvent);
-        G4double w = 1.0;
-
-        if(chosen_energy < 0 && !file_check)
-        {
-                G4double theSampling = hSample->GetBinContent(hSample->GetXaxis()->FindBin(energy));
-                G4double dNdE = hBrems->GetBinContent(hBrems->GetXaxis()->FindBin(energy));
-                w = dNdE/theSampling;
-        }
 
 // Pass the event information
         eventInformation *anInfo = new eventInformation(anEvent);

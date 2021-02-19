@@ -30,6 +30,7 @@
 #include "StackingAction.hh"
 #include "EventAction.hh"
 #include "HistoManager.hh"
+#include "RootDataManager.hh"
 #include "G4Types.hh"
 
 
@@ -46,8 +47,10 @@ void ActionInitialization::Build() const
 {
         //std::cout << "ActionInitialization::Build() -> Begin!" << std::endl;
         HistoManager* histo = new HistoManager();
+        RootDataManager* RootAnalysis = new RootDataManager();
+
         SetUserAction(new PrimaryGeneratorAction());
-        RunAction* run = new RunAction(histo);
+        RunAction* run = new RunAction(histo, RootAnalysis);
         SetUserAction(run);
         EventAction* event = new EventAction();
         SetUserAction(event);

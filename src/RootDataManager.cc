@@ -49,7 +49,7 @@ ROOTObjectsExist(false)
 
 RootDataManager::~RootDataManager()
 {
-  //delete ROOTOutFile;
+  delete ROOTOutFile;
 }
 
 // Method that creates ROOT File at the beginning of a G4Run
@@ -107,6 +107,7 @@ void RootDataManager::IntObjAddPoint(G4int i, G4double x, G4double y)
 // Method to Write TGraphs to OutFile
 void RootDataManager::WriteToFile()
 {
+  RootDataManager* manager = RootDataManager::GetInstance();
   if(!ROOTObjectsExist)
   {
     G4cerr << "RootDataManager::WriteToFile() -> FATAL ERROR ROOT Object does NOT Exist!" << G4endl;
@@ -127,5 +128,7 @@ void RootDataManager::WriteToFile()
   std::cout << "RootDataManager::WriteToFile() -> Wrote TGraph Data to " << ROOTFileName << std::endl;
   G4cout << "RootDataManager::WriteToFile() -> Wrote TGraph Data to " << ROOTFileName << G4endl;
   ROOTObjectsExist = false;
-
+  ROOTOutFile->Close();
+  delete manager;
+  std::cout << "File Closed." << std::endl;
 }

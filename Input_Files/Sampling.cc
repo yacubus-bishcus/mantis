@@ -1,4 +1,24 @@
-// to Run in root: root -b -q 'Sampling.cc("brem.root", Emax)'
+//
+// ************************************************************************************************ //
+// ************************************************************************************************ //
+// To Run File in ROOT CERN:
+// root -b -q 'Sampling.cc("testOn.root", 2.1,"U")'
+// ************************************************************************************************ //
+// ************************************************************************************************ //
+// File Explanation:
+//
+// Requires 3 inputs
+// 1. Filename
+// 2. Histogram Max Energy
+// 3. Element for Sampling Either U or Pu
+//
+// This Script scans a ROOT file for the bremsstrahlung spectrum and converts
+// The TTree to a TGraph. The File also creates an importance sampling Distribution
+// based on the user's sampling material either Uranium or plutonium and the users
+// maximum histogram energy (cuts off sampling resonances above this energy)
+// The output of this file is another ROOT TFile with a bremmstrahlung and importance
+// sampling distributions saved as TGraphs
+
 void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 {
 	cout << "Emax set to: " << Emax << endl; // spectrum max energy in MeV
@@ -84,15 +104,17 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	hSample->Scale(1.0/(hSample->Integral()));
 	// Convert Sample histogram to TGraph
 	TGraph *sampleGraph = new TGraph(hSample);
+	std::cout << "Importance Sampling Distribution Created!" << std::endl << std::endl;
 
 	// Convert Input Bremsstrahlung Spectrum Histogram to TGraph
-	if(gSystem->AccessPathName(bremInputFilename) != 0)
+	if(gSystem->AccessPathName(bremInputFilename))
 	{
 		std::cerr << "ERROR Reading: " << bremInputFilename << std::endl;
 		exit(1);
 	}
 
 	TFile *f = TFile::Open(bremInputFilename);
+	f->cd();
 	TTree *ChopperData;
 	f->GetObject("Chopin", ChopperData);
 	ChopperData->Print();

@@ -47,7 +47,7 @@ void ActionInitialization::Build() const
 {
         //std::cout << "ActionInitialization::Build() -> Begin!" << std::endl;
         HistoManager* histo = new HistoManager();
-        RootDataManager* RootAnalysis = new RootDataManager();
+        //RootDataManager* RootAnalysis = new RootDataManager();
 
         SetUserAction(new PrimaryGeneratorAction());
         RunAction* run = new RunAction(histo, RootAnalysis);

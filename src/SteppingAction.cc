@@ -154,8 +154,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         if(weightHisto)
                         {
                           manager->FillH1(0, theTrack->GetKineticEnergy()/(MeV), weight);
-                          RootDataManager::GetInstance()->ChopperAddPoint(chopCount, theTrack->GetKineticEnergy()/(MeV),weight);
-                          chopCount++;
+                          //RootDataManager::GetInstance()->ChopperAddPoint(chopCount, theTrack->GetKineticEnergy()/(MeV),weight);
+                          //chopCount++;
                         }
 
                         if(bremTest)
@@ -194,8 +194,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         if(theTrack->GetParticleDefinition() == G4Gamma::Definition() && !isNRF) // only add non NRF Gammas
                         {
                                 manager->FillH1(2, theTrack->GetKineticEnergy()/(MeV), weight);
-                                RootDataManager::GetInstance()->IntObjAddPoint(intCount, theTrack->GetKineticEnergy()/(MeV),weight);
-                                intCount++;
+                                //RootDataManager::GetInstance()->IntObjAddPoint(intCount, theTrack->GetKineticEnergy()/(MeV),weight);
+                                //intCount++;
                                 //manager->FillNtupleDColumn(6,0, theTrack->GetKineticEnergy()/(MeV));
                                 //manager->FillNtupleDColumn(6,1, weight);
                                 //manager->FillNtupleSColumn(6,2, CPName);

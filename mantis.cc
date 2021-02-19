@@ -28,8 +28,8 @@ G4double chosen_energy;
 G4bool output;
 // String global variables
 G4String macro, root_output_name, gOutName, inFile;
-// boolean global variables 
-G4bool bremTest, resonanceTest, checkEvents, weightHisto;
+// boolean global variables
+G4bool bremTest, resonanceTest, checkEvents;
 
 namespace
 {
@@ -38,7 +38,7 @@ void PrintUsage()
         G4cerr << "Usage: " << G4endl;
         G4cerr << "mantis [-h help] [-m macro=mantis.in] [-a chosen_energy=-1.] [-s seed=1] [-o output_name] [-t bremTest=false] " <<
                 "[-r resonance_test=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] " <<
-                "[-e checkEvents_in=false] [-w weightHisto_in=false] [-i inFile]"
+                "[-e checkEvents_in=false] [-i inFile]"
                << G4endl;
         exit(1);
 }
@@ -48,34 +48,32 @@ int main(int argc,char **argv)
 {
         // Defaults
         G4int start_time = time(0);
-        // Physics List Defaults 
+        // Physics List Defaults
         G4bool use_xsec_tables = true;
         G4bool use_xsec_integration = true;
         G4bool force_isotropic = false;
         G4String standalone_in = "false";
         G4String verbose_in = "false";
         G4String addNRF_in = "true";
-        
+
         G4bool standalone = false;
         G4bool NRF_Verbose = false;
         G4bool addNRF = true;
-        // Run Defaults 
+        // Run Defaults
         macro = "mantis.in";
         seed = 1;
         inFile = "brems_distributions.root";
-        // Primary Generator Defaults 
+        // Primary Generator Defaults
         G4String resonance_in = "false";
         resonanceTest = false;
         chosen_energy = -1.;
         G4String bremTest_in = "false";
         bremTest = false;
-        
-        // Output Defaults 
+
+        // Output Defaults
         output = false;
         G4String checkEvents_in = "false";
-        G4String weightHisto_in = "false";
         checkEvents = false;
-        weightHisto = false;
 
         // Detect interactive mode (if no arguments) and define UI session
         //
@@ -105,15 +103,14 @@ int main(int argc,char **argv)
                 else if (G4String(argv[i]) == "-v") verbose_in = argv[i+1];
                 else if (G4String(argv[i]) == "-n") addNRF_in = argv[i+1];
                 else if (G4String(argv[i]) == "-e") checkEvents_in = argv[i+1];
-                else if (G4String(argv[i]) == "-w") weightHisto_in = argv[i+1];
                 else if (G4String(argv[i]) == "-i") inFile = argv[i+1];
                 else
                 {
                         PrintUsage();
                         return 1;
                 }
-        } 
-        
+        }
+
         // Handle Output File
         std::cout << "Output Filename: " << root_output_name << std::endl;
         std::string RootOutputFile = (std::string)root_output_name;
@@ -132,7 +129,7 @@ int main(int argc,char **argv)
                 UI->SetCoutDestination(LoggedSession);
         }
 
-        // Physics List Options 
+        // Physics List Options
         if(standalone_in == "True" || standalone_in == "true")
         {
                 G4cout << "Standalone File Requested." << G4endl;
@@ -149,33 +146,27 @@ int main(int argc,char **argv)
                 G4cout << "NRF Physics turned OFF!" << G4endl;
                 addNRF = false;
         }
-        
-        // Primary Generator Options 
+
+        // Primary Generator Options
         if(bremTest_in == "True" || bremTest_in == "true")
         {
                 G4cout << "Conducting Brem Test!" << G4endl;
                 bremTest = true;
         }
-        
-        if(weightHisto_in == "True" || weightHisto_in == "true")
-        {
-                G4cout << "Producing Weighted Histograms!" << G4endl;
-                weightHisto = true;
-        }
-        
+
         if(checkEvents_in == "True" || checkEvents_in == "true")
         {
                 G4cout << "Checking Events!" << G4endl;
                 checkEvents = true;
         }
-        
+
         if(resonance_in == "True" || resonance_in == "true")
         {
                 G4cout << "Completing Resonance Test!" << G4endl;
                 resonanceTest = true;
         }
-        
-        // Some User Error Checking 
+
+        // Some User Error Checking
         if(bremTest && resonanceTest)
         {
                 G4cerr << "FATAL ERROR mantis.cc -> Cannot test bremsstrahlung and resonance during the same run!" << G4endl;

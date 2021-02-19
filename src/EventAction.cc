@@ -22,7 +22,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "EventAction.hh"
-extern G4bool weightHisto;
 
 EventAction::EventAction()
 {
@@ -61,16 +60,12 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
                         c_time = 0;
                 // Fill the TTree
                 G4AnalysisManager* manager = G4AnalysisManager::Instance();
-                manager->FillNtupleDColumn(3,0,maxE);
-                manager->FillNtupleDColumn(3,1, weight);
-                manager->FillNtupleIColumn(3,2,anEvent->GetEventID());
-                manager->FillNtupleIColumn(3,3,c_secondaries);
-                manager->FillNtupleDColumn(3,4,c_time);
-                manager->AddNtupleRow(3);
-                if(weightHisto)
-                {
-                        manager->FillH1(9, maxE, weight);
-                }
+                manager->FillNtupleDColumn(6,0,maxE);
+                manager->FillNtupleDColumn(6,1, weight);
+                manager->FillNtupleIColumn(6,2,anEvent->GetEventID());
+                manager->FillNtupleIColumn(6,3,c_secondaries);
+                manager->FillNtupleDColumn(6,4,c_time);
+                manager->AddNtupleRow(6);
         }
         //std::cout << "EventAction::EndOfEventAction() --> Ending!" << std::endl;
 }

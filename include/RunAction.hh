@@ -30,17 +30,15 @@
 #include <vector>
 #include "G4Run.hh"
 #include "HistoManager.hh"
-#include "RootDataManager.hh"
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
 #include "EventCheck.hh"
-#include "WeightHisto.hh"
 
 class RunAction : public G4UserRunAction
 {
   public:
-    RunAction(HistoManager*, RootDataManager*);
+    RunAction(HistoManager*);
     virtual ~RunAction();
 
   public:
@@ -58,7 +56,6 @@ class RunAction : public G4UserRunAction
 
   private:
     HistoManager* fHistoManager;
-    RootDataManager* fRootManager;
     G4double fCerenkovEnergy, fScintEnergy, fCerenkovCount;
     G4int fScintCount, fTotalSurface, fNRF, fStatusKilled;
 };

@@ -127,6 +127,7 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	ChopperData->Draw("Energy>>hBrems","","goff");
 	// normalize hBrems so that its integral is 1
 	hBrems->Scale(1.0/(hBrems->Integral()));
+	hBrems->Smooth(1024);
 	// Convert Histo to TGraph
 	TGraph *bremsGraph = new TGraph(hBrems);
 	bremsGraph->SetTitle("Bremsstrahlung Distribution");

@@ -68,7 +68,7 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 			if (e < 1.5) {
 				hSample->SetBinContent(i, 0.0001);
 			}
-            		else if (e > Evec_above_threshold[j] - deltaE/2.0 && e < Evec_above_threshold[j] + deltaE/2.0)
+            		else if (e > Evec_above_threshold[j] - deltaE && e < Evec_above_threshold[j] + deltaE)
             		{
 				hSample->SetBinContent(i, 1);
 				break;
@@ -86,18 +86,25 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	TGraph *sampleGraph = new TGraph(hSample);
 
 	// Convert Input Bremsstrahlung Spectrum Histogram to TGraph
-	TFile *f = TFile::Open(bremInputFilename);
-	std::cout << "Root input File: " <<bremInputFilename << " being read..." << std::endl;
-	TTree *ChopperData;
-	if(f)
-		f->GetObject("ChopperData", ChopperData);
-	else
+	if(gSystem->AccessPathName(bremInputFilename) != 0)
 	{
 		std::cerr << "ERROR Reading: " << bremInputFilename << std::endl;
 		exit(1);
 	}
+
+	TFile *f = TFile::Open(bremInputFilename);
+	TTree *ChopperData;
+	f->GetObject("Chopin", ChopperData);
 	ChopperData->Print();
-	TGraph *bremsGraph = new TGraph(ChopperData);
+
+	nbins = sqrt(ChopperData->GetEntries()); // set number of bins to sqrt(entries)
+	TH1D *hBrems = new TH1D("hBrems","Brem Histo",nbins,0.,Emax);
+	// Convert TTree to Histo
+	ChopperData->Draw("Energy>>hBrems","","goff");
+	// normalize hBrems so that its integral is 1
+	hBrems->Scale(1.0/(hBrems->Integral()));
+	// Convert Histo to TGraph
+	TGraph *bremsGraph = new TGraph(hBrems);
 	bremsGraph->SetTitle("Bremsstrahlung Distribution");
 
 
@@ -113,7 +120,7 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	sampleGraph->SetTitle("NRF importance sampling distribution");
 	sampleGraph->GetXaxis()->SetTitle("energy #it{E} [MeV]");
 	sampleGraph->GetYaxis()->SetTitle("probability per 5 eV");
-	sampleGraph->SetStats(0);
+	//sampleGraph->SetStats(0);
 	c0->SaveAs("brems_distributions.png");
 	std::cout << "brems_distributions.png created!" << std::endl;
 

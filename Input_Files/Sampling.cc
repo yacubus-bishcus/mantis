@@ -141,7 +141,7 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	sampleGraph->Draw();
 	bremsGraph->SetLineColor(kRed);
 	bremsGraph->Draw("same");
-	sampleGraph->GetYaxis()->SetRangeUser(1e-9, 1e-1);
+	sampleGraph->GetYaxis()->SetRangeUser(1e-8, 1e-1);
 	sampleGraph->SetTitle("NRF importance sampling distribution");
 	sampleGraph->GetXaxis()->SetTitle("energy #it{E} [MeV]");
 	sampleGraph->GetYaxis()->SetTitle("probability per 5 eV");

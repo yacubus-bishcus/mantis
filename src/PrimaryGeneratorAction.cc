@@ -76,9 +76,9 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                 if(fileName.compare(0,24,"brems_distributions.root") == 0)
                 {
                     file_check = false;
-                    gBrems = (TGraph*) fin->Get("gBrems");
+                    gBrems = (TGraph*) fin->Get("Graph_from_hBrems");
                     hSample = (TH1D*) fin->Get("hSample");
-                    gSample = (TGraph*) fin->Get("gSample");
+                    gSample = (TGraph*) fin->Get("Graph_from_hSample");
                     if(!hSample || !gSample || !gBrems)
                     {
                       G4cerr << "PrimaryGeneratorAction::PrimaryGeneratorAction() -> FATAL ERROR Failure to grab TGraphs from File: " << fileName << G4endl;

@@ -66,14 +66,16 @@ G4double SampleUResonances();
 
 private:
 G4double beamStart = 129.9;
-G4double MaxE;
+//G4double MaxE;
 G4bool file_check;
 G4ParticleGun* fParticleGun;
 
-TRandom2 *r; // TRandom2 has 5ns/call with 10^26 period
+//TRandom2 *r; // TRandom2 has 5ns/call with 10^26 period
 TRandom2 Random;
-TGraph *hBrems;
-TGraph *hSample;
+TGraph *gBrems;
+TGraph *gSample;
+TH1D *hBrems;
+TH1D *hSample;
 
 protected:
 G4float energy;

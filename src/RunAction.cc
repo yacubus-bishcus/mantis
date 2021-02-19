@@ -41,7 +41,7 @@ void RunAction::BeginOfRunAction(const G4Run*)
         if(output)
         {
                 fHistoManager->Book();
-                fRootManager->Book();
+                //fRootManager->Book();
         }
 
         fTotalSurface = 0;
@@ -94,7 +94,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
         if(output)
         {
                 fHistoManager->finish();
-                fRootManager->WriteToFile();
+                //fRootManager->WriteToFile();
         }
         if(checkEvents)
         {

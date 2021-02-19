@@ -114,20 +114,20 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
           if(!file_check)
           {
             // Grab random from importance sampling distribution
-            eSample = hSample->GetRandom()*MeV;
+            energy = hSample->GetRandom()*MeV;
             // Grab contents of bin closest
             // TGraph::Eval -> Description: linear interpolation between the
             // two points close to x is computed. If x is outside the graph
             // range, a linear extrapolation is computed. Eval here returns the
             // probability per 5 eV for each respective distribution
-            G4double dNdE = gBrems->Eval(eSample);
-            G4double importanceSampling = gSample->Eval(eSample);
+            G4double dNdE = gBrems->Eval(energy);
+            G4double importanceSampling = gSample->Eval(energy);
             // Create importance weighting based on the two distributions probability
             w = dNdE/importanceSampling;
           }
           // User IS NOT USING importance sampling
           else
-            eSample = hBrems->GetRandom()*MeV;
+            energy = hBrems->GetRandom()*MeV;
         }
         // The user has selected a mono-energetic beam
         else if(chosen_energy > 0)

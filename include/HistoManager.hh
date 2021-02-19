@@ -30,11 +30,6 @@
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 
-#include "TFile.h"
-#include "TROOT.h"
-#include "TH1D.h"
-#include "TSystem.h"
-
 
 class HistoManager
 {
@@ -45,15 +40,8 @@ HistoManager();
 void finish();     // close root file
 void Book();
 
-G4double GetEmax()const
-{
-  return xmax;
-}
-
 private:
 G4bool fFactoryOn;
-G4double xmax;
-TH1D *hBrems;
 };
 
 #endif

@@ -67,6 +67,7 @@ G4double SampleUResonances();
 private:
 G4double beamStart = 129.9;
 //G4double MaxE;
+G4double beam_size;
 G4bool file_check;
 G4ParticleGun* fParticleGun;
 

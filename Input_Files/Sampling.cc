@@ -112,11 +112,13 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 		std::cerr << "ERROR Reading: " << bremInputFilename << std::endl;
 		exit(1);
 	}
-
+	std::cout << "Converting hBrems to TGraph..." << std::endl;
 	TFile *f = TFile::Open(bremInputFilename);
-	f->cd();
+	bool confirm = f->cd();
+	if(!confirm)
+		exit(10);
 	TTree *ChopperData;
-	f->GetObject("Chopin", ChopperData);
+	f->GetObject("ChopIn", ChopperData);
 	ChopperData->Print();
 
 	nbins = sqrt(ChopperData->GetEntries()); // set number of bins to sqrt(entries)

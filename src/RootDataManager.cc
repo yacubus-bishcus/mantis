@@ -119,10 +119,13 @@ void RootDataManager::WriteToFile()
     return;
   }
 
+  std::cout << "RootDataManager::WriteToFile() -> Writing to disk." << std::endl;
+  G4cout << "RootDataManager::WriteToFile() -> Writing to disk." << G4endl;
   ROOTChopperIn->Write();
   ROOTIntObj->Write();
 
-  G4cout << "Wrote TGraph Data to " << ROOTFileName << G4endl;
+  std::cout << "RootDataManager::WriteToFile() -> Wrote TGraph Data to " << ROOTFileName << std::endl;
+  G4cout << "RootDataManager::WriteToFile() -> Wrote TGraph Data to " << ROOTFileName << G4endl;
   ROOTObjectsExist = false;
 
 }

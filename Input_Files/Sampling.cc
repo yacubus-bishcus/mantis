@@ -121,20 +121,16 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	ChopperData->Print();
 	TH1D *hBrems = new TH1D("hBrems","Bremsstrahlung Data",nbins, 0.,Emax);
 	ChopperData->Draw("Energy>>hBrems","","goff");
+	hBrems->Scale(1.0/hBrems->Integral());
+	hBrems->Smooth(1024);
 	TGraph *gBrems = new TGraph(hBrems);
 
-	TCanvas *c0 = new TCanvas();
-	c0->cd();
-	gPad->SetTicks(1,1);
-	gPad->SetLogy();
-
-	gBrems->Draw();
-	hSample->SetLineColor(kRed);
-	hSample->Draw("HIST,SAME");
-	hSample->GetYaxis()->SetRangeUser(1e-8, 1e-1);
 	hSample->SetTitle("NRF importance sampling distribution");
+	gSample->SetTitle("NRF importance sampling distribution");
 	hSample->GetXaxis()->SetTitle("energy #it{E} [MeV]");
 	hSample->GetYaxis()->SetTitle("probability per 5 eV");
+	gSample->GetXaxis()->SetTitle("Energy #it{E} [MeV]");
+	gSample->GetYaxis()->SetTitle("probability per 5 eV");
 
 	// save everything to file
 	TFile *fout = new TFile("brems_distributions.root","recreate");

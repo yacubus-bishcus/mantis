@@ -63,26 +63,28 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
         {
                 gRandom->SetSeed(seed);
 
-                if(gSystem->AccessPathName(inFile.c_str()) != 0)
+                if(gSystem->AccessPathName(inFile.c_str()))
                 {
                   G4cerr << "PrimaryGeneratorAction::PrimaryActionGenerator FATAL ERROR -> " << inFile << " NOT FOUND!" << G4endl;
                   exit(1);
                 }
                 TFile *fin = TFile::Open(inFile.c_str());
-                G4String fileName = (G4String)fin->GetName();
+                fin->cd();
                 hBrems  = (TH1D*) fin->Get("hBrems");
+                hBrems->Print();
                 if(!hBrems)
                 {
                   G4cerr << "PrimaryGeneratorAction::PrimaryActionGenerator FATAL ERROR -> hBrems Fail." << G4endl;
                   exit(1);
                 }
 
-                if(fileName.compare(0,24,"brems_distributions.root") == 0)
+                if(!fileName.compare(0,24,"brems_distributions.root"))
                 {
                     file_check = false;
                     gBrems = (TGraph*) fin->Get("Graph_from_hBrems");
                     hSample = (TH1D*) fin->Get("hSample");
                     gSample = (TGraph*) fin->Get("Graph_from_hSample");
+                    hSample->Print();
                     if(!hSample || !gSample || !gBrems)
                     {
                       G4cerr << "PrimaryGeneratorAction::PrimaryGeneratorAction() -> FATAL ERROR Failure to grab TGraphs from File: " << fileName << G4endl;

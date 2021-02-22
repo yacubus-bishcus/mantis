@@ -78,7 +78,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                   exit(1);
                 }
 
-                if(!fileName.compare(0,24,"brems_distributions.root"))
+                if(!inFile.compare(0,24,"brems_distributions.root"))
                 {
                     file_check = false;
                     gBrems = (TGraph*) fin->Get("Graph_from_hBrems");

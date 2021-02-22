@@ -2,16 +2,15 @@
 // ************************************************************************************************ //
 // ************************************************************************************************ //
 // To Run File:
-// root -b -q 'PrintResults.cc("testOn.root", "testOff.root", "WeightOn.root", WeightOff.root")'
+// root -b -q 'PrintResults.cc("testOn.root", "testOff.root","hChop")'
 // ************************************************************************************************ //
 // ************************************************************************************************ //
 // File Explanation:
 //
-// Requires 5 inputs
+// Requires 3 inputs
 // 1. Chopper On Filename
 // 2. Chopper Off Filename
-// 3. Weight On Filename (Optional Default = NA)
-// 4. Weight Off Filename (Optional Default = NA)
+// 3. Histogram name 
 //
 // This File Scans the Weighted Histogram File.
 // This file prints to terminal all histogram

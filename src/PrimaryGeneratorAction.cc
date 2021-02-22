@@ -73,7 +73,10 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                 fFileOpen = true;
                 fin->cd();
                 hBrems  = (TH1D*) fin->Get("hBrems");
-                hBrems->Print();
+                
+                if(debug)
+                  hBrems->Print();
+
                 if(!hBrems)
                 {
                   G4cerr << "PrimaryGeneratorAction::PrimaryActionGenerator FATAL ERROR -> hBrems Fail." << G4endl;
@@ -86,7 +89,10 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                     gBrems = (TGraph*) fin->Get("Graph_from_hBrems");
                     hSample = (TH1D*) fin->Get("hSample");
                     gSample = (TGraph*) fin->Get("Graph_from_hSample");
-                    hSample->Print();
+
+                    if(debug)
+                      hSample->Print();
+
                     if(!hSample || !gSample || !gBrems)
                     {
                       G4cerr << "PrimaryGeneratorAction::PrimaryGeneratorAction() -> FATAL ERROR Failure to grab TGraphs from File: " << inFile << G4endl;

@@ -22,6 +22,9 @@ G4VisManager* visManager;
 #include "G4ios.hh"
 #include "G4UIsession.hh"
 
+// For FileSystem Handling
+#include <filesystem>
+
 // declare global variables
 G4long seed;
 G4double chosen_energy;
@@ -30,6 +33,18 @@ G4bool output;
 G4String macro, root_output_name, gOutName, inFile;
 // boolean global variables
 G4bool bremTest, resonanceTest, checkEvents, debug;
+
+void check_file_exists(const std::filesystem::path& p)
+{
+  std::cout << "Checking Database Path: " << p << std::endl;
+  if(std::filesystem::exists(p))
+    std::cout << p << " exists." << std::endl;
+  else
+  {
+    std::cout << p << " does not exist. Exiting." << std::endl;
+    exit(1);
+  }
+}
 
 namespace
 {
@@ -49,15 +64,12 @@ int main(int argc,char **argv)
   // Check to make sure user set up environment correctly
   if(getenv("G4NRFGAMMADATA") == NULL)
   {
-    std::cout << "mantis.cc -> FATAL ERROR: User must set environmental variable G4NRFGAMMADATA!" << std::end;
+    std::cout << "mantis.cc -> FATAL ERROR: User must set environmental variable G4NRFGAMMADATA!" << std::endl;
     exit(1);
   }
-  const std::filesystem::path gamma_data_path = std::getenv("G4NRFGAMMADATA");
-  if(!std::filesystem::exists(&gamma_data_path))
-  {
-    std::cout << "mantis.cc -> FATAL ERROR: Could not find directory set by environmental variable G4NRFGAMMADATA!" << std::endl;
-    exit(1);
-  }
+
+  check_file_exists(getenv("G4NRFGAMMADATA"));
+  
         // Defaults
         G4int start_time = time(0);
         // Physics List Defaults

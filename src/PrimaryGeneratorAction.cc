@@ -87,7 +87,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                     hSample->Print();
                     if(!hSample || !gSample || !gBrems)
                     {
-                      G4cerr << "PrimaryGeneratorAction::PrimaryGeneratorAction() -> FATAL ERROR Failure to grab TGraphs from File: " << fileName << G4endl;
+                      G4cerr << "PrimaryGeneratorAction::PrimaryGeneratorAction() -> FATAL ERROR Failure to grab TGraphs from File: " << inFile << G4endl;
                       exit(1);
                     }
                 }

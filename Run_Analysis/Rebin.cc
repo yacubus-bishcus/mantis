@@ -42,6 +42,7 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName,
   // Grab the Users TTree
   inObj = (TTree*) f->Get(ObjName);
   inObj->Print();
+  inObj->SetEstimate(-1);
   // Grab TTree Values
   Int_t nentries = inObj->Draw("Energy:Weight","","goff");
   Double_t *energies = inObj->GetVal(0);
@@ -50,6 +51,7 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName,
   // If User wants fixed bin widths
   if(!VarArray)
   {
+    std::cout << "User did not select variable bin widths." << std::endl;
     hObj = new TH1D(OutObjName,"Weighted Energy Spectrum",nbins,0.,Emax);
   }
   // User wants variable bin widths
@@ -60,7 +62,7 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName,
       std::cerr << "Error User must input Energy and Weight of region split." << std::endl;
       exit(1);
     }
-
+    std::cout << "User selected variable bin widths." <<std::endl;
     // Find total number of bins
     double bin_increment = nrf_bin_width*sample_weight;
     double edge_counter = 0.;
@@ -88,19 +90,19 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName,
 
   }// end !VarArray
 
+  std::cout << "Filling Histogram..." << std::endl;
   // Fill the new Histogram
-  for(int i=0;i<nentries;++i)
+  for(unsigned int i=0;i<nentries;++i)
   {
     hObj->Fill(energies[i],weights[i]);
   }
 
   // Write to OutFile
-  std::string OutFileName = "rebinned_" + (std::string)inFile;
+  std::string OutFileName = "rebinned_" + to_string(nbins) + "_" + (std::string)inFile;
   TFile *fout = new TFile(OutFileName.c_str(),"recreate");
   fout->cd();
   hObj->Write();
   std::cout << "Rebinned Histogram written to: " << OutFileName << std::endl;
   fout->Close();
-  //delete []edges;
 
 }// end Rebin.cc

@@ -2,22 +2,22 @@
 # Setup the project
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(mantis)
-option(WITH_GEANT4_UIVIS "Build with Geant4 UI and Vis drivers" ON) # Can switch to OFF if not building with vis drivers --> NOT recommended 
+option(WITH_GEANT4_UIVIS "Build with Geant4 UI and Vis drivers" ON) # Can switch to OFF if not building with vis drivers --> NOT recommended
 
-# Determine the Geant4 Version 
+# Determine the Geant4 Version
 execute_process(COMMAND bash -c "geant4-config --version"
                 OUTPUT_VARIABLE MY_GEANT4_VERSION
                 )
-# Determine the ROOT CERN Version 
+# Determine the ROOT CERN Version
 execute_process(COMMAND bash -c "root --version"
                 OUTPUT_VARIABLE MY_ROOT_VERSION
                 )
-                
-string(SUBSTRING "${MY_GEANT4_VERSION}" 0 4 THE_VERSION)	
-string(COMPARE EQUAL "${THE_VERSION}" "10.7" VERSION_BOOL)	
+
+string(SUBSTRING "${MY_GEANT4_VERSION}" 0 4 THE_VERSION)
+string(COMPARE EQUAL "${THE_VERSION}" "10.7" VERSION_BOOL)
 
 # If the version if > 10.7 then add the compile definition to avoid depreceated code!
-if(${VERSION_BOOL})	
+if(${VERSION_BOOL})
   add_compile_definitions(G4_OPTPARAM)
   message(STATUS "Version is at least 10.7")
 endif()
@@ -46,20 +46,20 @@ include(${Geant4_USE_FILE})
 # Find ROOT (required package)
 
 find_package(ROOT CONFIG REQUIRED)
-if(ROOT_FOUND)	
-    message(STATUS "${MY_ROOT_VERSION}")	
-else()	
+if(ROOT_FOUND)
+    message(STATUS "${MY_ROOT_VERSION}")
+else()
     message(STATUS "ROOT NOT Found. --> MAKE WILL FAIL!")
 endif()
 
 #----------------------------------------------------------------------------
-# Locate Sources and Headers 
+# Locate Sources and Headers
 include("${ROOT_USE_FILE}")
-include_directories(${PROJECT_SOURCE_DIR}/include	
-                    ${Geant4_INCLUDE_DIR}	                   
-                    ${ROOT_INCLUDE_DIR})	
-                    
-file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)	
+include_directories(${PROJECT_SOURCE_DIR}/include
+                    ${Geant4_INCLUDE_DIR}
+                    ${ROOT_INCLUDE_DIR})
+
+file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
 #----------------------------------------------------------------------------
@@ -80,7 +80,6 @@ set(Input_SCRIPTS
   )
 
 set(Run_Analysis_SCRIPTS
-PrintResults.cc
 stitch.sh
 )
 

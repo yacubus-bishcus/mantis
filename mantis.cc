@@ -23,7 +23,7 @@ G4VisManager* visManager;
 #include "G4UIsession.hh"
 
 // For FileSystem Handling
-#include <filesystem>
+#include <sys/stat.h>
 
 // declare global variables
 G4long seed;
@@ -34,10 +34,12 @@ G4String macro, root_output_name, gOutName, inFile;
 // boolean global variables
 G4bool bremTest, resonanceTest, checkEvents, debug;
 
-void check_file_exists(const std::filesystem::path& p)
+void check_file_exists(const std::string &p)
 {
   std::cout << "Checking Database Path: " << p << std::endl;
-  if(std::filesystem::exists(p))
+  struct stat buffer;
+
+  if(stat (p.c_str(), &buffer) == 0)
     std::cout << p << " exists." << std::endl;
   else
   {
@@ -68,8 +70,8 @@ int main(int argc,char **argv)
     exit(1);
   }
 
-  check_file_exists(getenv("G4NRFGAMMADATA"));
-  
+  check_file_exists((std::string)getenv("G4NRFGAMMADATA"));
+
         // Defaults
         G4int start_time = time(0);
         // Physics List Defaults

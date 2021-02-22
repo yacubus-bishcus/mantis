@@ -34,8 +34,6 @@ SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, 
 {
         stepM = new StepMessenger(this);
         fExpectedNextStatus = Undefined;
-        chopCount = 0;
-        intCount = 0;
 }
 
 SteppingAction::~SteppingAction()
@@ -69,7 +67,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
         // throw a warning if energy conservation appears to be broken for gammas
         // small deviations have been observed; attribute to a likely mismatch in database energies
-        if (theTrack->GetKineticEnergy() > beamEnergy) {
+        if (theTrack->GetKineticEnergy() > beamEnergy)
+        {
           G4cerr << G4endl;
           G4cerr << "Warning: gammaEnergy " << theTrack->GetKineticEnergy() << " MeV > beamEnergy " << beamEnergy << " MeV!!" << G4endl;
           G4cerr << "  energy difference (keV) = " << (theTrack->GetKineticEnergy()-beamEnergy)/keV << G4endl;

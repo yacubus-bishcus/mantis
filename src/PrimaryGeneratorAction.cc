@@ -94,6 +94,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                 }
                 else
                   file_check = true;
+
+              fin->Close();
         }
         else
         {
@@ -150,7 +152,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         fParticleGun->SetParticleEnergy(energy);
 
       if(debug)
+      {
         std::cout << "Particle Energy: " << energy/(MeV) << " MeV" << std::endl;
+        std::cout << "Particle Weight: " << w << std::endl;
+      }
 
         const float pi=acos(-1);
 

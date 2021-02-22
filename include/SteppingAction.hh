@@ -105,7 +105,6 @@ G4OpBoundaryProcessStatus fExpectedNextStatus;
 G4String procCount;
 G4int drawChopperIncDataFlag, drawChopperOutDataFlag, drawNRFDataFlag, drawIntObjDataFlag, drawWaterIncDataFlag, drawCherenkovDataFlag, drawDetDataFlag;
 StepMessenger* stepM;
-G4int chopCount, intCount;
 };
 
 #endif

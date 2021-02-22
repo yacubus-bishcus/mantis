@@ -60,7 +60,7 @@ G4ParticleGun* GetParticleGun()
 {
   return fParticleGun;
 };
-
+void CloseInputFile(){if(fFileOpen) fin->Close();}
 G4double SampleUResonances();
 
 private:
@@ -76,8 +76,9 @@ TGraph *gBrems;
 TGraph *gSample;
 TH1D *hBrems;
 TH1D *hSample;
-
+TFile *fin;
 G4double energy;
+G4bool fFileOpen;
 };
 
 #endif

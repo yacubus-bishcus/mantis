@@ -149,7 +149,7 @@ EventCheck::EventCheck()
                                 }
                         }
                 }
-                G4cout << G4endl << "EventCheck::EventCheck -> NRF to Optical Photon Number of Events Found: " << nrf_to_cherEvents.size() << G4endl;
+                G4cout << "EventCheck::EventCheck -> NRF to Optical Photon Number of Events Found: " << nrf_to_cherEvents.size() << G4endl;
         }
 
         if(num_entries2 > 0)
@@ -180,8 +180,7 @@ EventCheck::EventCheck()
                         }
                 }
 
-                G4cout << G4endl << "EventCheck::EventCheck -> Optical Photon Events lead to Detection: " << cher_to_detEvents.size() << G4endl;
-                G4cout << "EventCheck::EventCheck -> NRF Events Lead to Detection: " << nrf_to_detEvents.size() << G4endl;
+                G4cout << "EventCheck::EventCheck -> Number of Optical Photons Detected from NRF: " << nrf_to_detEvents.size() << G4endl;
 
                 // ******************************************************************************************************************************** //
                 // Determine if NRF and Cherenkov lead to Detection Event
@@ -230,7 +229,7 @@ EventCheck::EventCheck()
                         }
                 }
 
-                G4cout << G4endl << "EventCheck::EventCheck -> NRF Events Leading to Optical Photons Leading to Detection: " << nrf_to_cherenkov_to_detEvents.size() << G4endl;
+                G4cout << "EventCheck::EventCheck -> NRF Events Leading to Optical Photons Leading to Detection: " << nrf_to_cherenkov_to_detEvents.size() << G4endl;
         }
 }
 EventCheck::~EventCheck()

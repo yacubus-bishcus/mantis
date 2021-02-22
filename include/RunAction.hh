@@ -34,11 +34,12 @@
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
 #include "EventCheck.hh"
+#include "PrimaryGeneratorAction.hh"
 
 class RunAction : public G4UserRunAction
 {
   public:
-    RunAction(HistoManager*);
+    RunAction(HistoManager*, PrimaryGeneratorAction*);
     virtual ~RunAction();
 
   public:
@@ -56,6 +57,7 @@ class RunAction : public G4UserRunAction
 
   private:
     HistoManager* fHistoManager;
+    PrimaryGeneratorAction* fpga;
     G4double fCerenkovEnergy, fScintEnergy, fCerenkovCount;
     G4int fScintCount, fTotalSurface, fNRF, fStatusKilled;
 };

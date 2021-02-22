@@ -49,9 +49,9 @@ void ActionInitialization::Build() const
         std::cout << "ActionInitialization::Build() -> Begin!" << std::endl;
 
         HistoManager* histo = new HistoManager();
-
-        SetUserAction(new PrimaryGeneratorAction());
-        RunAction* run = new RunAction(histo);
+        PrimaryGeneratorAction* pga = new PrimaryGeneratorAction();
+        SetUserAction(pga);
+        RunAction* run = new RunAction(histo,pga);
         SetUserAction(run);
         EventAction* event = new EventAction();
         SetUserAction(event);

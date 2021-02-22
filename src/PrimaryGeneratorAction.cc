@@ -33,7 +33,7 @@ extern G4bool debug;
 
 PrimaryGeneratorAction::PrimaryGeneratorAction()
         : G4VUserPrimaryGeneratorAction(),
-        fParticleGun(0)
+        fParticleGun(0),fFileOpen(false)
 {
         fParticleGun = new G4ParticleGun(1);
         if(!bremTest)
@@ -69,7 +69,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                   G4cerr << "PrimaryGeneratorAction::PrimaryActionGenerator FATAL ERROR -> " << inFile << " NOT FOUND!" << G4endl;
                   exit(1);
                 }
-                TFile *fin = TFile::Open(inFile.c_str());
+                fin = TFile::Open(inFile.c_str());
+                fFileOpen = true;
                 fin->cd();
                 hBrems  = (TH1D*) fin->Get("hBrems");
                 hBrems->Print();
@@ -95,7 +96,6 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                 else
                   file_check = true;
 
-              //fin->Close();
         }
         else
         {

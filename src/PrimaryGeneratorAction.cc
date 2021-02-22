@@ -36,7 +36,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 {
         fParticleGun = new G4ParticleGun(1);
         if(!bremTest)
-          beam_size = 100.0*mm;
+          beam_size = 80.0*mm;
         else
           beam_size = 1.3*mm;
 

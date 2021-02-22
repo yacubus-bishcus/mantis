@@ -306,17 +306,9 @@ void EventCheck::WriteEvents()
         // Write TTrees to OutFile
         // ******************************************************************************************************************************** //
 
-        // Write nrf_to_cher_tree
-        if(nrf_to_cherEvents.size() > 0)
-        {
-                nrf_to_cher_tree->Write();
-        }
+        nrf_to_cher_tree->Write();
+        nrf_to_cher_to_det_tree->Write();
 
-        // Write nrf_to_cher_to_det_tree
-        if(nrf_to_cherenkov_to_detEvents.size() > 0)
-        {
-                nrf_to_cher_to_det_tree->Write();
-        }
         std::cout << "EventCheck::WriteEvents -> TTrees Written to File: " << OutFileName << std::endl;
         fout->Close();
         time_end = std::time(&timer2);

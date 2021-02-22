@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Default Arguments 
+# Default Arguments
 
 GEANT4_DIR="None"
 ROOT_DIRECTORY="None"
@@ -8,10 +8,10 @@ RUN_TEST="true"
 DEBUGGING="false"
 VERBOSE="false"
 
-# Read Input Flags 
+# Read Input Flags
 
 for arg in "$@"
-do 
+do
    case $arg in
         -h|--help)
         echo "Configure Script for Mantis"
@@ -19,27 +19,17 @@ do
         echo "h,--help              show brief help"
         echo "--geant4_dir          specify the Geant4 Install Directory to be sourced"
         echo "--root_dir            specify thisroot.sh Directory to be sourced"
-        echo "--run_test            choose to run a test at the end of the build (optional Default=true)"
-        echo "--debug               choose debugging mode for configure script (optional Default=false)"
         echo "--verbose             choose verbosity mode for cmake (optional Default=false)"
         shift
         exit 0
         ;;
         -g|--geant4_dir=*)
         GEANT4_DIR="${arg#*=}"
-        shift 
+        shift
         ;;
         -r|--root_dir=*)
         ROOT_DIRECTORY="${arg#*=}"
         shift # Remove argument name from processing
-        ;;
-        -t|--run_test=*)
-        RUN_TEST="${arg#*=}"
-        shift
-        ;;
-        -d|--debug=*)
-        DEBUGGING="${arg#*=}"
-        shift
         ;;
        -v|--verbose=*)
        VERBOSE="${arg#*=}"
@@ -51,17 +41,15 @@ done
 #echo "Geant4 Directory: $GEANT4_DIR"
 
 echo Configuring mantis...
-# Lower inputs 
-echo $RUN_TEST | tr '[:upper:]' '[:lower:]' > /dev/null
-echo $DEBUGGING | tr '[:upper:]' '[:lower:]' > /dev/null
+
 current_dir="$(pwd)"
 cd ../
-#cd ~ 
+#cd ~
 #bash_file=".bashrc"
 #old_bash_file=".old_bashrc"
 
 # Dealing with .bashrc
-mkdir MANTIS_MAIN_DIR && mv $current_dir MANTIS_MAIN_DIR 
+mkdir MANTIS_MAIN_DIR && mv $current_dir MANTIS_MAIN_DIR
 cd MANTIS_MAIN_DIR/mantis
 #if [ -f ~/.bashrc ]
 #then
@@ -79,7 +67,7 @@ cd ../mantis
 #echo "export G4NRFGAMMADATA=$database_working_dir " | tee -a $bash_file >/dev/null
 export G4NRFGAMMADATA=$database_working_dir
 
-# Source ROOT CERN 
+# Source ROOT CERN
 if [ $ROOT_DIRECTORY != "None" ]
 then
     echo "ROOT DIRECTORY: $ROOT_DIRECTORY"
@@ -97,7 +85,7 @@ fi
 
 #echo "source $VARROOTBIN " | tee -a $bash_file >/dev/null
 
-# Source Required Geant4 Make Files 
+# Source Required Geant4 Make Files
 if [ $GEANT4_DIR != "None" ]
 then
    VAR4="/bin/geant4.sh"
@@ -116,34 +104,18 @@ fi
 #cp $bash_file ~
 #echo "Old bash file saved in: MANTIS_MAIN_DIR/mantis"
 
-# Build Mantis 
+# Build Mantis
 echo Building Mantis...
 
 cd ../ && mkdir mantis_run && cd mantis_run
 if [ $VERBOSE = "true" ]
 then
    echo "Passing verbosity argument to cmake"
-   cmake -DMYVERBOSE=ON ../mantis 
+   cmake -DMYVERBOSE=ON ../mantis && make
 else
-   cmake -DMYVERBOSE=OFF ../mantis
+   cmake -DMYVERBOSE=OFF ../mantis && make
 fi
 
-if [ $DEBUGGING != "true" ]
-then
-   make -j4 && cd ../mantis/Input_Files
-   echo Creating Default brems_distributions.root
-   root -b -q -l 'Sampling.cc("Brem2.1_100M.root",2.1,"U")'
-   cp brems_distributions.root ../../mantis_run && cd ../../mantis_run
-
-   if [ $RUN_TEST = "true" ]
-   then
-      echo Testing a mantis run...
-      ./mantis -m mantis.in -o test.root -s 1 
-      echo "Test Run Complete. Test results can be found in test_error.log and test.log."
-   fi
-fi
-
-cd ../mantis_run
 echo "Be sure to add the following to your bash profile: "
 echo "export G4NRFGAMMADATA=$database_working_dir"
 echo "Be sure to have thisroot.sh, geant4make.sh and geant4.sh all sourced prior to running"

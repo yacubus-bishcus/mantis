@@ -44,7 +44,7 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
-        //std::cout << "SteppingAction::UserSteppingAction --> Beginning" << std::endl;
+        std::cout << "SteppingAction::UserSteppingAction --> Beginning" << std::endl;
         G4StepPoint* endPoint   = aStep->GetPostStepPoint();
         G4StepPoint* startPoint = aStep->GetPreStepPoint();
         G4Track* theTrack = aStep->GetTrack();
@@ -59,7 +59,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 return;
         }
 
-        // Grab Relevant event information including the particle weight 
+        // Grab Relevant event information including the particle weight
         eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
         weight = info->GetWeight();
         G4double beamEnergy = info->GetBeamEnergy();
@@ -380,5 +380,5 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         } // for for loop
                 } // for if statement if first time in photocathode
         } // for if at boundary
-          //std::cout << "SteppingAction::UserSteppingAction()-> Ending!" <<std::endl;
+        std::cout << "SteppingAction::UserSteppingAction()-> Ending!" <<std::endl;
 } // end of user stepping action function

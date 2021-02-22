@@ -112,7 +112,7 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
   // ******************** Energy Sampling Options *************************** //
-
+        std::cout << "PrimaryGeneratorAction::GeneratePrimaries -> Beginning." << std::endl;
         G4double w = 1.;
         if(!resonanceTest && chosen_energy < 0)
         {
@@ -163,7 +163,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         anInfo->SetWeight(w);
         anInfo->SetBeamEnergy(energy);
         anEvent->SetUserInformation(anInfo);
-        //std::cout << "PrimaryActionGenerator::GeneratePrimaries() -> End!" << std::endl;
+        std::cout << "PrimaryActionGenerator::GeneratePrimaries() -> End!" << std::endl;
 }
 
 G4double PrimaryGeneratorAction::SampleUResonances()

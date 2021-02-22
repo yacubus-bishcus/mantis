@@ -56,21 +56,19 @@ EventCheck::EventCheck()
         }
         f = new TFile(root_output_name.c_str());
         bool confirm = f->cd();
-        if(confirm)
+        if(!confirm)
         {
-                //Cherenkov->Print();
-                f->GetObject("Cherenkov",Cherenkov);
-                //Cherenkov->Print();
-                f->GetObject("NRFMatData",NRF);
-                //NRF->Print();
-                f->GetObject("DetInfo",DetData);
-                //DetData->Print();
-
-                Cherenkov->SetEstimate(-1);
-                NRF->SetEstimate(-1);
-                DetData->SetEstimate(-1);
+          G4cerr << "EventCheck::EventCheck -> Could not confirm Output File" << G4endl;
+          exit(1);
         }
 
+        f->GetObject("Cherenkov",Cherenkov);
+        f->GetObject("NRF",NRF);
+        f->GetObject("DetInfo",DetData);
+
+        Cherenkov->SetEstimate(-1);
+        NRF->SetEstimate(-1);
+        DetData->SetEstimate(-1);
         G4cout << "EventCheck::EventCheck -> Objects Grabbed!" << G4endl;
 
         // Grab Cherenkov Events
@@ -255,7 +253,7 @@ void EventCheck::WriteEvents()
 
         fout = new TFile(OutFilename,"recreate");
         fout->cd();
-        
+
         // Set up Output NRF to Cher Tree
         nrf_to_cher_tree = new TTree("nrf_to_cher_tree","NRF Events that Lead to Cherenkov");
         nrf_to_cher_tree->Branch("EventID",&nrf_cher_EventID);
@@ -263,8 +261,8 @@ void EventCheck::WriteEvents()
         nrf_to_cher_tree->Branch("NRF_Weight",&nrfW);
         nrf_to_cher_tree->Branch("Cher_Energy",&cherE);
         nrf_to_cher_tree->Branch("Cher_Weight",&cherW);
-        
-        // Fill Tree 
+
+        // Fill Tree
         if(num_entries > 0 && num_entries1 > 0)
         {
                 std::cout << "EventCheck::WriteEvents -> Filling NRF to Optical Photon Tree..." << std::endl;
@@ -317,8 +315,8 @@ void EventCheck::WriteEvents()
 
         fout2 = new TFile(OutFilename2,"recreate");
         fout2->cd();
-        
-        // Set up NRF to Cher to Det Tree 
+
+        // Set up NRF to Cher to Det Tree
         nrf_to_cher_to_det_tree = new TTree("nrf_to_cher_to_det_tree","NRF Events that Lead to Cherenkov that were Detected");
         nrf_to_cher_to_det_tree->Branch("EventID",&a);
         nrf_to_cher_to_det_tree->Branch("EnergyNRF",&energyNRF);
@@ -328,7 +326,7 @@ void EventCheck::WriteEvents()
         nrf_to_cher_to_det_tree->Branch("TimeNRF",&timeNRF);
         nrf_to_cher_to_det_tree->Branch("TimeCher",&timeCher);
 
-        // Fill Tree 
+        // Fill Tree
         if(nrf_to_cherenkov_to_detEvents.size() > 0)
         {
                 nrf_to_cher_to_det_tree->Write();

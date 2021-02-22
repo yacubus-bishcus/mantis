@@ -95,7 +95,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                 else
                   file_check = true;
 
-              fin->Close();
+              //fin->Close();
         }
         else
         {

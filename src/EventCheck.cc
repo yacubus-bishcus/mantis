@@ -246,7 +246,7 @@ void EventCheck::WriteEvents()
         std::string OutFileName = gOutName;
         OutFileName = "EventCheck_" + OutFileName + ".root";
 
-        fout = new TFile(OutFilename.c_str(),"recreate");
+        fout = new TFile(OutFileName.c_str(),"recreate");
         fout->cd();
 
         // Set up Output NRF to Cher Tree
@@ -317,7 +317,7 @@ void EventCheck::WriteEvents()
         {
                 nrf_to_cher_to_det_tree->Write();
         }
-        std::cout << "EventCheck::WriteEvents -> TTrees Written to File: " << OutFilename << std::endl;
+        std::cout << "EventCheck::WriteEvents -> TTrees Written to File: " << OutFileName << std::endl;
         fout->Close();
         time_end = std::time(&timer2);
         G4cout << "Event Check took: " << std::difftime(time_end, time_start) << " seconds!" << G4endl << G4endl;

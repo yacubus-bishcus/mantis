@@ -22,6 +22,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "EventAction.hh"
+extern G4bool debug;
 
 EventAction::EventAction()
 {
@@ -33,16 +34,22 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event*)
 {
-        //std::cout << "EventAction::BeginOfEventAction -> Beginning" << std::endl;
+    if(debug)
+        std::cout << "EventAction::BeginOfEventAction -> Beginning" << std::endl;
+
         c_secondaries = 0;
         energyv.clear();
         timev.clear();
-        //std::cout << "EventAction::BeginOfEventAction -> Ending" << std::endl;
+
+    if(debug)
+        std::cout << "EventAction::BeginOfEventAction -> Ending" << std::endl;
 }
 
 void EventAction::EndOfEventAction(const G4Event* anEvent)
 {
-        //std::cout << "EventAction::EndOfEventAction -> Beginning" << std::endl;
+    if(debug)
+        std::cout << "EventAction::EndOfEventAction -> Beginning" << std::endl;
+
         if(c_secondaries > 0)
         {
                 // Grab Max Energy
@@ -67,5 +74,7 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
                 manager->FillNtupleDColumn(6,4,c_time);
                 manager->AddNtupleRow(6);
         }
-        //std::cout << "EventAction::EndOfEventAction() --> Ending!" << std::endl;
+
+    if(debug)
+        std::cout << "EventAction::EndOfEventAction() --> Ending!" << std::endl;
 }

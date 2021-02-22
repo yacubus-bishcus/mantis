@@ -24,6 +24,7 @@
 
 #include "SteppingAction.hh"
 extern G4bool bremTest;
+extern G4bool debug;
 
 SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, EventAction* event)
         : G4UserSteppingAction(), kdet(det), krun(run), kevent(event),
@@ -44,7 +45,9 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
+    if(debug)
         std::cout << "SteppingAction::UserSteppingAction --> Beginning" << std::endl;
+
         G4StepPoint* endPoint   = aStep->GetPostStepPoint();
         G4StepPoint* startPoint = aStep->GetPreStepPoint();
         G4Track* theTrack = aStep->GetTrack();
@@ -90,18 +93,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         if(bremTest)
         {
                 G4double EndChop = kdet->getEndChop();
-                G4ThreeVector pB = aStep->GetPreStepPoint()->GetMomentum();
-                G4double tB = asin(sqrt(pow(pB.x(),2)+pow(pB.y(),2))/pB.mag()); //the angle of the particle relative to the Z axis
+                //G4ThreeVector pB = aStep->GetPreStepPoint()->GetMomentum();
+                //G4double tB = asin(sqrt(pow(pB.x(),2)+pow(pB.y(),2))/pB.mag()); //the angle of the particle relative to the Z axis
                 if(theTrack->GetPosition().z() > EndChop)
                 {
                         theTrack->SetTrackStatus(fStopAndKill);
                         krun->AddStatusKilled();
                 }
-                //if(cos(tB) < 0) // if the track is not heading forward kill it
-                //{
-                //        theTrack->SetTrackStatus(fStopAndKill);
-                //        krun->AddStatusKilled();
-                // }
         }
 
         if(theTrack->GetPosition().z() > EndIntObj)
@@ -380,5 +378,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                         } // for for loop
                 } // for if statement if first time in photocathode
         } // for if at boundary
+      if(debug)
         std::cout << "SteppingAction::UserSteppingAction()-> Ending!" <<std::endl;
 } // end of user stepping action function

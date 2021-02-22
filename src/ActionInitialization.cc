@@ -32,6 +32,7 @@
 #include "HistoManager.hh"
 #include "G4Types.hh"
 
+extern G4bool debug;
 
 ActionInitialization::ActionInitialization(const DetectorConstruction* det)
         : G4VUserActionInitialization(), fDetector(det)
@@ -44,7 +45,9 @@ ActionInitialization::~ActionInitialization()
 
 void ActionInitialization::Build() const
 {
-        //std::cout << "ActionInitialization::Build() -> Begin!" << std::endl;
+    if(debug)
+        std::cout << "ActionInitialization::Build() -> Begin!" << std::endl;
+
         HistoManager* histo = new HistoManager();
 
         SetUserAction(new PrimaryGeneratorAction());
@@ -54,5 +57,7 @@ void ActionInitialization::Build() const
         SetUserAction(event);
         SetUserAction(new SteppingAction(fDetector, run, event));
         SetUserAction(new StackingAction(fDetector, run));
-        //std::cout << "ActionInitialization::Build() -> End!" << std::endl;
+
+    if(debug)
+        std::cout << "ActionInitialization::Build() -> End!" << std::endl;
 }

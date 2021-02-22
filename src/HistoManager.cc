@@ -26,6 +26,7 @@
 
 extern G4String gOutName;
 extern G4bool bremTest;
+extern G4bool debug;
 
 HistoManager::HistoManager() : fFactoryOn(false)
 {
@@ -123,13 +124,14 @@ void HistoManager::Book()
         }
 
         fFactoryOn = true;
-        //std::cout << "HistoManager::Book() --> Complete!" << std::endl;
+      if(debug)
+        std::cout << "HistoManager::Book() --> Complete!" << std::endl;
 }
 
 void HistoManager::finish()
 {
         if(!fFactoryOn) {
-                G4cout << "ERROR HistoManager::finish: Failed to write to file" << G4endl;
+                G4cerr << "ERROR HistoManager::finish: Failed to write to file" << G4endl;
                 return;
         }
         G4AnalysisManager* manager = G4AnalysisManager::Instance();

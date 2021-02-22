@@ -29,6 +29,7 @@ extern G4String inFile;
 extern G4double chosen_energy;
 extern G4bool resonanceTest;
 extern G4bool bremTest;
+extern G4bool debug;
 
 PrimaryGeneratorAction::PrimaryGeneratorAction()
         : G4VUserPrimaryGeneratorAction(),
@@ -112,7 +113,9 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
   // ******************** Energy Sampling Options *************************** //
+    if(debug)
         std::cout << "PrimaryGeneratorAction::GeneratePrimaries -> Beginning." << std::endl;
+
         G4double w = 1.;
         if(!resonanceTest && chosen_energy < 0)
         {
@@ -146,6 +149,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         // Set the energy
         fParticleGun->SetParticleEnergy(energy);
 
+      if(debug)
+        std::cout << "Particle Energy: " << energy/(MeV) << " MeV" << std::endl;
+
         const float pi=acos(-1);
 
         // Set beam position
@@ -163,6 +169,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         anInfo->SetWeight(w);
         anInfo->SetBeamEnergy(energy);
         anEvent->SetUserInformation(anInfo);
+      if(debug)
         std::cout << "PrimaryActionGenerator::GeneratePrimaries() -> End!" << std::endl;
 }
 

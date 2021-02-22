@@ -29,7 +29,7 @@ G4bool output;
 // String global variables
 G4String macro, root_output_name, gOutName, inFile;
 // boolean global variables
-G4bool bremTest, resonanceTest, checkEvents;
+G4bool bremTest, resonanceTest, checkEvents, debug;
 
 namespace
 {
@@ -38,7 +38,7 @@ void PrintUsage()
         G4cerr << "Usage: " << G4endl;
         G4cerr << "mantis [-h help] [-m macro=mantis.in] [-a chosen_energy=-1.] [-s seed=1] [-o output_name] [-t bremTest=false] " <<
                 "[-r resonance_test=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] " <<
-                "[-e checkEvents_in=false] [-i inFile]"
+                "[-e checkEvents_in=false] [-i inFile] [-d debug]"
                << G4endl;
         exit(1);
 }
@@ -63,6 +63,8 @@ int main(int argc,char **argv)
         macro = "mantis.in";
         seed = 1;
         inFile = "brems_distributions.root";
+        G4String debug_in = "false";
+        debug = false;
         // Primary Generator Defaults
         G4String resonance_in = "false";
         resonanceTest = false;
@@ -104,6 +106,7 @@ int main(int argc,char **argv)
                 else if (G4String(argv[i]) == "-n") addNRF_in = argv[i+1];
                 else if (G4String(argv[i]) == "-e") checkEvents_in = argv[i+1];
                 else if (G4String(argv[i]) == "-i") inFile = argv[i+1];
+                else if (G4String(argv[i]) == "-d") debug_in = argv[i+1];
                 else
                 {
                         PrintUsage();
@@ -119,6 +122,12 @@ int main(int argc,char **argv)
         }
         else gOutName=(std::string)root_output_name;
 
+        // Handle Debugging
+        if(debug_in == "True" || debug_in == "true")
+        {
+          std::cout << "Debugging mode set." << std::endl;
+          debug = true;
+        }
 
         G4UImanager* UI = G4UImanager::GetUIpointer();
         MySession* LoggedSession = new MySession;

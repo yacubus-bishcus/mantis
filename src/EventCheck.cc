@@ -243,11 +243,10 @@ EventCheck::~EventCheck()
 
 void EventCheck::WriteEvents()
 {
-        std::string FinalOutName = gOutName;
-        FinalOutName = FinalOutName + "_EventCheck.root";
-        const char* OutFilename = FinalOutName.c_str();
+        std::string OutFileName = gOutName;
+        OutFileName = "EventCheck_" + OutFileName + ".root";
 
-        fout = new TFile(OutFilename,"recreate");
+        fout = new TFile(OutFilename.c_str(),"recreate");
         fout->cd();
 
         // Set up Output NRF to Cher Tree
@@ -311,17 +310,14 @@ void EventCheck::WriteEvents()
         if(nrf_to_cherEvents.size() > 0)
         {
                 nrf_to_cher_tree->Write();
-                std::cout << "EventCheck::WriteEvents -> NRF to Optical Photon Events Written to file: " << OutFilename << std::endl;
-                G4cout << "EventCheck::WriteEvents -> NRF to Optical Photon Events Written to file: " << OutFilename << G4endl;
         }
 
         // Write nrf_to_cher_to_det_tree
         if(nrf_to_cherenkov_to_detEvents.size() > 0)
         {
                 nrf_to_cher_to_det_tree->Write();
-                G4cout << "NRF to Optical Photon to Detected Events Written to file: " << OutFilename2 << G4endl;
         }
-
+        std::cout << "EventCheck::WriteEvents -> TTrees Written to File: " << OutFilename << std::endl;
         fout->Close();
         time_end = std::time(&timer2);
         G4cout << "Event Check took: " << std::difftime(time_end, time_start) << " seconds!" << G4endl << G4endl;

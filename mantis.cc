@@ -46,6 +46,18 @@ void PrintUsage()
 
 int main(int argc,char **argv)
 {
+  // Check to make sure user set up environment correctly
+  if(getenv("G4NRFGAMMADATA") == NULL)
+  {
+    std::cout << "mantis.cc -> FATAL ERROR: User must set environmental variable G4NRFGAMMADATA!" << std::end;
+    exit(1);
+  }
+  const std::filesystem::path gamma_data_path = std::getenv("G4NRFGAMMADATA");
+  if(!std::filesystem::exists(&gamma_data_path))
+  {
+    std::cout << "mantis.cc -> FATAL ERROR: Could not find directory set by environmental variable G4NRFGAMMADATA!" << std::endl;
+    exit(1);
+  }
         // Defaults
         G4int start_time = time(0);
         // Physics List Defaults
@@ -85,12 +97,6 @@ int main(int argc,char **argv)
                 ui = new G4UIExecutive(argc, argv);
         }
 
-        // Evaluate Arguments
-        if ( argc > 21)
-        {
-                PrintUsage();
-                return 1;
-        }
 
         for (G4int i=1; i<argc; i=i+2)
         {

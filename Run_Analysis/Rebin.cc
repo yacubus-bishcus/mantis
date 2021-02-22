@@ -12,7 +12,7 @@
 // 2. TTree Object to Weight and Rebin. const char*
 // 3. Weighted and Rebined TH1D Object Name. const char*
 // 4. Number of Bins int
-// 5. Max Energy of Histogram (MeV). double
+// 5. Max Energy of Histogram (MeV) Default set as 2.1 MeV. double
 //
 // Additional Optional inputs are Available to the User for variable bin drawing
 // 1. Variable Bin Width. bool
@@ -24,9 +24,9 @@
 // that object to a new weighted histogram with the user's number of bins
 
 void Rebin(const char* inFile, const char* ObjName, const char* OutObjName,
-  int nbins, double Emax,
+  int nbins, double Emax=2.1,
   bool VarArray=false, double nrf_bin_width = -1., double sample_energy=-1.,
-  double sample_weight=-1.)
+  double sample_weight=-1.,TCut cut1="NA")
 {
 
   // Check to make sure file exists
@@ -44,7 +44,12 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName,
   inObj->Print();
   inObj->SetEstimate(-1);
   // Grab TTree Values
-  Int_t nentries = inObj->Draw("Energy:Weight","","goff");
+  Int_t nentries;
+  if(cut1=="NA")
+    nentries = inObj->Draw("Energy:Weight","","goff");
+  else
+    nentries = inObj->Draw("Energy:Weight",cut1,"goff");
+
   Double_t *energies = inObj->GetVal(0);
   Double_t *weights = inObj->GetVal(1);
   TH1D *hObj;
@@ -72,6 +77,7 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName,
     // create edges (dynamically sized array)
     Double_t* edges = new Double_t[tbins+1];
     // fill the edges for the first region
+    std::cout << "Creating Edges for the first region..." << std::endl;
     for(int i=0;i<nbins1+1;++i)
     {
       edges[i] = edge_counter;
@@ -79,6 +85,7 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName,
     }
     // fill the edges for the second region
     edge_counter = edge_counter - bin_increment;
+    std::cout << "Creating Edges for the second region..." << std::endl;
     for(int i=nbins1;i<tbins+2;++i)
     {
       edges[i] = edge_counter;
@@ -98,7 +105,12 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName,
   }
 
   // Write to OutFile
-  std::string OutFileName = "rebinned_" + to_string(nbins) + "_" + (std::string)inFile;
+  std::string OutFileName;
+  if(!VarArray)
+    OutFileName = "rebinned_" + to_string(nbins) + "_" + (std::string)inFile;
+  else
+    OutFileName = "rebinned_Variable_binWidth_" + to_string(nrf_bin_width) + "_" + (std::string)inFile;
+
   TFile *fout = new TFile(OutFileName.c_str(),"recreate");
   fout->cd();
   hObj->Write();

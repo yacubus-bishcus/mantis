@@ -43,7 +43,9 @@ void check_file_exists(const std::string &p)
     std::cout << p << " exists." << std::endl;
   else
   {
-    std::cout << p << " does not exist. Exiting." << std::endl;
+    std::cout << p << " does not exist." << std::endl;
+    std::cout << "User MUST Set the correct Path for the NRF Database as an environment variable." <<
+    std::endl << "See README For Details!" << std::endl;
     exit(1);
   }
 }

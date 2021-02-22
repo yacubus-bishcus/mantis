@@ -243,13 +243,9 @@ EventCheck::~EventCheck()
 
 void EventCheck::WriteEvents()
 {
-        // Write to file
         std::string FinalOutName = gOutName;
-        std::string FinalOutName2 = gOutName;
-        FinalOutName = FinalOutName + "_NRF_to_Cher.root";
-        FinalOutName2 = FinalOutName2 + "_NRF_to_Cher_to_Det.root";
+        FinalOutName = FinalOutName + "_EventCheck.root";
         const char* OutFilename = FinalOutName.c_str();
-        const char* OutFilename2 = FinalOutName2.c_str();
 
         fout = new TFile(OutFilename,"recreate");
         fout->cd();
@@ -262,13 +258,23 @@ void EventCheck::WriteEvents()
         nrf_to_cher_tree->Branch("Cher_Energy",&cherE);
         nrf_to_cher_tree->Branch("Cher_Weight",&cherW);
 
-        // Fill Tree
-        if(num_entries > 0 && num_entries1 > 0)
+        // Set up NRF to Cher to Det Tree
+        nrf_to_cher_to_det_tree = new TTree("nrf_to_cher_to_det_tree","NRF Events that Lead to Cherenkov that were Detected");
+        nrf_to_cher_to_det_tree->Branch("EventID",&a);
+        nrf_to_cher_to_det_tree->Branch("EnergyNRF",&energyNRF);
+        nrf_to_cher_to_det_tree->Branch("EnergyCher",&energyCher);
+        nrf_to_cher_to_det_tree->Branch("WeightNRF",&weightNRF);
+        nrf_to_cher_to_det_tree->Branch("WeightCher",&weightCher);
+        nrf_to_cher_to_det_tree->Branch("TimeNRF",&timeNRF);
+        nrf_to_cher_to_det_tree->Branch("TimeCher",&timeCher);
+
+        // Fill nrf_to_cher Tree
+        if(num_entries > 0 && num_entries1 > 0 && nrf_to_cherEvents.size() > 0)
         {
                 std::cout << "EventCheck::WriteEvents -> Filling NRF to Optical Photon Tree..." << std::endl;
                 G4cout << "EventCheck::WriteEvents -> Filling NRF to Optical Photon Tree..." << G4endl;
                 // Fill nrf_to_cher_tree
-                for(unsigned int i=0; i<nrf_to_cherEvents.size(); i++)
+                for(unsigned int i=0; i<nrf_to_cherEvents.size(); ++i)
                 {
                         nrf_cher_EventID = nrf_to_cherEvents[i];
                         nrfE = nrfEnergyv[i];
@@ -278,13 +284,13 @@ void EventCheck::WriteEvents()
                         nrf_to_cher_tree->Fill();
                 }
         }
-
-        if(num_entries2 > 0)
+        // Fill nrf_to_det_Tree
+        if(num_entries > 0 && num_entries1 > 0 && num_entries2 > 0 && nrf_to_cherenkov_to_detEvents.size() > 0)
         {
                 std::cout << "EventCheck::WriteEvents -> Filling NRF to Optical Photon to Detected Tree..." << std::endl;
                 G4cout << "EventCheck::WriteEvents -> Filling NRF to Optical Photon to Detected Tree..." << G4endl;
                 // Fill nrf_to_cher_to_det_tree
-                for(unsigned int i=0; i<nrf_to_cherenkov_to_detEvents.size(); i++)
+                for(unsigned int i=0; i<nrf_to_cherenkov_to_detEvents.size(); ++i)
                 {
                         a = nrf_to_cherenkov_to_detEvents[i];
                         energyNRF = nrf_to_cherenkov_to_detNRFEnergies[i];
@@ -301,43 +307,22 @@ void EventCheck::WriteEvents()
         // Write TTrees to OutFile
         // ******************************************************************************************************************************** //
 
+        // Write nrf_to_cher_tree
         if(nrf_to_cherEvents.size() > 0)
         {
                 nrf_to_cher_tree->Write();
                 std::cout << "EventCheck::WriteEvents -> NRF to Optical Photon Events Written to file: " << OutFilename << std::endl;
                 G4cout << "EventCheck::WriteEvents -> NRF to Optical Photon Events Written to file: " << OutFilename << G4endl;
         }
-        else
-        {
-                G4cerr << OutFilename << " not written to File!" << G4endl << G4endl;
-        }
-        fout->Close();
 
-        fout2 = new TFile(OutFilename2,"recreate");
-        fout2->cd();
-
-        // Set up NRF to Cher to Det Tree
-        nrf_to_cher_to_det_tree = new TTree("nrf_to_cher_to_det_tree","NRF Events that Lead to Cherenkov that were Detected");
-        nrf_to_cher_to_det_tree->Branch("EventID",&a);
-        nrf_to_cher_to_det_tree->Branch("EnergyNRF",&energyNRF);
-        nrf_to_cher_to_det_tree->Branch("EnergyCher",&energyCher);
-        nrf_to_cher_to_det_tree->Branch("WeightNRF",&weightNRF);
-        nrf_to_cher_to_det_tree->Branch("WeightCher",&weightCher);
-        nrf_to_cher_to_det_tree->Branch("TimeNRF",&timeNRF);
-        nrf_to_cher_to_det_tree->Branch("TimeCher",&timeCher);
-
-        // Fill Tree
+        // Write nrf_to_cher_to_det_tree
         if(nrf_to_cherenkov_to_detEvents.size() > 0)
         {
                 nrf_to_cher_to_det_tree->Write();
                 G4cout << "NRF to Optical Photon to Detected Events Written to file: " << OutFilename2 << G4endl;
         }
-        else
-        {
-                G4cout << OutFilename2 << " not written to File!" << G4endl << G4endl;
-        }
 
-        fout2->Close();
+        fout->Close();
         time_end = std::time(&timer2);
         G4cout << "Event Check took: " << std::difftime(time_end, time_start) << " seconds!" << G4endl << G4endl;
 }

@@ -135,4 +135,8 @@ endforeach()
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
-install(TARGETS mantis DESTINATION bin)
+if(fMPI)
+  install(TARGETS mantis_mpi DESTINATION bin)
+else()
+  install(TARGETS mantis DESTINATION bin)
+endif()

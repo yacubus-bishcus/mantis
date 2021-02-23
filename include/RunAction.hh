@@ -29,7 +29,7 @@
 #include "G4UserRunAction.hh"
 #include <vector>
 #include "G4Run.hh"
-#include "HistoManager.hh"
+#include "RootDataManager.hh"
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
@@ -39,7 +39,7 @@
 class RunAction : public G4UserRunAction
 {
   public:
-    RunAction(HistoManager*, PrimaryGeneratorAction*);
+    RunAction(RootDataManager*, PrimaryGeneratorAction*, G4bool);
     virtual ~RunAction();
 
   public:
@@ -54,13 +54,15 @@ class RunAction : public G4UserRunAction
     void AddTotalSurface(void) {fTotalSurface += 1;}
     void AddNRF(void){fNRF++;}
     void AddStatusKilled(void){fStatusKilled++;}
+    void ReduceSlaveValuesToMaster();
 
   private:
-    HistoManager* fHistoManager;
+    RootDataManager* fmanager;
     PrimaryGeneratorAction* fpga;
+    G4bool fbuild;
+    G4int nodeRank;
     G4double fCerenkovEnergy, fScintEnergy, fCerenkovCount;
     G4int fScintCount, fTotalSurface, fNRF, fStatusKilled;
 };
-
 
 #endif

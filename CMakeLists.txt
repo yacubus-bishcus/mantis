@@ -3,6 +3,11 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(mantis)
 option(WITH_GEANT4_UIVIS "Build with Geant4 UI and Vis drivers" ON) # Can switch to OFF if not building with vis drivers --> NOT recommended
+option(WITH_MPI "Build with MPI" OFF)
+if(WITH_MPI)
+  add_compile_definitions(MANTIS_MPI_ENABLED)
+  message(STATUS "MPI Enabled.")
+endif()
 
 # Determine the Geant4 Version
 execute_process(COMMAND bash -c "geant4-config --version"
@@ -29,12 +34,16 @@ else()
   add_compile_options(-Wno-unused-variable -Wno-shadow -Wno-unused-parameter)
 endif()
 
-if(WITH_GEANT4_UIVIS)
-  find_package(Geant4 10.5 REQUIRED ui_all vis_all)
-  message(STATUS "Geant4 Version: ${MY_GEANT4_VERSION}")
-  message(STATUS "Built Geant4 with UI and Vis Drivers")
-else()
+if(WITH_MPI)
   find_package(Geant4 10.5 REQUIRED)
+else()
+  if(WITH_GEANT4_UIVIS)
+    find_package(Geant4 10.5 REQUIRED ui_all vis_all)
+    message(STATUS "Geant4 Version: ${MY_GEANT4_VERSION}")
+    message(STATUS "Built Geant4 with UI and Vis Drivers")
+    else()
+      find_package(Geant4 10.5 REQUIRED)
+  endif()
 endif()
 
 #----------------------------------------------------------------------------
@@ -65,8 +74,14 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 and ROOT libraries
 #
-add_executable(mantis mantis.cc ${sources} ${headers})
-target_link_libraries(mantis ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+if(WITH_MPI)
+  add_executable(mantis_mpi mantis.cc ${sources} ${headers})
+  target_link_libraries(mantis_mpi ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+else()
+  add_executable(mantis mantis.cc ${sources} ${headers})
+  target_link_libraries(mantis ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+endif()
+
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we

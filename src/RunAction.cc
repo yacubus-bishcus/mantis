@@ -27,8 +27,8 @@ extern G4bool output;
 extern G4bool checkEvents;
 extern G4double chosen_energy;
 
-RunAction::RunAction(HistoManager* histoAnalysis, PrimaryGeneratorAction* pga)
-        : G4UserRunAction(), fHistoManager(histoAnalysis), fpga(pga)
+RunAction::RunAction(RootDataManager* analysis, PrimaryGeneratorAction* pga, G4bool build)
+        : G4UserRunAction(), fmanager(analysis), fpga(pga), fbuild(!build), nodeRank(0)
 {
 }
 
@@ -38,67 +38,95 @@ RunAction::~RunAction()
 
 void RunAction::BeginOfRunAction(const G4Run*)
 {
-        if(output)
-        {
-                fHistoManager->Book();
-        }
+  #ifdef MANTIS_MPI_ENABLED
+    MPIManager *theMPIManager = MPIManager::GetInstance();
+    nodeRank = theMPIManager->GetRank();
 
-        fTotalSurface = 0;
-        fCerenkovCount = 0;
-        fScintCount = 0;
-        fCerenkovEnergy = 0;
-        fScintEnergy = 0;
-        fNRF = 0;
-        fStatusKilled = 0;
-        G4cout << G4endl << "Beginning Run..." << G4endl;
+    G4double masterEvents = theMPIManager->GetMasterEvents();
+    G4double slaveEvents = theMPIManager->GetSlaveEvents();
+
+    G4cout << "MANTIS ANNOUNCEMENT: # events in master = " << masterEvents
+	   << " / # events in slave = "  << slaveEvents << "\n" << G4endl;
+
+     theMPIManager->ForceBarrier("RunAction::BeginOfRunAction()");
+   #endif
+    if(output)
+    {
+      fmanager->Book();
+    }
+
+    fTotalSurface = 0;
+    fCerenkovCount = 0;
+    fScintCount = 0;
+    fCerenkovEnergy = 0;
+    fScintEnergy = 0;
+    fNRF = 0;
+    fStatusKilled = 0;
+    G4cout << G4endl << "Beginning Run..." << G4endl;
 }
 
 void RunAction::EndOfRunAction(const G4Run* aRun)
 {
-  if(chosen_energy < 0)
+  #ifdef MANTIS_MPI_ENABLED
+    MPIManager::GetInstance()->ForceBarrier("RunAction::EndOfRunAction()");
+  #endif
+  if(nodeRank == 0)
   {
-    fpga->CloseInputFile();
-    G4cout << "RunAction::EndOfRunAction -> PrimaryGeneratorAction Input File Closed." << G4endl;
+    if(chosen_energy < 0)
+    {
+      fpga->CloseInputFile();
+      G4cout << "RunAction::EndOfRunAction -> PrimaryGeneratorAction Input File Closed." << G4endl;
+    }
+
+    if(fbuild)
+    {
+      #ifdef MANTIS_MPI_ENABLED
+        totalEvents = MPIManager::GetInstance()->GetInstance()->GetTotalEvents();
+      #endif
+    }
+    else
+    {
+      G4int TotNbofEvents = aRun->GetNumberOfEvent();
+      std::ios::fmtflags mode = G4cout.flags();
+      G4int prec = G4cout.precision(2);
+      G4cout << G4endl << "Run Summary" << G4endl;
+      G4cout << "----------------------------------------------------------------------" << G4endl;
+      G4cout << "Total Number of Events:                                " << TotNbofEvents << G4endl;
+      G4cout << "Total number of Surface Events:                        " << fTotalSurface << G4endl;
+      G4cout << "Total number of NRF Photons:                           " << fNRF << G4endl;
+      G4cout << "Total number of Cherenkov Photons:                     " << fCerenkovCount << G4endl;
+      G4cout << "Total number of Scintillation Photons:                 " << fScintCount << G4endl;
+      G4cout << "Total number of Optical Photons:                       " << fCerenkovCount + fScintCount << G4endl;
+      G4cout << "Total number of Tracks Cut Based on Position:          " << fStatusKilled << G4endl;
+
+      if (fCerenkovCount > 0)
+      {
+              G4cout << " Average Cherenkov Photon energy emitted:            "
+                     << (fCerenkovEnergy/eV)/fCerenkovCount << " eV." << G4endl;
+      }
+
+      if (fScintCount > 0)
+      {
+              G4cout << " Average Scintillation Photon energy emitted:        "
+                     << (fScintEnergy/eV)/fScintCount << " eV." << G4endl;
+      }
+
+      G4cout << "----------------------------------------------------------------------" << G4endl;
+
+      G4cout.setf(mode, std::ios::floatfield);
+
+      G4cout.precision(prec);
+    }
   }
-
-  G4int TotNbofEvents = aRun->GetNumberOfEvent();
-  std::ios::fmtflags mode = G4cout.flags();
-  G4int prec = G4cout.precision(2);
-  G4cout << G4endl << "Run Summary" << G4endl;
-  G4cout << "----------------------------------------------------------------------" << G4endl;
-  G4cout << "Total Number of Events:                                " << TotNbofEvents << G4endl;
-  G4cout << "Total number of Surface Events:                        " << fTotalSurface << G4endl;
-  G4cout << "Total number of NRF Photons:                           " << fNRF << G4endl;
-  G4cout << "Total number of Cherenkov Photons:                     " << fCerenkovCount << G4endl;
-  G4cout << "Total number of Scintillation Photons:                 " << fScintCount << G4endl;
-  G4cout << "Total number of Optical Photons:                       " << fCerenkovCount + fScintCount << G4endl;
-  G4cout << "Total number of Tracks Cut Based on Position:          " << fStatusKilled << G4endl;
-
-  if (fCerenkovCount > 0)
-  {
-          G4cout << " Average Cherenkov Photon energy emitted:            "
-                 << (fCerenkovEnergy/eV)/fCerenkovCount << " eV." << G4endl;
-  }
-
-  if (fScintCount > 0)
-  {
-          G4cout << " Average Scintillation Photon energy emitted:        "
-                 << (fScintEnergy/eV)/fScintCount << " eV." << G4endl;
-  }
-
-  G4cout << "----------------------------------------------------------------------" << G4endl;
-
-  G4cout.setf(mode, std::ios::floatfield);
-
-  G4cout.precision(prec);
 
   if(output)
   {
-          fHistoManager->finish();
+    fmanager->finish();
   }
+  
   if(checkEvents)
   {
-          EventCheck *eCheck = new EventCheck();
-          eCheck->WriteEvents();
+    EventCheck *eCheck = new EventCheck();
+    eCheck->WriteEvents();
   }
 }

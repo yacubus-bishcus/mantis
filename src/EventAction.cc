@@ -66,13 +66,8 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
                 else
                         c_time = 0;
                 // Fill the TTree
-                G4AnalysisManager* manager = G4AnalysisManager::Instance();
-                manager->FillNtupleDColumn(6,0,maxE);
-                manager->FillNtupleDColumn(6,1, weight);
-                manager->FillNtupleIColumn(6,2,anEvent->GetEventID());
-                manager->FillNtupleIColumn(6,3,c_secondaries);
-                manager->FillNtupleDColumn(6,4,c_time);
-                manager->AddNtupleRow(6);
+                RootDataManager *manager = RootDataManager::GetInstance();
+                manager->FillCherenkov(maxE, weight, anEvent->GetEventID(), c_secondaries, c_time);
         }
 
     if(debug)

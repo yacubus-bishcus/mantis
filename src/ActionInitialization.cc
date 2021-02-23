@@ -29,13 +29,13 @@
 #include "SteppingAction.hh"
 #include "StackingAction.hh"
 #include "EventAction.hh"
-#include "HistoManager.hh"
+#include "RootDataManager.hh"
 #include "G4Types.hh"
 
 extern G4bool debug;
 
-ActionInitialization::ActionInitialization(const DetectorConstruction* det)
-        : G4VUserActionInitialization(), fDetector(det)
+ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool build)
+        : G4VUserActionInitialization(), fDetector(det), fbuild(build)
 {
 }
 
@@ -48,15 +48,15 @@ void ActionInitialization::Build() const
     if(debug)
         std::cout << "ActionInitialization::Build() -> Begin!" << std::endl;
 
-        HistoManager* histo = new HistoManager();
-        PrimaryGeneratorAction* pga = new PrimaryGeneratorAction();
-        SetUserAction(pga);
-        RunAction* run = new RunAction(histo,pga);
-        SetUserAction(run);
-        EventAction* event = new EventAction();
-        SetUserAction(event);
-        SetUserAction(new SteppingAction(fDetector, run, event));
-        SetUserAction(new StackingAction(fDetector, run));
+    RootDataManager *analysis = new RootDataManager(fbuild);
+    PrimaryGeneratorAction* pga = new PrimaryGeneratorAction();
+    SetUserAction(pga);
+    RunAction* run = new RunAction(analysis,pga, fbuild);
+    SetUserAction(run);
+    EventAction* event = new EventAction();
+    SetUserAction(event);
+    SetUserAction(new SteppingAction(fDetector, run, event));
+    SetUserAction(new StackingAction(fDetector, run));
 
     if(debug)
         std::cout << "ActionInitialization::Build() -> End!" << std::endl;

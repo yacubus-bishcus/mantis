@@ -30,7 +30,7 @@
 #include "G4Types.hh"
 #include "G4EventManager.hh"
 #include "eventInformation.hh"
-#include "HistoManager.hh"
+#include "RootDataManager.hh"
 #include "G4RunManager.hh"
 #include "G4Event.hh"
 #include "G4ios.hh"

@@ -175,7 +175,7 @@ int main(int argc,char **argv)
     MPIManager *theMPIManager = new MPIManager(argcMPI,argvMPI);
   #endif
 
-  MySession* LoggedSession;
+  MySession* LoggedSession = 0;
   if(sequentialBuild)
   {
     LoggedSession = new MySession;

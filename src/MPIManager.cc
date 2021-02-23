@@ -39,7 +39,7 @@
 #include "MPIManager.hh"
 #include "MPIManagerMessenger.hh"
 
-
+extern G4bool debug;
 MPIManager *MPIManager::theMPImanager = 0;
 
 
@@ -67,6 +67,9 @@ MPIManager::MPIManager(int argcMPI, char *argvMPI[])
   // If the present process is a slave, redirect its std::output to
   // the slaveForum, a special directory for output. The output file
   // is the base specified by argvMPI[1] combined with the slave rank
+  if(debug)
+    std::cout << "Making Slave Ranks." << std::endl;
+    
   if(isSlave){
     G4String fBase = argvMPI[1];
     std::ostringstream slaveRank;

@@ -170,7 +170,7 @@ int main(int argc,char **argv)
     const G4int argcMPI = 2;
     char *argvMPI[argcMPI];
     argvMPI[0] = argv[0]; // binary name
-    argvMPI[1] = (char *)"/tmp/MANTISSlave"; // slave file base name
+    argvMPI[1] = (char *)"MANTISSlave"; // slave file base name
     if(debug)
       std::cout << "Instantiating MPIManager." << std::endl;
     if(debug)

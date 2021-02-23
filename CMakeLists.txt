@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(mantis)
 option(WITH_GEANT4_UIVIS "Build with Geant4 UI and Vis drivers" ON) # Can switch to OFF if not building with vis drivers --> NOT recommended
 option(WITH_MPI "Build with MPI" OFF)
-if(WITH_MPI)
+if(${WITH_MPI})
   add_compile_definitions(MANTIS_MPI_ENABLED)
   message(STATUS "MPI Enabled.")
 endif()

@@ -56,7 +56,7 @@ MPIManager::MPIManager(int argcMPI, char **argvMPI)
   }
 
   // Initialize the MPI execution environment.
-  MPI::Init(&argcMPI, &argvMPI);
+  MPI_Init(&argcMPI, &argvMPI);
   if(debug)
     std::cout << "MPIManager::MPIManager -> Init_thread complete!" << std::endl;
   // Get the size (number of) and the rank the present process

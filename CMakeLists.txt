@@ -3,11 +3,6 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(mantis)
 option(WITH_GEANT4_UIVIS "Build with Geant4 UI and Vis drivers" ON) # Can switch to OFF if not building with vis drivers --> NOT recommended
-option(WITH_MPI "Build with MPI" OFF)
-if(${WITH_MPI})
-  add_compile_definitions(MANTIS_MPI_ENABLED)
-  message(STATUS "MPI Enabled.")
-endif()
 
 # Determine the Geant4 Version
 execute_process(COMMAND bash -c "geant4-config --version"
@@ -27,6 +22,8 @@ if(${VERSION_BOOL})
   message(STATUS "Version is at least 10.7")
 endif()
 
+# Cmake flag to allow for verbosity (lots of warnings)
+
 if(${MYVERBOSE})
   message(STATUS "Running make with Full Verbosity")
 else()
@@ -34,7 +31,17 @@ else()
   add_compile_options(-Wno-unused-variable -Wno-shadow -Wno-unused-parameter)
 endif()
 
-if(WITH_MPI)
+# Cmake flag to allow for building with MPI
+
+if(${WITH_MPI})
+  option(fMPI "Build with MPI" ON)
+  add_compile_definitions(MANTIS_MPI_ENABLED)
+  message(STATUS "MPI Enabled.")
+else()
+  option(fMPI "Build with MPI" OFF)
+endif()
+
+if(fMPI)
   find_package(Geant4 10.5 REQUIRED)
 else()
   if(WITH_GEANT4_UIVIS)
@@ -74,7 +81,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 and ROOT libraries
 #
-if(WITH_MPI)
+if(fMPI)
   add_executable(mantis_mpi mantis.cc ${sources} ${headers})
   target_link_libraries(mantis_mpi ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 else()

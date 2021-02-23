@@ -78,13 +78,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
       G4cout << "RunAction::EndOfRunAction -> PrimaryGeneratorAction Input File Closed." << G4endl;
     }
 
-    if(fbuild)
-    {
-      #ifdef MANTIS_MPI_ENABLED
-        totalEvents = MPIManager::GetInstance()->GetInstance()->GetTotalEvents();
-      #endif
-    }
-    else
+    if(!fbuild)
     {
       G4int TotNbofEvents = aRun->GetNumberOfEvent();
       std::ios::fmtflags mode = G4cout.flags();
@@ -123,7 +117,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
   {
     fmanager->finish();
   }
-  
+
   if(checkEvents)
   {
     EventCheck *eCheck = new EventCheck();

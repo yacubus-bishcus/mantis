@@ -43,6 +43,7 @@ endif()
 
 if(fMPI)
   find_package(Geant4 10.5 REQUIRED)
+  find_package(MPI REQUIRED)
 else()
   if(WITH_GEANT4_UIVIS)
     find_package(Geant4 10.5 REQUIRED ui_all vis_all)
@@ -70,10 +71,18 @@ endif()
 
 #----------------------------------------------------------------------------
 # Locate Sources and Headers
+
 include("${ROOT_USE_FILE}")
-include_directories(${PROJECT_SOURCE_DIR}/include
-                    ${Geant4_INCLUDE_DIR}
-                    ${ROOT_INCLUDE_DIR})
+if(fMPI)
+  include_directories(${PROJECT_SOURCE_DIR}/include
+                      ${Geant4_INCLUDE_DIR}
+                      ${ROOT_INCLUDE_DIR}
+                      ${MPI_INCLUDE_PATH})
+else()
+  include_directories(${PROJECT_SOURCE_DIR}/include
+                      ${Geant4_INCLUDE_DIR}
+                      ${ROOT_INCLUDE_DIR})
+endif()
 
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
@@ -83,7 +92,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #
 if(fMPI)
   add_executable(mantis_mpi mantis.cc ${sources} ${headers})
-  target_link_libraries(mantis_mpi ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+  target_link_libraries(mantis_mpi ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${MPI_C_LIBRARIES})
 else()
   add_executable(mantis mantis.cc ${sources} ${headers})
   target_link_libraries(mantis ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})

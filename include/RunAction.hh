@@ -35,6 +35,9 @@
 #include "G4UnitsTable.hh"
 #include "EventCheck.hh"
 #include "PrimaryGeneratorAction.hh"
+#ifdef MANTIS_MPI_ENABLED
+#include "MPIManager.hh"
+#endif
 
 class RunAction : public G4UserRunAction
 {

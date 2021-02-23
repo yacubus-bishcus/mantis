@@ -58,7 +58,7 @@ MPIManager::MPIManager(int argcMPI, char *argvMPI[])
   // Initialize the MPI execution environment.  The MPI::Init_thread
   // method is more specific than MPI::Init, allowing control of
   // thread level support.
-  MPI::Init(&argcMPI, &argvMPI);
+  MPI::Init(*argcMPI, *argvMPI);
   if(debug)
     std::cout << "MPIManager::MPIManager -> Init_thread complete!" << std::endl;
   // Get the size (number of) and the rank the present process

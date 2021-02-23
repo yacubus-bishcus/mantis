@@ -23,10 +23,10 @@
 // This File Scans the File for the user's TTree Object Name. It then Draws
 // that object to a new weighted histogram with the user's number of bins
 
-void Rebin(const char* inFile, const char* ObjName, const char* OutObjName,
-  int nbins, double Emax=2.1,
-  bool VarArray=false, double nrf_bin_width = -1., double sample_energy=-1.,
-  double sample_weight=-1.,TCut cut1="NA")
+void Rebin(const char* inFile, const char* ObjName, const char* OutObjName="hOut",
+  int nbins=420000, double Emax=2.1,
+  bool VarArray=false, double nrf_bin_width = -1., double non_nrf_bin_width =-1.,
+  double sample_energy=-1., TCut cut1="NA")
 {
 
   // Check to make sure file exists
@@ -57,21 +57,23 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName,
   if(!VarArray)
   {
     std::cout << "User did not select variable bin widths." << std::endl;
-    hObj = new TH1D(OutObjName,"Weighted Energy Spectrum",nbins,0.,Emax);
+    if(cut1=="NA")
+      hObj = new TH1D(OutObjName,"Weighted Energy Spectrum",nbins,0.,Emax);
+    else
+      hObj = new TH1D(OutObjName, "Weighted Energy Spectrum",nbins,sample_energy, Emax);
   }
   // User wants variable bin widths
   else
   {
-    if(sample_energy < 0 || sample_weight < 0 || nrf_bin_width < 0)
+    if(sample_energy < 0 || non_nrf_bin_width < 0 || nrf_bin_width < 0)
     {
       std::cerr << "Error User must input Energy and Weight of region split." << std::endl;
       exit(1);
     }
     std::cout << "User selected variable bin widths." <<std::endl;
     // Find total number of bins
-    double bin_increment = nrf_bin_width*sample_weight;
     double edge_counter = 0.;
-    int nbins1 = sample_energy/(bin_increment);
+    int nbins1 = sample_energy/(non_nrf_bin_width);
     int nbins2 = (Emax - sample_energy)/nrf_bin_width;
     Int_t tbins = nbins1 + nbins2;
     // create edges (dynamically sized array)
@@ -81,10 +83,10 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName,
     for(int i=0;i<nbins1+1;++i)
     {
       edges[i] = edge_counter;
-      edge_counter += bin_increment;
+      edge_counter += non_nrf_bin_width;
     }
     // fill the edges for the second region
-    edge_counter = edge_counter - bin_increment;
+    edge_counter = edge_counter - non_nrf_bin_width;
     std::cout << "Creating Edges for the second region..." << std::endl;
     for(int i=nbins1;i<tbins+2;++i)
     {

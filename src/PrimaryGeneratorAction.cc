@@ -37,7 +37,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 {
         fParticleGun = new G4ParticleGun(1);
         if(!bremTest)
-          beam_size = 80.0*mm;
+          beam_size = 44.0*mm; // optimized beam size for a 4.5cm radius interrogation object 
         else
           beam_size = 1.3*mm;
 
@@ -73,7 +73,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                 fFileOpen = true;
                 fin->cd();
                 hBrems  = (TH1D*) fin->Get("hBrems");
-                
+
                 if(debug)
                   hBrems->Print();
 

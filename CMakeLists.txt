@@ -76,8 +76,9 @@ include("${ROOT_USE_FILE}")
 if(fMPI)
   include_directories(${PROJECT_SOURCE_DIR}/include
                       ${Geant4_INCLUDE_DIR}
-                      ${ROOT_INCLUDE_DIR})
-#${MPI_INCLUDE_PATH}
+                      ${ROOT_INCLUDE_DIR}
+                      ${MPI_INCLUDE_PATH})
+
 else()
   include_directories(${PROJECT_SOURCE_DIR}/include
                       ${Geant4_INCLUDE_DIR}

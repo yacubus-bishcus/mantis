@@ -60,7 +60,7 @@ MPIManager::MPIManager(int argcMPI, char *argvMPI[])
   // thread level support.  Here, we use MPI::THREAD_SERIALIZED to
   // ensure that if multiple threads are present that only 1 thread
   // will make calls the MPI libraries at one time.
-  MPI::Init_thread(argcMPI, argvMPI, MPI::THREAD_SERIALIZED);
+  MPI::Init(argcMPI, argvMPI);
   if(debug)
     std::cout << "MPIManager::MPIManager -> Init_thread complete!" << std::endl;
   // Get the size (number of) and the rank the present process

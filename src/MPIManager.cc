@@ -50,18 +50,24 @@ MPIManager *MPIManager::GetInstance()
 MPIManager::MPIManager(int argcMPI, char *argvMPI[])
 {
   if(debug)
+  {
     std::cout << "MPIManager::MPIManager -> Begin." << std::endl;
+    std::cout << argcMPI << " Inputs: " << std::endl << argvMPI[0] << std::endl << argvMPI[1] << std::endl;
+  }
+
   // Initialize the MPI execution environment.  The MPI::Init_thread
   // method is more specific than MPI::Init, allowing control of
   // thread level support.  Here, we use MPI::THREAD_SERIALIZED to
   // ensure that if multiple threads are present that only 1 thread
   // will make calls the MPI libraries at one time.
   MPI::Init_thread(argcMPI, argvMPI, MPI::THREAD_SERIALIZED);
-
+  if(debug)
+    std::cout << "MPIManager::MPIManager -> Init_thread complete!" << std::endl;
   // Get the size (number of) and the rank the present process
   size = MPI::COMM_WORLD.Get_size();
   rank = MPI::COMM_WORLD.Get_rank();
-
+  if(debug)
+    std::cout << "MPIManager::MPIManager -> Size and Rank: " << size << "\t" << rank << std::endl;
   // Set G4bools for master/slave identification
   isMaster = (rank == RANK_MASTER);
   isSlave = (rank != RANK_MASTER);

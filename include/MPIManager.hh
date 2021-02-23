@@ -32,7 +32,9 @@
 #define MPIManager_hh 1
 
 #include "globals.hh"
-
+#ifdef MANTIS_MPI_ENABLED
+#include "mpi.h"
+#endif
 #include <fstream>
 
 class MPIManagerMessenger;

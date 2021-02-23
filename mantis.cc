@@ -29,6 +29,13 @@ G4VisManager* visManager;
 #include "MPIManager.hh"
 #endif
 
+// C++ classes
+#include <ctime>
+#include <unistd.h>
+#include <sys/resource.h>
+#include <stdlib.h>
+#include <string>
+
 // declare global variables
 G4long seed;
 G4double chosen_energy;

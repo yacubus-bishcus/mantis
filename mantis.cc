@@ -171,8 +171,11 @@ int main(int argc,char **argv)
     char *argvMPI[argcMPI];
     argvMPI[0] = argv[0]; // binary name
     argvMPI[1] = (char *)"/tmp/MANTISSlave"; // slave file base name
-
+    if(debug)
+      std::cout << "Instantiating MPIManager." << std::endl;
     MPIManager *theMPIManager = new MPIManager(argcMPI,argvMPI);
+    if(debug)
+      std::cout << "MPIManager Instantiated." << std::endl;
   #endif
 
   MySession* LoggedSession = 0;

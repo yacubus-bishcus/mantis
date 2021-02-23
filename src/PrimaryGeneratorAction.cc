@@ -32,15 +32,17 @@ extern G4bool bremTest;
 extern G4bool debug;
 
 PrimaryGeneratorAction::PrimaryGeneratorAction()
-        : G4VUserPrimaryGeneratorAction(),
+        : G4VUserPrimaryGeneratorAction(), pgaM(NULL),
         fParticleGun(0),fFileOpen(false)
 {
         fParticleGun = new G4ParticleGun(1);
         if(!bremTest)
-          beam_size = 44.0*mm; // optimized beam size for a 4.5cm radius interrogation object 
+          beam_size = 44.0*mm; // optimized beam size for a 4.5cm radius interrogation object
         else
           beam_size = 1.3*mm;
 
+        // Call messenger after default beams are set that way user can change default 
+        pgaM = new PGAMessenger(this);
         G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction -> Beam Size set to: " << beam_size << " mm" << G4endl;
 
         G4cout << "PrimaryGeneratorAction::Beam Position Set to: (0,0," << beamStart << ")cm" << G4endl;
@@ -115,6 +117,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
+        delete pgaM;
         delete fParticleGun;
 }
 

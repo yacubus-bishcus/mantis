@@ -53,14 +53,14 @@ class EventCheck
 public:
     EventCheck();
     ~EventCheck();
-    
+
 public:
     void WriteEvents();
-    
+
 private:
 
 time_t timer, timer2, time_start, time_end;
-TFile *f, *fout, *fout2;
+TFile *f, *fout;
 TTree *Cherenkov, *NRF, *DetData, *nrf_to_cher_tree, *nrf_to_cher_to_det_tree;
 std::vector<int> cherEventv, nrfEventv, detEventv, nrf_to_cherEvents, cher_to_detEvents, nrf_to_detEvents;
 std::vector<double> cher_to_detEnergies, cher_to_detWeights, cher_to_detTimes;

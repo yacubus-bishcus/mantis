@@ -22,68 +22,35 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef PrimaryGeneratorAction_h
-#define PrimaryGeneratorAction_h 1
-
-#include "G4VUserPrimaryGeneratorAction.hh"
-#include "HistoManager.hh"
 #include "PGAMessenger.hh"
-#include "globals.hh"
-#include <vector>
-#include "G4ParticleGun.hh"
-#include "Randomize.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Event.hh"
-#include "G4Gamma.hh"
-#include "G4Electron.hh"
-#include "eventInformation.hh"
 
-#include "TFile.h"
-#include "TROOT.h"
-#include "TH1D.h"
-#include "TGraph.h"
-#include "TRandom2.h"
-#include "TSystem.h"
 
-class G4Event;
-class HistoManager;
-class PGAMessenger;
-
-class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
+PGAMessenger::PGAMessenger(PrimaryGeneratorAction* pga_in)
+        : pga(pga_in)
 {
-
-public:
-PrimaryGeneratorAction();
-virtual ~PrimaryGeneratorAction();
-
-public:
-virtual void GeneratePrimaries(G4Event*);
-G4ParticleGun* GetParticleGun()
-{
-  return fParticleGun;
-};
-void SetBeamSize(G4double x)
-{
-  beam_size = x;
-  G4cout << "PrimaryGeneratorAction::BeamSize set to: " << beam_size << " mm" << G4endl;
+  myDir = new G4UIdirectory("/PGA/");
+  myDir->SetGuidance("Primary Generator Action Commands");
+  Cmd = new G4UIcmdWithADouble("/PGA/beamSize",this);
+  Cmd->SetGuidance("Choose Desired Beam Size");
+  Cmd->SetParameterName("beamSize",false);
+  Cmd->SetRange("beamSize > 0. && beamSize < 80.0");      
 }
-void CloseInputFile(){if(fFileOpen) fin->Close();}
-G4double SampleUResonances();
 
-private:
-  PGAMessenger* pgaM;
-  G4ParticleGun* fParticleGun;
-  G4double beamStart = 129.9;
-  G4double beam_size, energy;
-  G4bool file_check, fFileOpen;
+PGAMessenger::~PGAMessenger()
+{
+  delete Cmd;
+}
 
-  // ROOT
-  TRandom2 Random;
-  TGraph *gBrems;
-  TGraph *gSample;
-  TH1D *hBrems;
-  TH1D *hSample;
-  TFile *fin;
-};
 
-#endif
+void PGAMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
+{ // this function only works if named SetNewValue
+  if(command == Cmd)
+  {
+    G4double theCommand = Cmd->GetNewDoubleValue(newValue);
+    pga->SetBeamSize(theCommand);
+  }
+  else
+  {
+    G4cerr << "ERROR PGAMessenger::SetNewValue -> command != Cmd" << G4endl;
+  }
+}

@@ -49,6 +49,8 @@ MPIManager *MPIManager::GetInstance()
 
 MPIManager::MPIManager(int argcMPI, char *argvMPI[])
 {
+  if(debug)
+    std::cout << "MPIManager::MPIManager -> Begin." << std::endl;
   // Initialize the MPI execution environment.  The MPI::Init_thread
   // method is more specific than MPI::Init, allowing control of
   // thread level support.  Here, we use MPI::THREAD_SERIALIZED to
@@ -69,7 +71,7 @@ MPIManager::MPIManager(int argcMPI, char *argvMPI[])
   // is the base specified by argvMPI[1] combined with the slave rank
   if(debug)
     std::cout << "Making Slave Ranks." << std::endl;
-    
+
   if(isSlave){
     G4String fBase = argvMPI[1];
     std::ostringstream slaveRank;

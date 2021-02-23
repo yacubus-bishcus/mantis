@@ -41,9 +41,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
         else
           beam_size = 1.3*mm;
 
-        // Call messenger after default beams are set that way user can change default 
+        // Call messenger after default beams are set that way user can change default
         pgaM = new PGAMessenger(this);
-        G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction -> Beam Size set to: " << beam_size << " mm" << G4endl;
 
         G4cout << "PrimaryGeneratorAction::Beam Position Set to: (0,0," << beamStart << ")cm" << G4endl;
 

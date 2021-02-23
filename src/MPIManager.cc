@@ -47,7 +47,7 @@ MPIManager *MPIManager::GetInstance()
 { return theMPImanager; }
 
 
-MPIManager::MPIManager(int argcMPI, char *argvMPI[])
+MPIManager::MPIManager(int argcMPI, char **argvMPI)
 {
   if(debug)
   {
@@ -55,8 +55,8 @@ MPIManager::MPIManager(int argcMPI, char *argvMPI[])
     std::cout << argcMPI << " Inputs: " << std::endl << argvMPI[0] << std::endl << argvMPI[1] << std::endl;
   }
 
-  // Initialize the MPI execution environment. 
-  MPI::Init();
+  // Initialize the MPI execution environment.
+  MPI::Init(&argcMPI, &argvMPI);
   if(debug)
     std::cout << "MPIManager::MPIManager -> Init_thread complete!" << std::endl;
   // Get the size (number of) and the rank the present process

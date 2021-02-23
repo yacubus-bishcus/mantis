@@ -109,9 +109,10 @@ endif()
 # build mantis. This is so that we can run the executable directly because it
 # relies on these scripts being in the current working directory.
 #
-set(Input_SCRIPTS
+set(Runtime_SCRIPTS
   mantis.in
   mantisOff.in
+  mantis_mpi.in
   vis_save.mac
   )
 
@@ -124,9 +125,9 @@ runBatch.sh
 submit_geant4.slurm
 )
 
-foreach(_script ${Input_SCRIPTS})
+foreach(_script ${Runtime_SCRIPTS})
   configure_file(
-    ${PROJECT_SOURCE_DIR}/Input_Files/${_script}
+    ${PROJECT_SOURCE_DIR}/Runtime/${_script}
     ${PROJECT_BINARY_DIR}/${_script}
     COPYONLY
     )

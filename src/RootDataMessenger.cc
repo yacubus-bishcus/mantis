@@ -42,9 +42,9 @@ RootDataMessenger::RootDataMessenger(RootDataManager *rdm)
 
 RootDataMessenger::~RootDataMessenger()
 {
-  delete root_filename_cmd;
-  delete root_book_cmd;
   delete root_write_cmd;
+  delete root_book_cmd;
+  delete root_filename_cmd;
 }
 
 void RootDataMessenger::SetNewValue(G4UIcommand *cmd, G4String newValue)

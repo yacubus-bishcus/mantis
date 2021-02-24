@@ -1,13 +1,20 @@
-#ifndef RootDataMessenger_hh
-#define RootDataMessenger_hh 1
+#ifndef RootDataMessenger_h
+#define RootDataMessenger_h 1
 
+#include "globals.hh"
 #include "G4UImessenger.hh"
+#include "G4ApplicationState.hh"
+#include "G4UIcmdWithADouble.hh"
+#include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithAnInteger.hh"
+#include "G4UIdirectory.hh"
 #include "RootDataManager.hh"
 
 class RootDataManager;
-class G4UIdirectory;
+class G4UIcmdWithADouble;
 class G4UIcmdWithAString;
 class G4UIcmdWithoutParameter;
+class G4UIdirectory;
 
 class RootDataMessenger : public G4UImessenger
 {

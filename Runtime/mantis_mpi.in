@@ -83,8 +83,6 @@
 #/material/verbose false
 /material/CheckOverlaps false
 
-/run/initialize
-
 #/output/myoutput ChopIncData
 #/output/myoutput ChopOutData
 #/output/myoutput NRFData
@@ -92,8 +90,14 @@
 #/output/myoutput WaterIncData
 #/output/myoutput CherenkovData
 #/output/myoutput DetData
-
-#################################################################################################
-# RUN OPTIONS
-# Number of Events
-/MANTIS/mpiBeamOn 100
+#
+##########################################################################
+#
+# Open a new ROOT file
+/mantis/root/setFileName test.root
+/mantis/root/book
+# Run particles
+/mantis/mpiBeamOn 1000
+#
+# Write the ROOT file
+/mantis/root/write

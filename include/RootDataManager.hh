@@ -61,6 +61,8 @@ void FillInDet(G4double, G4double, G4int, G4String);
 
 void GenerateFileNames();
 void ReduceSlaveValuesToMaster();
+void SetFileName(G4String FN) {ROOTFileName = FN;}
+G4String GetFileName() {return ROOTFileName;}
 
 G4bool CheckForROOTObjects() {return ROOTObjectsExist;}
 

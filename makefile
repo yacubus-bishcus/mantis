@@ -5,7 +5,7 @@ ACROLIBS := libmantisRoot.so
 ##################
 #  G4 Makefile  #
 ##################
-
+cp mantis.cc $PAR_TARGET.cc
 name := $(PAR_TARGET)
 
 G4TARGET := $(name)

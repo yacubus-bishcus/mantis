@@ -57,7 +57,6 @@ G4bool bremTest, resonanceTest, checkEvents, debug;
 
 void check_file_exists(const std::string &p)
 {
-  std::cout << "Checking Database Path: " << p << std::endl;
   struct stat buffer;
 
   if(stat (p.c_str(), &buffer) == 0)
@@ -149,7 +148,6 @@ int main(int argc,char **argv)
 
   G4bool sequentialBuild = true;
   std::string arg0 = argv[0];
-  std::cout << "Arg0: " << arg0 << std::endl;
   macro = argv[1];
   if(arg0=="mantis_mpi")
     sequentialBuild = false;
@@ -174,13 +172,11 @@ int main(int argc,char **argv)
       else
       {
         PrintUsage();
-        return 1;
       }
     }
   }
 
   // Handle Output File
-  std::cout << "Output Filename: " << root_output_name << std::endl;
   std::string RootOutputFile = (std::string)root_output_name;
   if(RootOutputFile.find(".root")<RootOutputFile.length()) {
           gOutName=(std::string)RootOutputFile.substr(0, RootOutputFile.find(".root"));

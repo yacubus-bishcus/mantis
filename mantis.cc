@@ -3,7 +3,14 @@
 #include "G4UImanager.hh"
 #include "DetectorConstruction.hh"
 #include "PhysicsListNew.hh"
-#include "ActionInitialization.hh"
+#include "PrimaryGeneratorAction.hh"
+#include "RunAction.hh"
+#include "EventAction.hh"
+#include "SteppingAction.hh"
+#include "StackingAction.hh"
+#include "RootDataManager.hh"
+#include "runMetadata.hh"
+
 // Typcially include
 #include "time.h"
 #include "Randomize.hh"
@@ -36,10 +43,13 @@ G4VisManager* visManager;
 #include <stdlib.h>
 #include <string>
 
+#include "G4UIterminal.hh"
+#include "G4UItcsh.hh"
+#include "G4UIcsh.hh"
+
 // declare global variables
 G4long seed;
 G4double chosen_energy;
-G4bool output;
 // String global variables
 G4String macro, root_output_name, gOutName, inFile;
 // boolean global variables
@@ -65,11 +75,23 @@ namespace
 {
 void PrintUsage()
 {
-        G4cerr << "Usage: " << G4endl;
-        G4cerr << "mantis [-h help] [-m macro=mantis.in] [-a chosen_energy=-1.] [-s seed=1] [-o output_name] [-t bremTest=false] " <<
-                "[-r resonance_test=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] " <<
-                "[-e checkEvents_in=false] [-i inFile] [-d debug]"
-               << G4endl;
+        G4cerr << "Usage Example: " << G4endl;
+        G4cerr << "./mantis mantis.in -o test.root -s 1" << G4endl;
+        G4cerr << "Would run mantis with the macro named mantis.in. The Root data "
+        << G4endl << "file would be outputed to test.root and the simulation would be ran "
+        << G4endl << "with a seed of 1" << G4endl << G4endl;
+        G4cerr << "mantis Options Menu: " << G4endl;
+        G4cerr << "-h Print this Usage Menu" << G4endl;
+        G4cerr << "-a Energy for a Monoenergetic Beam (MeV)" << G4endl;
+        G4cerr << "-d Run in Debugging Mode (extra verbosity)" << G4endl;
+        G4cerr << "-e Check Events in NRF, Cherenkov and Det TTrees to see coincidence in Event IDs" << G4endl;
+        G4cerr << "-i Input ROOT File to be read as Input Spectrum instead of Sampling from brems_distributions.root" << G4endl;
+        G4cerr << "-n Add NRF Physics default = true" << G4endl;
+        G4cerr << "-o Output filename default = test.root" << G4endl;
+        G4cerr << "-p Print Standalone Database of NRF Energies" << G4endl;
+        G4cerr << "-r Set Resonance Test. The input spectrum will be from Uranium Resonance Energies" << G4endl;
+        G4cerr << "-s Seed for the Run Manager" << G4endl;
+        G4cerr << "-v Set NRF Verbosity. Prints verbosity from G4NRF" << G4endl;
         exit(1);
 }
 }
@@ -83,7 +105,13 @@ int main(int argc,char **argv)
     exit(1);
   }
 
+  if(getenv("MANTIS_TOPDIR") == NULL)
+  {
+    G4cout << "mantis.cc -> FATAL ERROR: User must set environmental variable MANTIS_TOPDIR"
+    << G4endl << "Try running . ./setup.sh" << G4endl;
+  }
   check_file_exists((std::string)getenv("G4NRFGAMMADATA"));
+  G4String MANTIS_TOPDIR = (G4String)std::getenv("MANTIS_TOPDIR");
 
   // Defaults
   G4int start_time = time(0);
@@ -112,7 +140,7 @@ int main(int argc,char **argv)
   bremTest = false;
 
   // Output Defaults
-  output = false;
+  root_output_name = "test.root";
   G4String checkEvents_in = "false";
   checkEvents = false;
 
@@ -121,6 +149,7 @@ int main(int argc,char **argv)
 
   G4bool sequentialBuild = true;
   std::string arg0 = argv[0];
+  macro = argv[1];
   if(arg0=="mantis_mpi")
     sequentialBuild = false;
 
@@ -128,7 +157,6 @@ int main(int argc,char **argv)
   for (G4int i=1; i<argc; i=i+2)
   {
           if      (G4String(argv[i]) == "-h") PrintUsage();
-          else if (G4String(argv[i]) == "-m") macro = argv[i+1];
           else if (G4String(argv[i]) == "-a") chosen_energy = std::stod(argv[i+1]);
           else if (G4String(argv[i]) == "-s") seed = atoi(argv[i+1]);
           else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];
@@ -170,7 +198,7 @@ int main(int argc,char **argv)
     const G4int argcMPI = 2;
     char *argvMPI[argcMPI];
     argvMPI[0] = argv[0]; // binary name
-    argvMPI[1] = (char *)"MANTISSlave"; // slave file base name
+    argvMPI[1] = (char *)"/tmp/MANTISSlave"; // slave file base name
     if(debug)
       std::cout << "Instantiating MPIManager." << std::endl;
     if(debug)
@@ -189,7 +217,6 @@ int main(int argc,char **argv)
     LoggedSession = new MySession;
     if(macro != "vis_save.mac")
     {
-            output = true;
             UI->SetCoutDestination(LoggedSession);
     }
   }
@@ -254,7 +281,19 @@ int main(int argc,char **argv)
                                                 standalone, NRF_Verbose);
   runManager->SetUserInitialization(thePLNew);
 
-  runManager->SetUserInitialization(new ActionInitialization(det, sequentialBuild));
+  PrimaryGeneratorAction* pga = new PrimaryGeneratorAction();
+  runManager->SetUserAction(pga);
+  runManager->Initialize();
+
+  // Set User action classes
+  RunAction* run = new RunAction(pga,sequentialBuild);
+  runManager->SetUserAction(run);
+  EventAction* event = new EventAction();
+  runManager->SetUserAction(event);
+  runManager->SetUserAction(new SteppingAction(det, run, event));
+  runManager->SetUserAction(new StackingAction(det, run));
+  RootDataManager *manager = new RootDataManager(sequentialBuild);
+  run->SetRootDataManager(manager);
 
 // ******************************************************************************************************************** //
   if(sequentialBuild)
@@ -308,6 +347,7 @@ int main(int argc,char **argv)
   G4cout << G4endl << "----------------------------------------------------------------------" << G4endl;
   G4cout << G4endl << "The MC took:\t\t" << stop_time - start_time << "s" << G4endl << G4endl;
 
+  delete manager;
   delete runManager;
 
   return 0;

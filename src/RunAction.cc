@@ -23,12 +23,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "RunAction.hh"
-extern G4bool output;
+
 extern G4bool checkEvents;
 extern G4double chosen_energy;
 
-RunAction::RunAction(RootDataManager* analysis, PrimaryGeneratorAction* pga, G4bool build)
-        : G4UserRunAction(), fmanager(analysis), fpga(pga), fbuild(!build), nodeRank(0)
+RunAction::RunAction(PrimaryGeneratorAction* pga, G4bool build)
+        : G4UserRunAction(), fpga(pga), fbuild(!build), nodeRank(0), totalEvents(0)
 {
 }
 
@@ -50,10 +50,6 @@ void RunAction::BeginOfRunAction(const G4Run*)
 
      theMPIManager->ForceBarrier("RunAction::BeginOfRunAction()");
    #endif
-    if(output)
-    {
-      fmanager->Book();
-    }
 
     fTotalSurface = 0;
     fCerenkovCount = 0;
@@ -77,6 +73,16 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
       fpga->CloseInputFile();
       G4cout << "RunAction::EndOfRunAction -> PrimaryGeneratorAction Input File Closed." << G4endl;
     }
+
+    if(fbuild)
+    {
+      #ifdef MANTIS_MPI_ENABLED
+        totalEvents = MPIManager::GetInstance()->GetInstance()->GetTotalEvents();
+      #endif
+
+    }
+    else
+      totalEvents = aRun->GetNumberOfEventToBeProcessed();
 
     if(!fbuild)
     {
@@ -113,14 +119,4 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
     }
   }
 
-  if(output)
-  {
-    fmanager->finish();
-  }
-
-  if(checkEvents)
-  {
-    EventCheck *eCheck = new EventCheck();
-    eCheck->WriteEvents();
-  }
 }

@@ -24,6 +24,7 @@
 
 #include "RootDataManager.hh"
 #include "MPIManager.hh"
+#include "rootStorageManagerMessenger.hh"
 #include <sstream>
 
 extern G4String gOutName;
@@ -59,11 +60,13 @@ InDetEnergy(0.), InDetWeight(0.), InDetEventID(0), InDetProcess("")
     theRootDataManager = this;
 
   ROOTFileName = gOutName;
+  theMessenger = new RootDataMessenger(this);
 }
 
 RootDataManager::~RootDataManager()
 {
   delete ROOTFile;
+  delete theMessenger;
 }
 
 void RootDataManager::Book()

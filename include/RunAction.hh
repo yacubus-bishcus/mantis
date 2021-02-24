@@ -30,6 +30,7 @@
 #include <vector>
 #include "G4Run.hh"
 #include "RootDataManager.hh"
+#include "RootDataMessenger.hh"
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
@@ -39,10 +40,12 @@
 #include "MPIManager.hh"
 #endif
 
+class RootDataManager;
+
 class RunAction : public G4UserRunAction
 {
   public:
-    RunAction(RootDataManager*, PrimaryGeneratorAction*, G4bool);
+    RunAction(PrimaryGeneratorAction*, G4bool);
     virtual ~RunAction();
 
   public:
@@ -58,12 +61,13 @@ class RunAction : public G4UserRunAction
     void AddNRF(void){fNRF++;}
     void AddStatusKilled(void){fStatusKilled++;}
     void ReduceSlaveValuesToMaster();
-
+    void SetRootDataManager(RootDataManager *rSM){theRootDataManager = rSM;}
+    RootDataManager* theRootDataManager;
+    
   private:
-    RootDataManager* fmanager;
     PrimaryGeneratorAction* fpga;
     G4bool fbuild;
-    G4int nodeRank;
+    G4int nodeRank, totalEvents;
     G4double fCerenkovEnergy, fScintEnergy, fCerenkovCount;
     G4int fScintCount, fTotalSurface, fNRF, fStatusKilled;
 };

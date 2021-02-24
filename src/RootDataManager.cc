@@ -24,7 +24,7 @@
 
 #include "RootDataManager.hh"
 #include "MPIManager.hh"
-#include "rootStorageManagerMessenger.hh"
+#include "RootDataMessenger.hh"
 #include <sstream>
 
 extern G4String gOutName;

@@ -37,6 +37,8 @@
 
 #include <vector>
 
+class RootDataMessenger;
+
 class RootDataManager
 {
 public:
@@ -64,7 +66,7 @@ G4bool CheckForROOTObjects() {return ROOTObjectsExist;}
 
 private:
   static RootDataManager *theRootDataManager;
-
+  RootDataMessenger* theMessenger;
   G4bool parallelArchitecture;
   G4int MPI_Rank, MPI_Size;
   G4String ROOTFileName;

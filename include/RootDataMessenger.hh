@@ -1,20 +1,15 @@
 #ifndef RootDataMessenger_h
 #define RootDataMessenger_h 1
 
-#include "globals.hh"
 #include "G4UImessenger.hh"
-#include "G4ApplicationState.hh"
-#include "G4UIcmdWithADouble.hh"
-#include "G4UIcmdWithAString.hh"
-#include "G4UIcmdWithAnInteger.hh"
-#include "G4UIdirectory.hh"
-#include "RootDataManager.hh"
 
 class RootDataManager;
-class G4UIcmdWithADouble;
+class G4UIdirectory;
 class G4UIcmdWithAString;
 class G4UIcmdWithoutParameter;
-class G4UIdirectory;
+class G4UIcmdWithADoubleAndUnit;
+class G4UIcmdWithAnInteger;
+class G4UIcmdWithABool;
 
 class RootDataMessenger : public G4UImessenger
 {
@@ -28,9 +23,9 @@ public:
 private:
   RootDataManager *theManager;
 
-  G4UIdirectory *root_directory;
+  G4UIdirectory *rootdirectory;
 
-  G4UIcmdWithAString *root_filename_cmd;
+  G4UIcmdWithAString *rootfilenamecmd;
   G4UIcmdWithoutParameter *root_book_cmd;
   G4UIcmdWithoutParameter *root_write_cmd;
 };

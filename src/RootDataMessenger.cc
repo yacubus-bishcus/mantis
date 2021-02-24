@@ -21,16 +21,24 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
+#include "G4UIdirectory.hh"
+#include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithoutParameter.hh"
+#include "G4UIcmdWithADoubleAndUnit.hh"
+#include "G4UIcmdWithAnInteger.hh"
+#include "G4UIcmdWithABool.hh"
+
+#include "RootDataManager.hh"
 #include "RootDataMessenger.hh"
 
 RootDataMessenger::RootDataMessenger(RootDataManager *rdm)
 : theManager(rdm)
 {
-  root_directory = new G4UIdirectory("/mantis/root/");
-  root_directory->SetGuidance("ROOT COMMANDS");
-  root_filename_cmd = new G4UIcmdWithAString("/mantis/root/setFileName",this);
-  root_filename_cmd->SetGuidance("Sets ROOT Output Filename");
-  root_filename_cmd->SetParameterName("choice",false);
+  rootdirectory = new G4UIdirectory("/mantis/root/");
+  rootdirectory->SetGuidance("ROOT COMMANDS");
+  rootfilenamecmd = new G4UIcmdWithAString("/mantis/root/setFileName",this);
+  rootfilenamecmd->SetGuidance("Sets ROOT Output Filename");
+  rootfilenamecmd->SetParameterName("choice",false);
   root_book_cmd = new G4UIcmdWithoutParameter("/mantis/root/book",this);
   root_book_cmd->SetGuidance("Sets ROOT Objects");
   root_book_cmd->AvailableForStates(G4State_PreInit, G4State_Idle);
@@ -44,12 +52,12 @@ RootDataMessenger::~RootDataMessenger()
 {
   delete root_write_cmd;
   delete root_book_cmd;
-  delete root_filename_cmd;
+  delete rootfilenamecmd;
 }
 
 void RootDataMessenger::SetNewValue(G4UIcommand *cmd, G4String newValue)
 {
-  if(cmd == root_filename_cmd)
+  if(cmd == rootfilenamecmd)
     theManager->SetFileName(newValue);
 
   if(cmd == root_book_cmd)

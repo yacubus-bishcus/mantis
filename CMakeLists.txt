@@ -133,6 +133,7 @@ foreach(_script ${Runtime_SCRIPTS})
     COPYONLY
     )
 endforeach()
+
 foreach(_script ${Run_Analysis_SCRIPTS})
   configure_file(
     ${PROJECT_SOURCE_DIR}/Run_Analysis/${_script}
@@ -140,6 +141,7 @@ foreach(_script ${Run_Analysis_SCRIPTS})
     COPYONLY
     )
 endforeach()
+
 foreach(_script ${Slurm_Run_Files_SCRIPTS})
   configure_file(
     ${PROJECT_SOURCE_DIR}/Slurm_Run_Files/${_script}
@@ -148,6 +150,14 @@ foreach(_script ${Slurm_Run_Files_SCRIPTS})
     )
 endforeach()
 
+set(Setup_SCRIPTS
+setup.sh
+)
+configure_file(
+  ${PROJECT_SOURCE_DIR}/${Setup_SCRIPTS}
+    ${PROJECT_BINARY_DIR}/${Setup_SCRIPTS}
+    COPYONLY
+    )
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #

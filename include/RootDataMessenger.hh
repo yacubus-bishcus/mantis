@@ -2,6 +2,7 @@
 #define RootDataMessenger_hh 1
 
 #include "G4UImessenger.hh"
+#include "RootDataManager.hh"
 
 class RootDataManager;
 class G4UIdirectory;

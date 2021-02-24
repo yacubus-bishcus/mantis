@@ -153,26 +153,28 @@ int main(int argc,char **argv)
   if(arg0=="mantis_mpi")
     sequentialBuild = false;
 
-
-  for (G4int i=1; i<argc; i=i+2)
+  if(sequentialBuild)
   {
-          if      (G4String(argv[i]) == "-h") PrintUsage();
-          else if (G4String(argv[i]) == "-a") chosen_energy = std::stod(argv[i+1]);
-          else if (G4String(argv[i]) == "-s") seed = atoi(argv[i+1]);
-          else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];
-          else if (G4String(argv[i]) == "-t") bremTest_in = argv[i+1];
-          else if (G4String(argv[i]) == "-r") resonance_in = argv[i+1];
-          else if (G4String(argv[i]) == "-p") standalone_in = argv[i+1];
-          else if (G4String(argv[i]) == "-v") verbose_in = argv[i+1];
-          else if (G4String(argv[i]) == "-n") addNRF_in = argv[i+1];
-          else if (G4String(argv[i]) == "-e") checkEvents_in = argv[i+1];
-          else if (G4String(argv[i]) == "-i") inFile = argv[i+1];
-          else if (G4String(argv[i]) == "-d") debug_in = argv[i+1];
-          else
-          {
-            PrintUsage();
-            return 1;
-          }
+    for (G4int i=1; i<argc; i=i+2)
+    {
+      if      (G4String(argv[i]) == "-h") PrintUsage();
+      else if (G4String(argv[i]) == "-a") chosen_energy = std::stod(argv[i+1]);
+      else if (G4String(argv[i]) == "-s") seed = atoi(argv[i+1]);
+      else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];
+      else if (G4String(argv[i]) == "-t") bremTest_in = argv[i+1];
+      else if (G4String(argv[i]) == "-r") resonance_in = argv[i+1];
+      else if (G4String(argv[i]) == "-p") standalone_in = argv[i+1];
+      else if (G4String(argv[i]) == "-v") verbose_in = argv[i+1];
+      else if (G4String(argv[i]) == "-n") addNRF_in = argv[i+1];
+      else if (G4String(argv[i]) == "-e") checkEvents_in = argv[i+1];
+      else if (G4String(argv[i]) == "-i") inFile = argv[i+1];
+      else if (G4String(argv[i]) == "-d") debug_in = argv[i+1];
+      else
+      {
+        PrintUsage();
+        return 1;
+      }
+    }
   }
 
   // Handle Output File
@@ -217,7 +219,7 @@ int main(int argc,char **argv)
     LoggedSession = new MySession;
     if(macro != "vis_save.mac")
     {
-            UI->SetCoutDestination(LoggedSession);
+      UI->SetCoutDestination(LoggedSession);
     }
   }
 

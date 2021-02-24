@@ -22,7 +22,6 @@ RootDataMessenger::~RootDataMessenger()
   delete root_filename_cmd;
   delete root_book_cmd;
   delete root_write_cmd;
-  delete root_directory;
 }
 
 void RootDataMessenger::SetNewValue(G4UIcommand *cmd, G4String newValue)
@@ -30,9 +29,9 @@ void RootDataMessenger::SetNewValue(G4UIcommand *cmd, G4String newValue)
   if(cmd == root_filename_cmd)
     theManager->SetFileName(newValue);
 
-  if(cmd == rootInitCmd)
+  if(cmd == root_book_cmd)
     theManager->Book();
 
-  if(cmd == rootWriteCmd)
+  if(cmd == root_write_cmd)
     theManager->finish();
 }

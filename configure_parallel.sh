@@ -56,7 +56,7 @@ make -j$CORES
 if [ -a $BINARY ]
     then
     echo -e '\n************************************************************'
-    echo -e '   ZKBrem was successfully built in parallel for '$CORES' cores!'
+    echo -e '   Mantis was successfully built in parallel for '$CORES' cores!'
     echo -e '                MPI parallelization enabled!'
     echo -e '************************************************************\n'
 fi

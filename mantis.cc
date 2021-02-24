@@ -149,12 +149,14 @@ int main(int argc,char **argv)
 
   G4bool sequentialBuild = true;
   std::string arg0 = argv[0];
+  std::cout << "Arg0: " << arg0 << std::endl;
   macro = argv[1];
   if(arg0=="mantis_mpi")
     sequentialBuild = false;
 
   if(sequentialBuild)
   {
+    std::cout << "Reading Inputs..." << std::endl;
     for (G4int i=1; i<argc; i=i+2)
     {
       if      (G4String(argv[i]) == "-h") PrintUsage();

@@ -1,5 +1,5 @@
-#include "rootStorageManager.hh"
-#include "rootStorageManagerMessenger.hh"
+#include "RootDataManager.hh"
+#include "RootDataMessenger.hh"
 
 RootDataMessenger::RootDataMessenger(RootDataManager *rdm)
 : theManager(rdm)

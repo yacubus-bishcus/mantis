@@ -124,12 +124,11 @@ int main(int argc,char** argv)
   checkEvents = false;
 
   G4bool sequentialBuild = true;
-  macro = argv[1];
-  std::cout << "Macro: " << macro << std::endl;
   #ifdef MANTIS_MPI_ENABLED
     sequentialBuild = false;
+    macro = "mantis_mpi.in";
   #endif
-
+  std::cout << "Macro: " << macro << std::endl;
   if(sequentialBuild)
   {
     std::cout << "Reading Inputs..." << std::endl;

@@ -150,14 +150,6 @@ foreach(_script ${Slurm_Run_Files_SCRIPTS})
     )
 endforeach()
 
-set(Setup_SCRIPTS
-setup.sh
-)
-configure_file(
-  ${PROJECT_SOURCE_DIR}/${Setup_SCRIPTS}
-    ${PROJECT_BINARY_DIR}/${Setup_SCRIPTS}
-    COPYONLY
-    )
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #

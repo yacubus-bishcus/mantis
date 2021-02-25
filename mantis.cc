@@ -100,13 +100,7 @@ int main(int argc,char **argv)
     exit(1);
   }
 
-  if(getenv("MANTIS_TOPDIR") == NULL)
-  {
-    G4cout << "mantis.cc -> FATAL ERROR: User must set environmental variable MANTIS_TOPDIR"
-    << G4endl << "Try running . ./setup.sh" << G4endl;
-  }
   check_file_exists((std::string)getenv("G4NRFGAMMADATA"));
-  G4String MANTIS_TOPDIR = (G4String)std::getenv("MANTIS_TOPDIR");
 
   // Defaults
   G4int start_time = time(0);

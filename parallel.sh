@@ -27,7 +27,7 @@ then
     rm -rf $BUILDDIR
     exit
 else
-    echo -e "\nBuilding the parallel version of ZKBrem ...\n"
+    echo -e "\nBuilding the parallel version of mantis ...\n"
 fi
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then

@@ -104,7 +104,7 @@ endif()
 #
 
 if(fMPI)
-  add_executable(mpi_mantis mantis_mpi.cc ${sources} ${headers})
+  add_executable(mpi_mantis mpi_mantis.cc ${sources} ${headers})
   target_link_libraries(mpi_mantis ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${G4mpi_LIBRARIES})
 
 else()

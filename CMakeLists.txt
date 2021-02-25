@@ -78,6 +78,7 @@ if(ROOT_FOUND)
     message(STATUS "${MY_ROOT_VERSION}")
 else()
     message(STATUS "ROOT NOT Found. --> MAKE WILL FAIL!")
+    return()
 endif()
 
 include("${ROOT_USE_FILE}")

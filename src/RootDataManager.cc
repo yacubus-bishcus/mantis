@@ -79,7 +79,7 @@ void RootDataManager::Book()
   #ifdef MANTIS_MPI_ENABLED
     G4MPImanager *theMPIManager = G4MPImanager::GetManager();
     MPI_Rank = theMPIManager->GetRank();
-    MPI_Size = theMPIManager->GetSize();
+    MPI_Size = theMPIManager->GetTotalSize();
   #endif
 
   GenerateFileNames();

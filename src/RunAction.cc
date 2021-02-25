@@ -42,12 +42,6 @@ void RunAction::BeginOfRunAction(const G4Run*)
     G4MPImanager *theMPIManager = G4MPImanager::GetManager();
     nodeRank = theMPIManager->GetRank();
 
-    G4double masterEvents = theMPIManager->GetMasterEvents();
-    G4double slaveEvents = theMPIManager->GetSlaveEvents();
-
-    G4cout << "MANTIS ANNOUNCEMENT: # events in master = " << masterEvents
-	   << " / # events in slave = "  << slaveEvents << "\n" << G4endl;
-
      theMPIManager->ForceBarrier("RunAction::BeginOfRunAction()");
    #endif
 
@@ -64,7 +58,7 @@ void RunAction::BeginOfRunAction(const G4Run*)
 void RunAction::EndOfRunAction(const G4Run* aRun)
 {
   #ifdef MANTIS_MPI_ENABLED
-    MPIManager::GetInstance()->ForceBarrier("RunAction::EndOfRunAction()");
+    MPIManager::GetManager()->ForceBarrier("RunAction::EndOfRunAction()");
   #endif
   if(nodeRank == 0)
   {
@@ -73,16 +67,6 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
       fpga->CloseInputFile();
       G4cout << "RunAction::EndOfRunAction -> PrimaryGeneratorAction Input File Closed." << G4endl;
     }
-
-    if(fbuild)
-    {
-      #ifdef MANTIS_MPI_ENABLED
-        totalEvents = MPIManager::GetInstance()->GetInstance()->GetTotalEvents();
-      #endif
-
-    }
-    else
-      totalEvents = aRun->GetNumberOfEventToBeProcessed();
 
     if(!fbuild)
     {

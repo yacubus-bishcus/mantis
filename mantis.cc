@@ -195,7 +195,7 @@ int main(int argc,char **argv)
       std::cout << argvMPI[0] << std::endl;
       std::cout << argvMPI[1] << std::endl;
     }
-    G4MPIManager *theMPIManager = new G4MPIManager(argcMPI,argvMPI);
+    G4MPImanager *theMPIManager = new G4MPImanager(argcMPI,argvMPI);
     if(debug)
       std::cout << "MPIManager Instantiated." << std::endl;
   #endif

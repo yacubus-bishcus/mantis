@@ -23,7 +23,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "RootDataManager.hh"
-#include "MPIManager.hh"
+#include "G4MPImanager.hh"
 #include "RootDataMessenger.hh"
 #include <sstream>
 

@@ -33,6 +33,7 @@ G4VisManager* visManager;
 // For MPI
 #ifdef MANTIS_MPI_ENABLED
 #include "G4MPImanager.hh"
+#include "G4MPIsession.hh"
 #endif
 
 // C++ classes
@@ -165,6 +166,11 @@ int main(int argc,char **argv)
     }
   }
 
+  #ifdef MANTIS_MPI_ENABLED
+    G4MPImanager* g4MPI= new G4MPImanager(argc,argv);
+    G4MPIsession* session= g4MPI->GetMPIsession();
+  #endif
+
   // Handle Output File
   std::string RootOutputFile = (std::string)root_output_name;
   if(RootOutputFile.find(".root")<RootOutputFile.length()) {
@@ -182,23 +188,6 @@ int main(int argc,char **argv)
   // construct the default run manager
   G4RunManager* runManager = new G4RunManager;
   G4UImanager* UI = G4UImanager::GetUIpointer();
-
-  #ifdef MANTIS_MPI_ENABLED
-    const G4int argcMPI = 2;
-    char *argvMPI[argcMPI];
-    argvMPI[0] = argv[0]; // binary name
-    argvMPI[1] = (char *)"/tmp/MANTISSlave"; // slave file base name
-    if(debug)
-      std::cout << "Instantiating MPIManager." << std::endl;
-    if(debug)
-    {
-      std::cout << argvMPI[0] << std::endl;
-      std::cout << argvMPI[1] << std::endl;
-    }
-    G4MPImanager *theMPIManager = new G4MPImanager(argcMPI,argvMPI);
-    if(debug)
-      std::cout << "MPIManager Instantiated." << std::endl;
-  #endif
 
   MySession* LoggedSession = 0;
   if(sequentialBuild)
@@ -284,6 +273,17 @@ int main(int argc,char **argv)
   RootDataManager *manager = new RootDataManager(sequentialBuild);
   run->SetRootDataManager(manager);
 
+  std::cout << "Seed set to: " << seed << std::endl;
+  // choose the Random engine
+  CLHEP::HepRandom::setTheEngine(new CLHEP::RanluxEngine);
+  CLHEP::HepRandom::setTheSeed(seed);
+
+  #ifdef MANTIS_MPI_ENABLED
+    if(!sequentialBuild)
+    {
+      session->SessionStart();
+    }
+  #endif
 // ******************************************************************************************************************** //
   if(sequentialBuild)
   {
@@ -298,13 +298,6 @@ int main(int argc,char **argv)
       #endif
     }
 
-
-    std::cout << "Seed set to: " << seed << std::endl;
-
-    // choose the Random engine
-    CLHEP::HepRandom::setTheEngine(new CLHEP::RanluxEngine);
-    CLHEP::HepRandom::setTheSeed(seed);
-
     G4String command = "/control/execute ";
     UI->ApplyCommand(command+macro);
 
@@ -316,19 +309,6 @@ int main(int argc,char **argv)
     #endif
     delete LoggedSession;
   }// if sequentialBuild
-  #ifdef MANTIS_MPI_ENABLED
-    else // RUNNING MPI
-    {
-      // Internally assign niceness of 19 to parallel builds
-      G4int priority = 19;
-      setpriority(PRIO_PROCESS,getpid(),priority);
-      G4int MPI_Rank = theMPIManager->GetRank();
-      CLHEP::HepRandom::setTheSeed(seed+ 7*MPI_Rank);
-      G4String command = "/control/execute ";
-      UI->ApplyCommand(command+macro);
-      delete theMPIManager;
-    }
-  #endif
 
 
   G4int stop_time = time(0);
@@ -337,6 +317,12 @@ int main(int argc,char **argv)
   G4cout << G4endl << "The MC took:\t\t" << stop_time - start_time << "s" << G4endl << G4endl;
 
   delete manager;
+
+  #ifdef MANTIS_MPI_ENABLED
+    if(!sequentialBuild)
+      delete g4MPI;
+  #endif
+
   delete runManager;
 
   return 0;

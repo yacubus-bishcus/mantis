@@ -9,7 +9,6 @@
 #include "SteppingAction.hh"
 #include "StackingAction.hh"
 #include "RootDataManager.hh"
-#include "runMetadata.hh"
 
 // Typcially include
 #include "time.h"

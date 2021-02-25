@@ -139,12 +139,17 @@ endif()
 # build mantis. This is so that we can run the executable directly because it
 # relies on these scripts being in the current working directory.
 #
-set(Runtime_SCRIPTS
-  mantis.in
-  mantisOff.in
-  mantis_mpi.in
-  vis_save.mac
-  )
+if(fMPI)
+  set(Runtime_SCRIPTS
+    mantis_mpi.in
+    )
+else()
+  set(Runtime_SCRIPTS
+    mantis.in
+    mantisOff.in
+    vis_save.mac
+    )
+endif()
 
 set(Run_Analysis_SCRIPTS
 stitch.sh
@@ -163,21 +168,25 @@ foreach(_script ${Runtime_SCRIPTS})
     )
 endforeach()
 
-foreach(_script ${Run_Analysis_SCRIPTS})
-  configure_file(
-    ${PROJECT_SOURCE_DIR}/Run_Analysis/${_script}
-    ${PROJECT_BINARY_DIR}/${_script}
-    COPYONLY
-    )
-endforeach()
+if(fMPI)
+  message(STATUS "FILES COPIED")
+else()
+  foreach(_script ${Run_Analysis_SCRIPTS})
+    configure_file(
+      ${PROJECT_SOURCE_DIR}/Run_Analysis/${_script}
+      ${PROJECT_BINARY_DIR}/${_script}
+      COPYONLY
+      )
+  endforeach()
 
-foreach(_script ${Slurm_Run_Files_SCRIPTS})
-  configure_file(
-    ${PROJECT_SOURCE_DIR}/Slurm_Run_Files/${_script}
-    ${PROJECT_BINARY_DIR}/${_script}
-    COPYONLY
-    )
-endforeach()
+  foreach(_script ${Slurm_Run_Files_SCRIPTS})
+    configure_file(
+      ${PROJECT_SOURCE_DIR}/Slurm_Run_Files/${_script}
+      ${PROJECT_BINARY_DIR}/${_script}
+      COPYONLY
+      )
+  endforeach()
+endif()
 
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX

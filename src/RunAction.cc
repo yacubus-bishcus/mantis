@@ -39,7 +39,7 @@ RunAction::~RunAction()
 void RunAction::BeginOfRunAction(const G4Run*)
 {
   #ifdef MANTIS_MPI_ENABLED
-    G4MPImanager *theMPIManager = G4MPImanager::GetInstance();
+    G4MPImanager *theMPIManager = G4MPImanager::GetManager();
     nodeRank = theMPIManager->GetRank();
 
     G4double masterEvents = theMPIManager->GetMasterEvents();

@@ -77,7 +77,7 @@ void RootDataManager::Book()
     return;
   }
   #ifdef MANTIS_MPI_ENABLED
-    G4MPImanager *theMPIManager = G4MPImanager::GetInstance();
+    G4MPImanager *theMPIManager = G4MPImanager::GetManager();
     MPI_Rank = theMPIManager->GetRank();
     MPI_Size = theMPIManager->GetSize();
   #endif

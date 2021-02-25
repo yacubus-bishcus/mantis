@@ -33,7 +33,7 @@ G4VisManager* visManager;
 #include <sys/stat.h>
 // For MPI
 #ifdef MANTIS_MPI_ENABLED
-#include "MPIManager.hh"
+#include "G4MPImanager.hh"
 #endif
 
 // C++ classes
@@ -42,10 +42,6 @@ G4VisManager* visManager;
 #include <sys/resource.h>
 #include <stdlib.h>
 #include <string>
-
-#include "G4UIterminal.hh"
-#include "G4UItcsh.hh"
-#include "G4UIcsh.hh"
 
 // declare global variables
 G4long seed;

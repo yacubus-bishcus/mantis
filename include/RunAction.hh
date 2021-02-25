@@ -37,7 +37,7 @@
 #include "EventCheck.hh"
 #include "PrimaryGeneratorAction.hh"
 #ifdef MANTIS_MPI_ENABLED
-#include "MPIManager.hh"
+#include "G4MPImanager.hh"
 #endif
 
 class RootDataManager;
@@ -63,7 +63,7 @@ class RunAction : public G4UserRunAction
     void ReduceSlaveValuesToMaster();
     void SetRootDataManager(RootDataManager *rSM){theRootDataManager = rSM;}
     RootDataManager* theRootDataManager;
-    
+
   private:
     PrimaryGeneratorAction* fpga;
     G4bool fbuild;

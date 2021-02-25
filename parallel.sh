@@ -25,6 +25,7 @@ if [ "$1" == 'clean' ];
 then
     echo -e "\nCleaning up $PAR_TARGET build directory ...\n"
     rm -rf $BUILDDIR
+    rm -rf ../RunMantis 
     exit
 else
     echo -e "\nBuilding the parallel version of mantis ...\n"

@@ -36,11 +36,6 @@ G4VisManager* visManager;
 #include "G4MPIsession.hh"
 #endif
 
-// C++ classes
-#include <ctime>
-#include <unistd.h>
-#include <sys/resource.h>
-#include <stdlib.h>
 #include <string>
 
 // declare global variables

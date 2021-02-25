@@ -8,7 +8,7 @@
 #// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #///////////////////////////////////////////////////////////////////////////////
 
-cp mantis.cc mantis_mpi.cc
-mkdir tmp 
+cp ../mantis/mantis.cc ../mantis/mantis_mpi.cc
+mkdir tmp
 cmake ../mantis -DWITH_MPI=ON
 make -j4

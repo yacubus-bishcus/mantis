@@ -155,7 +155,7 @@ int main(int argc,char **argv)
   }
 
   #ifdef MANTIS_MPI_ENABLED
-    std::cout << "Instatiating G4MPImanager with: " << argc " arguments." << std::endl;
+    std::cout << "Instatiating G4MPImanager with: " << argc << " arguments." << std::endl;
 
     G4MPImanager* g4MPI= new G4MPImanager(argc,argv);
     G4MPIsession* session= g4MPI->GetMPIsession();

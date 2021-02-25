@@ -41,8 +41,6 @@ void RunAction::BeginOfRunAction(const G4Run*)
   #ifdef MANTIS_MPI_ENABLED
     G4MPImanager *theMPIManager = G4MPImanager::GetManager();
     nodeRank = theMPIManager->GetRank();
-
-     theMPIManager->ForceBarrier("RunAction::BeginOfRunAction()");
    #endif
 
     fTotalSurface = 0;
@@ -57,9 +55,6 @@ void RunAction::BeginOfRunAction(const G4Run*)
 
 void RunAction::EndOfRunAction(const G4Run* aRun)
 {
-  #ifdef MANTIS_MPI_ENABLED
-    MPIManager::GetManager()->ForceBarrier("RunAction::EndOfRunAction()");
-  #endif
   if(nodeRank == 0)
   {
     if(chosen_energy < 0)

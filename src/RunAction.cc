@@ -60,7 +60,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
 {
   G4int rank = G4MPImanager::GetManager()-> GetRank();
 
-  G4String fname = gOutName + ".rank" + to_string(rank) + ".root";
+  G4String fname = gOutName + ".rank" + std::to_string(rank) + ".root";
 
   Analysis* myana = Analysis::GetAnalysis();
   myana->Save(fname);

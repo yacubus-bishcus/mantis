@@ -2,7 +2,9 @@
 # Setup the project
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 project(mantis)
-option(WITH_GEANT4_UIVIS "Build with Geant4 UI and Vis drivers" ON) # Can switch to OFF if not building with vis drivers --> NOT recommended
+
+#----------------------------------------------------------------------------
+# Determine Versions
 
 # Determine the Geant4 Version
 execute_process(COMMAND bash -c "geant4-config --version"
@@ -22,8 +24,12 @@ if(${VERSION_BOOL})
   message(STATUS "Version is at least 10.7")
 endif()
 
-# Cmake flag to allow for verbosity (lots of warnings)
+#----------------------------------------------------------------------------
+# Set User Cmake Options
 
+option(WITH_GEANT4_UIVIS "Build with Geant4 UI and Vis drivers" ON) # Can switch to OFF if not building with vis drivers --> NOT recommended
+
+# Cmake flag to allow for verbosity (lots of warnings)
 if(${MYVERBOSE})
   message(STATUS "Running make with Full Verbosity")
 else()
@@ -36,11 +42,14 @@ endif()
 if(${WITH_MPI})
   option(fMPI "Build with MPI" ON)
   add_compile_definitions(MANTIS_MPI_ENABLED)
-  execute_process(COMMAND bash -c "cp ../mantis/mantis.cc ./mantis_mpi.cc")
   message(STATUS "MPI Enabled.")
 else()
   option(fMPI "Build with MPI" OFF)
+  message(STATUS "MPI Disabled.")
 endif()
+
+#----------------------------------------------------------------------------
+# Find Geant4 Package
 
 if(fMPI)
   find_package(Geant4 10.5 REQUIRED)
@@ -75,7 +84,23 @@ else()
 endif()
 
 #----------------------------------------------------------------------------
+# Add G4mpi library
+
+if(fMPI)
+  SET(Geant4_LIBRARIES ${Geant4_LIBRARIES} G4mpi)
+  ADD_LIBRARY(G4mpi SHARED IMPORTED)
+  SET_PROPERTY(TARGET G4mpi APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+  SET_TARGET_PROPERTIES(G4mpi PROPERTIES
+    IMPORTED_LOCATION_RELEASE "${Geant4_DIR}/../libG4mpi.so"
+    IMPORTED_SONAME_RELEASE "libG4mpi.so"
+  )
+endif()
+
+#----------------------------------------------------------------------------
 # Locate Sources and Headers
+
+file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
+file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
 include("${ROOT_USE_FILE}")
 if(fMPI)
@@ -90,15 +115,19 @@ else()
                       ${ROOT_INCLUDE_DIR})
 endif()
 
-file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
-file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 and ROOT libraries
 #
+
 if(fMPI)
   add_executable(mantis_mpi mantis_mpi.cc ${sources} ${headers})
   target_link_libraries(mantis_mpi ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${MPI_CXX_LIBRARIES})
+  set_target_properties(mantis_mpi
+                      PROPERTIES INSTALL_RPATH
+                      ${Geant4_DIR}/..
+                      BUILD_WITH_INSTALL_RPATH TRUE)
+
 else()
   add_executable(mantis mantis.cc ${sources} ${headers})
   target_link_libraries(mantis ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
@@ -154,7 +183,7 @@ endforeach()
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
 if(fMPI)
-  install(TARGETS mantis_mpi DESTINATION bin)
+  install(TARGETS mantis_mpi RUNTIME DESTINATION bin)
 else()
   install(TARGETS mantis DESTINATION bin)
 endif()

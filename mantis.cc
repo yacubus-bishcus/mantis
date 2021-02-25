@@ -123,14 +123,12 @@ int main(int argc,char **argv)
   G4String checkEvents_in = "false";
   checkEvents = false;
 
-  // Select whether mantis architecture is sequential or parallel based on
-  // the binary name (sequential=="mantis"), parallel=="mantis_mpi")
-
   G4bool sequentialBuild = true;
-  std::string arg0 = argv[0];
   macro = argv[1];
-  if(arg0=="mantis_mpi")
+  std::cout << "Macro: " << macro << std::endl;
+  #ifdef MANTIS_MPI_ENABLED
     sequentialBuild = false;
+  #endif
 
   if(sequentialBuild)
   {

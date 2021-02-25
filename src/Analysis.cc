@@ -296,7 +296,7 @@ void Analysis::GenerateFileNames()
 {
   if(MPI_Rank == 0)
   {
-    slaveFileNames.Clear();
+    slaveFileNames.clear();
     for(int rank=0; rank<MPI_Size; ++rank)
     {
       size_t pos = ROOTFileName.find(".rank");

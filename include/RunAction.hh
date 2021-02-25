@@ -44,7 +44,7 @@ class RootDataManager;
 class RunAction : public G4UserRunAction
 {
   public:
-    RunAction(G4bool);
+    RunAction();
     virtual ~RunAction();
 
   public:
@@ -61,7 +61,6 @@ class RunAction : public G4UserRunAction
     void AddStatusKilled(void){fStatusKilled++;}
 
   private:
-    G4bool fbuild;
     G4int nodeRank;
     G4double fCerenkovEnergy, fScintEnergy, fCerenkovCount;
     G4int fScintCount, fTotalSurface, fNRF, fStatusKilled;

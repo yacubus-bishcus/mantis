@@ -32,8 +32,8 @@ extern G4String gOutName;
 extern G4bool checkEvents;
 extern G4double chosen_energy;
 
-RunAction::RunAction(G4bool build)
-        : G4UserRunAction(), fbuild(!build)
+RunAction::RunAction()
+        : G4UserRunAction()
 {
 }
 
@@ -66,8 +66,8 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
   myana->Save(fname);
 
 
-  if(!fbuild)
-  {
+#ifndef MANTIS_MPI_ENABLED
+
     G4int TotNbofEvents = aRun->GetNumberOfEvent();
     std::ios::fmtflags mode = G4cout.flags();
     G4int prec = G4cout.precision(2);
@@ -98,6 +98,6 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
     G4cout.setf(mode, std::ios::floatfield);
 
     G4cout.precision(prec);
-  }
+#endif
 
 }

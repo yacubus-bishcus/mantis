@@ -43,6 +43,8 @@
 
 #include <vector>
 
+#include <sstream>
+
 class Analysis
 {
 public:

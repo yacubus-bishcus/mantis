@@ -3,12 +3,6 @@
 #include "G4UImanager.hh"
 #include "DetectorConstruction.hh"
 #include "PhysicsListNew.hh"
-#include "PrimaryGeneratorAction.hh"
-#include "RunAction.hh"
-#include "EventAction.hh"
-#include "SteppingAction.hh"
-#include "StackingAction.hh"
-#include "RootDataManager.hh"
 
 // Typcially include
 #include "time.h"
@@ -253,20 +247,8 @@ int main(int argc,char **argv)
                                                 use_xsec_integration, force_isotropic,
                                                 standalone, NRF_Verbose);
   runManager->SetUserInitialization(thePLNew);
-
-  PrimaryGeneratorAction* pga = new PrimaryGeneratorAction();
-  runManager->SetUserAction(pga);
+  runManager->SetUserInitialization(new ActionInitialization(det));
   runManager->Initialize();
-
-  // Set User action classes
-  RunAction* run = new RunAction(pga,sequentialBuild);
-  runManager->SetUserAction(run);
-  EventAction* event = new EventAction();
-  runManager->SetUserAction(event);
-  runManager->SetUserAction(new SteppingAction(det, run, event));
-  runManager->SetUserAction(new StackingAction(det, run));
-  RootDataManager *manager = new RootDataManager(sequentialBuild);
-  run->SetRootDataManager(manager);
 
   std::cout << "Seed set to: " << seed << std::endl;
   // choose the Random engine
@@ -310,8 +292,6 @@ int main(int argc,char **argv)
   G4cout << G4endl << "----------------------------------------------------------------------" << G4endl;
   G4cout << G4endl << "----------------------------------------------------------------------" << G4endl;
   G4cout << G4endl << "The MC took:\t\t" << stop_time - start_time << "s" << G4endl << G4endl;
-
-  delete manager;
 
   #ifdef MANTIS_MPI_ENABLED
     if(!sequentialBuild)

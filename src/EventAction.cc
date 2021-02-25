@@ -22,6 +22,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "EventAction.hh"
+#include "Analysis.hh"
+
 extern G4bool debug;
 
 EventAction::EventAction()
@@ -66,7 +68,7 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
                 else
                         c_time = 0;
                 // Fill the TTree
-                RootDataManager *manager = RootDataManager::GetInstance();
+                Analysis *manager = Analysis::GetAnalysis();
                 manager->FillCherenkov(maxE, weight, anEvent->GetEventID(), c_secondaries, c_time);
         }
 

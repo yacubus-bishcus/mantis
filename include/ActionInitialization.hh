@@ -22,49 +22,25 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef RunAction_h
-#define RunAction_h 1
+#ifndef ActionInitialization_h
+#define ActionInitialization_h 1
 
-#include "globals.hh"
-#include "G4UserRunAction.hh"
-#include <vector>
-#include "G4Run.hh"
+#include "G4VUserActionInitialization.hh"
+#include "G4Types.hh"
 
-#include "G4RunManager.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4UnitsTable.hh"
-#include "EventCheck.hh"
+class DetectorConstruction;
 
-#ifdef MANTIS_MPI_ENABLED
-#include "G4MPImanager.hh"
-#endif
 
-class RootDataManager;
-
-class RunAction : public G4UserRunAction
+class ActionInitialization : public G4VUserActionInitialization
 {
   public:
-    RunAction(G4bool);
-    virtual ~RunAction();
+    ActionInitialization(const DetectorConstruction*);
+    virtual ~ActionInitialization();
+    virtual void BuildForMaster() const;
+    virtual void Build() const;
 
-  public:
-
-    virtual void BeginOfRunAction(const G4Run*);
-    virtual void EndOfRunAction(const G4Run*);
-
-    void AddCerenkovEnergy(G4double en) {fCerenkovEnergy += en;}
-    void AddScintillationEnergy(G4double en) {fScintEnergy += en;}
-    void AddCerenkov(void) {fCerenkovCount++;} // changed from +=
-    void AddScintillation(void) {fScintCount++;}
-    void AddTotalSurface(void) {fTotalSurface += 1;}
-    void AddNRF(void){fNRF++;}
-    void AddStatusKilled(void){fStatusKilled++;}
-
-  private:
-    G4bool fbuild;
-    G4int nodeRank;
-    G4double fCerenkovEnergy, fScintEnergy, fCerenkovCount;
-    G4int fScintCount, fTotalSurface, fNRF, fStatusKilled;
+private:
+    const DetectorConstruction* fDetector;
 };
 
 #endif

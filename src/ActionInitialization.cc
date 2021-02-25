@@ -22,49 +22,44 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef RunAction_h
-#define RunAction_h 1
+#include "ActionInitialization.hh"
+#include "DetectorConstruction.hh"
+#include "PrimaryGeneratorAction.hh"
+#include "RunAction.hh"
+#include "SteppingAction.hh"
+#include "StackingAction.hh"
+#include "EventAction.hh"
+#include "G4Types.hh"
 
-#include "globals.hh"
-#include "G4UserRunAction.hh"
-#include <vector>
-#include "G4Run.hh"
+extern G4bool debug;
 
-#include "G4RunManager.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4UnitsTable.hh"
-#include "EventCheck.hh"
-
-#ifdef MANTIS_MPI_ENABLED
-#include "G4MPImanager.hh"
-#endif
-
-class RootDataManager;
-
-class RunAction : public G4UserRunAction
+ActionInitialization::ActionInitialization(const DetectorConstruction* det)
+        : G4VUserActionInitialization(), fDetector(det)
 {
-  public:
-    RunAction(G4bool);
-    virtual ~RunAction();
+}
 
-  public:
+ActionInitialization::~ActionInitialization()
+{
+}
 
-    virtual void BeginOfRunAction(const G4Run*);
-    virtual void EndOfRunAction(const G4Run*);
+void ActionInitialization::BuildForMaster() const
+{
+  SetUserAction(ew RunAction());
+}
 
-    void AddCerenkovEnergy(G4double en) {fCerenkovEnergy += en;}
-    void AddScintillationEnergy(G4double en) {fScintEnergy += en;}
-    void AddCerenkov(void) {fCerenkovCount++;} // changed from +=
-    void AddScintillation(void) {fScintCount++;}
-    void AddTotalSurface(void) {fTotalSurface += 1;}
-    void AddNRF(void){fNRF++;}
-    void AddStatusKilled(void){fStatusKilled++;}
+void ActionInitialization::Build() const
+{
+    if(debug)
+        std::cout << "ActionInitialization::Build() -> Begin!" << std::endl;
 
-  private:
-    G4bool fbuild;
-    G4int nodeRank;
-    G4double fCerenkovEnergy, fScintEnergy, fCerenkovCount;
-    G4int fScintCount, fTotalSurface, fNRF, fStatusKilled;
-};
+        SetUserAction(new PrimaryGeneratorAction());
+        RunAction* run = new RunAction();
+        SetUserAction(run);
+        EventAction* event = new EventAction();
+        SetUserAction(event);
+        SetUserAction(new SteppingAction(fDetector, run, event));
+        SetUserAction(new StackingAction(fDetector, run));
 
-#endif
+    if(debug)
+        std::cout << "ActionInitialization::Build() -> End!" << std::endl;
+}

@@ -22,70 +22,38 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "RootDataManager.hh"
+#include "Analysis.hh"
 #include "G4MPImanager.hh"
 #include "RootDataMessenger.hh"
 #include <sstream>
+#include "G4AutoLock.hh"
+#include "TFile.h"
+#include "TTree.h"
 
-extern G4String gOutName;
 extern G4bool bremTest;
 extern G4bool debug;
 
-RootDataManager *RootDataManager::theRootDataManager = 0;
+G4ThreadLocal Analysis* the_analysis = 0;
 
+G4Mutex rootm = G4MUTEX_INITIALIZER;
 
-RootDataManager *RootDataManager::GetInstance()
-{ return theRootDataManager; }
-
-RootDataManager::RootDataManager(G4bool arch): parallelArchitecture(!arch),
-MPI_Rank(0), MPI_Size(1),
-ROOTFileName(""), ROOTFile(new TFile), ChopInTree(new TTree), ChopOutTree(new TTree),
-NRFTree(new TTree), IntObjInTree(new TTree), IntObjOutTree(new TTree),
-WaterInTree(new TTree), CherenkovTree(new TTree), DetTree(new TTree), DetInTree(new TTree),
-ROOTObjectsExist(false), ChopInEnergy(0.), ChopInWeight(0.), ChopInEventID(0),
-ChopOutEnergy(0.), ChopOutWeight(0.), ChopOutEventID(0), ChopOutisNRF(0),
-NRFEnergy(0.),NRFWeight(0.), NRFEventID(0), Material(""), ZPos(0.),
-IntObjInEnergy(0.), IntObjInWeight(0.), IntObjInCreatorProcess(""),
-IntObjOutEnergy(0.), IntObjOutWeight(0.), IntObjOutCreatorProcess(""),
-WaterEnergy(0.),WaterWeight(0.), WaterCreatorProcess(""),
-CherenkovEnergy(0.), CherenkovWeight(0.), CherenkovEventID(0), CherenkovNumSecondaries(0), CherenkovTime(0.),
-DetEnergy(0.), DetWeight(0.), DetEventID(0), DetCreatorProcess(""), DetTime(0.),
-InDetEnergy(0.), InDetWeight(0.), InDetEventID(0), InDetProcess("")
-
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+Analysis* Analysis::GetAnalysis()
 {
-  if(theRootDataManager)
-  G4Exception("RootDataManager::RootDataManager()", "RootException001",
-  FatalException, "The RootDataManager was constructed twice!");
-  else
-    theRootDataManager = this;
-
-  ROOTFileName = gOutName;
-  theMessenger = new RootDataMessenger(this);
+   if ( ! the_analysis ) the_analysis = new Analysis;
+   return the_analysis;
 }
 
-RootDataManager::~RootDataManager()
-{
-  delete ROOTFile;
-  delete theMessenger;
-}
 
-void RootDataManager::Book()
+Analysis::Analysis()
+: ROOTObjectsExist(false),MPI_Rank(0), MPI_Size(1)
 {
-  if(ROOTObjectsExist)
-  {
-    G4cerr << "RootDataManager::Book() -> FATAL ERROR: ROOT Objects already opened!" << G4endl;
-    return;
-  }
-  #ifdef MANTIS_MPI_ENABLED
-    G4MPImanager *theMPIManager = G4MPImanager::GetManager();
-    MPI_Rank = theMPIManager->GetRank();
-    MPI_Size = theMPIManager->GetTotalSize();
-  #endif
+  G4AutoLock l(&rootm);
+  G4MPImanager *theMPIManager = G4MPImanager::GetManager();
+  MPI_Rank = theMPIManager->GetRank();
+  MPI_Size = theMPIManager->GetTotalSize();
 
   GenerateFileNames();
-  if(ROOTFile) delete ROOTFile;
-  ROOTFile = new TFile(ROOTFileName, "recreate");
-
   ChopInTree = new TTree("ChopIn","Chopper Wheel Incident Data");
   ChopInTree->Branch("Energy",&ChopInEnergy);
   ChopInTree->Branch("Weight",&ChopInWeight);
@@ -142,41 +110,77 @@ void RootDataManager::Book()
     DetInTree->Branch("DetProcess",&InDetProcess);
 
   }
-
   ROOTObjectsExist = true;
   if(debug)
-    std::cout << "RootDataManager::Book() --> Complete!" << std::endl;
+    std::cout << "Analysis::Book() --> Complete!" << std::endl;
+}
+
+Analysis::~Analysis()
+{
+  delete ChopInTree;
+  delete ChopOutTree;
+  delete NRFTree;
+  delete IntObjInTree;
+  delete IntObjOutTree;
+  delete WaterInTree;
+  delete CherenkovTree;
+  delete DetTree;
+  delete DetInTree;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void Analysis::Update()
+{
+  return;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void Analysis::Clear()
+{
+  ChopInTree->Reset();
+  ChopOutTree->Reset();
+  NRFTree->Reset();
+  IntObjInTree->Reset();
+  IntObjOutTree->Reset();
+  WaterInTree->Reset();
+  CherenkovTree->Reset();
+  DetTree->Reset();
+  DetInTree->Reset();
+
+  return;
+}
+
+void Analysis::Save(const G4String& fname)
+{
+  G4AutoLock l(&rootm);
+  TFile* file = new TFile(fname.c_str(), "RECREATE", "Geant4 ROOT analysis");
+
+  ChopInTree->Write();
+  ChopOutTree->Write();
+  if(!bremTest)
+  {
+    NRFTree->Write();
+    IntObjInTree->Write();
+    IntObjOutTree->Write();
+    WaterInTree->Write();
+    CherenkovTree->Write();
+    DetTree->Write();
+    DetInTree->Write();
+  }
+
+  file->Close();
+
+  delete file;
+
+  return;
 }
 
 
-void RootDataManager::finish()
+void Analysis::finish()
 {
-  if(!ROOTObjectsExist)
-  {
-    G4cerr << "RootDataManager::finish() -> FATAL ERROR: ROOT Objects do not exist to write!" << G4endl;
-    return;
-  }
-
-  if(parallelArchitecture)
-  {
-    // Write all TTrees
-    ChopInTree->Write();
-    ChopOutTree->Write();
-    if(!bremTest)
-    {
-      NRFTree->Write();
-      IntObjInTree->Write();
-      IntObjOutTree->Write();
-      WaterInTree->Write();
-      CherenkovTree->Write();
-      DetTree->Write();
-      DetInTree->Write();
-    }
-    ROOTFile->Close();
-
     if(MPI_Rank == 0)
     {
-      G4String FinalFileName = ROOTFileName.substr(0, ROOTFileName.find(".slave"));
+      G4String FinalFileName = ROOTFileName.substr(0, ROOTFileName.find(".rank"));
       TFile *FinalFile = new TFile(FinalFileName.c_str(), "update");
       FinalFile->Open(FinalFileName.c_str(), "recreate");
 
@@ -196,29 +200,11 @@ void RootDataManager::finish()
         G4String RemoveSlaveFileCmd = "rm -f " + (*it);
         system(RemoveSlaveFileCmd.c_str());
       }
-    } // for if MPI_RANK == 0
-    ROOTObjectsExist = false;
-  } // for if parallelArchitecture
-  else
-  {
-    // Write all TTrees
-    ChopInTree->Write();
-    ChopOutTree->Write();
-    if(!bremTest)
-    {
-      NRFTree->Write();
-      IntObjInTree->Write();
-      IntObjOutTree->Write();
-      WaterInTree->Write();
-      CherenkovTree->Write();
-      DetTree->Write();
-      DetInTree->Write();
-    }
-    ROOTObjectsExist = false;
-  } // for else parallelArchitecture
-}// for RootDataManager::finish
 
-void RootDataManager::FillChopIn(G4double e, G4double w, G4int id)
+    } // for if MPI_RANK == 0
+}// for Analysis::finish
+
+void Analysis::FillChopIn(G4double e, G4double w, G4int id)
 {
   if (!ROOTObjectsExist) return;
   ChopInEnergy = e;
@@ -227,7 +213,7 @@ void RootDataManager::FillChopIn(G4double e, G4double w, G4int id)
   ChopInTree->Fill();
 }
 
-void RootDataManager::FillChopOut(G4double e, G4double w, G4int id, G4int nrf)
+void Analysis::FillChopOut(G4double e, G4double w, G4int id, G4int nrf)
 {
   if (!ROOTObjectsExist) return;
   ChopOutEnergy = e;
@@ -237,7 +223,7 @@ void RootDataManager::FillChopOut(G4double e, G4double w, G4int id, G4int nrf)
   ChopOutTree->Fill();
 }
 
-void RootDataManager::FillNRF(G4double e, G4double w, G4int id, G4String Mat, G4double z)
+void Analysis::FillNRF(G4double e, G4double w, G4int id, G4String Mat, G4double z)
 {
   if (!ROOTObjectsExist) return;
   NRFEnergy = e;
@@ -248,7 +234,7 @@ void RootDataManager::FillNRF(G4double e, G4double w, G4int id, G4String Mat, G4
   NRFTree->Fill();
 }
 
-void RootDataManager::FillIntObjIn(G4double e, G4double w, G4String c)
+void Analysis::FillIntObjIn(G4double e, G4double w, G4String c)
 {
   if (!ROOTObjectsExist) return;
   IntObjInEnergy = e;
@@ -257,7 +243,7 @@ void RootDataManager::FillIntObjIn(G4double e, G4double w, G4String c)
   IntObjInTree->Fill();
 }
 
-void RootDataManager::FillIntObjOut(G4double e, G4double w, G4String c)
+void Analysis::FillIntObjOut(G4double e, G4double w, G4String c)
 {
   if (!ROOTObjectsExist) return;
   IntObjOutEnergy = e;
@@ -266,7 +252,7 @@ void RootDataManager::FillIntObjOut(G4double e, G4double w, G4String c)
   IntObjOutTree->Fill();
 }
 
-void RootDataManager::FillWater(G4double e, G4double w, G4String c)
+void Analysis::FillWater(G4double e, G4double w, G4String c)
 {
   if (!ROOTObjectsExist) return;
   WaterEnergy = e;
@@ -275,7 +261,7 @@ void RootDataManager::FillWater(G4double e, G4double w, G4String c)
   WaterInTree->Fill();
 }
 
-void RootDataManager::FillCherenkov(G4double e, G4double w, G4int id, G4int secondaries, G4double times)
+void Analysis::FillCherenkov(G4double e, G4double w, G4int id, G4int secondaries, G4double times)
 {
   if (!ROOTObjectsExist) return;
   CherenkovEnergy = e;
@@ -286,7 +272,7 @@ void RootDataManager::FillCherenkov(G4double e, G4double w, G4int id, G4int seco
   CherenkovTree->Fill();
 }
 
-void RootDataManager::FillDet(G4double e, G4double w, G4int id, G4String c, G4double times)
+void Analysis::FillDet(G4double e, G4double w, G4int id, G4String c, G4double times)
 {
   if (!ROOTObjectsExist) return;
   DetEnergy = e;
@@ -297,7 +283,7 @@ void RootDataManager::FillDet(G4double e, G4double w, G4int id, G4String c, G4do
   DetTree->Fill();
 }
 
-void RootDataManager::FillInDet(G4double e, G4double w, G4int id, G4String c)
+void Analysis::FillInDet(G4double e, G4double w, G4int id, G4String c)
 {
   if (!ROOTObjectsExist) return;
   InDetEnergy = e;
@@ -307,59 +293,20 @@ void RootDataManager::FillInDet(G4double e, G4double w, G4int id, G4String c)
   DetInTree->Fill();
 }
 
-void RootDataManager::GenerateFileNames()
+void Analysis::GenerateFileNames()
 {
-  if(ROOTObjectsExist)
+  if(MPI_RANK == 0)
   {
-    G4cerr << "RootDataManager::GenerateFileNames -> ROOT Objects Already Exist before File!" << G4endl;
-    return;
-  }
-
-  std::stringstream ss;
-  if(parallelArchitecture)
-  {
-    ss << ROOTFileName << ".slave" << MPI_Rank;
-    ROOTFileName = ss.str();
-  }
-
-  // Generate a class member vector list (on the master node only) of
-  // all the slave file names. This list will be used for MPI
-  // reduction before the ROOT writing process. Note that slave file
-  // names are cleared at every time Book() is called in
-  // order to enable multiple ROOT files to be written for many runs
-  // within a single MANTIS session
-
-  if(MPI_Rank == 0)
-  {
-    if(parallelArchitecture)
+    slaveFileNames.Clear();
+    for(int rank=0; rank<MPI_Size; ++rank)
     {
-      slaveFileNames.clear();
-
-      for(int rank=0; rank<MPI_Size; rank++)
+      size_t pos = ROOTFileName.find(".rank");
+      if(pos != G4String::npos)
       {
-      	size_t pos = ROOTFileName.find("slave");
-      	if(pos != G4String::npos)
-        {
-      	  ss.str("");
-      	  ss << ROOTFileName.substr(0,pos) << "slave" << rank;
-      	  slaveFileNames.push_back((G4String)ss.str());
-      	}
-      	else
-      	  G4Exception("RootDataManager::BeginRunCleanup()","RootException002",
-      		      FatalException,"MANTIS could not find slaves files!");
-      }// for for loop
-    }// for if parallelArchitecture
-  } // for if MPI_Rank == 0
-} // for GenerateFileNames
-
-void RootDataManager::ReduceSlaveValuesToMaster()
-{
-#ifdef MANTIS_MPI_ENABLED
-
-  G4cout << "MANTIS ANNOUNCEMENT: Beginning the MPI reduction of data to the master!"
-	 << G4endl;
-
-  G4cout << "MANTIS ANNOUNCEMENT: Finished the MPI reduction of values to the master!\n"
-	 << G4endl;
-#endif
+        ss.str("");
+        ss << ROOTFileName.substr(0,pos) << ".rank" << rank;
+        slaveFileNames.push_back((G4String)ss.str());
+      }
+    }
+  }
 }

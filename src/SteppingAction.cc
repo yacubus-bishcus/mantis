@@ -23,6 +23,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "SteppingAction.hh"
+#include "Analysis.hh"
+
 extern G4bool bremTest;
 extern G4bool debug;
 
@@ -117,7 +119,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 // ************************************************* Checks and Cuts Complete ************************************************** //
 
         G4int isNRF = 0;
-        RootDataManager *manager = RootDataManager::GetInstance();
+        Analysis *manager = Analysis::GetAnalysis();
 
 // **************************************************** Track NRF Materials **************************************************** //
 

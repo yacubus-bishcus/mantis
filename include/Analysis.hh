@@ -22,8 +22,14 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef RootDataManager_h
-#define RootDataManager_h 1
+#ifndef ANALYSIS_MANAGER_H
+#define ANALYSIS_MANAGER_H
+
+#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
+  TypeName(const TypeName&);               \
+  void operator=(const TypeName&)
+
+
 
 #include "G4ParticleTypes.hh"
 #include "G4SystemOfUnits.hh"
@@ -37,16 +43,15 @@
 
 #include <vector>
 
-class RootDataMessenger;
-
-class RootDataManager
+class Analysis
 {
 public:
-RootDataManager(G4bool);
-~RootDataManager();
-static RootDataManager *GetInstance();
+~Analysis();
+static Analysis *GetAnalysis();
 
-void Book();
+void Update();
+void Clear();
+void Save(const G4String& fname);
 void finish();
 
 void FillChopIn(G4double, G4double, G4int);
@@ -59,24 +64,16 @@ void FillCherenkov(G4double, G4double, G4int, G4int, G4double);
 void FillDet(G4double, G4double, G4int, G4String, G4double);
 void FillInDet(G4double, G4double, G4int, G4String);
 
-void GenerateFileNames();
-void ReduceSlaveValuesToMaster();
-void SetFileName(G4String FN) {ROOTFileName = FN;}
-G4String GetFileName() {return ROOTFileName;}
-
-G4bool CheckForROOTObjects() {return ROOTObjectsExist;}
 
 private:
-  static RootDataManager *theRootDataManager;
-  RootDataMessenger* theMessenger;
-  G4bool parallelArchitecture;
-  G4int MPI_Rank, MPI_Size;
+  Analysis();
+  DISALLOW_COPY_AND_ASSIGN(Analysis);
+  G4bool ROOTObjectsExist;
+  G4int MPI_RANK;
   G4String ROOTFileName;
   std::vector<G4String> slaveFileNames;
 
-  TFile *ROOTFile;
   TTree *ChopInTree,*ChopOutTree, *NRFTree, *IntObjInTree, *IntObjOutTree, *WaterInTree, *CherenkovTree, *DetTree, *DetInTree;
-  G4bool ROOTObjectsExist;
   // Chopper In
   G4double ChopInEnergy, ChopInWeight;
   G4int ChopInEventID;

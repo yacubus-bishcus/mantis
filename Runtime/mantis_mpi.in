@@ -94,5 +94,5 @@
 ##########################################################################
 
 # Run particles
-/run/beamOn 1000
-/mpi/status 
+/run/beamOn 100
+/mpi/status

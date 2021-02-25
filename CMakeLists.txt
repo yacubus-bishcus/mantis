@@ -83,7 +83,7 @@ endif()
 include("${ROOT_USE_FILE}")
 #----------------------------------------------------------------------------
 # Locate Sources and Headers
-
+include_directories(${PROJECT_SOURCE_DIR}/include)
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
@@ -106,7 +106,7 @@ endif()
 
 if(fMPI)
   add_executable(mantis_mpi mantis_mpi.cc ${sources} ${headers})
-  target_link_libraries(mantis_mpi ${G4mpi_LIBRARIES} ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+  target_link_libraries(mantis_mpi ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${G4mpi_LIBRARIES})
 
 else()
   add_executable(mantis mantis.cc ${sources} ${headers})
@@ -172,7 +172,7 @@ endif()
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
 if(fMPI)
-  install(TARGETS mantis_mpi RUNTIME DESTINATION bin)
+  install(TARGETS mantis_mpi DESTINATION bin)
 else()
   install(TARGETS mantis DESTINATION bin)
 endif()

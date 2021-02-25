@@ -43,6 +43,8 @@ if(${WITH_MPI})
   option(fMPI "Build with MPI" ON)
   add_compile_definitions(MANTIS_MPI_ENABLED)
   message(STATUS "MPI Enabled.")
+  #set(CMAKE_CXX_COMPILER mpicxx)
+  #set(CMAKE_CXX_INCLUDE_PATH)
 else()
   option(fMPI "Build with MPI" OFF)
   message(STATUS "MPI Disabled.")
@@ -58,6 +60,7 @@ if(fMPI)
         include_directories(${MPI_CXX_INCLUDE_PATH})
         list(APPEND SCR_EXTERNAL_LIBS ${MPI_CXX_LIBRARIES})
   endif()
+  find_package(G4mpi REQUIRED)
 else()
   if(WITH_GEANT4_UIVIS)
     find_package(Geant4 10.5 REQUIRED ui_all vis_all)
@@ -83,34 +86,22 @@ else()
     message(STATUS "ROOT NOT Found. --> MAKE WILL FAIL!")
 endif()
 
-#----------------------------------------------------------------------------
-# Add G4mpi library
-
-if(fMPI)
-  SET(Geant4_LIBRARIES ${Geant4_LIBRARIES} G4mpi)
-  ADD_LIBRARY(G4mpi SHARED IMPORTED)
-  SET_PROPERTY(TARGET G4mpi APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
-  SET_TARGET_PROPERTIES(G4mpi PROPERTIES
-    IMPORTED_LOCATION_RELEASE "${Geant4_DIR}/../libG4mpi.so"
-    IMPORTED_SONAME_RELEASE "libG4mpi.so"
-  )
-endif()
-
+include("${ROOT_USE_FILE}")
 #----------------------------------------------------------------------------
 # Locate Sources and Headers
 
+include_directories(${PROJECT_SOURCE_DIR}/include)
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
-include("${ROOT_USE_FILE}")
 if(fMPI)
-  include_directories(${PROJECT_SOURCE_DIR}/include
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include
                       ${Geant4_INCLUDE_DIR}
                       ${ROOT_INCLUDE_DIR}
-                      ${MPI_INCLUDE_PATH})
+                      ${G4mpi_INCLUDE_DIR})
 
 else()
-  include_directories(${PROJECT_SOURCE_DIR}/include
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include
                       ${Geant4_INCLUDE_DIR}
                       ${ROOT_INCLUDE_DIR})
 endif()
@@ -122,11 +113,7 @@ endif()
 
 if(fMPI)
   add_executable(mantis_mpi mantis_mpi.cc ${sources} ${headers})
-  target_link_libraries(mantis_mpi ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${MPI_CXX_LIBRARIES})
-  set_target_properties(mantis_mpi
-                      PROPERTIES INSTALL_RPATH
-                      ${Geant4_DIR}/..
-                      BUILD_WITH_INSTALL_RPATH TRUE)
+  target_link_libraries(mantis_mpi ${G4mpi_LIBRARIES} ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 
 else()
   add_executable(mantis mantis.cc ${sources} ${headers})

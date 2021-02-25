@@ -68,8 +68,9 @@ void FillInDet(G4double, G4double, G4int, G4String);
 private:
   Analysis();
   DISALLOW_COPY_AND_ASSIGN(Analysis);
+  void GenerateFileNames();
   G4bool ROOTObjectsExist;
-  G4int MPI_RANK;
+  G4int MPI_Rank, MPI_Size;
   G4String ROOTFileName;
   std::vector<G4String> slaveFileNames;
 

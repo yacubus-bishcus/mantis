@@ -32,7 +32,6 @@
 #include "G4OpBoundaryProcess.hh"
 #include "RunAction.hh"
 #include "StackingAction.hh"
-#include "RootDataManager.hh"
 #include "StepMessenger.hh"
 #include "EventAction.hh"
 #include "DetectorConstruction.hh"

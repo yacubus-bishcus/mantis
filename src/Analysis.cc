@@ -294,7 +294,7 @@ void Analysis::FillInDet(G4double e, G4double w, G4int id, G4String c)
 
 void Analysis::GenerateFileNames()
 {
-  if(MPI_RANK == 0)
+  if(MPI_Rank == 0)
   {
     slaveFileNames.Clear();
     for(int rank=0; rank<MPI_Size; ++rank)

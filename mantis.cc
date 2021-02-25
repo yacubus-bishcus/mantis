@@ -81,7 +81,7 @@ void PrintUsage()
 }
 }
 
-int main(int argc,char **argv)
+int main(int argc,char** argv)
 {
   // Check to make sure user set up environment correctly
   if(getenv("G4NRFGAMMADATA") == NULL)
@@ -160,7 +160,7 @@ int main(int argc,char **argv)
     {
       std::cout << "Argument " << i << ": " << argv[i] << std::endl;
     }
-    G4MPImanager* g4MPI= new G4MPImanager(argc,argv);
+    G4MPImanager* g4MPI= new G4MPImanager(argc, argv);
     G4MPIsession* session= g4MPI->GetMPIsession();
     std::cout << "Session Grabbed." << std::endl;
   #endif

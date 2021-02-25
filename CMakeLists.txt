@@ -90,7 +90,6 @@ include("${ROOT_USE_FILE}")
 #----------------------------------------------------------------------------
 # Locate Sources and Headers
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 

@@ -9,6 +9,26 @@
 #// jbickus@mit.edu
 #// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #///////////////////////////////////////////////////////////////////////////////
+PAR_TARGET=mpi_mantis
+
+BINARY=$G4WORKDIR/bin/$G4SYSTEM/$PAR_TARGET
+BUILDDIR=$G4WORKDIR/tmp/$G4SYSTEM/$PAR_TARGET
+
+# Remove the old binary
+if [ -a $BINARY ]
+    then
+    rm $BINARY
+fi
+
+# Command-line capability to clean the build directory
+if [ "$1" == 'clean' ];
+then
+    echo -e "\nCleaning up $PAR_TARGET build directory ...\n"
+    rm -rf $BUILDDIR
+    exit
+else
+    echo -e "\nBuilding the parallel version of ZKBrem ...\n"
+fi
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
         # linux

@@ -35,6 +35,7 @@
 // TFile*        test_EventCheck.root
 
 #include "EventCheck.hh"
+#include "TSystem.h"
 
 extern G4String root_output_name;
 extern G4String gOutName;

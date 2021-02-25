@@ -23,6 +23,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "PrimaryGeneratorAction.hh"
+#include "TSystem.h"
 
 extern G4long seed;
 extern G4String inFile;

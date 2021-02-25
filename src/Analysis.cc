@@ -24,7 +24,6 @@
 
 #include "Analysis.hh"
 #include "G4MPImanager.hh"
-#include "RootDataMessenger.hh"
 #include <sstream>
 #include "G4AutoLock.hh"
 #include "TFile.h"

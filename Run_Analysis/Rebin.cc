@@ -30,7 +30,7 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName="hOut
 {
 
   // Check to make sure file exists
-  if(gSystem->AccessPathName(inFile) != 0)
+  if(gSystem->AccessPathName(inFile))
   {
     std::cerr << "ERROR Could not find " << inFile << "exiting..." << std::endl;
     exit(1);
@@ -113,7 +113,12 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName="hOut
   else
     OutFileName = "rebinned_Variable_binWidth_" + to_string(nrf_bin_width) + "_" + (std::string)inFile;
 
-  TFile *fout = new TFile(OutFileName.c_str(),"update");
+  TFile *fout;
+  if(!gSystem->AccessPathName(OutFileName.c_str()))
+    fout = new TFile(OutFileName.c_str(),"update");
+  else
+    fout = new TFile(OutFileName.c_str(),"recreate");
+ 
   fout->cd();
   hObj->Write();
   std::cout << "Rebinned Histogram written to: " << OutFileName << std::endl;

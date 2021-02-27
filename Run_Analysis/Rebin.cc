@@ -113,7 +113,7 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName="hOut
   else
     OutFileName = "rebinned_Variable_binWidth_" + to_string(nrf_bin_width) + "_" + (std::string)inFile;
 
-  TFile *fout = new TFile(OutFileName.c_str(),"recreate");
+  TFile *fout = new TFile(OutFileName.c_str(),"update");
   fout->cd();
   hObj->Write();
   std::cout << "Rebinned Histogram written to: " << OutFileName << std::endl;

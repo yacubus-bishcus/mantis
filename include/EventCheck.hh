@@ -31,18 +31,11 @@
 #include <vector>
 
 #include "TROOT.h"
-#include "TApplication.h"
-#include "TSystem.h"
-#include "TH1.h"
-#include "TPad.h"
-#include "TCanvas.h"
+
 #include "TFile.h"
 #include "TTree.h"
 #include "TBranch.h"
-#include "TMath.h"
-#include "TString.h"
 
-class TH1D;
 class TFile;
 class TTree;
 class TBranch;
@@ -58,20 +51,9 @@ public:
     void WriteEvents();
 
 private:
-
-time_t timer, timer2, time_start, time_end;
-TFile *f, *fout;
-TTree *Cherenkov, *NRF, *DetData, *nrf_to_cher_tree, *nrf_to_cher_to_det_tree;
-std::vector<int> cherEventv, nrfEventv, detEventv, nrf_to_cherEvents, cher_to_detEvents, nrf_to_detEvents;
-std::vector<double> cher_to_detEnergies, cher_to_detWeights, cher_to_detTimes;
-std::vector<double> nrf_to_detEnergies, nrf_to_detWeights, nrf_to_detTimes;
-std::vector<double> nrfEnergyv, nrfWeightv, cherEnergyv, cherWeightv;
-std::vector<double> nrf_to_cherenkov_to_detEvents, nrf_to_cherenkov_to_detNRFEnergies, nrf_to_cherenkov_to_detCherEnergies;
-std::vector<double> nrf_to_cherenkov_to_detNRFWeights, nrf_to_cherenkov_to_detCherWeights;
-std::vector<double> nrf_to_cherenkov_to_detNRFTimes, nrf_to_cherenkov_to_detCherTimes;
-double nrfE,nrfW, cherE, cherW, a, energyNRF, energyCher, weightNRF, weightCher, timeNRF, timeCher;
-int nrf_cher_EventID;
-G4int num_entries, num_entries1, num_entries2, x, index;
+  time_t timer, timer2, time_start, time_end;
+  std::vector<double> nrf_to_cher_to_det_event, nrf_to_cher_to_det_energy, nrf_to_cher_to_det_weight,nrf_to_cher_to_det_time;
+  G4int x;
 
 };
 

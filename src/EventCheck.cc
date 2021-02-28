@@ -24,214 +24,141 @@
 //
 // File Explanation:
 //
-// This File Scans the Cherenkov Merged File and determines:
-// 1. Check if a NRF event causes cherenkov
-// 2. Check if a NRF event was detected
-// 3. Check if a Cherenkov event was detected
-// 4. Check if a NRF event lead to Cherenkov which was then detected
+// This File Scans the Output file and finds events that underwent NRF that lead
+// to cherenkov that lead to detection.
 //
 // The script create a new root file with the Following Structure:
 // TFile**        test_EventCheck.root
 // TFile*        test_EventCheck.root
 
 #include "EventCheck.hh"
+#include "TSystem.h"
+#include "TPad.h"
+#include "TCanvas.h"
+#include "TString.h"
+#include "TMath.h"
 
 extern G4String root_output_name;
 extern G4String gOutName;
 
 EventCheck::EventCheck()
 {
-        time_start = std::time(&timer);
+  time_start = std::time(&timer);
 
-        if(gSystem->AccessPathName(root_output_name.c_str()))
-        {
-                std::cerr << "EventCheck::EventCheck -> File: " << root_output_name << " does not exist." << std::endl;
-                G4cerr << "EventCheck::EventCheck -> File: " << root_output_name << " does not exist." << G4endl;
-                return;
-        }
-        else
-        {
-                std::cout << "EventCheck::EventCheck -> File: " << root_output_name << " exists." << std::endl;
-                G4cout << "EventCheck::EventCheck -> File: " << root_output_name << " exists." << G4endl;
-        }
-        f = new TFile(root_output_name.c_str());
-        bool confirm = f->cd();
-        if(!confirm)
-        {
-          G4cerr << "EventCheck::EventCheck -> Could not confirm Output File" << G4endl;
-          exit(1);
-        }
+  if(gSystem->AccessPathName(root_output_name.c_str()))
+  {
+          std::cerr << "EventCheck::EventCheck -> File: " << root_output_name << " does not exist." << std::endl;
+          G4cerr << "EventCheck::EventCheck -> File: " << root_output_name << " does not exist." << G4endl;
+          return;
+  }
+  else
+  {
+          std::cout << "EventCheck::EventCheck -> File: " << root_output_name << " exists." << std::endl;
+          G4cout << "EventCheck::EventCheck -> File: " << root_output_name << " exists." << G4endl;
+  }
 
-        f->GetObject("Cherenkov",Cherenkov);
-        f->GetObject("NRF",NRF);
-        f->GetObject("DetInfo",DetData);
+  TFile *f = new TFile(root_output_name.c_str());
 
-        Cherenkov->SetEstimate(-1);
-        NRF->SetEstimate(-1);
-        DetData->SetEstimate(-1);
-        G4cout << "EventCheck::EventCheck -> Objects Grabbed!" << G4endl;
+  bool confirm = f->cd();
+  if(!confirm)
+  {
+    G4cerr << "EventCheck::EventCheck -> Could not confirm Output File" << G4endl;
+    exit(1);
+  }
 
-        // Grab Cherenkov Events
-        num_entries = Cherenkov->Draw("EventID:Energy:Weight","","goff");
-        G4cout << "EventCheck::EventCheck -> Cherenkov Entries: " << num_entries << G4endl;
-        G4double *cherEvent = Cherenkov->GetVal(0);
-        G4double *cherEnergy = Cherenkov->GetVal(1);
-        G4double *cherWeight = Cherenkov->GetVal(2);
+  TTree *Cherenkov_in, *NRF_in, *DetInfo_in;
 
-        for(int i=0; i<num_entries; ++i)
-        {
-                cherEventv.push_back((int)cherEvent[i]);
-        }
+  f->GetObject("Cherenkov",Cherenkov_in);
+  f->GetObject("NRF",NRF_in);
+  f->GetObject("DetInfo",DetInfo_in);
 
-        // Grab NRF Events
-        num_entries1 = NRF->Draw("EventID:Energy:Weight","","goff");
-        G4cout << "EventCheck::EventCheck -> NRF Entries: " << num_entries1 << G4endl;
-        G4double *nrfEvent = NRF->GetVal(0);
-        G4double *nrfEnergy = NRF->GetVal(1);
-        G4double *nrfWeight = NRF->GetVal(2);
+  Cherenkov_in->SetEstimate(-1);
+  NRF_in->SetEstimate(-1);
+  DetInfo_in->SetEstimate(-1);
+  G4cout << "EventCheck::EventCheck -> Objects Grabbed!" << G4endl;
 
-        for(int i=0; i<num_entries1; ++i)
-        {
-                nrfEventv.push_back((int)nrfEvent[i]);
-        }
+  // Grab NRF Events
+  G4int nrf_entries = NRF_in->Draw("EventID","","goff");
+  G4cout << "EventCheck::EventCheck -> NRF Entries: " << nrf_entries << G4endl;
+  G4double *nrfEvent = NRF_in->GetVal(0);
 
-        // Grab DetInfo Events
-        num_entries2 = DetData->Draw("EventID:Energy:Weight:Time","CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\"","goff");
-        G4cout << "EventCheck::EventCheck -> Total Number of Detected Optical Photon entries: " << num_entries2 << G4endl << G4endl;
-        G4double *detEvent = DetData->GetVal(0);
-        G4double *detEnergy = DetData->GetVal(1);
-        G4double *detWeight = DetData->GetVal(2);
-        G4double *time = DetData->GetVal(3);
+  std::vector<int> nrfEventv;
+  // Write NRF Events to Vector
+  for(int i=0; i<nrf_entries; ++i)
+  {
+    nrfEventv.push_back((int)nrfEvent[i]);
+  }
 
-        for(int i=0; i<num_entries2; ++i)
-        {
-                detEventv.push_back((int)detEvent[i]);
-        }
+  // Grab Cherenkov Events
+  G4int cher_entries = Cherenkov_in->Draw("EventID","","goff");
+  G4cout << "EventCheck::EventCheck -> Cherenkov Entries: " << cher_entries << G4endl;
+  G4double *cherEvent = Cherenkov_in->GetVal(0);
 
-        if(num_entries != 0 && num_entries1 != 0)
-        {
-                G4cout << "EventCheck::EventCheck -> Finding NRF Events that Caused Optical Photons..." << G4endl;
-                // if Cherenkov has more entries search with nrf events
-                if(num_entries1 < num_entries)
-                {
-                        for(int i=0; i<num_entries1; ++i)
-                        {
-                                x = nrfEventv[i];
-                                auto exists = std::find(cherEventv.begin(),cherEventv.end(), x);
+  std::vector<int> cherEventv;
+  // Write Cherenkov Events to vector
+  for(int i=0; i<cher_entries; ++i)
+  {
+    cherEventv.push_back((int)cherEvent[i]);
+  }
 
-                                if(exists != cherEventv.end())
-                                {
-                                        index = exists - cherEventv.begin();
-                                        nrf_to_cherEvents.push_back(x);
-                                        nrfEnergyv.push_back(nrfEnergy[i]);
-                                        nrfWeightv.push_back(nrfWeight[i]);
-                                        cherEnergyv.push_back(cherEnergy[index]);
-                                        cherWeightv.push_back(cherWeight[index]);
-                                }
-                        }
-                }
-                // Else NRF has more entries search with cherenkov events
-                else
-                {
-                        for(int i=0; i<num_entries; ++i)
-                        {
-                                x = cherEventv[i];
-                                auto exists = std::find(nrfEventv.begin(),nrfEventv.end(), x);
+  // Grab DetInfo Events
+  G4int det_entries = DetInfo_in->Draw("EventID:Energy:Weight:Time","CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\"","goff");
+  G4cout << "EventCheck::EventCheck -> Total Number of Detected Optical Photon entries: "
+          << det_entries << G4endl << G4endl;
+  G4double *detEvent = DetInfo_in->GetVal(0);
+  G4double *detEnergy = DetInfo_in->GetVal(1);
+  G4double *detWeight = DetInfo_in->GetVal(2);
+  G4double *detTime = DetInfo_in->GetVal(3);
 
-                                if(exists != nrfEventv.end())
-                                {
-                                        index = exists - nrfEventv.begin();
-                                        nrf_to_cherEvents.push_back(x);
-                                        cherEnergyv.push_back(cherEnergy[i]);
-                                        cherWeightv.push_back(cherWeight[i]);
-                                        nrfEnergyv.push_back(nrfEnergy[index]);
-                                        nrfWeightv.push_back(nrfWeight[index]);
-                                }
-                        }
-                }
-                G4cout << "EventCheck::EventCheck -> NRF to Optical Photon Number of Events Found: " << nrf_to_cherEvents.size() << G4endl;
-        }
+  std::vector<int> detEventv;
+  for(int i=0; i<det_entries; ++i)
+  {
+    detEventv.push_back((int)detEvent[i]);
+  }
 
-        if(num_entries2 > 0)
-        {
-                for(int i=0; i<num_entries2; ++i)
-                {
-                        // Check to see if Cherenkov Event ID matches Det Event ID
-                        x = detEventv[i];
-                        auto exists = std::find(cherEventv.begin(), cherEventv.end(),x);
-                        // This section here looks at events and places the energy of the "first" aka Max energy Cherenkov photon energy in the vector cher_to_detEnergies
-                        if(exists != cherEventv.end())
-                        {
-                                index = exists - cherEventv.begin();
-                                cher_to_detEvents.push_back(x);
-                                cher_to_detEnergies.push_back(detEnergy[index]);
-                                cher_to_detWeights.push_back(detWeight[index]);
-                                cher_to_detTimes.push_back(time[index]);
-                        }
-                        // Check to see if NRF Event ID matches Det Event ID
-                        exists = std::find(nrfEventv.begin(),nrfEventv.end(),x);
-                        if(exists != nrfEventv.end())
-                        {
-                                index = exists - nrfEventv.begin();
-                                nrf_to_detEvents.push_back(x);
-                                nrf_to_detEnergies.push_back(detEnergy[index]);
-                                nrf_to_detWeights.push_back(detWeight[index]);
-                                nrf_to_detTimes.push_back(time[index]);
-                        }
-                }
+  std::vector<int> nrf_to_cherEvents;
+  if(nrf_entries != 0 && cher_entries != 0 && det_entries != 0)
+  {
+    G4cout << "EventCheck::EventCheck -> Finding NRF Events that Caused Optical Photons..." << G4endl;
 
-                G4cout << "EventCheck::EventCheck -> Number of Optical Photons Detected from NRF: " << nrf_to_detEvents.size() << G4endl;
+    for(int i=0; i<nrf_entries; ++i)
+    {
+      // Grab nrf Event ID
+      x = nrfEventv[i];
+      // Check if NRF EventID is found in Cherenkov Vector
+      auto exists = std::find(cherEventv.begin(),cherEventv.end(), x);
 
-                // ******************************************************************************************************************************** //
-                // Determine if NRF and Cherenkov lead to Detection Event
-                // ******************************************************************************************************************************** //
+      if(exists != cherEventv.end())
+        // if the eventID is found in cherenkov write to new vector
+        nrf_to_cherEvents.push_back(x);
+    }
+    G4cout << "EventCheck::EventCheck -> NRF to Optical Photon Number of Events Found: "
+            << nrf_to_cherEvents.size() << G4endl;
 
-                // Check to see if cherenkov detected ID and nrf detected ID match
-                // Check if more cherenkov events of nrf events lead to detection if cherenkov > nrf then look at nrf->Detected events
-                if(cher_to_detEvents.size() > nrf_to_detEvents.size())
-                {
-                        //G4cout << "EventCheck::EventCheck -> More Optical Photon Events than nrf events lead to detection. Checking NRF Detected Events..." << G4endl;
-                        for(unsigned int i=0; i<nrf_to_detEvents.size(); ++i)
-                        {
-                                x = nrf_to_detEvents[i];
-                                auto exists = std::find(cher_to_detEvents.begin(), cher_to_detEvents.end(),x);
-                                if(exists != cher_to_detEvents.end())
-                                {
-                                        index = exists - cher_to_detEvents.begin();
-                                        nrf_to_cherenkov_to_detEvents.push_back(x);
-                                        nrf_to_cherenkov_to_detNRFEnergies.push_back(nrf_to_detEnergies[i]);
-                                        nrf_to_cherenkov_to_detCherEnergies.push_back(cher_to_detEnergies[index]);
-                                        nrf_to_cherenkov_to_detNRFWeights.push_back(nrf_to_detWeights[i]);
-                                        nrf_to_cherenkov_to_detCherWeights.push_back(cher_to_detWeights[index]);
-                                        nrf_to_cherenkov_to_detNRFTimes.push_back(nrf_to_detTimes[i]);
-                                        nrf_to_cherenkov_to_detCherTimes.push_back(cher_to_detTimes[index]);
-                                }
-                        }
-                }
-                else if(nrf_to_detEvents.size() > cher_to_detEvents.size())
-                {
-                        //G4cout << "EventCheck::EventCheck -> More NRF Events than Optical Photon events lead to detection. Checking Optical Photon Events..." << G4endl;
-                        for(unsigned int i=0; i<cher_to_detEvents.size(); ++i)
-                        {
-                                x = cher_to_detEvents[i];
-                                auto exists = std::find(nrf_to_detEvents.begin(), nrf_to_detEvents.end(),x);
-                                if(exists != nrf_to_detEvents.end())
-                                {
-                                        index = exists - nrf_to_detEvents.begin();
-                                        nrf_to_cherenkov_to_detEvents.push_back(x);
-                                        nrf_to_cherenkov_to_detNRFEnergies.push_back(nrf_to_detEnergies[index]);
-                                        nrf_to_cherenkov_to_detCherEnergies.push_back(cher_to_detEnergies[i]);
-                                        nrf_to_cherenkov_to_detNRFWeights.push_back(nrf_to_detWeights[index]);
-                                        nrf_to_cherenkov_to_detCherWeights.push_back(cher_to_detWeights[i]);
-                                        nrf_to_cherenkov_to_detNRFTimes.push_back(nrf_to_detTimes[index]);
-                                        nrf_to_cherenkov_to_detCherTimes.push_back(cher_to_detTimes[i]);
-                                }
-                        }
-                }
+    for(unsigned int i=0; i<nrf_to_cherEvents.size(); ++i)
+    {
+      // Check if nrf->cherenkov event ID is in detected
+      x = nrf_to_cherEvents[i];
+      auto exists = std::find(detEventv.begin(), detEventv.end(), x);
+      if(exists != detEventv.end())
+      {
+        // if the eventID is found write to new vector
+        nrf_to_cher_to_det_event.push_back(x);
+        // find the index of the detInfo array
+        G4int index = exists - detEventv.begin();
+        // write the rest of the detected info to new vectors
+        nrf_to_cher_to_det_energy.push_back(detEnergy[index]);
+        nrf_to_cher_to_det_weight.push_back(detWeight[index]);
+        nrf_to_cher_to_det_time.push_back(detTime[index]);
+      }
+    }
+    G4cout << "EventCheck::EventCheck -> NRF to Optical Photons Detected Number of Events: "
+            << nrf_to_cher_to_det_event.size() << G4endl;
+  } // end if nrf_entries != 0 && cher_entries != 0
 
-                G4cout << "EventCheck::EventCheck -> NRF Events Leading to Optical Photons Leading to Detection: " << nrf_to_cherenkov_to_detEvents.size() << G4endl;
-        }
+  f->Close();
 }
+
 EventCheck::~EventCheck()
 {
 }
@@ -242,74 +169,46 @@ EventCheck::~EventCheck()
 
 void EventCheck::WriteEvents()
 {
-        std::string OutFileName = gOutName;
-        OutFileName = "EventCheck_" + OutFileName + ".root";
+    std::string OutFileName = gOutName;
+    OutFileName = "EventCheck_" + OutFileName + ".root";
 
-        fout = new TFile(OutFileName.c_str(),"recreate");
-        fout->cd();
+    TFile *fout = new TFile(OutFileName.c_str(),"recreate");
+    fout->cd();
 
-        // Set up Output NRF to Cher Tree
-        nrf_to_cher_tree = new TTree("nrf_to_cher_tree","NRF Events that Lead to Cherenkov");
-        nrf_to_cher_tree->Branch("EventID",&nrf_cher_EventID);
-        nrf_to_cher_tree->Branch("NRF_Energy",&nrfE);
-        nrf_to_cher_tree->Branch("NRF_Weight",&nrfW);
-        nrf_to_cher_tree->Branch("Cher_Energy",&cherE);
-        nrf_to_cher_tree->Branch("Cher_Weight",&cherW);
+    // Set up NRF to Cher to Det Tree
+    G4int event;
+    G4double energy, weight, thetimes;
 
-        // Set up NRF to Cher to Det Tree
-        nrf_to_cher_to_det_tree = new TTree("nrf_to_cher_to_det_tree","NRF Events that Lead to Cherenkov that were Detected");
-        nrf_to_cher_to_det_tree->Branch("EventID",&a);
-        nrf_to_cher_to_det_tree->Branch("EnergyNRF",&energyNRF);
-        nrf_to_cher_to_det_tree->Branch("EnergyCher",&energyCher);
-        nrf_to_cher_to_det_tree->Branch("WeightNRF",&weightNRF);
-        nrf_to_cher_to_det_tree->Branch("WeightCher",&weightCher);
-        nrf_to_cher_to_det_tree->Branch("TimeNRF",&timeNRF);
-        nrf_to_cher_to_det_tree->Branch("TimeCher",&timeCher);
+    TTree *nrf_to_cher_to_det_tree = new TTree("event_tree","NRF Events that Lead to Cherenkov that were Detected");
+    nrf_to_cher_to_det_tree->Branch("EventID",&event);
+    nrf_to_cher_to_det_tree->Branch("Energy",&energy);
+    nrf_to_cher_to_det_tree->Branch("Weight",&weight);
+    nrf_to_cher_to_det_tree->Branch("Time",&thetimes);
 
-        // Fill nrf_to_cher Tree
-        if(num_entries > 0 && num_entries1 > 0 && nrf_to_cherEvents.size() > 0)
-        {
-                std::cout << "EventCheck::WriteEvents -> Filling NRF to Optical Photon Tree..." << std::endl;
-                G4cout << "EventCheck::WriteEvents -> Filling NRF to Optical Photon Tree..." << G4endl;
-                // Fill nrf_to_cher_tree
-                for(unsigned int i=0; i<nrf_to_cherEvents.size(); ++i)
-                {
-                        nrf_cher_EventID = nrf_to_cherEvents[i];
-                        nrfE = nrfEnergyv[i];
-                        nrfW = nrfWeightv[i];
-                        cherE = cherEnergyv[i];
-                        cherW = cherWeightv[i];
-                        nrf_to_cher_tree->Fill();
-                }
-        }
-        // Fill nrf_to_det_Tree
-        if(num_entries > 0 && num_entries1 > 0 && num_entries2 > 0 && nrf_to_cherenkov_to_detEvents.size() > 0)
-        {
-                std::cout << "EventCheck::WriteEvents -> Filling NRF to Optical Photon to Detected Tree..." << std::endl;
-                G4cout << "EventCheck::WriteEvents -> Filling NRF to Optical Photon to Detected Tree..." << G4endl;
-                // Fill nrf_to_cher_to_det_tree
-                for(unsigned int i=0; i<nrf_to_cherenkov_to_detEvents.size(); ++i)
-                {
-                        a = nrf_to_cherenkov_to_detEvents[i];
-                        energyNRF = nrf_to_cherenkov_to_detNRFEnergies[i];
-                        energyCher = nrf_to_cherenkov_to_detCherEnergies[i];
-                        weightNRF = nrf_to_cherenkov_to_detNRFWeights[i];
-                        weightCher = nrf_to_cherenkov_to_detCherWeights[i];
-                        timeNRF = nrf_to_cherenkov_to_detNRFTimes[i];
-                        timeCher = nrf_to_cherenkov_to_detCherTimes[i];
-                        nrf_to_cher_to_det_tree->Fill();
-                }
-        }
+    // Fill nrf_to_cher_to_det Tree
+    if(nrf_to_cher_to_det_event.size() > 0)
+    {
+      // Fill tree
+      for(unsigned int i=0; i<nrf_to_cher_to_det_event.size(); ++i)
+      {
+        event = nrf_to_cher_to_det_event[i];
+        energy = nrf_to_cher_to_det_energy[i];
+        weight = nrf_to_cher_to_det_weight[i];
+        thetimes = nrf_to_cher_to_det_time[i];
+        nrf_to_cher_to_det_tree->Fill();
+      }
+    }
 
-        // ******************************************************************************************************************************** //
-        // Write TTrees to OutFile
-        // ******************************************************************************************************************************** //
+// ******************************************************************************************************************************** //
+// Write TTrees to OutFile
+// ******************************************************************************************************************************** //
 
-        nrf_to_cher_tree->Write();
-        nrf_to_cher_to_det_tree->Write();
+  nrf_to_cher_to_det_tree->Write();
 
-        std::cout << "EventCheck::WriteEvents -> TTrees Written to File: " << OutFileName << std::endl;
-        fout->Close();
-        time_end = std::time(&timer2);
-        G4cout << "Event Check took: " << std::difftime(time_end, time_start) << " seconds!" << G4endl << G4endl;
+  std::cout << "EventCheck::WriteEvents -> TTrees Written to File: "
+              << OutFileName << std::endl;
+  fout->Close();
+  time_end = std::time(&timer2);
+  G4cout << "Event Check took: " << std::difftime(time_end, time_start)
+          << " seconds!" << G4endl << G4endl;
 }

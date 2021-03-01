@@ -7,32 +7,40 @@
 // ************************************************************************************************ //
 // File Explanation:
 //
-// Requires 5 inputs
+// Requires 2 inputs
 // 1. Filename. const char*
 // 2. TTree Object to Weight and Rebin. const char*
-// 3. Weighted and Rebined TH1D Object Name. const char*
-// 4. Number of Bins int
-// 5. Max Energy of Histogram (MeV) Default set as 2.1 MeV. double
-//
-// Additional Optional inputs are Available to the User for variable bin drawing
-// 1. Variable Bin Width. bool
-// 2. The NRF Bin Width. double
-// 3. Importance Sampling Energy Region split. double
-// 4. Importance sampling region weighting. double
+// Other Input Options
+// 3. Weighted and Rebined TH1D Object Name. const char* Default = "hOut"
+// 4. Number of Bins. int Default = 120,000
+// 5. Min Energy of Histogram (MeV) for a constant bin width histogram or
+//    the Max Energy of the non nrf region.  Default set as 0.0 MeV. double
+// 6. Max Energy of Histogram (MeV) Default set as 2.1 MeV. double
+// 7. TCut to place on TTree prior to Histogramming. TCut Default = "NA"
+// 8. Variable Bin Width Bool. bool Default = false
+// 9. NRF Area of Interest Bin Width. double Default = -1
+// 10. Non-NRF Area of Interest Bin Width. double Default = -1
 //
 // This File Scans the File for the user's TTree Object Name. It then Draws
 // that object to a new weighted histogram with the user's number of bins
 
 void Rebin(const char* inFile, const char* ObjName, const char* OutObjName="hOut",
-  int nbins=420000, double Emax=2.1,
-  bool VarArray=false, double nrf_bin_width = -1., double non_nrf_bin_width =-1.,
-  double sample_energy=-1., TCut cut1="NA")
+  int nbins=120000, double Emin = 0.0, double Emax=2.1, TCut cut1="NA",
+  bool VarArray=false, double nrf_bin_width = -1., double non_nrf_bin_width =-1.)
 {
 
   // Check to make sure file exists
   if(gSystem->AccessPathName(inFile))
   {
     std::cerr << "ERROR Could not find " << inFile << "exiting..." << std::endl;
+    exit(1);
+  }
+
+  // Complete User Input Checks
+  if(VarArray && (nrf_bin_width < 0. || non_nrf_bin_width < 0.))
+  {
+    std::cerr << "USER ERROR. Variable bin widths selected without user selecting "
+                << "the magnitude of the bin widths. Exiting..." << std::endl;
     exit(1);
   }
 
@@ -58,23 +66,18 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName="hOut
   {
     std::cout << "User did not select variable bin widths." << std::endl;
     if(cut1=="NA")
-      hObj = new TH1D(OutObjName,"Weighted Energy Spectrum",nbins,0.,Emax);
+      hObj = new TH1D(OutObjName, "Weighted Energy Spectrum", nbins, Emin, Emax);
     else
-      hObj = new TH1D(OutObjName, "Weighted Energy Spectrum",nbins,sample_energy, Emax);
+      hObj = new TH1D(OutObjName, "Weighted Energy Spectrum", nbins, Emin, Emax);
   }
   // User wants variable bin widths
   else
   {
-    if(sample_energy < 0 || non_nrf_bin_width < 0 || nrf_bin_width < 0)
-    {
-      std::cerr << "Error User must input Energy and Weight of region split." << std::endl;
-      exit(1);
-    }
     std::cout << "User selected variable bin widths." <<std::endl;
     // Find total number of bins
     double edge_counter = 0.;
-    int nbins1 = sample_energy/(non_nrf_bin_width);
-    int nbins2 = (Emax - sample_energy)/nrf_bin_width;
+    int nbins1 = Emin/(non_nrf_bin_width);
+    int nbins2 = (Emax - Emin)/nrf_bin_width;
     Int_t tbins = nbins1 + nbins2;
     // create edges (dynamically sized array)
     Double_t* edges = new Double_t[tbins+1];
@@ -118,7 +121,7 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName="hOut
     fout = new TFile(OutFileName.c_str(),"update");
   else
     fout = new TFile(OutFileName.c_str(),"recreate");
- 
+
   fout->cd();
   hObj->Write();
   std::cout << "Rebinned Histogram written to: " << OutFileName << std::endl;

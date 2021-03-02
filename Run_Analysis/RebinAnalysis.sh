@@ -101,46 +101,46 @@ theFile2=$VAR1$INFILE2$VAR1
 
 if [ $CHOPDATA != "false" ] && [ $CHOPDATA != "False" ]
 then
-  root -b -q "Rebin.cc($theFile,\"ChopIn\",\"hChopIn\",300)"
-  root -b -q "Rebin.cc($theFile,\"ChopOut\",\"hChopOut\",300)"
+  root -l -b -q "Rebin.cc($theFile,\"ChopIn\",\"hChopIn\",300)"
+  root -l -b -q "Rebin.cc($theFile,\"ChopOut\",\"hChopOut\",300)"
   if [ $INFILE2 != "NA" ]
   then
-    root -b -q "Rebin.cc($theFile2,\"ChopIn\",\"hChopIn\",300)"
-    root -b -q "Rebin.cc($theFile2,\"ChopOut\",\"hChopOut\",300)"
+    root -l -b -q "Rebin.cc($theFile2,\"ChopIn\",\"hChopIn\",300)"
+    root -l -b -q "Rebin.cc($theFile2,\"ChopOut\",\"hChopOut\",300)"
   fi
 fi
 
 if [ $INTOBJDATA != "false" ] && [ $INTOBJDATA != "False" ]
 then
   # Rebin IntObj > 1.5 MeV with 600 bins bin width 1e-3
-  root -b -q "Rebin.cc($theFile,\"IntObjIn\",\"hIntObjIn\",600,1.5,2.1,\"Energy>1.5\")"
+  root -l -b -q "Rebin.cc($theFile,\"IntObjIn\",\"hIntObjIn\",600,1.5,2.1,\"Energy>1.5\")"
   # Rebin IntObj > 1.5 MeV with 120,000 bins bin width 5e-6
-  root -b -q "Rebin.cc($theFile,\"IntObjIn\",\"hIntObjIn\",120000,1.5,2.1,\"Energy>1.5\")"
-  root -b -q "Rebin.cc($theFile,\"IntObjIn\",\"hIntObjIn\",300)"
-  root -b -q "Rebin.cc($theFile,\"IntObjOut\",\"hIntObjOut\",300)"
+  root -l -b -q "Rebin.cc($theFile,\"IntObjIn\",\"hIntObjIn\",120000,1.5,2.1,\"Energy>1.5\")"
+  root -l -b -q "Rebin.cc($theFile,\"IntObjIn\",\"hIntObjIn\",300)"
+  root -l -b -q "Rebin.cc($theFile,\"IntObjOut\",\"hIntObjOut\",300)"
   if [ $INFILE2 != "NA" ]
   then
     # Rebin IntObj > 1.5 MeV with 600 bins bin width 1e-3
-    root -b -q "Rebin.cc($theFile2,\"IntObjIn\",\"hIntObjIn\",600,1.5,2.1,\"Energy>1.5\")"
+    root -l -b -q "Rebin.cc($theFile2,\"IntObjIn\",\"hIntObjIn\",600,1.5,2.1,\"Energy>1.5\")"
     # Rebin IntObj > 1.5 MeV with 120,000 bins bin width 5e-6
-    root -b -q "Rebin.cc($theFile2,\"IntObjIn\",\"hIntObjIn\",120000,1.5,2.1,\"Energy>1.5\")"
-    root -b -q "Rebin.cc($theFile2,\"IntObjIn\",\"hIntObjIn\",300)"
-    root -b -q "Rebin.cc($theFile2,\"IntObjOut\",\"hIntObjOut\",300)"
+    root -l -b -q "Rebin.cc($theFile2,\"IntObjIn\",\"hIntObjIn\",120000,1.5,2.1,\"Energy>1.5\")"
+    root -l -b -q "Rebin.cc($theFile2,\"IntObjIn\",\"hIntObjIn\",300)"
+    root -l -b -q "Rebin.cc($theFile2,\"IntObjOut\",\"hIntObjOut\",300)"
   fi
 fi
 
 if [ $NRFDATA != "false" ] && [ $NRFDATA != "False" ]
 then
-  root -b -q "Rebin.cc($theFile,\"NRF\",\"hNRF\",300)"
+  root -l -b -q "Rebin.cc($theFile,\"NRF\",\"hNRF\",300)"
   if [ $INFILE2 != "NA" ]
   then
-    root -b -q "Rebin.cc($theFile2,\"NRF\",\"hNRF\",300)"
+    root -l -b -q "Rebin.cc($theFile2,\"NRF\",\"hNRF\",300)"
   fi
 fi
 
 if [ $WATERDATA != "false" ] && [ $WATERDATA != "False" ]
 then
-  root -b -q "Rebin.cc($theFile,\"Water\",\"hWater\",300)"
+  root -l -b -q "Rebin.cc($theFile,\"Water\",\"hWater\",300)"
   if [ $INFILE2 != "NA" ]
   then
     root -b -q "Rebin.cc($theFile2,\"Water\",\"hWater\",300)"
@@ -149,29 +149,29 @@ fi
 
 if [ $CHERENKOVDATA != "false" ] && [ $CHERENKOVDATA != "False" ]
 then
-  root -b -q "Rebin.cc($theFile,\"Cherenkov\",\"hCherenkov\",300)"
+  root -l -b -q "Rebin.cc($theFile,\"Cherenkov\",\"hCherenkov\",300)"
   if [ $INFILE2 != "NA" ]
   then
-    root -b -q "Rebin.cc($theFile2,\"Cherenkov\",\"hCherenkov\",300)"
+    root -l -b -q "Rebin.cc($theFile2,\"Cherenkov\",\"hCherenkov\",300)"
   fi
 fi
 
 if [ $DETDATA != "false" ] && [ $DETDATA != "False" ]
 then
   # Rebin Detected with 20 bins Energy < 5e-6 bin width 0.25e-6
-  root -b -q "Rebin.cc($theFile,\"DetInfo\",\"hDet\",20,0.0,5e-6,\"Energy<5e-6\")"
+  root -l -b -q "Rebin.cc($theFile,\"DetInfo\",\"hDet\",20,0.0,5e-6,\"Energy<5e-6\")"
   if [ $INFILE2 != "NA" ]
   then
-    root -b -q "Rebin.cc($theFile2,\"DetInfo\",\"hDet\",20,0.0,5e-6,\"Energy<5e-6\")"
+    root -l -b -q "Rebin.cc($theFile2,\"DetInfo\",\"hDet\",20,0.0,5e-6,\"Energy<5e-6\")"
   fi
 fi
 
 if [ $INCDETDATA != "false" ] && [ $INCDETDATA != "False" ]
 then
-  root -b -q "Rebin.cc($theFile,\"IncDetInfo\",\"hIncDetInfo\",300)"
+  root -l -b -q "Rebin.cc($theFile,\"IncDetInfo\",\"hIncDetInfo\",300)"
   if [ $INFILE2 != "NA" ]
   then
-    root -b -q "Rebin.cc($theFile2,\"IncDetInfo\",\"hIncDetInfo\",300)"
+    root -l -b -q "Rebin.cc($theFile2,\"IncDetInfo\",\"hIncDetInfo\",300)"
   fi
 fi
 
@@ -185,34 +185,34 @@ then
 
   if [ $CHOPDATA != "false" ] && [ $CHOPDATA != "False" ]
   then
-    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hChopIn\")"
-    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hChopOut\")"
+    root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hChopIn\")"
+    root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hChopOut\")"
   fi
 
   if [ $INTOBJDATA != "false" ] && [ $INTOBJDATA != "False" ]
   then
-    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjIn\")"
-    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjOut\")"
+    root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjIn\")"
+    root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjOut\")"
   fi
 
   if [ $NRFDATA != "false" ] && [ $NRFDATA != "False" ]
   then
-    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hNRF\")"
+    root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hNRF\")"
   fi
 
   if [ $WATERDATA != "false" ] && [ $WATERDATA != "False" ]
   then
-    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hWater\")"
+    root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hWater\")"
   fi
 
   if [ $CHERENKOVDATA != "false" ] && [ $CHERENKOVDATA != "False" ]
   then
-    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hCherenkov\")"
+    root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hCherenkov\")"
   fi
 
   if [ $INCDETDATA != "false" ] && [ $INCDETDATA != "False" ]
   then
-    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIncDetInfo\")"
+    root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIncDetInfo\")"
   fi
 
   if [ $DETDATA != "false" ] && [ $DETDATA != "False" ]
@@ -221,7 +221,7 @@ then
     rebinnedDetFile=$VAR1$VAR3$INFILE$VAR1
     rebinnedDetFile2=$VAR1$VAR3$INFILE2$VAR1
 
-    root -b -q "PrintResults.cc($rebinnedDetFile, $rebinnedDetFile2, \"hDet\")"
+    root -l -b -q "PrintResults.cc($rebinnedDetFile, $rebinnedDetFile2, \"hDet\")"
   fi
 
 fi

@@ -19,7 +19,7 @@
 // The output of this file is another ROOT TFile with a bremmstrahlung and importance
 // sampling distributions saved as TGraphs
 
-void Sampling(const char *bremInputFilename, double Emax, string sample_element)
+void Sampling(const char *bremInputFilename, double Emax=2.1, string sample_element="U")
 {
 	cout << "Emax set to: " << Emax << endl; // spectrum max energy in MeV
 
@@ -122,7 +122,7 @@ void Sampling(const char *bremInputFilename, double Emax, string sample_element)
 	TH1D *hBrems = new TH1D("hBrems","Bremsstrahlung Data",nbins, 0.,Emax);
 	ChopperData->Draw("Energy>>hBrems","","goff");
 	hBrems->Scale(1.0/hBrems->Integral());
-	hBrems->Smooth(1024);
+	//hBrems->Smooth(1024);
 	TGraph *gBrems = new TGraph(hBrems);
 
 	hSample->SetTitle("NRF importance sampling distribution");

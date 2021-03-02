@@ -105,9 +105,9 @@ then
   echo "Rebinning Off File: $INFILE2"
 fi
 
+VAR1="\""
 if [ $PRINTDATAONLY == "false" ]
 then
-  VAR1="\""
 
   theFile=$VAR1$INFILE$VAR1
   theFile2=$VAR1$INFILE2$VAR1
@@ -188,7 +188,7 @@ then
     fi
   fi
 
-fi 
+fi
 
 if [ $INFILE2 != "NA" ] && [ $PRINTDATA != "false" ]
 then

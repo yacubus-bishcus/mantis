@@ -99,6 +99,9 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName="hOut
 
   }// end !VarArray
 
+  // Prior to filling histogram set structure for storing bin errors
+  hObj->Sumw2();
+
   std::cout << "Filling Histogram..." << std::endl;
   // Fill the new Histogram
   for(unsigned int i=0;i<nentries;++i)

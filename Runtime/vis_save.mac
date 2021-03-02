@@ -1,4 +1,3 @@
-/input/energy 2.1
 /chopper/state On
 /chopper/material Uranium
 /chopper/abundance 90
@@ -9,7 +8,7 @@
 /run/verbose 0
 /event/verbose 0
 /chopper/thickness 30
-/chopper/distance 2 
+/chopper/distance 2
 /mydet/Angle 120
 /mydet/attenuator Off
 /mydet/attenuator2 Off

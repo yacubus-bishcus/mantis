@@ -82,6 +82,7 @@ then
   echo "Cherenkov Data: $CHERENKOVDATA"
   echo "Detected Data: $DETDATA"
   echo "Incident Detector Data: $INCDETDATA"
+  echo "Print Results: $PRINTDATA"
 else
   echo "USER ERROR: MUST INPUT File to Rebin!"
   exit

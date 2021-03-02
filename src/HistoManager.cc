@@ -46,8 +46,8 @@ void HistoManager::Book()
 
   if(!fileOpen)
   {
-          G4cerr << "HistoManager::Book(): Cannot Open " <<manager->GetFileName()<<G4endl;
-          return;
+    G4cerr << "HistoManager::Book(): Cannot Open " <<manager->GetFileName()<<G4endl;
+    return;
   }
 
   // Create ID 0 Ntuple for Incident Chopper Data
@@ -131,13 +131,16 @@ if(debug)
 
 void HistoManager::finish()
 {
-  if(!fFactoryOn) {
-          G4cerr << "ERROR HistoManager::finish: Failed to write to file" << G4endl;
-          return;
+  if(!fFactoryOn)
+  {
+    G4cerr << "ERROR HistoManager::finish: Failed to write to file" << G4endl;
+    return;
   }
+
   G4AnalysisManager* manager = G4AnalysisManager::Instance();
   manager->Write();
   manager->CloseFile();
+
   std::cout << "HistoManager::finish -> Ntuples are saved." << std::endl;
   G4cout << "HistoManager::finish -> Ntuples are saved. " << G4endl;
   stop_time = time(0);
@@ -145,6 +148,7 @@ void HistoManager::finish()
           << std::difftime(stop_time,start_time) << " seconds!" << G4endl;
   std::cout << "HistoManager::finish -> Time: "
               << std::difftime(stop_time,start_time) << " seconds!" << std::endl;
+
   delete manager;
   fFactoryOn = false;
 }

@@ -7,6 +7,7 @@ NRFDATA="false"
 WATERDATA="false"
 DETDATA="true"
 INCDETDATA="false"
+PRINTDATA="false"
 
 for arg in "$@"
 do
@@ -24,6 +25,7 @@ do
         echo "--CherenkovData=false   specify Cherenkov Data Analysis"
         echo "--DetData=true          specify Detected Data Analysis"
         echo "--IncDetData=false      specify Incident Detector Data Analysis"
+        echo "--PrintData=false       Run PrintResults.cc"
         shift
         exit 0
         ;;
@@ -61,6 +63,10 @@ do
        ;;
        -IncDet|--IncDetData=*)
        INCDETDATA="${arg#*=}"
+       shift
+       ;;
+       -Print|--PrintData=*)
+       PRINTDATA="${arg#*=}"
        shift
        ;;
     esac
@@ -166,4 +172,55 @@ then
   then
     root -b -q "Rebin.cc($theFile2,\"IncDetInfo\",\"hIncDetInfo\",300)"
   fi
+fi
+
+if [ $INFILE2 != "NA" ] && [ $PRINTDATA != "false" ]
+then
+  VAR2="rebinned_300_"
+  rebinnedFile=$VAR1$VAR2$INFILE$VAR1
+  rebinnedFile2=$VAR1$VAR2$INFILE2$VAR1
+
+  echo Running Z Test Analysis on $rebinnedFile and $rebinnedFile2
+
+  if [ $CHOPDATA != "false" ] && [ $CHOPDATA != "False" ]
+  then
+    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hChopIn\")"
+    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hChopOut\")"
+  fi
+
+  if [ $INTOBJDATA != "false" ] && [ $INTOBJDATA != "False" ]
+  then
+    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjIn\")"
+    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjOut\")"
+  fi
+
+  if [ $NRFDATA != "false" ] && [ $NRFDATA != "False" ]
+  then
+    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hNRF\")"
+  fi
+
+  if [ $WATERDATA != "false" ] && [ $WATERDATA != "False" ]
+  then
+    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hWater\")"
+  fi
+
+  if [ $CHERENKOVDATA != "false" ] && [ $CHERENKOVDATA != "False" ]
+  then
+    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hCherenkov\")"
+  fi
+
+  if [ $INCDETDATA != "false" ] && [ $INCDETDATA != "False" ]
+  then
+    root -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIncDetInfo\")"
+  fi
+
+  if [ $DETDATA != "false" ] && [ $DETDATA != "False" ]
+  then
+    VAR3="rebinned_20_"
+    rebinnedDetFile=$VAR1$VAR3$INFILE$VAR1
+    rebinnedDetFile2=$VAR1$VAR3$INFILE2$VAR1
+
+    root -b -q "PrintResults.cc($rebinnedDetFile, $rebinnedDetFile2, \"hDet\")"
+  fi
+
 fi

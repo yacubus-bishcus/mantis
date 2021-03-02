@@ -183,24 +183,41 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         // Interrogation Object Analysis
         if(drawIntObjDataFlag && !bremTest)
         {
+          G4ThreeVector p = aStep->GetPreStepPoint()->GetMomentum();
+          G4double angle = asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()); //the angle of the particle relative to the Z axis
+          // Incident Air Pocket Just Prior to Interrogation Object
+          if(nextStep_VolumeName.compare(0,9,"AirPocket") == 0
+            && previousStep_VolumeName.compare(0,9,"AirPocket") !=0)
+          {
+            manager->FillNtupleDColumn(9,0,theTrack->GetKineticEnergy()/(MeV));
+            manager->FillNtupleDColumn(9,1,weight);
+            manager->FillNtupleSColumn(9,2,CPName);
+            manager->FillNtupleDColumn(9,3,angle);
+            manager->FillNtupleDColumn(9,4,theTrack->GetGlobalTime());
+            manager->FillNtupleIColumn(9,5, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+            manager->AddNtupleRow(9);
+          }
                 // Incident Interrogation Object
-                if(nextStep_VolumeName.compare(0, 6,"IntObj") == 0
-                   && previousStep_VolumeName.compare(0, 6, "IntObj") != 0)
-                {
-                    manager->FillNtupleDColumn(3,0, theTrack->GetKineticEnergy()/(MeV));
-                    manager->FillNtupleDColumn(3,1, weight);
-                    manager->FillNtupleSColumn(3,2, CPName);
-                    manager->AddNtupleRow(3);
-                }
-                // Exiting Interrogation Object
-                if(nextStep_VolumeName.compare(0, 6,"IntObj") != 0
-                   && previousStep_VolumeName.compare(0,6,"IntObj") == 0)
-                {
-                  manager->FillNtupleDColumn(4,0, theTrack->GetKineticEnergy()/(MeV));
-                  manager->FillNtupleDColumn(4,1, weight);
-                  manager->FillNtupleSColumn(4,2, CPName);
-                  manager->AddNtupleRow(4);
-                }
+          if(nextStep_VolumeName.compare(0, 6,"IntObj") == 0
+             && previousStep_VolumeName.compare(0, 6, "IntObj") != 0)
+          {
+              manager->FillNtupleDColumn(3,0, theTrack->GetKineticEnergy()/(MeV));
+              manager->FillNtupleDColumn(3,1, weight);
+              manager->FillNtupleSColumn(3,2, CPName);
+              manager->FillNtupleDColumn(3,3,angle);
+              manager->FillNtupleDColumn(3,4,theTrack->GetGlobalTime());
+              manager->FillNtupleIColumn(3,5,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+              manager->AddNtupleRow(3);
+          }
+          // Exiting Interrogation Object
+          if(nextStep_VolumeName.compare(0, 6,"IntObj") != 0
+             && previousStep_VolumeName.compare(0,6,"IntObj") == 0)
+          {
+            manager->FillNtupleDColumn(4,0, theTrack->GetKineticEnergy()/(MeV));
+            manager->FillNtupleDColumn(4,1, weight);
+            manager->FillNtupleSColumn(4,2, CPName);
+            manager->AddNtupleRow(4);
+          }
         }
 
 // *********************************************** Track Water Tank Interactions **************************************************** //

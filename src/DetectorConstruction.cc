@@ -49,373 +49,378 @@ DetectorConstruction::~DetectorConstruction()
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
 // Get nist material manager
-        G4NistManager* nist = G4NistManager::Instance();
+  G4NistManager* nist = G4NistManager::Instance();
 
-// ************************************* Set up Materials ***************************************** //
+  // ************************************* Set up Materials ***************************************** //
 
-        G4Material *air = nist->FindOrBuildMaterial("G4_AIR");
-        G4Material *steel = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
-        G4Material *poly = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
+  G4Material *air = nist->FindOrBuildMaterial("G4_AIR");
+  G4Material *steel = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
+  G4Material *poly = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
 
-        // Materials For NIST Shielding 
-        G4Material *tungsten = nist->FindOrBuildMaterial("G4_W");
-        G4Material *lead = nist->FindOrBuildMaterial("G4_Pb");
-        G4Material *gold = nist->FindOrBuildMaterial("G4_Au");
-        G4Material *copper = nist->FindOrBuildMaterial("G4_Cu");
-        G4Material *attenuator = nist->FindOrBuildMaterial(attenuatorMat);
-        G4Material *low_z_attenuator = nist->FindOrBuildMaterial(attenuatorMat2);
-        
-        //G4Element *elPb = new G4Element("Lead", "Pb", 82, 207.2*g/mole);
-        //G4Element *elN = new G4Element("Nitrogen", "N2", 7, 14.01*g/mole);
-        G4Element *elO = new G4Element("Oxygen", "O", 8, 16.0*g/mole);
-        //G4Element *elC = new G4Element("Carbon", "C", 6, 12.0*g/mole);
-        G4Element *elH = new G4Element("Hydrogen", "H", 1, 1.00794*g/mole);
-        // Need to have water built by user for raleigh scattering
-        G4Material *Water = new G4Material("Water", 0.99802*g/cm3,2, kStateLiquid,273.15, 1); // Name, density, numComponents, state, Temperature, pressure
-        Water->AddElement(elH, 1);
-        Water->AddElement(elO, 2);
-        G4Material *plexiglass = nist->FindOrBuildMaterial("G4_PLEXIGLASS");
+  // Materials For NIST Shielding
+  G4Material *tungsten = nist->FindOrBuildMaterial("G4_W");
+  G4Material *lead = nist->FindOrBuildMaterial("G4_Pb");
+  G4Material *gold = nist->FindOrBuildMaterial("G4_Au");
+  G4Material *copper = nist->FindOrBuildMaterial("G4_Cu");
+  G4Material *attenuator = nist->FindOrBuildMaterial(attenuatorMat);
+  G4Material *low_z_attenuator = nist->FindOrBuildMaterial(attenuatorMat2);
 
-        G4Material *myVacuum = new G4Material("Vacuum", 1.e-5*g/cm3, 1, kStateGas, 273.15, 2.e-2*bar);
-        myVacuum->AddMaterial(air,1);
-// technically PMT glass is a special borosilicate glass calle k-free glass
-// but pyrex is close enough as a borosilicate glass
-        G4Material* PMT_mat = nist->FindOrBuildMaterial("G4_Pyrex_Glass");
+  //G4Element *elPb = new G4Element("Lead", "Pb", 82, 207.2*g/mole);
+  //G4Element *elN = new G4Element("Nitrogen", "N2", 7, 14.01*g/mole);
+  G4Element *elO = new G4Element("Oxygen", "O", 8, 16.0*g/mole);
+  //G4Element *elC = new G4Element("Carbon", "C", 6, 12.0*g/mole);
+  G4Element *elH = new G4Element("Hydrogen", "H", 1, 1.00794*g/mole);
+  // Need to have water built by user for raleigh scattering
+  G4Material *Water = new G4Material("Water", 0.99802*g/cm3,2, kStateLiquid,273.15, 1); // Name, density, numComponents, state, Temperature, pressure
+  Water->AddElement(elH, 1);
+  Water->AddElement(elO, 2);
+  G4Material *plexiglass = nist->FindOrBuildMaterial("G4_PLEXIGLASS");
 
-// Setting up weapons grade material Isotopes
-        G4Isotope* Uranium235 = new G4Isotope("Uranium235", 92, 235, 235.04393*g/mole); // atomicnumber, number of nucleons, mass of mole
-        G4Isotope* Uranium238 = new G4Isotope("Uranium238", 92, 238, 238.02891*g/mole);
-        G4Isotope* Plutonium239 = new G4Isotope("Plutonium239",94, 239, 239.0521634*g/mole);
-        G4Isotope* Plutonium240 = new G4Isotope("Plutonium240", 94, 240, 240.05381*g/mole);
-// Setting up Chopper Isotopes 
-        G4Isotope* Lead204 = new G4Isotope("Lead204", 82, 204, 203.973043*g/mole);
-        G4Isotope* Lead206 = new G4Isotope("Lead206", 82, 206, 205.974465*g/mole);
-        G4Isotope* Lead207 = new G4Isotope("Lead207", 82, 207, 206.975897*g/mole);
-        G4Isotope* Lead208 = new G4Isotope("Lead208", 82, 208, 207.976652*g/mole);
-        
-        G4Isotope* Tungsten180 = new G4Isotope("Tung180", 74, 180, 179.9467*g/mole);
-        G4Isotope* Tungsten182 = new G4Isotope("Tung182", 74, 182, 181.9482*g/mole);
-        G4Isotope* Tungsten183 = new G4Isotope("Tung183", 74, 183, 182.9502*g/mole);
-        G4Isotope* Tungsten184 = new G4Isotope("Tung182", 74, 184, 183.9509*g/mole);
-        G4Isotope* Tungsten186 = new G4Isotope("Tung186", 74, 186, 185.9543*g/mole);
-        
-// Setting up Chopper Materials 
-        G4Element* Uranium_chopper = new G4Element("Chopper_Uranium", "U", 2); // name, element symbol, #isotopes
-        G4Element* Plutonium_chopper = new G4Element("Chopper_Plutonium","Pu",2);
-        G4Element* Lead_chopper = new G4Element("Chopper_Lead","Pb",4);
-        Lead_chopper->AddIsotope(Lead204, 1.4*perCent);
-        Lead_chopper->AddIsotope(Lead206, 24.1*perCent);
-        Lead_chopper->AddIsotope(Lead207, 22.1*perCent);
-        Lead_chopper->AddIsotope(Lead208, 52.4*perCent);
-        G4Element* Tungsten_chopper = new G4Element("Chopper_Tungsten","W",5);
-        Tungsten_chopper->AddIsotope(Tungsten180, 0.000012*perCent);
-        Tungsten_chopper->AddIsotope(Tungsten182, 26.50*perCent);
-        Tungsten_chopper->AddIsotope(Tungsten183, 14.31*perCent);
-        Tungsten_chopper->AddIsotope(Tungsten184, 30.759988*perCent);
-        Tungsten_chopper->AddIsotope(Tungsten186, 28.43*perCent);
-        
-// Setting up Interrogation object materials 
-        G4Element* Uranium_interrogation = new G4Element("Interrogation_Uranium","U",2);
-        G4Element* Plutonium_interrogation = new G4Element("Interrogation_Plutonium","Pu",2);
-        G4Material* natural_uranium = nist->FindOrBuildMaterial("G4_U");
-        G4Material* natural_plutonium = nist->FindOrBuildMaterial("G4_Pu");
+  G4Material *myVacuum = new G4Material("Vacuum", 1.e-5*g/cm3, 1, kStateGas, 273.15, 2.e-2*bar);
+  myVacuum->AddMaterial(air,1);
+  // technically PMT glass is a special borosilicate glass calle k-free glass
+  // but pyrex is close enough as a borosilicate glass
+  G4Material* PMT_mat = nist->FindOrBuildMaterial("G4_Pyrex_Glass");
 
-// Set up Photocathode materials
-        G4Element* elGa = new G4Element("Gallium", "Ga", 31, 69.723*g/mole);
-        G4Element* elAs = new G4Element("Arsenic", "As", 33, 74.9216*g/mole);
-        G4Element* elP = new G4Element("Phosphorous", "P", 15, 30.973762*g/mole);
-        G4Material* GaAsP = new G4Material("GaAsP", 4.138*g/cm3, 3, kStateSolid, 293*kelvin, 1*pow(10,-6)*pascal);
-        GaAsP->AddElement(elGa, 1);
-        GaAsP->AddElement(elAs, 1);
-        GaAsP->AddElement(elP, 1);
-        G4Element* elCs = new G4Element("Cesium", "Cs", 55, 132.90545*g/mole);
-        G4Element* elK = new G4Element("Potassium", "K", 19, 39.0983*g/mole);
-        G4Element* elSb = new G4Element("Antimony", "Sb", 51, 121.76*g/mole);
-        G4Material * bialkali = new G4Material("Bialkali", 3.29*g/cm3, 3, kStateSolid, 293*kelvin, 1*pow(10,-6)*pascal);
-        bialkali->AddElement(elCs,1);
-        bialkali->AddElement(elK,2);
-        bialkali->AddElement(elSb,1);
+  // Setting up weapons grade material Isotopes
+  G4Isotope* Uranium235 = new G4Isotope("Uranium235", 92, 235, 235.04393*g/mole); // atomicnumber, number of nucleons, mass of mole
+  G4Isotope* Uranium238 = new G4Isotope("Uranium238", 92, 238, 238.02891*g/mole);
+  G4Isotope* Plutonium239 = new G4Isotope("Plutonium239",94, 239, 239.0521634*g/mole);
+  G4Isotope* Plutonium240 = new G4Isotope("Plutonium240", 94, 240, 240.05381*g/mole);
+  // Setting up Chopper Isotopes
+  G4Isotope* Lead204 = new G4Isotope("Lead204", 82, 204, 203.973043*g/mole);
+  G4Isotope* Lead206 = new G4Isotope("Lead206", 82, 206, 205.974465*g/mole);
+  G4Isotope* Lead207 = new G4Isotope("Lead207", 82, 207, 206.975897*g/mole);
+  G4Isotope* Lead208 = new G4Isotope("Lead208", 82, 208, 207.976652*g/mole);
 
-        G4double world_size_x = 5.*m;
-        G4double world_size_z = 10.*m;
+  G4Isotope* Tungsten180 = new G4Isotope("Tung180", 74, 180, 179.9467*g/mole);
+  G4Isotope* Tungsten182 = new G4Isotope("Tung182", 74, 182, 181.9482*g/mole);
+  G4Isotope* Tungsten183 = new G4Isotope("Tung183", 74, 183, 182.9502*g/mole);
+  G4Isotope* Tungsten184 = new G4Isotope("Tung182", 74, 184, 183.9509*g/mole);
+  G4Isotope* Tungsten186 = new G4Isotope("Tung186", 74, 186, 185.9543*g/mole);
 
-        G4Box* solidWorld = new G4Box("World", world_size_x, world_size_x, world_size_z);
+  // Setting up Chopper Materials
+  G4Element* Uranium_chopper = new G4Element("Chopper_Uranium", "U", 2); // name, element symbol, #isotopes
+  G4Element* Plutonium_chopper = new G4Element("Chopper_Plutonium","Pu",2);
+  G4Element* Lead_chopper = new G4Element("Chopper_Lead","Pb",4);
+  Lead_chopper->AddIsotope(Lead204, 1.4*perCent);
+  Lead_chopper->AddIsotope(Lead206, 24.1*perCent);
+  Lead_chopper->AddIsotope(Lead207, 22.1*perCent);
+  Lead_chopper->AddIsotope(Lead208, 52.4*perCent);
+  G4Element* Tungsten_chopper = new G4Element("Chopper_Tungsten","W",5);
+  Tungsten_chopper->AddIsotope(Tungsten180, 0.000012*perCent);
+  Tungsten_chopper->AddIsotope(Tungsten182, 26.50*perCent);
+  Tungsten_chopper->AddIsotope(Tungsten183, 14.31*perCent);
+  Tungsten_chopper->AddIsotope(Tungsten184, 30.759988*perCent);
+  Tungsten_chopper->AddIsotope(Tungsten186, 28.43*perCent);
 
-        G4LogicalVolume* logicWorld =
-                new G4LogicalVolume(solidWorld, //its solid
-                                    air, //its material
-                                    "World"); //its name
+  // Setting up Interrogation object materials
+  G4Element* Uranium_interrogation = new G4Element("Interrogation_Uranium","U",2);
+  G4Element* Plutonium_interrogation = new G4Element("Interrogation_Plutonium","Pu",2);
+  G4Material* natural_uranium = nist->FindOrBuildMaterial("G4_U");
+  G4Material* natural_plutonium = nist->FindOrBuildMaterial("G4_Pu");
 
-// Make Physical volume ** NEVER CHANGE THIS **
-        G4VPhysicalVolume* physWorld =
-                new G4PVPlacement(0, //no rotation
-                                  G4ThreeVector(), //at (0,0,0)
-                                  logicWorld, //its logical volume
-                                  "World", //its name
-                                  0, //its mother  volume
-                                  false, //no boolean operation
-                                  0, //copy number
-                                  false); //overlaps checking
+  // Set up Photocathode materials
+  G4Element* elGa = new G4Element("Gallium", "Ga", 31, 69.723*g/mole);
+  G4Element* elAs = new G4Element("Arsenic", "As", 33, 74.9216*g/mole);
+  G4Element* elP = new G4Element("Phosphorous", "P", 15, 30.973762*g/mole);
+  G4Material* GaAsP = new G4Material("GaAsP", 4.138*g/cm3, 3, kStateSolid, 293*kelvin, 1*pow(10,-6)*pascal);
+  GaAsP->AddElement(elGa, 1);
+  GaAsP->AddElement(elAs, 1);
+  GaAsP->AddElement(elP, 1);
+  G4Element* elCs = new G4Element("Cesium", "Cs", 55, 132.90545*g/mole);
+  G4Element* elK = new G4Element("Potassium", "K", 19, 39.0983*g/mole);
+  G4Element* elSb = new G4Element("Antimony", "Sb", 51, 121.76*g/mole);
+  G4Material * bialkali = new G4Material("Bialkali", 3.29*g/cm3, 3, kStateSolid, 293*kelvin, 1*pow(10,-6)*pascal);
+  bialkali->AddElement(elCs,1);
+  bialkali->AddElement(elK,2);
+  bialkali->AddElement(elSb,1);
 
-// ********************************************************** World and Materials Complete ************************************************************//
-        // Parameters used later 
-        G4double container_z_pos = 2.4384*m +water_size_x + 1.0*m;
-        G4double container_edge_position = container_z_pos - 2.4384*m;
-        G4double colimator_size = 50*cm;
-        G4double col_position = 1.0*cm + container_z_pos - 2.4384*m - colimator_size; // should go 1cm past the container 
-        G4double col_edge_position = col_position + colimator_size;
-        G4double bremStartPos = 135*cm;
-        G4double bremBacking_thickness = 100.0*mm;
-        G4double beamStart = bremStartPos - bremBacking_thickness/2.0 - 0.1*cm;
-        G4cout << "DetectorConstruction::Build -> Beam Should Start at " << beamStart/(cm) << " cm" << G4endl;
-        
-// *********************************************************** Set up Chopper Wheel ****************************************************************** //
+  G4double world_size_x = 5.*m;
+  G4double world_size_z = 10.*m;
 
-        G4cout << G4endl << "Chopper Wheel Information" << G4endl;
-        G4cout << "----------------------------------------------------------------------" << G4endl;
-        G4double chopper_beginning_edge_position = (bremStartPos+ chopper_z + linac_size) - chopper_thick/2.;  
-        G4double chopper_end_edge_position = (bremStartPos + chopper_z + linac_size) + chopper_thick/2.;
-        setBeginChopper(chopper_beginning_edge_position);
-        G4cout << "Chopper Beginning Edge Set to: " << chopper_beginning_edge_position/(cm) << " cm" << G4endl;
-        G4cout << "Chopper End Edge Set to: " << chopper_end_edge_position/(cm) << " cm" << G4endl;
-        setEndChop(chopper_end_edge_position);
-        if(chopper_end_edge_position > container_edge_position)
-        {
-                G4cerr << "ERROR: Chopper wheel location should be behind cargo container, exiting." << G4endl;
-                exit(100);
-        }
+  G4Box* solidWorld = new G4Box("World", world_size_x, world_size_x, world_size_z);
 
-        G4Tubs *solidChopper = new G4Tubs("Chop", 0*cm, 15*cm, chopper_thick/2, 0.*deg, 180.*deg);
-        G4Material *chopperMat = new G4Material("chopperMaterial", chopperDensity, 1);
-        G4cout << "The Chopper State was set to: " << chopperOn << G4endl;
+  G4LogicalVolume* logicWorld =
+          new G4LogicalVolume(solidWorld, //its solid
+                              air, //its material
+                              "World"); //its name
 
-        if(chopperDensity == 19.1*g/cm3)
-        {
-                if(chopper_radio_abundance <= 0.0)
-                {
-                        G4cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << G4endl;
-                        exit(100);
-                }
+  // Make Physical volume ** NEVER CHANGE THIS **
+  G4VPhysicalVolume* physWorld =
+          new G4PVPlacement(0, //no rotation
+                            G4ThreeVector(), //at (0,0,0)
+                            logicWorld, //its logical volume
+                            "World", //its name
+                            0, //its mother  volume
+                            false, //no boolean operation
+                            0, //copy number
+                            false); //overlaps checking
 
-                if(chopperOn)
-                {
-                        chopper_U235_abundance = chopper_radio_abundance;
-                        chopper_U238_abundance = 100. - chopper_radio_abundance;
-                }
-                else
-                {
-                        chopper_U235_abundance = 100. - chopper_radio_abundance;
-                        chopper_U238_abundance = chopper_radio_abundance;     
-                }
+  // ********************************************************** World and Materials Complete ************************************************************//
+  // Parameters used later
+  G4double container_z_pos = 2.4384*m +water_size_x + 1.0*m;
+  G4double container_edge_position = container_z_pos - 2.4384*m;
+  G4double colimator_size = 50*cm;
+  G4double col_position = 1.0*cm + container_z_pos - 2.4384*m - colimator_size; // should go 1cm past the container
+  G4double col_edge_position = col_position + colimator_size;
+  G4double bremStartPos = 135*cm;
+  G4double bremBacking_thickness = 100.0*mm;
+  G4double beamStart = bremStartPos - bremBacking_thickness/2.0 - 0.1*cm;
+  G4cout << "DetectorConstruction::Build -> Beam Should Start at " << beamStart/(cm) << " cm" << G4endl;
 
-                Uranium_chopper->AddIsotope(Uranium235, chopper_U235_abundance*perCent);
-                Uranium_chopper->AddIsotope(Uranium238, chopper_U238_abundance*perCent);
-                chopperMat->AddElement(Uranium_chopper,1);
-                G4cout << "The Chopper material selected was: Uranium" << G4endl;
-                G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
-        }
-        else if(chopperDensity == 19.6*g/cm3)
-        {
-                if(chopper_radio_abundance <= 0.0)
-                {
-                        G4cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << G4endl;
-                        exit(100);
-                }
+  // *********************************************************** Set up Chopper Wheel ****************************************************************** //
 
-                if(chopperOn)
-                {
-                        chopper_Pu239_abundance = chopper_radio_abundance;
-                        chopper_Pu240_abundance = 100. - chopper_radio_abundance;      
-                }
-                else
-                {
-                        chopper_Pu239_abundance = 100. - chopper_radio_abundance;
-                        chopper_Pu240_abundance = chopper_radio_abundance;       
-                }
+  G4cout << G4endl << "Chopper Wheel Information" << G4endl;
+  G4cout << "----------------------------------------------------------------------" << G4endl;
+  G4double chopper_beginning_edge_position = (bremStartPos+ chopper_z + linac_size) - chopper_thick/2.;
+  G4double chopper_end_edge_position = (bremStartPos + chopper_z + linac_size) + chopper_thick/2.;
+  setBeginChopper(chopper_beginning_edge_position);
+  G4cout << "Chopper Beginning Edge Set to: " << chopper_beginning_edge_position/(cm) << " cm" << G4endl;
+  G4cout << "Chopper End Edge Set to: " << chopper_end_edge_position/(cm) << " cm" << G4endl;
+  setEndChop(chopper_end_edge_position);
+  if(chopper_end_edge_position > container_edge_position)
+  {
+          G4cerr << "ERROR: Chopper wheel location should be behind cargo container, exiting." << G4endl;
+          exit(100);
+  }
 
-                Plutonium_chopper->AddIsotope(Plutonium239, chopper_Pu239_abundance*perCent);
-                Plutonium_chopper->AddIsotope(Plutonium240, chopper_Pu240_abundance*perCent);
-                chopperMat->AddElement(Plutonium_chopper, 1);
-                G4cout << "The Chopper material selected was: Plutonium" << G4endl;
-                G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
-        }
-        else if(chopperDensity == 11.34*g/cm3)
-        {
-                chopperMat->AddElement(Lead_chopper,1);
-                G4cout << "The Chopper material selected was: Lead" << G4endl;
-        }
-        else if(chopperDensity == 19.3*g/cm3)
-        {
-                chopperMat->AddElement(Tungsten_chopper,1);
-                G4cout << "The Chopper material selected was: Tungsten" << G4endl;
-        }
-        else{G4cerr << "ERROR Chopper Density not found!" << G4endl; exit(100);}
+  G4Tubs *solidChopper = new G4Tubs("Chop", 0*cm, 15*cm, chopper_thick/2, 0.*deg, 180.*deg);
+  G4Material *chopperMat = new G4Material("chopperMaterial", chopperDensity, 1);
+  G4cout << "The Chopper State was set to: " << chopperOn << G4endl;
 
-        G4cout << "The Chopper material density selected was: " << chopperDensity/(g/cm3) << " g/cm3" << G4endl;
+  if(chopperDensity == 19.1*g/cm3)
+  {
+          if(chopper_radio_abundance <= 0.0)
+          {
+                  G4cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << G4endl;
+                  exit(100);
+          }
+
+          if(chopperOn)
+          {
+                  chopper_U235_abundance = chopper_radio_abundance;
+                  chopper_U238_abundance = 100. - chopper_radio_abundance;
+          }
+          else
+          {
+                  chopper_U235_abundance = 100. - chopper_radio_abundance;
+                  chopper_U238_abundance = chopper_radio_abundance;
+          }
+
+          Uranium_chopper->AddIsotope(Uranium235, chopper_U235_abundance*perCent);
+          Uranium_chopper->AddIsotope(Uranium238, chopper_U238_abundance*perCent);
+          chopperMat->AddElement(Uranium_chopper,1);
+          G4cout << "The Chopper material selected was: Uranium" << G4endl;
+          G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
+  }
+  else if(chopperDensity == 19.6*g/cm3)
+  {
+          if(chopper_radio_abundance <= 0.0)
+          {
+                  G4cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << G4endl;
+                  exit(100);
+          }
+
+          if(chopperOn)
+          {
+                  chopper_Pu239_abundance = chopper_radio_abundance;
+                  chopper_Pu240_abundance = 100. - chopper_radio_abundance;
+          }
+          else
+          {
+                  chopper_Pu239_abundance = 100. - chopper_radio_abundance;
+                  chopper_Pu240_abundance = chopper_radio_abundance;
+          }
+
+          Plutonium_chopper->AddIsotope(Plutonium239, chopper_Pu239_abundance*perCent);
+          Plutonium_chopper->AddIsotope(Plutonium240, chopper_Pu240_abundance*perCent);
+          chopperMat->AddElement(Plutonium_chopper, 1);
+          G4cout << "The Chopper material selected was: Plutonium" << G4endl;
+          G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
+  }
+  else if(chopperDensity == 11.34*g/cm3)
+  {
+          chopperMat->AddElement(Lead_chopper,1);
+          G4cout << "The Chopper material selected was: Lead" << G4endl;
+  }
+  else if(chopperDensity == 19.3*g/cm3)
+  {
+          chopperMat->AddElement(Tungsten_chopper,1);
+          G4cout << "The Chopper material selected was: Tungsten" << G4endl;
+  }
+  else{G4cerr << "ERROR Chopper Density not found!" << G4endl; exit(100);}
+
+  G4cout << "The Chopper material density selected was: " << chopperDensity/(g/cm3) << " g/cm3" << G4endl;
 
 
-        G4cout << "The Chopper thickness was: " << chopper_thick/(mm) << " mm" << G4endl;
-        G4cout << "The Chopper center distance from the source was set as: " << (linac_size + chopper_z)/(cm) << " cm" << G4endl;
+  G4cout << "The Chopper thickness was: " << chopper_thick/(mm) << " mm" << G4endl;
+  G4cout << "The Chopper center distance from the source was set as: " << (linac_size + chopper_z)/(cm) << " cm" << G4endl;
 
-        logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chop");
+  logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chop");
 
-        new G4PVPlacement(0, G4ThreeVector(0, -7*cm,bremStartPos + chopper_z + linac_size),
-                        logicChopper, "Chop", logicWorld, false,
-                        0, checkOverlaps);
-        
-// Set up Linac configuration if Brem Test 
-        
-        if(bremTest)
-        {
-                G4Tubs *solidLinac = new G4Tubs("Linac",0, 7*cm, linac_size, 0*deg, 360*deg);
-                logicalLinac = new G4LogicalVolume(solidLinac, tungsten, "Linac");
-                new G4PVPlacement(0, G4ThreeVector(0,0, bremStartPos), logicalLinac, "Linac", logicWorld, false, 0, checkOverlaps);
-                G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 6*cm, linac_size, 0*deg, 360*deg);
-                logicalVacuum = new G4LogicalVolume(solidVacuum, myVacuum, "Vacuum");
-                new G4PVPlacement(0, G4ThreeVector(0,0,0), logicalVacuum, "Vac", logicalLinac, false,0,checkOverlaps);
-// Make Brem target
-                
-// Brem Backing
-                G4Box *solidBremTargetBacking = new G4Box("BremBacking", 20.1*mm/2.0, bremBacking_thickness/2.0, bremBacking_thickness/2.0);
-                logicBremTargetBacking = new G4LogicalVolume(solidBremTargetBacking, copper, "BremBacking");
-                new G4PVPlacement(0, G4ThreeVector(0, 0, 0), logicBremTargetBacking, "BremBacking", logicalVacuum, false, 0, checkOverlaps);
-                
-// Brem Radiator 
-                G4double bremTarget_thickness = 0.102*mm;
-                G4double brem_target_position = -(bremBacking_thickness/2.0) + bremTarget_thickness/2.0;
-                G4Tubs *solidBremTarget = new G4Tubs("Brem", 0.*mm, 5.0*mm, bremTarget_thickness/2.0,0.*degree,360.*degree);
-                logicBremTarget = new G4LogicalVolume(solidBremTarget, gold, "Brem");
-                new G4PVPlacement(0, G4ThreeVector(0, 0, brem_target_position),logicBremTarget,"Brem", logicBremTargetBacking, false, 0, checkOverlaps);
-                
-                G4double brem_target_edge_position = bremStartPos + brem_target_position + bremTarget_thickness/2.0;
-                G4cout << "Brem Target Beginning Edge Position: " << brem_target_edge_position/(cm) << " cm" << G4endl << G4endl;
-                if(brem_target_edge_position/(cm) < beamStart/(cm))
-                {
-                        G4cerr << "DetectorConstruction::Build::291 -> FATAL ERROR DURING BREM TEST: Beam Started downstream of Brem Radiator!" << G4endl << G4endl;
-                        exit(1);
-                }
-        }
-        //else
-        //{
+  new G4PVPlacement(0, G4ThreeVector(0, -7*cm,bremStartPos + chopper_z + linac_size),
+                  logicChopper, "Chop", logicWorld, false,
+                  0, checkOverlaps);
 
-// ***************************************** End of Brem Test Materials ***************************************** //
+  // Set up Linac configuration if Brem Test
 
-        // Set up Collimator
-                G4double rearCol_Z_pos = bremStartPos - linac_size - 1.0*cm;
-                G4Box *solidCollimator = new G4Box("Collimator", 1*cm, water_size_y, colimator_size);
-                G4Box *solidCollimatorRear = new G4Box("Collimator",0.6096*m - 2*cm, 2.5908*m, 1*cm);
-                G4LogicalVolume *logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
-                G4LogicalVolume *logicCollimatorRear = new G4LogicalVolume(solidCollimatorRear, lead, "Collimator");
-                G4cout << G4endl << "Container and Collimator Information" << G4endl;
-                G4cout << "----------------------------------------------------------------------" << G4endl;
-                G4cout << "Edge of Colimator placement: " << col_edge_position/(cm) << " cm" << G4endl << G4endl;
-                new G4PVPlacement(0, G4ThreeVector(-0.6096*m - 1*cm, 0, col_position),
-                                  logicCollimator, "ColL-Pb", logicWorld,
-                                  false, 0, checkOverlaps);
-                new G4PVPlacement(0, G4ThreeVector(0.6096*m + 1*cm, 0, col_position),
-                                  logicCollimator, "ColRi-Pb", logicWorld,
-                                  false, 0, checkOverlaps);
-                new G4PVPlacement(0, G4ThreeVector(0,0,rearCol_Z_pos),
-                                  logicCollimatorRear, "ColRe-Pb", logicWorld,
-                                  false, 0, checkOverlaps);
-        // Set up shipping container environment (8ft wide and 8.5ft high)
-                G4double c_thick = 0.1905*cm; // approx 0.075 inch thick
-                G4Box *solidContainer = new G4Box("Container", 0.6096*m, 2.5908*m, 2.4384*m);
-                G4cout << "Edge of Container Placement: " << container_edge_position/(cm) << " cm" << G4endl << G4endl;
-                G4LogicalVolume *logicContainer = new G4LogicalVolume(solidContainer, steel, "Container");
-                new G4PVPlacement(0,
-                                  G4ThreeVector(0, 0, container_z_pos),
-                                  logicContainer, "Con-Steel",logicWorld,
-                                  false,0,checkOverlaps);
+  if(bremTest)
+  {
+    G4Tubs *solidLinac = new G4Tubs("Linac",0, 7*cm, linac_size, 0*deg, 360*deg);
+    logicalLinac = new G4LogicalVolume(solidLinac, tungsten, "Linac");
+    new G4PVPlacement(0, G4ThreeVector(0,0, bremStartPos), logicalLinac, "Linac", logicWorld, false, 0, checkOverlaps);
+    G4Tubs *solidVacuum = new G4Tubs("Vacuum", 0, 6*cm, linac_size, 0*deg, 360*deg);
+    logicalVacuum = new G4LogicalVolume(solidVacuum, myVacuum, "Vacuum");
+    new G4PVPlacement(0, G4ThreeVector(0,0,0), logicalVacuum, "Vac", logicalLinac, false,0,checkOverlaps);
+  // Make Brem target
 
-                if(col_edge_position < container_edge_position)
-                {
-                        G4cerr << "ERROR: Collimator does not cover to edge of Cargo Container!!!" << G4endl;
-                        exit(1);
-                }
+  // Brem Backing
+    G4Box *solidBremTargetBacking = new G4Box("BremBacking", 20.1*mm/2.0, bremBacking_thickness/2.0, bremBacking_thickness/2.0);
+    logicBremTargetBacking = new G4LogicalVolume(solidBremTargetBacking, copper, "BremBacking");
+    new G4PVPlacement(0, G4ThreeVector(0, 0, 0), logicBremTargetBacking, "BremBacking", logicalVacuum, false, 0, checkOverlaps);
 
-        // make container hollow
-                G4Box *hollowContainer = new G4Box("ContainerAir", 0.6096*m -c_thick, 2.5908*m -c_thick, 2.4384*m -c_thick);
-                G4LogicalVolume *logicHollowC = new G4LogicalVolume(hollowContainer, air, "hollowContainer");
-                new G4PVPlacement(0, G4ThreeVector(),
-                                  logicHollowC, "Con-Air",logicContainer, false,0,checkOverlaps);
+  // Brem Radiator
+    G4double bremTarget_thickness = 0.102*mm;
+    G4double brem_target_position = -(bremBacking_thickness/2.0) + bremTarget_thickness/2.0;
+    G4Tubs *solidBremTarget = new G4Tubs("Brem", 0.*mm, 5.0*mm, bremTarget_thickness/2.0,0.*degree,360.*degree);
+    logicBremTarget = new G4LogicalVolume(solidBremTarget, gold, "Brem");
+    new G4PVPlacement(0, G4ThreeVector(0, 0, brem_target_position),logicBremTarget,"Brem", logicBremTargetBacking, false, 0, checkOverlaps);
 
-// *********************************************** End of Shipping Container and Collimator Geometries ************************************ //
+    G4double brem_target_edge_position = bremStartPos + brem_target_position + bremTarget_thickness/2.0;
+    G4cout << "Brem Target Beginning Edge Position: " << brem_target_edge_position/(cm) << " cm" << G4endl << G4endl;
+    if(brem_target_edge_position/(cm) < beamStart/(cm))
+    {
+            G4cerr << "DetectorConstruction::Build::291 -> FATAL ERROR DURING BREM TEST: Beam Started downstream of Brem Radiator!" << G4endl << G4endl;
+            exit(1);
+    }
+  }
 
-// *********************************************** Set up Interrogation Object **************************************************** //
+  // ***************************************** End of Brem Test Materials ***************************************** //
 
-                G4Sphere* solidIntObj = new G4Sphere("InterogationObject", 0, IntObj_rad, 0, 2*pi, 0, pi);
+  // Set up Collimator
+    G4double rearCol_Z_pos = bremStartPos - linac_size - 1.0*cm;
+    G4Box *solidCollimator = new G4Box("Collimator", 1*cm, water_size_y, colimator_size);
+    G4Box *solidCollimatorRear = new G4Box("Collimator",0.6096*m - 2*cm, 2.5908*m, 1*cm);
+    G4LogicalVolume *logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
+    G4LogicalVolume *logicCollimatorRear = new G4LogicalVolume(solidCollimatorRear, lead, "Collimator");
+    G4cout << G4endl << "Container and Collimator Information" << G4endl;
+    G4cout << "----------------------------------------------------------------------" << G4endl;
+    G4cout << "Edge of Colimator placement: " << col_edge_position/(cm) << " cm" << G4endl << G4endl;
+    new G4PVPlacement(0, G4ThreeVector(-0.6096*m - 1*cm, 0, col_position),
+                      logicCollimator, "ColL-Pb", logicWorld,
+                      false, 0, checkOverlaps);
+    new G4PVPlacement(0, G4ThreeVector(0.6096*m + 1*cm, 0, col_position),
+                      logicCollimator, "ColRi-Pb", logicWorld,
+                      false, 0, checkOverlaps);
+    new G4PVPlacement(0, G4ThreeVector(0,0,rearCol_Z_pos),
+                      logicCollimatorRear, "ColRe-Pb", logicWorld,
+                      false, 0, checkOverlaps);
+// Set up shipping container environment (8ft wide and 8.5ft high)
+    G4double c_thick = 0.1905*cm; // approx 0.075 inch thick
+    G4Box *solidContainer = new G4Box("Container", 0.6096*m, 2.5908*m, 2.4384*m);
+    G4cout << "Edge of Container Placement: " << container_edge_position/(cm) << " cm" << G4endl << G4endl;
+    G4LogicalVolume *logicContainer = new G4LogicalVolume(solidContainer, steel, "Container");
+    new G4PVPlacement(0,
+                      G4ThreeVector(0, 0, container_z_pos),
+                      logicContainer, "Con-Steel",logicWorld,
+                      false,0,checkOverlaps);
 
-                intObj_U235_abundance = intObj_radio_abundance;
-                intObj_U238_abundance = 100. - intObj_radio_abundance;
-                intObj_Pu239_abundance = intObj_radio_abundance;
-                intObj_Pu240_abundance = 100. - intObj_radio_abundance;
-                G4Material* intObjMat = new G4Material("IntObj", intObjDensity, 1);
-                intObjMat->SetName(IntObj_Selection);
-                G4cout << G4endl << "Interrogation Object Information" << G4endl;
-                G4cout << "----------------------------------------------------------------------" << G4endl;
-                if(IntObj_Selection == "Uranium")
-                {
-                        if(intObj_radio_abundance <= 0.0)
-                        {
-                                G4cerr << "Fatal Error: User must input interrogation object isotope abundance for Uranium 235" << G4endl;
-                                exit(100);
-                        }
-                        Uranium_interrogation->AddIsotope(Uranium235, intObj_U235_abundance*perCent);
-                        Uranium_interrogation->AddIsotope(Uranium238, intObj_U238_abundance*perCent);
-                        intObjMat->AddElement(Uranium_interrogation,1);
-                }
-                else if(IntObj_Selection == "Plutonium")
-                {
-                        if(intObj_radio_abundance <= 0.0)
-                        {
-                                G4cerr << "Fatal Error: User must input interrogation object isotope abundance for Plutonium 239" << G4endl;
-                                exit(100);
-                        }
-                        Plutonium_interrogation->AddIsotope(Plutonium239, intObj_Pu239_abundance*perCent);
-                        Plutonium_interrogation->AddIsotope(Plutonium240, intObj_Pu240_abundance*perCent);
-                        intObjMat->AddElement(Plutonium_interrogation,1);
-                }
-                else if(IntObj_Selection == "Natural Uranium")
-                {
-                        intObjMat->AddMaterial(natural_uranium,1);
-                }
-                else if(IntObj_Selection == "Natural Plutonium")
-                {
-                        intObjMat->AddMaterial(natural_plutonium,1);
-                }
-                else if(IntObj_Selection == "Lead")
-                {
-                        intObjMat->AddMaterial(lead,1);
-                }
-                else if(IntObj_Selection == "Steel")
-                {
-                        intObjMat->AddMaterial(steel,1);
-                }
-                else if(IntObj_Selection == "Plastic")
-                {
-                        intObjMat->AddMaterial(poly,1);
-                }
-                else{G4cerr << "ERROR: Interogation Material not found."<<G4endl;}
+    if(col_edge_position < container_edge_position)
+    {
+      G4cerr << "ERROR: Collimator does not cover to edge of Cargo Container!!!" << G4endl;
+      exit(1);
+    }
 
-                G4cout << "The User's Interogation Object Material: "
-                       << intObjMat->GetName() << G4endl;
-                if(IntObj_Selection == "Uranium" || IntObj_Selection == "Plutonium")
-                {
-                        G4cout << "The User's Interrogation Object Abundance: " << intObj_radio_abundance << " %" << G4endl;
-                }
-                G4cout << "The User's Interrogation Object Radius: " << IntObj_rad/(cm) << " cm" << G4endl;
-                G4cout << "The User's Interrogation Object Density: " << intObjDensity/(g/cm3) << " g/cm3" << G4endl;
-                G4cout << "The User's Interrogation Object Location: (" << intObj_x_pos/(cm) << ", " << intObj_y_pos/(cm) << ", " << intObj_z_pos/(cm) << ")" << " cm" << G4endl;
+// make container hollow
+    G4Box *hollowContainer = new G4Box("ContainerAir", 0.6096*m -c_thick, 2.5908*m -c_thick, 2.4384*m -c_thick);
+    G4LogicalVolume *logicHollowC = new G4LogicalVolume(hollowContainer, air, "hollowContainer");
+    new G4PVPlacement(0, G4ThreeVector(),
+                      logicHollowC, "Con-Air",logicContainer, false,0,checkOverlaps);
 
-                G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObj");
-                G4cout << "Begin of Interrogation Object: " << container_z_pos/(cm) + intObj_z_pos/(cm) -  IntObj_rad/(cm) << " cm" << G4endl;
-                setEndIntObj(container_z_pos, 2.4384*m);
+  // *********************************************** End of Shipping Container and Collimator Geometries ************************************ //
 
-                physIntObj = new G4PVPlacement(0,
-                                               G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos),
-                                               logicIntObj, "IntObj", logicHollowC, false,
-                                               0, checkOverlaps);
+  // *********************************************** Set up Interrogation Object **************************************************** //
+
+  // Set Up Testing Air Pocket Just Prior
+    G4Box* solidAirPocket = new G4Box("AirPocket",IntObj_rad,IntObj_rad,1*cm);
+    G4LogicalVolume *logicAirPocket = new G4LogicalVolume(solidAirPocket, air, "AirPocket");
+    new G4PVPlacement(0,G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos - 2*cm), logicAirPocket,
+                      "AirPocket",logicHollowC, false,0,checkOverlaps);
+
+  // Set Up the Interrogation Object
+    G4Sphere* solidIntObj = new G4Sphere("InterogationObject", 0, IntObj_rad, 0, 2*pi, 0, pi);
+
+    intObj_U235_abundance = intObj_radio_abundance;
+    intObj_U238_abundance = 100. - intObj_radio_abundance;
+    intObj_Pu239_abundance = intObj_radio_abundance;
+    intObj_Pu240_abundance = 100. - intObj_radio_abundance;
+    G4Material* intObjMat = new G4Material("IntObj", intObjDensity, 1);
+    intObjMat->SetName(IntObj_Selection);
+    G4cout << G4endl << "Interrogation Object Information" << G4endl;
+    G4cout << "----------------------------------------------------------------------" << G4endl;
+    if(IntObj_Selection == "Uranium")
+    {
+            if(intObj_radio_abundance <= 0.0)
+            {
+                    G4cerr << "Fatal Error: User must input interrogation object isotope abundance for Uranium 235" << G4endl;
+                    exit(100);
+            }
+            Uranium_interrogation->AddIsotope(Uranium235, intObj_U235_abundance*perCent);
+            Uranium_interrogation->AddIsotope(Uranium238, intObj_U238_abundance*perCent);
+            intObjMat->AddElement(Uranium_interrogation,1);
+    }
+    else if(IntObj_Selection == "Plutonium")
+    {
+            if(intObj_radio_abundance <= 0.0)
+            {
+                    G4cerr << "Fatal Error: User must input interrogation object isotope abundance for Plutonium 239" << G4endl;
+                    exit(100);
+            }
+            Plutonium_interrogation->AddIsotope(Plutonium239, intObj_Pu239_abundance*perCent);
+            Plutonium_interrogation->AddIsotope(Plutonium240, intObj_Pu240_abundance*perCent);
+            intObjMat->AddElement(Plutonium_interrogation,1);
+    }
+    else if(IntObj_Selection == "Natural Uranium")
+    {
+            intObjMat->AddMaterial(natural_uranium,1);
+    }
+    else if(IntObj_Selection == "Natural Plutonium")
+    {
+            intObjMat->AddMaterial(natural_plutonium,1);
+    }
+    else if(IntObj_Selection == "Lead")
+    {
+            intObjMat->AddMaterial(lead,1);
+    }
+    else if(IntObj_Selection == "Steel")
+    {
+            intObjMat->AddMaterial(steel,1);
+    }
+    else if(IntObj_Selection == "Plastic")
+    {
+            intObjMat->AddMaterial(poly,1);
+    }
+    else{G4cerr << "ERROR: Interogation Material not found."<<G4endl;}
+
+    G4cout << "The User's Interogation Object Material: "
+           << intObjMat->GetName() << G4endl;
+    if(IntObj_Selection == "Uranium" || IntObj_Selection == "Plutonium")
+    {
+            G4cout << "The User's Interrogation Object Abundance: " << intObj_radio_abundance << " %" << G4endl;
+    }
+    G4cout << "The User's Interrogation Object Radius: " << IntObj_rad/(cm) << " cm" << G4endl;
+    G4cout << "The User's Interrogation Object Density: " << intObjDensity/(g/cm3) << " g/cm3" << G4endl;
+    G4cout << "The User's Interrogation Object Location: (" << intObj_x_pos/(cm) << ", " << intObj_y_pos/(cm) << ", " << intObj_z_pos/(cm) << ")" << " cm" << G4endl;
+
+    G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObj");
+    G4cout << "Begin of Interrogation Object: " << container_z_pos/(cm) + intObj_z_pos/(cm) -  IntObj_rad/(cm) << " cm" << G4endl;
+    setEndIntObj(container_z_pos, 2.4384*m);
+
+    physIntObj = new G4PVPlacement(0,
+                                   G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos),
+                                   logicIntObj, "IntObj", logicHollowC, false,
+                                   0, checkOverlaps);
 
 
 // ******************************************************** Interrogation Object Setup Complete ******************************************************* //

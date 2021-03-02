@@ -39,112 +39,112 @@ HistoManager::~HistoManager()
 
 void HistoManager::Book()
 {
-        G4AnalysisManager* manager = G4AnalysisManager::Instance();
-        manager->SetVerboseLevel(0);
-        // open output file
-        G4bool fileOpen = manager->OpenFile(gOutName);
+  G4AnalysisManager* manager = G4AnalysisManager::Instance();
+  manager->SetVerboseLevel(0);
+  // open output file
+  G4bool fileOpen = manager->OpenFile(gOutName);
 
-        if(!fileOpen)
-        {
-                G4cerr << "HistoManager::Book(): Cannot Open " <<manager->GetFileName()<<G4endl;
-                return;
-        }
+  if(!fileOpen)
+  {
+          G4cerr << "HistoManager::Book(): Cannot Open " <<manager->GetFileName()<<G4endl;
+          return;
+  }
 
-        // Create ID 0 Ntuple for Incident Chopper Data
-        manager->CreateNtuple("ChopIn", "Chopper Wheel Incident Data");
-        manager->CreateNtupleDColumn("Energy");
-        manager->CreateNtupleDColumn("Weight");
-        manager->CreateNtupleIColumn("EventID");
-        manager->FinishNtuple();
-        // Create ID 1 Ntuple for Exiting Chopper Data
-        manager->CreateNtuple("ChopOut", "Chopper Wheel Exiting Radiation Data");
-        manager->CreateNtupleDColumn("Energy");
-        manager->CreateNtupleDColumn("Weight");
-        manager->CreateNtupleIColumn("EventID");
-        manager->CreateNtupleIColumn("isNRF");
-        manager->FinishNtuple();
+  // Create ID 0 Ntuple for Incident Chopper Data
+  manager->CreateNtuple("ChopIn", "Chopper Wheel Incident Data");
+  manager->CreateNtupleDColumn("Energy");
+  manager->CreateNtupleDColumn("Weight");
+  manager->CreateNtupleIColumn("EventID");
+  manager->FinishNtuple();
+  // Create ID 1 Ntuple for Exiting Chopper Data
+  manager->CreateNtuple("ChopOut", "Chopper Wheel Exiting Radiation Data");
+  manager->CreateNtupleDColumn("Energy");
+  manager->CreateNtupleDColumn("Weight");
+  manager->CreateNtupleIColumn("EventID");
+  manager->CreateNtupleIColumn("isNRF");
+  manager->FinishNtuple();
 
-        if(!bremTest)
-        {
-                // Create ID 2 Ntuple for NRF Materials
-                manager->CreateNtuple("NRF","NRF Data");
-                manager->CreateNtupleIColumn("EventID");
-                manager->CreateNtupleDColumn("Energy");
-                manager->CreateNtupleDColumn("Weight");
-                manager->CreateNtupleSColumn("Material");
-                manager->CreateNtupleDColumn("ZPos");
-                manager->FinishNtuple();
+  if(!bremTest)
+  {
+    // Create ID 2 Ntuple for NRF Materials
+    manager->CreateNtuple("NRF","NRF Data");
+    manager->CreateNtupleIColumn("EventID");
+    manager->CreateNtupleDColumn("Energy");
+    manager->CreateNtupleDColumn("Weight");
+    manager->CreateNtupleSColumn("Material");
+    manager->CreateNtupleDColumn("ZPos");
+    manager->FinishNtuple();
 
-                // Create ID 3 NTuple for Incident Interrogation Object Information
-                manager->CreateNtuple("IntObjIn","Incident Interrogation Object Data");
-                manager->CreateNtupleDColumn("Energy");
-                manager->CreateNtupleDColumn("Weight");
-                manager->CreateNtupleSColumn("CreatorProcess");
-                manager->FinishNtuple();
+    // Create ID 3 NTuple for Incident Interrogation Object Information
+    manager->CreateNtuple("IntObjIn","Incident Interrogation Object Data");
+    manager->CreateNtupleDColumn("Energy");
+    manager->CreateNtupleDColumn("Weight");
+    manager->CreateNtupleSColumn("CreatorProcess");
+    manager->FinishNtuple();
 
-                // Create ID 4 Ntuple for IntObj Emission Data
-                manager->CreateNtuple("IntObjOut","Interrogation Object Emission Data");
-                manager->CreateNtupleDColumn("Energy");
-                manager->CreateNtupleDColumn("Weight");
-                manager->CreateNtupleSColumn("CreatorProcess");
-                manager->FinishNtuple();
+    // Create ID 4 Ntuple for IntObj Emission Data
+    manager->CreateNtuple("IntObjOut","Interrogation Object Emission Data");
+    manager->CreateNtupleDColumn("Energy");
+    manager->CreateNtupleDColumn("Weight");
+    manager->CreateNtupleSColumn("CreatorProcess");
+    manager->FinishNtuple();
 
-                // Create ID 5 Ntuple for Incident Water Tank Data
-                manager->CreateNtuple("Water","Incident Water Tank Data");
-                manager->CreateNtupleDColumn("Energy");
-                manager->CreateNtupleDColumn("Weight");
-                manager->CreateNtupleSColumn("CreatorProcess");
-                manager->FinishNtuple();
+    // Create ID 5 Ntuple for Incident Water Tank Data
+    manager->CreateNtuple("Water","Incident Water Tank Data");
+    manager->CreateNtupleDColumn("Energy");
+    manager->CreateNtupleDColumn("Weight");
+    manager->CreateNtupleSColumn("CreatorProcess");
+    manager->FinishNtuple();
 
-                // Create ID 6 Ntuple for cherenkov in water
-                manager->CreateNtuple("Cherenkov","Cherenkov in Water Data");
-                manager->CreateNtupleDColumn("Energy");
-                manager->CreateNtupleDColumn("Weight");
-                manager->CreateNtupleIColumn("EventID");
-                manager->CreateNtupleIColumn("NumSecondaries");
-                manager->CreateNtupleDColumn("Time");
-                manager->FinishNtuple();
+    // Create ID 6 Ntuple for cherenkov in water
+    manager->CreateNtuple("Cherenkov","Cherenkov in Water Data");
+    manager->CreateNtupleDColumn("Energy");
+    manager->CreateNtupleDColumn("Weight");
+    manager->CreateNtupleIColumn("EventID");
+    manager->CreateNtupleIColumn("NumSecondaries");
+    manager->CreateNtupleDColumn("Time");
+    manager->FinishNtuple();
 
-                // Create ID 7 Ntuple for Detected Information
-                manager->CreateNtuple("DetInfo","Detected Information");
-                manager->CreateNtupleIColumn("EventID");
-                manager->CreateNtupleDColumn("Energy");
-                manager->CreateNtupleDColumn("Weight");
-                manager->CreateNtupleSColumn("CreatorProcess");
-                manager->CreateNtupleDColumn("Time");
-                manager->FinishNtuple();
+    // Create ID 7 Ntuple for Detected Information
+    manager->CreateNtuple("DetInfo","Detected Information");
+    manager->CreateNtupleIColumn("EventID");
+    manager->CreateNtupleDColumn("Energy");
+    manager->CreateNtupleDColumn("Weight");
+    manager->CreateNtupleSColumn("CreatorProcess");
+    manager->CreateNtupleDColumn("Time");
+    manager->FinishNtuple();
 
-                // Create ID 8 Ntuple for Detector Process Information
-                manager->CreateNtuple("IncDetInfo","Incident Detector Process Information");
-                manager->CreateNtupleIColumn("EventID");
-                manager->CreateNtupleDColumn("Energy");
-                manager->CreateNtupleDColumn("Weight");
-                manager->CreateNtupleSColumn("DetProcess");
-                manager->FinishNtuple();
+    // Create ID 8 Ntuple for Detector Process Information
+    manager->CreateNtuple("IncDetInfo","Incident Detector Process Information");
+    manager->CreateNtupleIColumn("EventID");
+    manager->CreateNtupleDColumn("Energy");
+    manager->CreateNtupleDColumn("Weight");
+    manager->CreateNtupleSColumn("DetProcess");
+    manager->FinishNtuple();
 
-        }
+  }
 
-        fFactoryOn = true;
-      if(debug)
-        std::cout << "HistoManager::Book() --> Complete!" << std::endl;
+  fFactoryOn = true;
+if(debug)
+  std::cout << "HistoManager::Book() --> Complete!" << std::endl;
 }
 
 void HistoManager::finish()
 {
-        if(!fFactoryOn) {
-                G4cerr << "ERROR HistoManager::finish: Failed to write to file" << G4endl;
-                return;
-        }
-        G4AnalysisManager* manager = G4AnalysisManager::Instance();
-        manager->Write();
-        manager->CloseFile();
-        std::cout << "HistoManager::finish -> Ntuples are saved." << std::endl;
-        G4cout << "HistoManager::finish -> Ntuples are saved. " << G4endl;
-        stop_time = time(0);
-        G4cout << "HistoManager::finish -> Time: "
-                << std::difftime(stop_time,start_time) << " seconds!" << G4endl;
-        std::cout << "HistoManager::finish -> Time: "
-                    << std::difftime(stop_time,start_time) << " seconds!" << std::endl;
-        delete manager;
-        fFactoryOn = false;
+  if(!fFactoryOn) {
+          G4cerr << "ERROR HistoManager::finish: Failed to write to file" << G4endl;
+          return;
+  }
+  G4AnalysisManager* manager = G4AnalysisManager::Instance();
+  manager->Write();
+  manager->CloseFile();
+  std::cout << "HistoManager::finish -> Ntuples are saved." << std::endl;
+  G4cout << "HistoManager::finish -> Ntuples are saved. " << G4endl;
+  stop_time = time(0);
+  G4cout << "HistoManager::finish -> Time: "
+          << std::difftime(stop_time,start_time) << " seconds!" << G4endl;
+  std::cout << "HistoManager::finish -> Time: "
+              << std::difftime(stop_time,start_time) << " seconds!" << std::endl;
+  delete manager;
+  fFactoryOn = false;
 }

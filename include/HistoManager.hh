@@ -29,6 +29,7 @@
 #include "g4root.hh"
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
+#include "time.h"
 
 
 class HistoManager
@@ -42,6 +43,7 @@ void Book();
 
 private:
 G4bool fFactoryOn;
+G4int start_time, stop_time;
 };
 
 #endif

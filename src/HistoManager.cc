@@ -30,6 +30,7 @@ extern G4bool debug;
 
 HistoManager::HistoManager() : fFactoryOn(false)
 {
+  start_time = time(0);
 }
 
 HistoManager::~HistoManager()
@@ -139,6 +140,11 @@ void HistoManager::finish()
         manager->CloseFile();
         std::cout << "HistoManager::finish -> Ntuples are saved." << std::endl;
         G4cout << "HistoManager::finish -> Ntuples are saved. " << G4endl;
+        stop_time = time(0);
+        G4cout << "HistoManager::finish -> Time: "
+                << std::difftime(stop_time,start_time) << " seconds!" << G4endl;
+        std::cout << "HistoManager::finish -> Time: "
+                    << std::difftime(stop_time,start_time) << " seconds!" << std::endl;
         delete manager;
         fFactoryOn = false;
 }

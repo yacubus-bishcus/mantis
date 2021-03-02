@@ -65,10 +65,7 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName="hOut
   if(!VarArray)
   {
     std::cout << "User did not select variable bin widths." << std::endl;
-    if(cut1=="NA")
-      hObj = new TH1D(OutObjName, "Weighted Energy Spectrum", nbins, Emin, Emax);
-    else
-      hObj = new TH1D(OutObjName, "Weighted Energy Spectrum", nbins, Emin, Emax);
+    hObj = new TH1D(OutObjName, "Weighted Energy Spectrum", nbins, Emin, Emax);
   }
   // User wants variable bin widths
   else

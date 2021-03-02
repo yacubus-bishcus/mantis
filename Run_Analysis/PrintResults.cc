@@ -10,7 +10,7 @@
 // Requires 3 inputs
 // 1. Chopper On Filename
 // 2. Chopper Off Filename
-// 3. Histogram name 
+// 3. Histogram name
 //
 // This File Scans the Weighted Histogram File.
 // This file prints to terminal all histogram
@@ -44,5 +44,5 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
     offHist->Print();
     double weighted_sum_off = offHist->Integral();
     double z_score = abs(weighted_sum - weighted_sum_off)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum_off),2)));
-    std::cout << histName << " Z-Score: " << z_score << std::endl;
+    std::cout << std::endl << histName << " Z-Score: " << z_score << std::endl << std::endl;
 }

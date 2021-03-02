@@ -343,7 +343,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // *********************************************** Set up Interrogation Object **************************************************** //
 
   // Set Up Testing Air Pocket Just Prior
-    G4Box* solidAirPocket = new G4Box("AirPocket",IntObj_rad,IntObj_rad,1*cm);
+    G4Box* solidAirPocket = new G4Box("AirPocket",IntObj_rad,IntObj_rad,0.5*cm);
     G4LogicalVolume *logicAirPocket = new G4LogicalVolume(solidAirPocket, air, "AirPocket");
     new G4PVPlacement(0,G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos - 2*cm), logicAirPocket,
                       "AirPocket",logicHollowC, false,0,checkOverlaps);

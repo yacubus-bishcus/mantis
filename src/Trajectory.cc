@@ -16,7 +16,7 @@ G4ThreadLocal G4Allocator<Trajectory>* TrajectoryAllocator = nullptr;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 Trajectory::Trajectory()
-  :G4Trajectory(),fWls(false),fDrawit(false),
+  :G4Trajectory(),fDrawit(false),
    fForceNoDraw(false),fForceDraw(false)
 {
   fParticleDefinition = nullptr;
@@ -25,7 +25,7 @@ Trajectory::Trajectory()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 Trajectory::Trajectory(const G4Track* aTrack)
-  :G4Trajectory(aTrack),fWls(false),fDrawit(false)
+  :G4Trajectory(aTrack),fDrawit(false)
 {
   fParticleDefinition=aTrack->GetDefinition();
 }
@@ -33,7 +33,7 @@ Trajectory::Trajectory(const G4Track* aTrack)
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 Trajectory::Trajectory(Trajectory &right)
-  :G4Trajectory(right),fWls(right.fWls),fDrawit(right.fDrawit)
+  :G4Trajectory(right),fDrawit(right.fDrawit)
 {
   fParticleDefinition=right.fParticleDefinition;
 }

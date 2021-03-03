@@ -6,12 +6,11 @@
 #include "G4Track.hh"
 #include "G4ParticleTypes.hh"
 
-extern G4bool debug;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-TrackingAction::TrackingAction()
+TrackingAction::TrackingAction(G4bool debug)
 :photonsOnly(false),opticalOnly(false),detectedOnly(false),chopperOnly(false),
-trackM(NULL)
+ , debugTrack(debug), trackM(NULL)
 {
   trackM = new TrackingMessenger(this);
 }
@@ -51,11 +50,11 @@ void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)
   }
   else if(opticalOnly)
   {
-    if(debug)
+    if(debugTrack)
       std::cout << "TrackingAction::PostUserTrackingAction -> Set to Track Optical Photons Only." << std::endl;
     if(aTrack->GetDefinition()==G4OpticalPhoton::OpticalPhotonDefinition())
     {
-      if(debug)
+      if(debugTrack)
         std::cout << "TrackingAction::PostUserTrackingAction -> Tracking Optical Photon." << std::endl;
       trajectory->SetDrawTrajectory(true);
     }

@@ -35,8 +35,8 @@
 
 extern G4bool debug;
 
-ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool vis)
-        : G4VUserActionInitialization(), fDetector(det), fvis(vis)
+ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool vis, G4bool debugT)
+        : G4VUserActionInitialization(), fDetector(det), fvis(vis), fdebugT(debugT)
 {
 }
 
@@ -59,7 +59,7 @@ void ActionInitialization::Build() const
         if(fvis)
         {
           std::cout << "ActionInitialization::Build -> Tracking Action Built!" << std::endl;
-          SetUserAction(new TrackingAction());
+          SetUserAction(new TrackingAction(fdebugT));
         }
         SetUserAction(new SteppingAction(fDetector, run, event));
         SetUserAction(new StackingAction(fDetector, run));

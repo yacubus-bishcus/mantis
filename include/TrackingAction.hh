@@ -11,7 +11,7 @@ class TrackingAction : public G4UserTrackingAction {
 
   public:
 
-    TrackingAction();
+    TrackingAction(G4bool);
     virtual ~TrackingAction();
 
     virtual void PreUserTrackingAction(const G4Track*);
@@ -23,7 +23,7 @@ class TrackingAction : public G4UserTrackingAction {
     void SetChopperOnly(){chopperOnly = true;}
 
   private:
-    G4bool photonsOnly, opticalOnly, detectedOnly, chopperOnly;
+    G4bool photonsOnly, opticalOnly, detectedOnly, chopperOnly, debugTrack;
     TrackingMessenger* trackM;
 
 };

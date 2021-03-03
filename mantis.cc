@@ -93,6 +93,8 @@ int main(int argc,char **argv)
         inFile = "brems_distributions.root";
         G4String debug_in = "false";
         debug = false;
+        G4String debugT_in = "false";
+        G4bool debugT = false;
         // Primary Generator Defaults
         G4String resonance_in = "false";
         resonanceTest = false;
@@ -116,24 +118,25 @@ int main(int argc,char **argv)
 
         for (G4int i=1; i<argc; i=i+2)
         {
-                if      (G4String(argv[i]) == "-h") PrintUsage();
-                else if (G4String(argv[i]) == "-m") macro = argv[i+1];
-                else if (G4String(argv[i]) == "-a") chosen_energy = std::stod(argv[i+1]);
-                else if (G4String(argv[i]) == "-s") seed = atoi(argv[i+1]);
-                else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];
-                else if (G4String(argv[i]) == "-t") bremTest_in = argv[i+1];
-                else if (G4String(argv[i]) == "-r") resonance_in = argv[i+1];
-                else if (G4String(argv[i]) == "-p") standalone_in = argv[i+1];
-                else if (G4String(argv[i]) == "-v") verbose_in = argv[i+1];
-                else if (G4String(argv[i]) == "-n") addNRF_in = argv[i+1];
-                else if (G4String(argv[i]) == "-e") checkEvents_in = argv[i+1];
-                else if (G4String(argv[i]) == "-i") inFile = argv[i+1];
-                else if (G4String(argv[i]) == "-d") debug_in = argv[i+1];
-                else
-                {
-                        PrintUsage();
-                        return 1;
-                }
+          if      (G4String(argv[i]) == "-h") PrintUsage();
+          else if (G4String(argv[i]) == "-m") macro = argv[i+1];
+          else if (G4String(argv[i]) == "-a") chosen_energy = std::stod(argv[i+1]);
+          else if (G4String(argv[i]) == "-s") seed = atoi(argv[i+1]);
+          else if (G4String(argv[i]) == "-o") root_output_name = argv[i+1];
+          else if (G4String(argv[i]) == "-t") bremTest_in = argv[i+1];
+          else if (G4String(argv[i]) == "-r") resonance_in = argv[i+1];
+          else if (G4String(argv[i]) == "-p") standalone_in = argv[i+1];
+          else if (G4String(argv[i]) == "-v") verbose_in = argv[i+1];
+          else if (G4String(argv[i]) == "-n") addNRF_in = argv[i+1];
+          else if (G4String(argv[i]) == "-e") checkEvents_in = argv[i+1];
+          else if (G4String(argv[i]) == "-i") inFile = argv[i+1];
+          else if (G4String(argv[i]) == "-d") debug_in = argv[i+1];
+          else if (G4String(argv[i]) == "-g") debugT_in = argv[i+1];
+          else
+          {
+            PrintUsage();
+            return 1;
+          }
         }
 
         // Handle Output File
@@ -149,6 +152,11 @@ int main(int argc,char **argv)
         {
           std::cout << "Debugging mode set." << std::endl;
           debug = true;
+        }
+        if(debugT_in == "True" || debugT_in == "true")
+        {
+          std::cout << "Tracking Debugging mode set." << std::endl;
+          debugT = true;
         }
 
         G4UImanager* UI = G4UImanager::GetUIpointer();
@@ -237,7 +245,7 @@ int main(int argc,char **argv)
         PhysicsListNew *thePLNew = new PhysicsListNew(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
         runManager->SetUserInitialization(thePLNew);
 
-        runManager->SetUserInitialization(new ActionInitialization(det, vis));
+        runManager->SetUserInitialization(new ActionInitialization(det, vis, debugT));
 
         if(!ui)
         {

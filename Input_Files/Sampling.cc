@@ -35,7 +35,11 @@ void Sampling(const char *bremInputFilename, string sample_element="U", double n
 	TTree *ChopperData;
 	f->GetObject("ChopIn", ChopperData);
 	ChopperData->Print();
+
 	double Emax = ChopperData->GetMaximum("Energy");
+	double deltaE = 5.0e-6; // width of each important sampling region in MeV
+	Int_t nbins = Emax/deltaE;
+	
 	TH1D *hBrems = new TH1D("hBrems","Bremsstrahlung Data",nbins, 0.,Emax);
 	ChopperData->Draw("Energy>>hBrems","","goff");
 	hBrems->Scale(1.0/hBrems->Integral());
@@ -90,10 +94,6 @@ void Sampling(const char *bremInputFilename, string sample_element="U", double n
 	  }
 	}
 
-	double deltaE = 5.0e-6; // width of each important sampling region in MeV
-
-	Int_t nbins = Emax/deltaE;
-
 	TH1D *hSample = new TH1D("hSample", "hSample", nbins, 0., Emax);
 
 	// create the sampling distribution
@@ -103,7 +103,7 @@ void Sampling(const char *bremInputFilename, string sample_element="U", double n
 
 		for (int j = 0; j < Evec_above_threshold.size(); ++j)
 		{
-			if (e < non_nrf_energy_cut) 
+			if (e < non_nrf_energy_cut)
 			{
 				hSample->SetBinContent(i, 0.0001);
 			}

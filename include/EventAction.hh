@@ -73,7 +73,8 @@ G4double calcAvg()
   }
   return sum/timev.size();
 }
-
+G4int eventInfoFreq, runID;
+G4double runTime, prevRunTime, eventsPerSec, totalEventsToRun, timeToFinish;
 G4int c_secondaries;
 G4double sum;
 std::vector<double> energyv, timev;

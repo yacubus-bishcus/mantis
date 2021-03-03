@@ -19,20 +19,14 @@
 /vis/open VRML2FILE
 /vis/viewer/set/autoRefresh false
 /vis/drawVolume
-/vis/scene/add/trajectories smooth
-/vis/modeling/trajectories/create/drawByCharge
-/vis/scene/add/hits
-/vis/scene/endOfEventAction accumulate 5000
 
+/vis/scene/endOfEventAction accumulate 5000
+/vis/filtering/trajectories/create/particleFilter
+/vis/filtering/trajectories/particleFilter-0/add gamma
+/vis/filtering/trajectories/particleFilter-0/invert true
 # Make the "World" box invisible
 /vis/geometry/set/visibility World 0 false
 /vis/viewer/set/background 1 1 1
 
-/vis/modeling/trajectories/create/drawByCharge
-/vis/modeling/trajectories/drawByCharge-0/set 1 blue
-/vis/modeling/trajectories/drawByCharge-0/set -1 blue
-/vis/modeling/trajectories/drawByCharge-0/set 0 red
-
-/vis/viewer/update
 /vis/viewer/set/autoRefresh true
 /run/beamOn 1000

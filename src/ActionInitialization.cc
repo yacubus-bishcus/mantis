@@ -57,7 +57,10 @@ void ActionInitialization::Build() const
         EventAction* event = new EventAction();
         SetUserAction(event);
         if(fvis)
+        {
+          std::cout << "ActionInitialization::Build -> Tracking Action Built!" << std::endl;
           SetUserAction(new TrackingAction());
+        }
         SetUserAction(new SteppingAction(fDetector, run, event));
         SetUserAction(new StackingAction(fDetector, run));
 

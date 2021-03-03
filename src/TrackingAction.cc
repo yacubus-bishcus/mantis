@@ -50,8 +50,14 @@ void TrackingAction::PostUserTrackingAction(const G4Track* aTrack)
   }
   else if(opticalOnly)
   {
+    if(debug)
+      std::cout << "TrackingAction::PostUserTrackingAction -> Set to Track Optical Photons Only." << std::endl;
     if(aTrack->GetDefinition()==G4OpticalPhoton::OpticalPhotonDefinition())
+    {
+      if(debug)
+        std::cout << "TrackingAction::PostUserTrackingAction -> Tracking Optical Photon." << std::endl;
       trajectory->SetDrawTrajectory(true);
+    }
   }
   else if(detectedOnly)
   {

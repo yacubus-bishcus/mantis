@@ -27,7 +27,6 @@ class Trajectory : public G4Trajectory
     inline void  operator delete(void*);
 
     void SetDrawTrajectory(G4bool b){fDrawit=b;}
-    void WLS(){fWls=true;}
     void SetForceDrawTrajectory(G4bool b){fForceDraw=b;}
     void SetForceNoDrawTrajectory(G4bool b){fForceNoDraw=b;}
 

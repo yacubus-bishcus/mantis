@@ -25,7 +25,7 @@
 #include "TrackingMessenger.hh"
 
 
-TrackingMessenger::TrackingMessenger(TrackingpingAction* TrackingAction)
+TrackingMessenger::TrackingMessenger(TrackingAction* TrackingAction)
         : trackA(TrackingAction)
 {
   myDir = new G4UIdirectory("/mantistracking/");

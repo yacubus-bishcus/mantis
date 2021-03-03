@@ -79,12 +79,6 @@ void EventAction::BeginOfEventAction(const G4Event* anEvent)
                 << ((int)timeToFinish%3600)/60 << "m "
                 << ((int)timeToFinish%3600)%60 << "s]"
                 << std::setprecision(6) << std::flush;
-      // Write Data to ROOT File if Brem Test
-      if(bremTest)
-      {
-        G4AnalysisManager* manager = G4AnalysisManager::Instance();
-        manager->Write();
-      }
     }
 
     c_secondaries = 0;

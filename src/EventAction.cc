@@ -45,7 +45,8 @@ void EventAction::BeginOfEventAction(const G4Event* anEvent)
     G4int event = anEvent->GetEventID();
     if(event == 0)
     {
-      std::cout << "Tracking Events: " << std::endl;
+      std::cout << "Tracking Events... " << std::endl;
+      G4cout << "Tracking Events: " << G4endl;
       totalEventsToRun = G4RunManager::GetRunManager()->GetCurrentRun()->GetNumberOfEventToBeProcessed();
     }
     else if(event % eventInfoFreq == 0)

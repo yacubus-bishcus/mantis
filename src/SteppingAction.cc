@@ -124,14 +124,22 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if(bremTest)
     {
       if(nextStep_VolumeName.compare(0,11,"BremBacking") != 0
-          && previousStep_VolumeName.compare(0,11,"BremBacking") == 0 
+          && previousStep_VolumeName.compare(0,11,"BremBacking") == 0
           && theTrack->GetParticleDefinition() == G4Gamma::Definition())
       {
         G4ThreeVector p = aStep->GetPreStepPoint()->GetMomentum();
         G4double angle = asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()); //the angle of the particle relative to the Z axis
-        manager->FillNtupleDColumn(0,0,theTrack->GetKineticEnergy()/(MeV));
-        manager->FillNtupleDColumn(0,1, angle);
-        manager->AddNtupleRow(0);
+        if(cos(angle) < 0)
+        {
+          theTrack->SetTrackStatus(fStopAndKill);
+          krun->AddStatusKilled();
+        }
+        else
+        {
+          manager->FillNtupleDColumn(0,0,theTrack->GetKineticEnergy()/(MeV));
+          manager->FillNtupleDColumn(0,1, angle);
+          manager->AddNtupleRow(0);
+        }
       }
     }
 // **************************************************** Track NRF Materials **************************************************** //

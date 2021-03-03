@@ -28,9 +28,9 @@
 TrackingMessenger::TrackingMessenger(TrackingpingAction* TrackingAction)
         : trackA(TrackingAction)
 {
-  myDir = new G4UIdirectory("/tracking/");
+  myDir = new G4UIdirectory("/mantistracking/");
   myDir->SetGuidance("Tracking Commands");
-  Cmd = new G4UIcmdWithAString("/tracking/track",this);
+  Cmd = new G4UIcmdWithAString("/mantistracking/track",this);
   Cmd->SetGuidance("Choose Desired Vis Tracking Output");
   Cmd->SetGuidance("Choice: Photons, OpticalPhotons, Detected, Chopper, all (default)");
   Cmd->SetParameterName("choice",false);

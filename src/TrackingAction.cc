@@ -10,7 +10,7 @@
 
 TrackingAction::TrackingAction(G4bool debug)
 :photonsOnly(false),opticalOnly(false),detectedOnly(false),chopperOnly(false),
- , debugTrack(debug), trackM(NULL)
+ debugTrack(debug), trackM(NULL)
 {
   trackM = new TrackingMessenger(this);
 }

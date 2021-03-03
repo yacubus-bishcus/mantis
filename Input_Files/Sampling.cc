@@ -33,13 +33,13 @@ void Sampling(const char *bremInputFilename, string sample_element="U", double n
 	if(!confirm)
 		exit(10);
 	TTree *ChopperData;
-	f->GetObject("ChopIn", ChopperData);
+	f->GetObject("Brem", ChopperData);
 	ChopperData->Print();
 
 	double Emax = ChopperData->GetMaximum("Energy");
 	double deltaE = 5.0e-6; // width of each important sampling region in MeV
 	Int_t nbins = Emax/deltaE;
-	
+
 	TH1D *hBrems = new TH1D("hBrems","Bremsstrahlung Data",nbins, 0.,Emax);
 	ChopperData->Draw("Energy>>hBrems","","goff");
 	hBrems->Scale(1.0/hBrems->Integral());

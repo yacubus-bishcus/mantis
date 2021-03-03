@@ -9,8 +9,8 @@
 //
 // Requires 3 inputs
 // 1. Filename
-// 2. Histogram Max Energy
-// 3. Element for Sampling Either U or Pu
+// 2. Element for Sampling Either U or Pu
+// 3. Non NRF Energy Cut for Importance Sampling region
 //
 // This Script scans a ROOT file for the bremsstrahlung spectrum and converts
 // The TTree to a TGraph. The File also creates an importance sampling Distribution
@@ -19,10 +19,27 @@
 // The output of this file is another ROOT TFile with a bremmstrahlung and importance
 // sampling distributions saved as TGraphs
 
-void Sampling(const char *bremInputFilename, double Emax=2.1, string sample_element="U")
+void Sampling(const char *bremInputFilename, string sample_element="U", double non_nrf_energy_cut=1.5)
 {
-	cout << "Emax set to: " << Emax << endl; // spectrum max energy in MeV
+	// Convert Input Bremsstrahlung Spectrum Histogram to TGraph
+	if(gSystem->AccessPathName(bremInputFilename))
+	{
+		std::cerr << "ERROR Reading: " << bremInputFilename << std::endl;
+		exit(1);
+	}
 
+	TFile *f = TFile::Open(bremInputFilename);
+	bool confirm = f->cd();
+	if(!confirm)
+		exit(10);
+	TTree *ChopperData;
+	f->GetObject("ChopIn", ChopperData);
+	ChopperData->Print();
+	double Emax = ChopperData->GetMaximum("Energy");
+	TH1D *hBrems = new TH1D("hBrems","Bremsstrahlung Data",nbins, 0.,Emax);
+	ChopperData->Draw("Energy>>hBrems","","goff");
+	hBrems->Scale(1.0/hBrems->Integral());
+	TGraph *gBrems = new TGraph(hBrems);
 	// resonance energies in MeV as calculated by G4NRF
 	vector<double> Evec;
 	vector<double> Evec_above_threshold;
@@ -75,7 +92,7 @@ void Sampling(const char *bremInputFilename, double Emax=2.1, string sample_elem
 
 	double deltaE = 5.0e-6; // width of each important sampling region in MeV
 
-	Int_t nbins = (Emax)/(deltaE);
+	Int_t nbins = Emax/deltaE;
 
 	TH1D *hSample = new TH1D("hSample", "hSample", nbins, 0., Emax);
 
@@ -84,17 +101,19 @@ void Sampling(const char *bremInputFilename, double Emax=2.1, string sample_elem
 	for (int i = 1; i <= nbins; ++i) {
 		double e = hSample->GetBinCenter(i);
 
-		for (int j = 0; j < Evec_above_threshold.size(); ++j) {
-			if (e < 1.5) {
+		for (int j = 0; j < Evec_above_threshold.size(); ++j)
+		{
+			if (e < non_nrf_energy_cut) 
+			{
 				hSample->SetBinContent(i, 0.0001);
 			}
-            		else if (e > Evec_above_threshold[j] - deltaE && e < Evec_above_threshold[j] + deltaE)
-            		{
+  		else if (e > Evec_above_threshold[j] - deltaE && e < Evec_above_threshold[j] + deltaE)
+  		{
 				hSample->SetBinContent(i, 1);
 				break;
-            		}
-            		else
-            		{
+  		}
+  		else
+  		{
 				hSample->SetBinContent(i, 0.1);
 			}
 		}
@@ -104,26 +123,6 @@ void Sampling(const char *bremInputFilename, double Emax=2.1, string sample_elem
 	hSample->Scale(1.0/(hSample->Integral()));
 	TGraph *gSample = new TGraph(hSample);
 	std::cout << "Importance Sampling Distribution Created!" << std::endl << std::endl;
-
-	// Convert Input Bremsstrahlung Spectrum Histogram to TGraph
-	if(gSystem->AccessPathName(bremInputFilename))
-	{
-		std::cerr << "ERROR Reading: " << bremInputFilename << std::endl;
-		exit(1);
-	}
-
-	TFile *f = TFile::Open(bremInputFilename);
-	bool confirm = f->cd();
-	if(!confirm)
-		exit(10);
-	TTree *ChopperData;
-	f->GetObject("ChopIn", ChopperData);
-	ChopperData->Print();
-	TH1D *hBrems = new TH1D("hBrems","Bremsstrahlung Data",nbins, 0.,Emax);
-	ChopperData->Draw("Energy>>hBrems","","goff");
-	hBrems->Scale(1.0/hBrems->Integral());
-	//hBrems->Smooth(1024);
-	TGraph *gBrems = new TGraph(hBrems);
 
 	hSample->SetTitle("NRF importance sampling distribution");
 	gSample->SetTitle("NRF importance sampling distribution");

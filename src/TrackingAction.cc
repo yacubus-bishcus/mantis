@@ -6,6 +6,7 @@
 #include "G4Track.hh"
 #include "G4ParticleTypes.hh"
 
+extern G4bool debug;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 TrackingAction::TrackingAction()

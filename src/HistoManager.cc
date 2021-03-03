@@ -50,13 +50,18 @@ void HistoManager::Book()
     return;
   }
 
-  // Create ID 0 Ntuple for Incident Chopper Data
+  // Create ID 0 Ntuple for Brem Beam Emission
+  manager->CreateNtuple("Brem","Bremsstrahlung Beam");
+  manager->CreateNtuple("Energy");
+  manager->CreateNtuple("Angle");
+  manager->FinishNtuple();
+  // Create ID 1 Ntuple for Incident Chopper Data
   manager->CreateNtuple("ChopIn", "Chopper Wheel Incident Data");
   manager->CreateNtupleDColumn("Energy");
   manager->CreateNtupleDColumn("Weight");
   manager->CreateNtupleIColumn("EventID");
   manager->FinishNtuple();
-  // Create ID 1 Ntuple for Exiting Chopper Data
+  // Create ID 2 Ntuple for Exiting Chopper Data
   manager->CreateNtuple("ChopOut", "Chopper Wheel Exiting Radiation Data");
   manager->CreateNtupleDColumn("Energy");
   manager->CreateNtupleDColumn("Weight");
@@ -66,7 +71,7 @@ void HistoManager::Book()
 
   if(!bremTest)
   {
-    // Create ID 2 Ntuple for NRF Materials
+    // Create ID 3 Ntuple for NRF Materials
     manager->CreateNtuple("NRF","NRF Data");
     manager->CreateNtupleIColumn("EventID");
     manager->CreateNtupleDColumn("Energy");
@@ -75,7 +80,17 @@ void HistoManager::Book()
     manager->CreateNtupleDColumn("ZPos");
     manager->FinishNtuple();
 
-    // Create ID 3 NTuple for Incident Interrogation Object Information
+    // Create Testing TTree ID 4 for Incident Air just prior to Interrogation Object
+    manager->CreateNtuple("AirIn","Incident Air Pocket Just Prior to Int Obj");
+    manager->CreateNtupleDColumn("Energy");
+    manager->CreateNtupleDColumn("Weight");
+    manager->CreateNtupleSColumn("CreatorProcess");
+    manager->CreateNtupleDColumn("Angle");
+    manager->CreateNtupleDColumn("Time");
+    manager->CreateNtupleIColumn("EventID");
+    manager->FinishNtuple();
+
+    // Create ID 5 NTuple for Incident Interrogation Object Information
     manager->CreateNtuple("IntObjIn","Incident Interrogation Object Data");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleDColumn("Weight");
@@ -85,21 +100,21 @@ void HistoManager::Book()
     manager->CreateNtupleIColumn("EventID");
     manager->FinishNtuple();
 
-    // Create ID 4 Ntuple for IntObj Emission Data
+    // Create ID 6 Ntuple for IntObj Emission Data
     manager->CreateNtuple("IntObjOut","Interrogation Object Emission Data");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleDColumn("Weight");
     manager->CreateNtupleSColumn("CreatorProcess");
     manager->FinishNtuple();
 
-    // Create ID 5 Ntuple for Incident Water Tank Data
+    // Create ID 7 Ntuple for Incident Water Tank Data
     manager->CreateNtuple("Water","Incident Water Tank Data");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleDColumn("Weight");
     manager->CreateNtupleSColumn("CreatorProcess");
     manager->FinishNtuple();
 
-    // Create ID 6 Ntuple for cherenkov in water
+    // Create ID 8 Ntuple for cherenkov in water
     manager->CreateNtuple("Cherenkov","Cherenkov in Water Data");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleDColumn("Weight");
@@ -108,7 +123,7 @@ void HistoManager::Book()
     manager->CreateNtupleDColumn("Time");
     manager->FinishNtuple();
 
-    // Create ID 7 Ntuple for Detected Information
+    // Create ID 9 Ntuple for Detected Information
     manager->CreateNtuple("DetInfo","Detected Information");
     manager->CreateNtupleIColumn("EventID");
     manager->CreateNtupleDColumn("Energy");
@@ -117,22 +132,12 @@ void HistoManager::Book()
     manager->CreateNtupleDColumn("Time");
     manager->FinishNtuple();
 
-    // Create ID 8 Ntuple for Detector Process Information
+    // Create ID 10 Ntuple for Detector Process Information
     manager->CreateNtuple("IncDetInfo","Incident Detector Process Information");
     manager->CreateNtupleIColumn("EventID");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleDColumn("Weight");
     manager->CreateNtupleSColumn("DetProcess");
-    manager->FinishNtuple();
-
-    // Create Testing TTree ID 9 for Incident Air just prior to Interrogation Object
-    manager->CreateNtuple("AirIn","Incident Air Pocket Just Prior to Int Obj");
-    manager->CreateNtupleDColumn("Energy");
-    manager->CreateNtupleDColumn("Weight");
-    manager->CreateNtupleSColumn("CreatorProcess");
-    manager->CreateNtupleDColumn("Angle");
-    manager->CreateNtupleDColumn("Time");
-    manager->CreateNtupleIColumn("EventID");
     manager->FinishNtuple();
 
   }

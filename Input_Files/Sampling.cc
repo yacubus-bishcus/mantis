@@ -41,7 +41,7 @@ void Sampling(const char *bremInputFilename, string sample_element="U", double n
 	Int_t nbins = Emax/deltaE;
 
 	TH1D *hBrems = new TH1D("hBrems","Bremsstrahlung Data",nbins, 0.,Emax);
-	ChopperData->Draw("Energy>>hBrems","","goff");
+	ChopperData->Draw("Energy>>hBrems","cos(Angle)>.94","goff");
 	hBrems->Scale(1.0/hBrems->Integral());
 	TGraph *gBrems = new TGraph(hBrems);
 	// resonance energies in MeV as calculated by G4NRF

@@ -22,6 +22,7 @@ TrackingAction::~TrackingAction()
 
 void TrackingAction::PreUserTrackingAction(const G4Track* aTrack)
 {
+  fpTrackingManager->SetStoreTrajectory(true);
   //Use custom trajectory class
   fpTrackingManager->SetTrajectory(new Trajectory(aTrack));
 

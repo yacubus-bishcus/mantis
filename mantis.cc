@@ -218,6 +218,15 @@ int main(int argc,char **argv)
 
         // construct the default run manager
         G4RunManager* runManager = new G4RunManager;
+        G4bool vis = false;
+#ifdef G4VIS_USE
+        if(ui || macro == "vis_save.mac")
+        {
+          visManager = new G4VisExecutive();
+          visManager->Initialize();
+          vis = true;
+        }
+#endif
 
         // set mandatory initialization classes
 
@@ -228,16 +237,8 @@ int main(int argc,char **argv)
         PhysicsListNew *thePLNew = new PhysicsListNew(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
         runManager->SetUserInitialization(thePLNew);
 
-        runManager->SetUserInitialization(new ActionInitialization(det));
+        runManager->SetUserInitialization(new ActionInitialization(det, vis));
 
-#ifdef G4VIS_USE
-        if(ui || macro == "vis_save.mac")
-        {
-                visManager = new G4VisExecutive();
-                visManager->Initialize();
-        }
-#endif
-        //std::cout << "visManager Initialized" << std::endl;
         if(!ui)
         {
                 G4String command = "/control/execute ";
@@ -254,7 +255,7 @@ int main(int argc,char **argv)
 #ifdef G4VIS_USE
         if(ui || macro == "vis_save.mac")
         {
-                delete visManager;
+          delete visManager;
         }
 #endif
 

@@ -28,14 +28,15 @@
 #include "RunAction.hh"
 #include "SteppingAction.hh"
 #include "StackingAction.hh"
+#include "TrackingAction.hh"
 #include "EventAction.hh"
 #include "HistoManager.hh"
 #include "G4Types.hh"
 
 extern G4bool debug;
 
-ActionInitialization::ActionInitialization(const DetectorConstruction* det)
-        : G4VUserActionInitialization(), fDetector(det)
+ActionInitialization::ActionInitialization(const DetectorConstruction* det, G4bool vis)
+        : G4VUserActionInitialization(), fDetector(det), fvis(vis)
 {
 }
 
@@ -55,6 +56,8 @@ void ActionInitialization::Build() const
         SetUserAction(run);
         EventAction* event = new EventAction();
         SetUserAction(event);
+        if(fvis)
+          SetUserAction(new TrackingAction());
         SetUserAction(new SteppingAction(fDetector, run, event));
         SetUserAction(new StackingAction(fDetector, run));
 

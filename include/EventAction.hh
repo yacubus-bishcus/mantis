@@ -37,8 +37,10 @@
 #include "G4UImanager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4Run.hh"
+#include "EventMessenger.hh"
 
 class G4Event;
+class EventMessenger;
 
 class EventAction : public G4UserEventAction
 {
@@ -75,6 +77,7 @@ G4double calcAvg()
 }
 G4int eventInfoFreq, runID;
 G4double runTime, prevRunTime, eventsPerSec, totalEventsToRun, timeToFinish;
+EventMessenger* eventM;
 G4int c_secondaries;
 G4double sum;
 std::vector<double> energyv, timev;

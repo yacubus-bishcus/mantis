@@ -54,7 +54,7 @@ void HistoManager::Book()
   manager->CreateNtuple("Brem","Bremsstrahlung Beam");
   manager->CreateNtupleDColumn("Energy");
   manager->CreateNtupleDColumn("Angle");
-  manager->CreateNtupleSColumn("CProcess");
+  //manager->CreateNtupleSColumn("CProcess");
   manager->FinishNtuple();
   // Create ID 1 Ntuple for Incident Chopper Data
   manager->CreateNtuple("ChopIn", "Chopper Wheel Incident Data");

@@ -29,8 +29,9 @@ extern G4bool bremTest;
 
 EventAction::EventAction()
 :eventInfoFreq(100000), runID(0),runTime(0.), prevRunTime(0.), eventsPerSec(0.),
-totalEventsToRun(0.), timeToFinish(0.)
+totalEventsToRun(0.), timeToFinish(0.), eventM(NULL)
 {
+  eventM = new EventMessenger(this);
 }
 
 EventAction::~EventAction()

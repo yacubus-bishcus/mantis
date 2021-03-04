@@ -7,14 +7,14 @@
 #include "EventAction.hh"
 #include "G4UIdirectory.hh"
 
-class PrimaryGeneratorAction;
+class EventAction;
 class G4UIcmdWithADouble;
 class G4UIdirectory;
 
 class EventMessenger: public G4UImessenger
 {
 public:
-  EventMessenger(PrimaryGeneratorAction*);
+  EventMessenger(EventAction*);
   ~EventMessenger();
 
   void SetNewValue(G4UIcommand*, G4String); // must always be a string input

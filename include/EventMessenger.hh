@@ -4,7 +4,7 @@
 #include "globals.hh"
 #include "G4UImessenger.hh"
 #include "G4UIcmdWithADouble.hh"
-#include "PrimaryGeneratorAction.hh"
+#include "EventAction.hh"
 #include "G4UIdirectory.hh"
 
 class PrimaryGeneratorAction;

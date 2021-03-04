@@ -41,9 +41,13 @@ void Sampling(const char *bremInputFilename, string sample_element="U", double n
 	Int_t nbins = Emax/deltaE;
 
 	TH1D *hBrems = new TH1D("hBrems","Bremsstrahlung Data",nbins, 0.,Emax);
-	ChopperData->Draw("Energy>>hBrems","cos(Angle)>.94","goff");
+	std::cout << "Grabbing Brem Data..." << std::endl;
+	ChopperData->Draw("Energy>>hBrems","","goff");
+	std::cout << "Data Grabbed." << std::endl;
 	hBrems->Scale(1.0/hBrems->Integral());
+	std::cout << "Converting to TGraph..." << std::endl;
 	TGraph *gBrems = new TGraph(hBrems);
+	std::cout << "Conversion Complete." << std::endl;
 	// resonance energies in MeV as calculated by G4NRF
 	vector<double> Evec;
 	vector<double> Evec_above_threshold;

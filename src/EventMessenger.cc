@@ -6,7 +6,7 @@ EventMessenger::EventMessenger(EventAction* EventAction)
 {
   myDir = new G4UIdirectory("/mantisevent/");
   myDir->SetGuidance("Event Info Commands");
-  Cmd = new G4UIcmdWithAInt("/mantisevent/eventInfoFreq",this);
+  Cmd = new G4UIcmdWithADouble("/mantisevent/eventInfoFreq",this);
   Cmd->SetGuidance("Choose Desired eventInfoFreq");
   Cmd->SetParameterName("eventInfo",false);
   Cmd->SetDefaultValue("100000");
@@ -24,6 +24,6 @@ void EventMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   if(command == Cmd)
   {
     G4double theCommand = Cmd->GetNewDoubleValue(newValue);
-    EventA->SetEventInfoFreq(theCommand);
+    EventA->SetEventInfoFreq((int)theCommand);
   }
 }

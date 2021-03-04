@@ -65,6 +65,8 @@ void CherenkovTime(G4double times)
   timev.push_back(times);
 }
 
+void SetEventInfoFreq(G4int freq){eventInfoFreq = freq;}
+
 private:
 
 G4double calcAvg()

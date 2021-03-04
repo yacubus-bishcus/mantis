@@ -36,6 +36,7 @@ totalEventsToRun(0.), timeToFinish(0.), eventM(NULL)
 
 EventAction::~EventAction()
 {
+  delete eventM;
 }
 
 void EventAction::BeginOfEventAction(const G4Event* anEvent)

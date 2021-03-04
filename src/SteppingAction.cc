@@ -140,7 +140,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       {
         G4ThreeVector p = aStep->GetPreStepPoint()->GetMomentum();
         G4double angle = asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()); //the angle of the particle relative to the Z axis
-        if(cos(angle) < 0.94 && CPName != "Brem")
+        if(cos(angle) < 0.94 || CPName != "eBrem")
         {
           theTrack->SetTrackStatus(fStopAndKill);
           krun->AddStatusKilled();

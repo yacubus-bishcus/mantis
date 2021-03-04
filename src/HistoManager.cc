@@ -163,8 +163,11 @@ void HistoManager::finish()
   std::cout << "HistoManager::finish -> Ntuples are saved." << std::endl;
   G4cout << "HistoManager::finish -> Ntuples are saved. " << G4endl;
   stop_time = time(0);
-  G4cout << "HistoManager::finish -> Time: "
-          << std::difftime(stop_time,start_time) << " seconds!" << G4endl;
+  G4cout << "HistoManager::finish -> Time: ["
+          << ((int)std::difftime(stop_time,start_time))/3600 << " h "
+          << ((int)std::difftime(stop_time,start_time)%3600)/60 << " m "
+          << ((int)std::difftime(stop_time,start_time)%3600)%60 << " s]"
+          << G4endl;
   std::cout << "HistoManager::finish -> Time: ["
               << ((int)std::difftime(stop_time,start_time))/3600 << " h "
               << ((int)std::difftime(stop_time,start_time)%3600)/60 << " m "

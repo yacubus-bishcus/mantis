@@ -149,6 +149,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         {
           manager->FillNtupleDColumn(0,0,theTrack->GetKineticEnergy()/(MeV));
           manager->FillNtupleDColumn(0,1, angle);
+          manager->FillNtupleSColumn(0,2,CPName);
           manager->AddNtupleRow(0);
         }
       }

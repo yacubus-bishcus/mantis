@@ -9,7 +9,6 @@ EventMessenger::EventMessenger(EventAction* EventAction)
   Cmd = new G4UIcmdWithADouble("/mantisevent/eventInfoFreq",this);
   Cmd->SetGuidance("Choose Desired eventInfoFreq");
   Cmd->SetParameterName("eventInfo",false);
-  Cmd->SetDefaultValue("100000");
   Cmd->SetRange("eventInfo > 0 && eventInfo < 100000000");
 }
 

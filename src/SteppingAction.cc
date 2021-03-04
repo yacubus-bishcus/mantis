@@ -119,6 +119,17 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     G4int isNRF = 0;
     G4AnalysisManager* manager = G4AnalysisManager::Instance();
 
+    G4String CPName = "beam";
+    // Check if Track is created by NRF
+    if(theTrack->GetCreatorProcess() !=0)
+    {
+      CPName = theTrack->GetCreatorProcess()->GetProcessName();
+      if(CPName == "NRF")
+      {
+        isNRF = 1;
+      }
+    }
+
 // *********************************** Track Bremsstrahlung Beam for Brem Test ***************************************** //
 
     if(bremTest)
@@ -129,7 +140,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       {
         G4ThreeVector p = aStep->GetPreStepPoint()->GetMomentum();
         G4double angle = asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()); //the angle of the particle relative to the Z axis
-        if(cos(angle) < 0.94)
+        if(cos(angle) < 0.94 && CPName != "Brem")
         {
           theTrack->SetTrackStatus(fStopAndKill);
           krun->AddStatusKilled();
@@ -158,16 +169,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         G4ThreeVector NRF_loc = theTrack->GetPosition();
         manager->FillNtupleDColumn(3,4, NRF_loc.z()/(cm));
         manager->AddNtupleRow(3);
-      }
-    }
-    G4String CPName = "beam";
-    // Check if Track is created by NRF
-    if(theTrack->GetCreatorProcess() !=0)
-    {
-      CPName = theTrack->GetCreatorProcess()->GetProcessName();
-      if(CPName == "NRF")
-      {
-              isNRF = 1;
       }
     }
 

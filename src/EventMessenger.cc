@@ -24,5 +24,6 @@ void EventMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   {
     G4double theCommand = Cmd->GetNewDoubleValue(newValue);
     EventA->SetEventInfoFreq((int)theCommand);
+    G4cout << "EventInfo Frequency set to: " << theCommand << G4endl;
   }
 }

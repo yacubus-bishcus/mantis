@@ -164,8 +164,11 @@ void HistoManager::finish()
   stop_time = time(0);
   G4cout << "HistoManager::finish -> Time: "
           << std::difftime(stop_time,start_time) << " seconds!" << G4endl;
-  std::cout << "HistoManager::finish -> Time: "
-              << std::difftime(stop_time,start_time) << " seconds!" << std::endl;
+  std::cout << "HistoManager::finish -> Time: ["
+              << ((int)std::difftime(stop_time,start_time))/3600 << " h "
+              << ((int)std::difftime(stop_time,start_time)%3600)/60 << " m "
+              << ((int)std::difftime(stop_time,start_time)%3600)%60 << " s]"
+              << std::endl;
 
   delete manager;
   fFactoryOn = false;

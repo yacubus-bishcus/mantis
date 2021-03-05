@@ -96,7 +96,10 @@ void SNR(const char* inFile)
     inSignal[3] = e13->Integral(binStart,binEnd);
     outSignal[3] = e23->Integral(binStart,binEnd);
     binStart = e14->GetXaxis()->FindBin(eStart[4]);
+    std::cout << "Bin Start: " << binStart << std::endl;
     binEnd = e14->GetXaxis()->FindBin(eEnd[4]);
+    std::cout << "Bin End: " << binEnd << std::endl;
+    std::cout << "Integral: " << e14->Integral(binStart,binEnd) << std::endl;
     inSignal[4] = e14->Integral(binStart,binEnd);
     outSignal[4] = e24->Integral(binStart,binEnd);
 

@@ -54,8 +54,8 @@ void SNR(const char* inFile)
     std::cout << "IntObjIn Noise: \t" << inNoise << std::endl;
     double outSignal = e2->Integral(binStart,binEnd);
     double outNoise = eT2->Integral();
-
-    std::cout << "IntObjIn SNR: \t" << inSignal/inNoise << std::endl;
-    std::cout << "IntObjOut SNR: \t" << outSignal/outNoise << std::endl;
+    std::cout << "The Larger the SNR the Better the Interrogation Beam." << std::endl;
+    std::cout << "IntObjIn SNR: \t" << abs(inSignal - inNoise)/sqrt(inNoise) << std::endl;
+    std::cout << "IntObjOut SNR: \t" << abs(outSignal - outNoise)/sqrt(outNoise) << std::endl;
   }
 }

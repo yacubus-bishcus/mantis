@@ -42,10 +42,16 @@ void SNR(const char* inFile)
     aIntObjOut->Draw("Energy>>e2","Weight","goff");
     aIntObjIn->Draw("Energy>>eT","Weight","goff");
     aIntObjOut->Draw("Energy>>eT2","Weight","goff");
+    e1->Print();
+    eT->Print();
+    e2->Print();
+    eT2->Print();
     int binStart = e1->GetXaxis()->FindBin(1.73354);
     int binEnd = e1->GetXaxis()->FindBin(1.73355);
     double inSignal = e1->Integral(binStart, binEnd);
+    std::cout << "IntObjIn Signal: \t" << inSignal << std::endl;
     double inNoise = eT->Integral();
+    std::cout << "IntObjIn Noise: \t" << inNoise << std::endl;
     double outSignal = e2->Integral(binStart,binEnd);
     double outNoise = eT2->Integral();
 

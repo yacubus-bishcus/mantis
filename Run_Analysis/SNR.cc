@@ -30,14 +30,14 @@ void SNR(const char* inFile)
   {
     aIntObjIn->Print();
     aIntObjOut->Print();
+    double inMax = aIntObjIn->GetMaximum("Energy");
+    double outMax = aIntObjOut->GetMaximum("Energy");
     aIntObjIn->SetEstimate(-1);
     aIntObjOut->SetEstimate(-1);
     TH1D* e1 = new TH1D("e1","IntObjIn NRF Histogram",100,1.73350, 1.73360);
     TH1D* e2 = new TH1D("e2","IntObjOut NRF Histogram",100,1.73350,1.73360);
-    //TH1D* eT = new TH1D("eT","IntObjIn Histogram");
-    //TH1D* eT2 = new TH1D("eT2","IntObjOut Histogram");
-    TH1D* eT = new TH1D();
-    TH1D* eT2 = new TH1D();
+    TH1D* eT = new TH1D("eT","IntObjIn Histogram",100,0.0,inMax);
+    TH1D* eT2 = new TH1D("eT2","IntObjOut Histogram",100,0.0,outMax);
     aIntObjIn->Draw("Energy>>e1","Weight","goff");
     aIntObjOut->Draw("Energy>>e2","Weight","goff");
     aIntObjIn->Draw("Energy>>eT","Weight","goff");

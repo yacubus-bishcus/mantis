@@ -39,7 +39,7 @@ void SNR(const char* inFile)
     TH1D* e10 = new TH1D("e10","IntObjIn NRF Histogram",100,1.65620,1.65630);
     TH1D* e12 = new TH1D("e12","IntObjIn NRF Histogram",100,1.81520,1.81530);
     TH1D* e13 = new TH1D("e13","IntObjIn NRF Histogram",100,1.86230,1.86240);
-    TH1D* e14 = new TH1D("e14","IntObjIn NRF Histogram",100,2.00610,2.00620);
+    TH1D* e14 = new TH1D("e14","IntObjIn NRF Histogram",100,2.00615,2.00625);
 
     TH1D* e21 = new TH1D("e21","IntObjOut NRF Histogram",100,1.73350,1.73360);
     TH1D* e20 = new TH1D("e20","IntObjOut NRF Histogram",100,1.65620,1.65630);

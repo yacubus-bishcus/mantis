@@ -56,7 +56,10 @@ void SNR(const char* inFile)
     std::cout << "IntObjOut Signal: \t" << outSignal << std::endl;
     double outNoise = eT2->Integral();
     std::cout << "IntObjOut Noise: \t" << outNoise << std::endl << std::endl;
-    std::cout << "A lower SNR is better because you want the signal from NRF to be minimized." << std::endl;
+    std::cout << "The NRF photons are removed from the beam in the chopper wheel stage."
+              << std::endl
+              << "A lower SNR is better because you want the signal from NRF to be minimized."
+              << std::endl;
     std::cout << "IntObjIn SNR: \t" << abs(inSignal - inNoise)/sqrt(inNoise) << std::endl;
     std::cout << "IntObjOut SNR: \t" << abs(outSignal - outNoise)/sqrt(outNoise) << std::endl;
   }

@@ -72,9 +72,9 @@ void SNR(const char* inFile)
 
     for(int i=0;i<5;++i)
     {
-      std::cout << "Bin Start Energy: " << std::setprecision(10) << eStart[i] << std::endl;
+      //std::cout << "Bin Start Energy: " << std::setprecision(10) << eStart[i] << std::endl;
       eEnd[i] = eStart[i] + 0.00001;
-      std::cout << "Bin End Energy: " << std::setprecision(10) << eEnd[i] << std::endl;
+      //std::cout << "Bin End Energy: " << std::setprecision(10) << eEnd[i] << std::endl;
     }
 
     int binStart = e10->GetXaxis()->FindBin(eStart[0]);
@@ -96,12 +96,12 @@ void SNR(const char* inFile)
     inSignal[3] = e13->Integral(binStart,binEnd);
     outSignal[3] = e23->Integral(binStart,binEnd);
     binStart = e14->GetXaxis()->FindBin(eStart[4]);
-    std::cout << "E Start: " << eStart[4] << std::endl;
-    std::cout << "Bin Start: " << binStart << std::endl;
+    //std::cout << "E Start: " << eStart[4] << std::endl;
+    //std::cout << "Bin Start: " << binStart << std::endl;
     binEnd = e14->GetXaxis()->FindBin(eEnd[4]);
-    std::cout << "E End: " << eEnd[4] << std::endl;
-    std::cout << "Bin End: " << binEnd << std::endl;
-    std::cout << "Integral: " << e14->Integral(binStart,binEnd) << std::endl;
+    //std::cout << "E End: " << eEnd[4] << std::endl;
+    //std::cout << "Bin End: " << binEnd << std::endl;
+    //std::cout << "Integral: " << e14->Integral(binStart,binEnd) << std::endl;
     inSignal[4] = e14->Integral(binStart,binEnd);
     outSignal[4] = e24->Integral(binStart,binEnd);
 

@@ -103,9 +103,9 @@ void SNR(const char* inFile)
 
     for(int i=0;i<5;++i)
     {
-      std::cout << "IntObjIn Signals: \t" << inSignal[i] << std::endl;
+      std::cout << "IntObjIn " << eStart[i] << " MeV Signals: \t" << inSignal[i] << std::endl;
       tSignalin += inSignal[i];
-      std::cout << "IntObjOut Signals: \t" << outSignal[i] << std::endl;
+      std::cout << "IntObjOut " << eStart[i] << " MeV Signals: \t" << outSignal[i] << std::endl;
       tSignalout += outSignal[i];
     }
     std::cout << "Total IntObjIn Signal: \t" << tSignalin << std::endl;

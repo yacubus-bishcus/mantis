@@ -36,6 +36,8 @@ void SNR(const char* inFile)
     TH1D* e2 = new TH1D("e2","IntObjOut NRF Histogram",100,1.73350,1.73360);
     //TH1D* eT = new TH1D("eT","IntObjIn Histogram");
     //TH1D* eT2 = new TH1D("eT2","IntObjOut Histogram");
+    TH1D* eT = new TH1D();
+    TH1D* eT2 = new TH1D();
     aIntObjIn->Draw("Energy>>e1","Weight","goff");
     aIntObjOut->Draw("Energy>>e2","Weight","goff");
     aIntObjIn->Draw("Energy>>eT","Weight","goff");

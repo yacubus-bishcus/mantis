@@ -45,7 +45,7 @@ void SNR(const char* inFile)
     TH1D* e20 = new TH1D("e20","IntObjOut NRF Histogram",100,1.65620,1.65630);
     TH1D* e22 = new TH1D("e22","IntObjOut NRF Histogram",100,1.81520,1.81530);
     TH1D* e23 = new TH1D("e23","IntObjOut NRF Histogram",100,1.86230,1.86240);
-    TH1D* e24 = new TH1D("e24","IntObjOut NRF Histogram",100,2.00610,2.00620);
+    TH1D* e24 = new TH1D("e24","IntObjOut NRF Histogram",100,2.00615,2.00625);
 
     TH1D* eT = new TH1D("eT","IntObjIn Histogram",100,0.0,inMax);
     TH1D* eT2 = new TH1D("eT2","IntObjOut Histogram",100,0.0,outMax);
@@ -67,7 +67,7 @@ void SNR(const char* inFile)
     std::cout << "Drawing IntObjIn and IntObjOut Histograms..." << std::endl;
     aIntObjIn->Draw("Energy>>eT","Weight","goff");
     aIntObjOut->Draw("Energy>>eT2","Weight","goff");
-    double eStart[] = {1.65623,1.73354,1.81525,1.86231,2.00619};
+    double eStart[] = {1.65623,1.73354,1.81525,1.86231,2.006197};
     double eEnd[5];
 
     for(int i=0;i<5;++i)

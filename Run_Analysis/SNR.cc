@@ -72,9 +72,9 @@ void SNR(const char* inFile)
 
     for(int i=0;i<5;++i)
     {
-      std::cout << "Bin Start Energy: " << eStart[i] << std::endl;
+      std::cout << "Bin Start Energy: " << std::setprecision(10) << eStart[i] << std::endl;
       eEnd[i] = eStart[i] + 0.00001;
-      std::cout << "Bin End Energy: " << eEnd[i] << std::endl;
+      std::cout << "Bin End Energy: " << std::setprecision(10) << eEnd[i] << std::endl;
     }
 
     int binStart = e10->GetXaxis()->FindBin(eStart[0]);

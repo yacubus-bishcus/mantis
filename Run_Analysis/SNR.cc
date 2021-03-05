@@ -34,8 +34,8 @@ void SNR(const char* inFile)
     aIntObjOut->SetEstimate(-1);
     TH1D* e1 = new TH1D("e1","IntObjIn NRF Histogram",100,1.73350, 1.73360);
     TH1D* e2 = new TH1D("e2","IntObjOut NRF Histogram",100,1.73350,1.73360);
-    TH1D* eT = new TH1D("eT","IntObjIn Histogram");
-    TH1D* eT2 = new TH1D("eT2","IntObjOut Histogram");
+    //TH1D* eT = new TH1D("eT","IntObjIn Histogram");
+    //TH1D* eT2 = new TH1D("eT2","IntObjOut Histogram");
     aIntObjIn->Draw("Energy>>e1","Weight","goff");
     aIntObjOut->Draw("Energy>>e2","Weight","goff");
     aIntObjIn->Draw("Energy>>eT","Weight","goff");
@@ -46,7 +46,7 @@ void SNR(const char* inFile)
     double inNoise = eT->Integral();
     double outSignal = e2->Integral(binStart,binEnd);
     double outNoise = eT2->Integral();
-    
+
     std::cout << "IntObjIn SNR: \t" << inSignal/inNoise << std::endl;
     std::cout << "IntObjOut SNR: \t" << outSignal/outNoise << std::endl;
   }

@@ -53,8 +53,10 @@ void SNR(const char* inFile)
     double inNoise = eT->Integral();
     std::cout << "IntObjIn Noise: \t" << inNoise << std::endl;
     double outSignal = e2->Integral(binStart,binEnd);
+    std::cout << "IntObjOut Signal: \t" << outSignal << std::endl;
     double outNoise = eT2->Integral();
-    std::cout << "The Larger the SNR the Better the Interrogation Beam." << std::endl;
+    std::cout << "IntObjOut Noise: \t" << outNoise << std::endl << std::endl;
+    std::cout << "A lower SNR is better because you want the signal from NRF to be minimized." << std::endl;
     std::cout << "IntObjIn SNR: \t" << abs(inSignal - inNoise)/sqrt(inNoise) << std::endl;
     std::cout << "IntObjOut SNR: \t" << abs(outSignal - outNoise)/sqrt(outNoise) << std::endl;
   }

@@ -10,6 +10,16 @@ DETDATA="true"
 INCDETDATA="false"
 PRINTDATA="false"
 PRINTDATAONLY="false"
+current_dir=pwd
+file_var="/Rebin.cc"
+FILECHECK=$current_dir$file_var
+
+if test -e "$FILECHECK"; then
+  echo "$FILECHECK found."
+else
+  echo "$FILECHECK not found."
+  exit(1)
+fi
 
 for arg in "$@"
 do

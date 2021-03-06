@@ -19,7 +19,7 @@ if test -e "$FILECHECK"; then
   echo "$FILECHECK found."
 else
   echo "$FILECHECK not found."
-  exit(1)
+  exit 1
 fi
 
 for arg in "$@"
@@ -112,7 +112,7 @@ then
       echo "$PRINTFILECHECK found."
     else
       echo "$PRINTFILECHECK not found."
-      exit(1)
+      exit 1
     fi
 else
   echo "USER ERROR: MUST INPUT File to Rebin!"

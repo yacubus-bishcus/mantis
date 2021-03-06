@@ -114,6 +114,7 @@ then
       echo "$PRINTFILECHECK not found."
       exit 1
     fi
+  fi
 else
   echo "USER ERROR: MUST INPUT File to Rebin!"
   exit
@@ -258,5 +259,4 @@ then
 
     root -l -b -q "PrintResults.cc($rebinnedDetFile, $rebinnedDetFile2, \"hDet\")"
   fi
-
 fi

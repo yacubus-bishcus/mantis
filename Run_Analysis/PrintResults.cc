@@ -34,6 +34,16 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
     onFile->GetObject(histName,onHist);
     std::cout << std::endl << "Chopper On " << histName << "Data..." << std::endl;
     std::cout << "------------------------------------------------------------------" << std::endl << std::endl;
+
+    if(onHist != 0)
+    {
+      int nentries = onHist->GetEntries();
+      if(nentries <=0)
+        exit(1);
+    }
+    else
+      exit(1);
+
     onHist->Print();
     double weighted_sum = onHist->Integral();
     TH1D *offHist;
@@ -41,6 +51,16 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
     offFile->GetObject(histName,offHist);
     std::cout << std::endl << "Chopper Off " << histName << "Data..." << std::endl;
     std::cout << "------------------------------------------------------------------" << std::endl << std::endl;
+
+    if(offHist != 0)
+    {
+      int nentries = offHist->GetEntries();
+      if(nentries <=0)
+        exit(1);
+    }
+    else
+      exit(1);
+
     offHist->Print();
     double weighted_sum_off = offHist->Integral();
     double z_score = abs(weighted_sum - weighted_sum_off)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum_off),2)));

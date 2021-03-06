@@ -29,8 +29,8 @@ do
         echo "Rebinning Script for Mantis Output"
         echo "options:"
         echo "-h,--help               show brief help"
-        echo "--read_on_file          specify the on file to be read in to rebin"
-        echo "--read_off_file=NA      specify the off file to be read"
+        echo "--fOn                   specify the on file to be read in to rebin"
+        echo "--fOff=NA               specify the off file to be read"
         echo "--ChopData=false        specify chopper data analysis"
         echo "--IntObjData=false      specify Interrogation Object analysis"
         echo "--NRFData=false         specify NRF Data Analysis"
@@ -40,14 +40,15 @@ do
         echo "--IncDetData=false      specify Incident Detector Data Analysis"
         echo "--PrintData=false       Run PrintResults.cc"
         echo "--PrintDataOnly=false   Only Run Print Results.cc Do not Rebin!"
+        echo "--Verbosity=false       specify data verbosity"
         shift
         exit 0
         ;;
-        -a|--read_on_file=*)
+        -a|--fOn=*)
         INFILE="${arg#*=}"
         shift
         ;;
-        -b|--read_off_file=*)
+        -b|--fOff=*)
         INFILE2="${arg#*=}"
         shift
         ;;
@@ -85,6 +86,10 @@ do
        ;;
        -PrintOnly|--PrintDataOnly=*)
        PRINTDATAONLY="${arg#*=}"
+       shift
+       ;;
+       -Verbose|--Verbosity=*)
+       VERBOSITY="${arg#*=}"
        shift
        ;;
     esac
@@ -135,81 +140,167 @@ then
 
   if [ $CHOPDATA != "false" ] && [ $CHOPDATA != "False" ]
   then
-    root -l -b -q "Rebin.cc($theFile,\"ChopIn\",\"hChopIn\",300)"
-    root -l -b -q "Rebin.cc($theFile,\"ChopOut\",\"hChopOut\",300)"
+
+    if [ $VERBOSITY != "false" ] && [ $VERBOSITY != "False" ]
+    then
+      root -l -b -q "Rebin.cc(true,$theFile,\"ChopIn\",\"hChopIn\",300)"
+      root -l -b -q "Rebin.cc(true,$theFile,\"ChopOut\",\"hChopOut\",300)"
+    else
+      root -l -b -q "Rebin.cc(false,$theFile,\"ChopIn\",\"hChopIn\",300)"
+      root -l -b -q "Rebin.cc(false,$theFile,\"ChopOut\",\"hChopOut\",300)"
+    fi
+
     if [ $INFILE2 != "NA" ]
     then
-      root -l -b -q "Rebin.cc($theFile2,\"ChopIn\",\"hChopIn\",300)"
-      root -l -b -q "Rebin.cc($theFile2,\"ChopOut\",\"hChopOut\",300)"
+      if [ $VERBOSITY != "false" ] && [ $VERBOSITY != "False" ]
+      then
+        root -l -b -q "Rebin.cc(true,$theFile2,\"ChopIn\",\"hChopIn\",300)"
+        root -l -b -q "Rebin.cc(true,$theFile2,\"ChopOut\",\"hChopOut\",300)"
+      else
+        root -l -b -q "Rebin.cc(false,$theFile2,\"ChopIn\",\"hChopIn\",300)"
+        root -l -b -q "Rebin.cc(false,$theFile2,\"ChopOut\",\"hChopOut\",300)"
+      fi
     fi
   fi
 
   if [ $INTOBJDATA != "false" ] && [ $INTOBJDATA != "False" ]
   then
-    # Rebin IntObj > 1.5 MeV with 600 bins bin width 1e-3
-    root -l -b -q "Rebin.cc($theFile,\"IntObjIn\",\"hIntObjIn\",600,1.5,2.1,\"Energy>1.5\")"
-    # Rebin IntObj > 1.5 MeV with 120,000 bins bin width 5e-6
-    root -l -b -q "Rebin.cc($theFile,\"IntObjIn\",\"hIntObjIn\",120000,1.5,2.1,\"Energy>1.5\")"
-    root -l -b -q "Rebin.cc($theFile,\"IntObjIn\",\"hIntObjIn\",300)"
-    root -l -b -q "Rebin.cc($theFile,\"IntObjOut\",\"hIntObjOut\",300)"
-    if [ $INFILE2 != "NA" ]
+    if [ $VERBOSITY != "false" ] && [ $VERBOSITY != "False" ]
     then
       # Rebin IntObj > 1.5 MeV with 600 bins bin width 1e-3
-      root -l -b -q "Rebin.cc($theFile2,\"IntObjIn\",\"hIntObjIn\",600,1.5,2.1,\"Energy>1.5\")"
+      root -l -b -q "Rebin.cc(true,$theFile,\"IntObjIn\",\"hIntObjIn\",600,1.5,2.1,\"Energy>1.5\")"
       # Rebin IntObj > 1.5 MeV with 120,000 bins bin width 5e-6
-      root -l -b -q "Rebin.cc($theFile2,\"IntObjIn\",\"hIntObjIn\",120000,1.5,2.1,\"Energy>1.5\")"
-      root -l -b -q "Rebin.cc($theFile2,\"IntObjIn\",\"hIntObjIn\",300)"
-      root -l -b -q "Rebin.cc($theFile2,\"IntObjOut\",\"hIntObjOut\",300)"
+      root -l -b -q "Rebin.cc(true,$theFile,\"IntObjIn\",\"hIntObjIn\",120000,1.5,2.1,\"Energy>1.5\")"
+      root -l -b -q "Rebin.cc(true,$theFile,\"IntObjIn\",\"hIntObjIn\",300)"
+      root -l -b -q "Rebin.cc(true,$theFile,\"IntObjOut\",\"hIntObjOut\",300)"
+    else
+      # Rebin IntObj > 1.5 MeV with 600 bins bin width 1e-3
+      root -l -b -q "Rebin.cc(false,$theFile,\"IntObjIn\",\"hIntObjIn\",600,1.5,2.1,\"Energy>1.5\")"
+      # Rebin IntObj > 1.5 MeV with 120,000 bins bin width 5e-6
+      root -l -b -q "Rebin.cc(false,$theFile,\"IntObjIn\",\"hIntObjIn\",120000,1.5,2.1,\"Energy>1.5\")"
+      root -l -b -q "Rebin.cc(false,$theFile,\"IntObjIn\",\"hIntObjIn\",300)"
+      root -l -b -q "Rebin.cc(false,$theFile,\"IntObjOut\",\"hIntObjOut\",300)"
+    fi
+    if [ $INFILE2 != "NA" ]
+    then
+      if [ $VERBOSITY != "false" ] && [ $VERBOSITY != "False" ]
+      then
+        # Rebin IntObj > 1.5 MeV with 600 bins bin width 1e-3
+        root -l -b -q "Rebin.cc(true,$theFile2,\"IntObjIn\",\"hIntObjIn\",600,1.5,2.1,\"Energy>1.5\")"
+        # Rebin IntObj > 1.5 MeV with 120,000 bins bin width 5e-6
+        root -l -b -q "Rebin.cc(true,$theFile2,\"IntObjIn\",\"hIntObjIn\",120000,1.5,2.1,\"Energy>1.5\")"
+        root -l -b -q "Rebin.cc(true,$theFile2,\"IntObjIn\",\"hIntObjIn\",300)"
+        root -l -b -q "Rebin.cc(true,$theFile2,\"IntObjOut\",\"hIntObjOut\",300)"
+      else
+        # Rebin IntObj > 1.5 MeV with 600 bins bin width 1e-3
+        root -l -b -q "Rebin.cc(false,$theFile2,\"IntObjIn\",\"hIntObjIn\",600,1.5,2.1,\"Energy>1.5\")"
+        # Rebin IntObj > 1.5 MeV with 120,000 bins bin width 5e-6
+        root -l -b -q "Rebin.cc(false,$theFile2,\"IntObjIn\",\"hIntObjIn\",120000,1.5,2.1,\"Energy>1.5\")"
+        root -l -b -q "Rebin.cc(false,$theFile2,\"IntObjIn\",\"hIntObjIn\",300)"
+        root -l -b -q "Rebin.cc(false,$theFile2,\"IntObjOut\",\"hIntObjOut\",300)"
+      fi
     fi
   fi
 
   if [ $NRFDATA != "false" ] && [ $NRFDATA != "False" ]
   then
-    root -l -b -q "Rebin.cc($theFile,\"NRF\",\"hNRF\",300)"
+    if [ $VERBOSITY != "false" ] && [ $VERBOSITY != "False" ]
+    then
+      root -l -b -q "Rebin.cc(true,$theFile,\"NRF\",\"hNRF\",300)"
+    else
+      root -l -b -q "Rebin.cc(false,$theFile,\"NRF\",\"hNRF\",300)"
+    fi
     if [ $INFILE2 != "NA" ]
     then
-      root -l -b -q "Rebin.cc($theFile2,\"NRF\",\"hNRF\",300)"
+      if [ $VERBOSITY != "false" ] && [ $VERBOSITY != "False" ]
+      then
+        root -l -b -q "Rebin.cc(true,$theFile2,\"NRF\",\"hNRF\",300)"
+      else
+        root -l -b -q "Rebin.cc(false,$theFile2,\"NRF\",\"hNRF\",300)"
+      fi
     fi
   fi
 
   if [ $WATERDATA != "false" ] && [ $WATERDATA != "False" ]
   then
-    root -l -b -q "Rebin.cc($theFile,\"Water\",\"hWater\",300)"
+    if [ $VERBOSITY != "false" ] && [ $VERBOSITY != "False" ]
+    then
+      root -l -b -q "Rebin.cc(true,$theFile,\"Water\",\"hWater\",300)"
+    else
+      root -l -b -q "Rebin.cc(false,$theFile,\"Water\",\"hWater\",300)"
+    fi
     if [ $INFILE2 != "NA" ]
     then
-      root -b -q "Rebin.cc($theFile2,\"Water\",\"hWater\",300)"
+      if [ $VERBOSITY != "false" ] && [ $VERBOSITY != "False" ]
+      then
+        root -b -q "Rebin.cc(true,$theFile2,\"Water\",\"hWater\",300)"
+      else
+        root -b -q "Rebin.cc(false,$theFile2,\"Water\",\"hWater\",300)"
+      fi
     fi
   fi
 
   if [ $CHERENKOVDATA != "false" ] && [ $CHERENKOVDATA != "False" ]
   then
-    root -l -b -q "Rebin.cc($theFile,\"Cherenkov\",\"hCherenkov\",300)"
+    if [ $VERBOSITY != "false" ] && [ $VERBOSITY != "False" ]
+    then
+      root -l -b -q "Rebin.cc(true,$theFile,\"Cherenkov\",\"hCherenkov\",300)"
+    else
+      root -l -b -q "Rebin.cc(false,$theFile,\"Cherenkov\",\"hCherenkov\",300)"
+    fi
     if [ $INFILE2 != "NA" ]
     then
-      root -l -b -q "Rebin.cc($theFile2,\"Cherenkov\",\"hCherenkov\",300)"
+      if [ $VERBOSITY != "false" ] && [ $VERBOSITY != "False" ]
+      then
+        root -l -b -q "Rebin.cc(true,$theFile2,\"Cherenkov\",\"hCherenkov\",300)"
+      else
+        root -l -b -q "Rebin.cc(false,$theFile2,\"Cherenkov\",\"hCherenkov\",300)"
+      fi
     fi
   fi
 
   if [ $DETDATA != "false" ] && [ $DETDATA != "False" ]
   then
-    # Rebin Detected with 20 bins Energy < 5e-6 bin width 0.25e-6
-    root -l -b -q "Rebin.cc($theFile,\"DetInfo\",\"hDet\",20,0.0,5e-6,\"Energy<5e-6\")"
+    if [ $VERBOSITY != "false" ] && [ $VERBOSITY != "False" ]
+    then
+      # Rebin Detected with 20 bins Energy < 5e-6 bin width 0.25e-6
+      root -l -b -q "Rebin.cc(true,$theFile,\"DetInfo\",\"hDet\",20,0.0,5e-6,\"Energy<5e-6\")"
+    else
+      root -l -b -q "Rebin.cc(false,$theFile,\"DetInfo\",\"hDet\",20,0.0,5e-6,\"Energy<5e-6\")"
+    fi
     if [ $INFILE2 != "NA" ]
     then
-      root -l -b -q "Rebin.cc($theFile2,\"DetInfo\",\"hDet\",20,0.0,5e-6,\"Energy<5e-6\")"
+      if [ $VERBOSITY != "false" ] && [ $VERBOSITY != "False" ]
+      then
+        root -l -b -q "Rebin.cc(true,$theFile2,\"DetInfo\",\"hDet\",20,0.0,5e-6,\"Energy<5e-6\")"
+      else
+        root -l -b -q "Rebin.cc(false,$theFile2,\"DetInfo\",\"hDet\",20,0.0,5e-6,\"Energy<5e-6\")"
+      fi
     fi
   fi
 
   if [ $INCDETDATA != "false" ] && [ $INCDETDATA != "False" ]
   then
-    root -l -b -q "Rebin.cc($theFile,\"IncDetInfo\",\"hIncDetInfo\",300)"
+    if [ $VERBOSITY != "false" ] && [ $VERBOSITY != "False" ]
+    then
+      root -l -b -q "Rebin.cc(true,$theFile,\"IncDetInfo\",\"hIncDetInfo\",300)"
+    else
+      root -l -b -q "Rebin.cc(false,$theFile,\"IncDetInfo\",\"hIncDetInfo\",300)"
+    fi
     if [ $INFILE2 != "NA" ]
     then
-      root -l -b -q "Rebin.cc($theFile2,\"IncDetInfo\",\"hIncDetInfo\",300)"
+      if [ $VERBOSITY != "false" ] && [ $VERBOSITY != "False" ]
+      then
+        root -l -b -q "Rebin.cc(true,$theFile2,\"IncDetInfo\",\"hIncDetInfo\",300)"
+      else
+        root -l -b -q "Rebin.cc(false,$theFile2,\"IncDetInfo\",\"hIncDetInfo\",300)"
+      fi
     fi
   fi
-
 fi
+
+
+# PRINTING RESULTS (RUNNING Z TESTS)
 
 if [ $INFILE2 != "NA" ] && [ $PRINTDATA != "false" ]
 then

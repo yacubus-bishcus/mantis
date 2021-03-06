@@ -12,8 +12,9 @@ PRINTDATA="false"
 PRINTDATAONLY="false"
 current_dir=pwd
 file_var="/Rebin.cc"
+file_var2="/PrintResults.cc"
 FILECHECK=$current_dir$file_var
-
+PRINTFILECHECK=$current_dir$file_var2
 if test -e "$FILECHECK"; then
   echo "$FILECHECK found."
 else
@@ -105,6 +106,14 @@ then
   then
     echo "Rebinning File: $INFILE"
   fi
+  if [ $PRINTDATA == "true" ]
+  then
+    if test -e "$PRINTFILECHECK"; then
+      echo "$PRINTFILECHECK found."
+    else
+      echo "$PRINTFILECHECK not found."
+      exit(1)
+    fi
 else
   echo "USER ERROR: MUST INPUT File to Rebin!"
   exit

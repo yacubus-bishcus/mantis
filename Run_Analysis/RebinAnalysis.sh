@@ -10,6 +10,8 @@ DETDATA="true"
 INCDETDATA="false"
 PRINTDATA="false"
 PRINTDATAONLY="false"
+VERBOSITY="false"
+
 current_dir="$(pwd)"
 file_var="/Rebin.cc"
 file_var2="/PrintResults.cc"

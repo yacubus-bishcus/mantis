@@ -49,7 +49,6 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName="hOut
   TTree *inObj;
   // Grab the Users TTree
   inObj = (TTree*) f->Get(ObjName);
-  inObj->Print();
   inObj->SetEstimate(-1);
   // Grab TTree Values
   Int_t nentries=0;
@@ -60,6 +59,8 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName="hOut
 
   if(nentries <= 0)
     exit(1);
+
+  inObj->Print();
 
   Double_t *energies = inObj->GetVal(0);
   Double_t *weights = inObj->GetVal(1);

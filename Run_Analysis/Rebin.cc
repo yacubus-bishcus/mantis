@@ -52,11 +52,14 @@ void Rebin(const char* inFile, const char* ObjName, const char* OutObjName="hOut
   inObj->Print();
   inObj->SetEstimate(-1);
   // Grab TTree Values
-  Int_t nentries;
+  Int_t nentries=0;
   if(cut1=="NA")
     nentries = inObj->Draw("Energy:Weight","","goff");
   else
     nentries = inObj->Draw("Energy:Weight",cut1,"goff");
+
+  if(nentries <= 0)
+    exit(1);
 
   Double_t *energies = inObj->GetVal(0);
   Double_t *weights = inObj->GetVal(1);

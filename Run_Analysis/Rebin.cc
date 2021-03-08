@@ -25,8 +25,8 @@
 // This File Scans the File for the user's TTree Object Name. It then Draws
 // that object to a new weighted histogram with the user's number of bins
 
-void Rebin(bool verbose, const char* inFile, const char* ObjName, const char* OutObjName="hOut",
-  int nbins=120000, double Emin = 0.0, double Emax=2.1, TCut cut1="NA",
+void Rebin(bool verbose, const char* inFile, const char* ObjName, const char* OutObjName,
+  int nbins, double Emin = 0.0, double Emax=2.1, TCut cut1="NA",
   bool VarArray=false, double nrf_bin_width = -1., double non_nrf_bin_width =-1.)
 {
 
@@ -141,3 +141,39 @@ void Rebin(bool verbose, const char* inFile, const char* ObjName, const char* Ou
   fout->Close();
 
 }// end Rebin.cc
+
+void Rebin(const char* inFile,const char* ObjName,const char* OutObjName)
+{
+  // Check to make sure file exists
+  if(gSystem->AccessPathName(inFile))
+  {
+    std::cerr << "ERROR Could not find " << inFile << "exiting..." << std::endl;
+    exit(1);
+  }
+
+  TFile *f = new TFile(inFile);
+  f->cd();
+  TTree *inObj;
+  // Grab the Users TTree
+  inObj = (TTree*) f->Get(ObjName);
+  inObj->SetEstimate(-1);
+
+  // Write TTree to histogram
+  TH1D *hObj = new TH1D(OutObjName, "Weighted Energy Spectrum",100);
+  std::string tCommand = "Energy>>" + (std::string)OutObjName
+  inObj->Draw(tCommand.c_str(), "Weight","goff");
+  hObj->Sumw2();
+  hObj->Print();
+
+  TFile *fout;
+  std::string OutFileName = "converted_" + (std::string)inFile;
+
+  if(!gSystem->AccessPathName(OutFileName.c_str()))
+    fout = new TFile(OutFileName.c_str(),"update");
+  else
+    fout = new TFile(OutFileName.c_str(),"recreate");
+
+  fout->cd();
+  hObj->Write();
+  fout->Close();
+}

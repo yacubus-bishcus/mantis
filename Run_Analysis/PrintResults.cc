@@ -33,7 +33,7 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
     TH1D *onHist;
     onFile->GetObject(histName,onHist);
 
-    if(onHist != 0 || tDetInfo != 0)
+    if(onHist != 0)
     {
       int nentries = onHist->GetEntries();
 
@@ -52,7 +52,7 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
     TH1D *offHist;
     double weighted_sum;
 
-    if(histName != "hDet")
+    if(((std::string)histName).compare(0,4, "hDet"))
     {
       weighted_sum = onHist->Integral();
     }
@@ -67,7 +67,7 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
     std::cout << std::endl << "Chopper Off " << histName << "Data..." << std::endl;
     std::cout << "------------------------------------------------------------------" << std::endl << std::endl;
 
-    if(offHist != 0 || offDetInfo != 0)
+    if(offHist != 0)
     {
       int nentries = offHist->GetEntries();
 
@@ -80,7 +80,7 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
     double weighted_sum_off;
     offHist->Print();
 
-    if(histName != "hDet")
+    if(((std::string)histName).compare(0,4, "hDet"))
       weighted_sum_off = offHist->Integral();
     else
       weighted_sum_off = offHist->Integral(0,1);

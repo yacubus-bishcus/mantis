@@ -151,8 +151,6 @@ then
   root -l -b -q "Rebin.cc($theFile2,\"ChopOut\",\"hChopOut\")"
   root -l -b -q "Rebin.cc($theFile,\"IntObjIn\",\"hIntObjIn\")"
   root -l -b -q "Rebin.cc($theFile2,\"IntObjIn\",\"hIntObjIn\")"
-  root -l -b -q "Rebin.cc($theFile,\"IntObjOut\",\"hIntObjOut\")"
-  root -l -b -q "Rebin.cc($theFile2,\"IntObjOut\",\"hIntObjOut\")"
   root -l -b -q "Rebin.cc($theFile, \"DetInfo\",\"hDet\")"
   root -l -b -q "Rebin.cc($theFile2, \"DetInfo\",\"hDet\")"
 
@@ -162,7 +160,6 @@ then
 
   root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hChopOut\")"
   root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjIn\")"
-  root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjOut\")"
   root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hDet\")"
 
   exit 0

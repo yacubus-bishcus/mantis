@@ -153,8 +153,6 @@ then
   root -l -b -q "Rebin.cc(false,$theFile2,\"IntObjIn\",\"hIntObjIn\",300)"
   root -l -b -q "Rebin.cc(false,$theFile,\"IntObjOut\",\"hIntObjOut\",300)"
   root -l -b -q "Rebin.cc(false,$theFile2,\"IntObjOut\",\"hIntObjOut\",300)"
-  root -l -b -q "Rebin.cc(false,$theFile,\"DetInfo\",\"hDet\",20,0.0,5e-6,\"Energy<5e-6\")"
-  root -l -b -q "Rebin.cc(false,$theFile2,\"DetInfo\",\"hDet\",20,0.0,5e-6,\"Energy<5e-6\")"
 
   VAR2="rebinned_300_"
   rebinnedFile=$VAR1$VAR2$INFILE$VAR1
@@ -164,11 +162,7 @@ then
   root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjIn\")"
   root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjOut\")"
 
-  VAR3="rebinned_20_"
-  rebinnedDetFile=$VAR1$VAR3$INFILE$VAR1
-  rebinnedDetFile2=$VAR1$VAR3$INFILE2$VAR1
-
-  root -l -b -q "PrintResults.cc($rebinnedDetFile, $rebinnedDetFile2, \"hDet\")"
+  root -l -b -q "PrintResults.cc($rebinnedDetFile, $rebinnedDetFile2, \"DetInfo\")"
 
   exit 0
 fi

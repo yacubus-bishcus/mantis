@@ -57,7 +57,7 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
     TH1D *offHist;
     TTree *offDetInfo;
     double weighted_sum;
-    if(histName != "DetInfo")
+    if(histName.compare(0,7, "DetInfo"))
     {
       onHist->Print();
       weighted_sum = onHist->Integral();
@@ -66,7 +66,7 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
     }
     else
     {
-      TH1D *e1 = new TH1D("e1","Energy Histogram");
+      TH1D *e1 = new TH1D("e1","Energy Histogram",100);
       onDetInfo->Draw("Energy>>e1","Weight","goff");
       e1->Print();
       weighted_sum = e1->Integral(0,1);
@@ -80,7 +80,7 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
     if(offHist != 0 || offDetInfo != 0)
     {
       int nentries;
-      if(histName != "DetInfo")
+      if(histName.compare(0,7, "DetInfo"))
         nentries = offHist->GetEntries();
       else
         nentries = offDetInfo->GetEntries();
@@ -93,19 +93,19 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
 
     double weighted_sum_off;
 
-    if(histName != "DetInfo")
+    if(histName.compare(0,7, "DetInfo"))
     {
       offHist->Print();
       weighted_sum_off = offHist->Integral();
     }
     else
     {
-      TH1D *e2 = new TH1D("e2","Off Energy Histogram");
+      TH1D *e2 = new TH1D("e2","Off Energy Histogram",100);
       offDetInfo->Draw("Energy>>e2","Weight","goff");
       e2->Print();
       weighted_sum_off = e2->Integral(0,1);
     }
-    
+
     double z_score = abs(weighted_sum - weighted_sum_off)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum_off),2)));
     std::cout << std::endl << histName << " Z-Score: " << z_score << std::endl << std::endl;
 }

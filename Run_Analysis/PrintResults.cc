@@ -32,8 +32,6 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
     onFile->cd();
     TH1D *onHist;
     onFile->GetObject(histName,onHist);
-    std::cout << std::endl << "Chopper On " << histName << "Data..." << std::endl;
-    std::cout << "------------------------------------------------------------------" << std::endl << std::endl;
 
     if(onHist != 0)
     {
@@ -44,6 +42,8 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
     else
       exit(1);
 
+    std::cout << std::endl << "Chopper On " << histName << "Data..." << std::endl;
+    std::cout << "------------------------------------------------------------------" << std::endl << std::endl;
     onHist->Print();
     double weighted_sum = onHist->Integral();
     TH1D *offHist;

@@ -67,13 +67,14 @@ void SNR(const char* inFile)
     std::cout << "Drawing IntObjIn and IntObjOut Histograms..." << std::endl;
     aIntObjIn->Draw("Energy>>eT","Weight","goff");
     aIntObjOut->Draw("Energy>>eT2","Weight","goff");
-    double eStart[] = {1.65623,1.73354,1.81525,1.86231,2.006197};
+    // start integral 5eV prior to energy level peak 
+    double eStart[] = {1.6562312,1.7335419,1.8152525,1.8623129,2.0061941};
     double eEnd[5];
 
     for(int i=0;i<5;++i)
     {
       //std::cout << "Bin Start Energy: " << std::setprecision(10) << eStart[i] << std::endl;
-      eEnd[i] = eStart[i] + 0.00001;
+      eEnd[i] = eStart[i] + 0.00001; // add 10 eV or 5eV above energy level peak
       //std::cout << "Bin End Energy: " << std::setprecision(10) << eEnd[i] << std::endl;
     }
 

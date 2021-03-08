@@ -160,7 +160,7 @@ void Rebin(const char* inFile,const char* ObjName,const char* OutObjName)
   double Emax = inObj->GetMaximum("Energy");
   // Write TTree to histogram
   TH1D *hObj = new TH1D(OutObjName, "Weighted Energy Spectrum",100,0.,Emax);
-  std::string tCommand = "Energy>>" + (std::string)OutObjName
+  std::string tCommand = "Energy>>" + (std::string)OutObjName;
   inObj->Draw(tCommand.c_str(), "Weight","goff");
   hObj->Sumw2();
   hObj->Print();

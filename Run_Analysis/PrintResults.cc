@@ -31,20 +31,11 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
     TFile *offFile = new TFile(ChopOff);
     onFile->cd();
     TH1D *onHist;
-    TTree *onDetInfo;
-
-    if(histName != "DetInfo")
-      onFile->GetObject(histName,onHist);
-    else
-      onFile->GetObject(histName,onDetInfo);
+    onFile->GetObject(histName,onHist);
 
     if(onHist != 0 || tDetInfo != 0)
     {
-      int nentries;
-      if(histName != "DetInfo")
-        nentries = onHist->GetEntries();
-      else
-        nentries = onDetInfo->GetEntries();
+      int nentries = onHist->GetEntries();
 
       if(nentries <=0)
         exit(1);
@@ -54,36 +45,31 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
 
     std::cout << std::endl << "Chopper On " << histName << "Data..." << std::endl;
     std::cout << "------------------------------------------------------------------" << std::endl << std::endl;
+
+    onHist->Print();
+
+
     TH1D *offHist;
-    TTree *offDetInfo;
     double weighted_sum;
-    if(histName.compare(0,7, "DetInfo"))
+
+    if(histName.compare(0,4, "hDet"))
     {
-      onHist->Print();
       weighted_sum = onHist->Integral();
-      offFile->cd();
-      offFile->GetObject(histName,offHist);
     }
     else
     {
-      TH1D *e1 = new TH1D("e1","Energy Histogram",100);
-      onDetInfo->Draw("Energy>>e1","Weight","goff");
-      e1->Print();
-      weighted_sum = e1->Integral(0,1);
-      offFile->cd();
-      offFile->GetObject(histName,offDetInfo);
+      weighted_sum = onHist->Integral(0,1);
     }
+
+    offFile->cd();
+    offFile->GetObject(histName,offHist);
 
     std::cout << std::endl << "Chopper Off " << histName << "Data..." << std::endl;
     std::cout << "------------------------------------------------------------------" << std::endl << std::endl;
 
     if(offHist != 0 || offDetInfo != 0)
     {
-      int nentries;
-      if(histName.compare(0,7, "DetInfo"))
-        nentries = offHist->GetEntries();
-      else
-        nentries = offDetInfo->GetEntries();
+      int nentries = offHist->GetEntries();
 
       if(nentries <=0)
         exit(1);
@@ -92,19 +78,12 @@ void PrintResults(const char* ChopOn, const char* ChopOff, const char* histName)
       exit(1);
 
     double weighted_sum_off;
+    offHist->Print();
 
-    if(histName.compare(0,7, "DetInfo"))
-    {
-      offHist->Print();
+    if(histName.compare(0,4, "hDet"))
       weighted_sum_off = offHist->Integral();
-    }
     else
-    {
-      TH1D *e2 = new TH1D("e2","Off Energy Histogram",100);
-      offDetInfo->Draw("Energy>>e2","Weight","goff");
-      e2->Print();
-      weighted_sum_off = e2->Integral(0,1);
-    }
+      weighted_sum_off = offHist->Integral(0,1);
 
     double z_score = abs(weighted_sum - weighted_sum_off)/(sqrt(pow(sqrt(weighted_sum),2) + pow(sqrt(weighted_sum_off),2)));
     std::cout << std::endl << histName << " Z-Score: " << z_score << std::endl << std::endl;

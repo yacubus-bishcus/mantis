@@ -147,22 +147,23 @@ if [ $TTEST != "false" ]
 then
   theFile=$VAR1$INFILE$VAR1
   theFile2=$VAR1$INFILE2$VAR1
-  root -l -b -q "Rebin.cc(false,$theFile,\"ChopOut\",\"hChopOut\",300)"
-  root -l -b -q "Rebin.cc(false,$theFile2,\"ChopOut\",\"hChopOut\",300)"
-  root -l -b -q "Rebin.cc(false,$theFile,\"IntObjIn\",\"hIntObjIn\",300)"
-  root -l -b -q "Rebin.cc(false,$theFile2,\"IntObjIn\",\"hIntObjIn\",300)"
-  root -l -b -q "Rebin.cc(false,$theFile,\"IntObjOut\",\"hIntObjOut\",300)"
-  root -l -b -q "Rebin.cc(false,$theFile2,\"IntObjOut\",\"hIntObjOut\",300)"
+  root -l -b -q "Rebin.cc($theFile,\"ChopOut\",\"hChopOut\")"
+  root -l -b -q "Rebin.cc($theFile2,\"ChopOut\",\"hChopOut\")"
+  root -l -b -q "Rebin.cc($theFile,\"IntObjIn\",\"hIntObjIn\")"
+  root -l -b -q "Rebin.cc($theFile2,\"IntObjIn\",\"hIntObjIn\")"
+  root -l -b -q "Rebin.cc($theFile,\"IntObjOut\",\"hIntObjOut\")"
+  root -l -b -q "Rebin.cc($theFile2,\"IntObjOut\",\"hIntObjOut\")"
+  root -l -b -q "Rebin.cc($theFile, \"DetInfo\",\"hDet\")"
+  root -l -b -q "Rebin.cc($theFile2, \"DetInfo\",\"hDet\")"
 
-  VAR2="rebinned_300_"
+  VAR2="converted_"
   rebinnedFile=$VAR1$VAR2$INFILE$VAR1
   rebinnedFile2=$VAR1$VAR2$INFILE2$VAR1
 
   root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hChopOut\")"
   root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjIn\")"
   root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjOut\")"
-
-  root -l -b -q "PrintResults.cc($rebinnedDetFile, $rebinnedDetFile2, \"DetInfo\")"
+  root -l -b -q "PrintResults.cc($rebinnedDetFile, $rebinnedDetFile2, \"hDet\")"
 
   exit 0
 fi

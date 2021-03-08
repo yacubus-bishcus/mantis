@@ -162,8 +162,8 @@ void Rebin(const char* inFile,const char* ObjName,const char* OutObjName)
   TH1D *hObj = new TH1D(OutObjName, "Weighted Energy Spectrum",100,0.,Emax);
   std::string tCommand = "Energy>>" + (std::string)OutObjName;
   inObj->Draw(tCommand.c_str(), "Weight","goff");
-  hObj->Sumw2();
-  hObj->Print();
+  //hObj->Sumw2();
+  //hObj->Print();
 
   TFile *fout;
   std::string OutFileName = "converted_" + (std::string)inFile;

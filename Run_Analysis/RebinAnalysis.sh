@@ -163,7 +163,7 @@ then
   root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hChopOut\")"
   root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjIn\")"
   root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjOut\")"
-  root -l -b -q "PrintResults.cc($rebinnedDetFile, $rebinnedDetFile2, \"hDet\")"
+  root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hDet\")"
 
   exit 0
 fi

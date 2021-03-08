@@ -10,6 +10,7 @@ DETDATA="true"
 INCDETDATA="false"
 PRINTDATA="false"
 PRINTDATAONLY="false"
+TTEST="false"
 VERBOSITY="false"
 
 current_dir="$(pwd)"
@@ -42,6 +43,7 @@ do
         echo "--IncDetData=false      specify Incident Detector Data Analysis"
         echo "--PrintData=false       Run PrintResults.cc"
         echo "--PrintDataOnly=false   Only Run Print Results.cc Do not Rebin!"
+        echo "--TTest=false           Only Create Histograms for testing Chop Off thickness"
         echo "--Verbosity=false       specify data verbosity"
         shift
         exit 0
@@ -90,6 +92,10 @@ do
        PRINTDATAONLY="${arg#*=}"
        shift
        ;;
+       -T|--TTest=*)
+       TTEST="${arg#*=}"
+       shift
+       ;;
        -Verbose|--Verbosity=*)
        VERBOSITY="${arg#*=}"
        shift
@@ -108,6 +114,8 @@ then
   echo "Incident Detector Data: $INCDETDATA"
   echo "Print Results: $PRINTDATA"
   echo "Print Results Only: $PRINTDATAONLY"
+  echo "TTEST: $TTEST"
+  echo "Verbosity: $VERBOSITY"
 
   if [ $PRINTDATAONLY == "false" ]
   then
@@ -134,6 +142,37 @@ then
 fi
 
 VAR1="\""
+
+if [ $TTEST != "false" ]
+then
+  theFile=$VAR1$INFILE$VAR1
+  theFile2=$VAR1$INFILE2$VAR1
+  root -l -b -q "Rebin.cc(false,$theFile,\"ChopOut\",\"hChopOut\",300)"
+  root -l -b -q "Rebin.cc(false,$theFile2,\"ChopOut\",\"hChopOut\",300)"
+  root -l -b -q "Rebin.cc(false,$theFile,\"IntObjIn\",\"hIntObjIn\",300)"
+  root -l -b -q "Rebin.cc(false,$theFile2,\"IntObjIn\",\"hIntObjIn\",300)"
+  root -l -b -q "Rebin.cc(false,$theFile,\"IntObjOut\",\"hIntObjOut\",300)"
+  root -l -b -q "Rebin.cc(false,$theFile2,\"IntObjOut\",\"hIntObjOut\",300)"
+  root -l -b -q "Rebin.cc(false,$theFile,\"DetInfo\",\"hDet\",20,0.0,5e-6,\"Energy<5e-6\")"
+  root -l -b -q "Rebin.cc(false,$theFile2,\"DetInfo\",\"hDet\",20,0.0,5e-6,\"Energy<5e-6\")"
+
+  VAR2="rebinned_300_"
+  rebinnedFile=$VAR1$VAR2$INFILE$VAR1
+  rebinnedFile2=$VAR1$VAR2$INFILE2$VAR1
+
+  root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hChopOut\")"
+  root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjIn\")"
+  root -l -b -q "PrintResults.cc($rebinnedFile, $rebinnedFile2, \"hIntObjOut\")"
+
+  VAR3="rebinned_20_"
+  rebinnedDetFile=$VAR1$VAR3$INFILE$VAR1
+  rebinnedDetFile2=$VAR1$VAR3$INFILE2$VAR1
+
+  root -l -b -q "PrintResults.cc($rebinnedDetFile, $rebinnedDetFile2, \"hDet\")"
+
+  exit 0
+fi
+
 if [ $PRINTDATAONLY == "false" ]
 then
 

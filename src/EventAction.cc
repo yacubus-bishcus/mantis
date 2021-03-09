@@ -26,6 +26,7 @@
 
 extern G4bool debug;
 extern G4bool bremTest;
+extern G4String inFile;
 
 EventAction::EventAction()
 :eventInfoFreq(100000), runID(0),runTime(0.), prevRunTime(0.), eventsPerSec(0.),
@@ -114,10 +115,11 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
                 // Fill the TTree
                 G4AnalysisManager* manager = G4AnalysisManager::Instance();
                 manager->FillNtupleDColumn(8,0,maxE);
-                manager->FillNtupleDColumn(8,1, weight);
-                manager->FillNtupleIColumn(8,2,anEvent->GetEventID());
-                manager->FillNtupleIColumn(8,3,c_secondaries);
-                manager->FillNtupleDColumn(8,4,c_time);
+                manager->FillNtupleIColumn(8,1,anEvent->GetEventID());
+                manager->FillNtupleIColumn(8,2,c_secondaries);
+                manager->FillNtupleDColumn(8,3,c_time);
+                if(!inFile.compare(0,24,"brems_distributions.root"))
+                  manager->FillNtupleDColumn(8,4, weight);
                 manager->AddNtupleRow(8);
         }
 

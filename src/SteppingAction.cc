@@ -25,6 +25,7 @@
 #include "SteppingAction.hh"
 extern G4bool bremTest;
 extern G4bool debug;
+extern G4String inFile;
 
 SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, EventAction* event)
         : G4UserSteppingAction(), kdet(det), krun(run), kevent(event),
@@ -164,10 +165,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         krun->AddNRF();
         manager->FillNtupleIColumn(3,0, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
         manager->FillNtupleDColumn(3,1,theTrack->GetTotalEnergy()/(MeV));
-        manager->FillNtupleDColumn(3,2,weight);
-        manager->FillNtupleSColumn(3,3,endPoint->GetPhysicalVolume()->GetName());
+        manager->FillNtupleSColumn(3,2,endPoint->GetPhysicalVolume()->GetName());
         G4ThreeVector NRF_loc = theTrack->GetPosition();
-        manager->FillNtupleDColumn(3,4, NRF_loc.z()/(cm));
+        manager->FillNtupleDColumn(3,3, NRF_loc.z()/(cm));
+        if(!inFile.compare(0,24,"brems_distributions.root"))
+          manager->FillNtupleDColumn(3,4,weight);
         manager->AddNtupleRow(3);
       }
     }
@@ -182,9 +184,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
          && previousStep_VolumeName.compare(0, 4, "Chop") != 0
          && theTrack->GetParticleDefinition() == G4Gamma::Definition())
       {
-        manager->FillNtupleDColumn(1,0, theTrack->GetKineticEnergy()/(MeV)); // not weighting chopper
-        manager->FillNtupleDColumn(1,1, weight);
-        manager->FillNtupleIColumn(1,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+        manager->FillNtupleDColumn(1,0, theTrack->GetKineticEnergy()/(MeV));
+        manager->FillNtupleIColumn(1,1,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+        if(!inFile.compare(0,24,"brems_distributions.root"))
+          manager->FillNtupleDColumn(1,2, weight);
         manager->AddNtupleRow(1);
       }
     }
@@ -195,9 +198,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
          && previousStep_VolumeName.compare(0,4,"Chop") == 0)
       {
         manager->FillNtupleDColumn(2,0, theTrack->GetKineticEnergy()/(MeV));
-        manager->FillNtupleDColumn(2,1, weight);
-        manager->FillNtupleIColumn(2,2,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
-        manager->FillNtupleIColumn(2,3,isNRF);
+        manager->FillNtupleIColumn(2,1,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+        manager->FillNtupleIColumn(2,2,isNRF);
+        if(!inFile.compare(0,24,"brems_distributions.root"))
+          manager->FillNtupleDColumn(2,3, weight);
         manager->AddNtupleRow(2);
       }
     }
@@ -214,11 +218,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             && previousStep_VolumeName.compare(0,9,"AirPocket") !=0)
           {
             manager->FillNtupleDColumn(4,0,theTrack->GetKineticEnergy()/(MeV));
-            manager->FillNtupleDColumn(4,1,weight);
-            manager->FillNtupleSColumn(4,2,CPName);
-            manager->FillNtupleDColumn(4,3,angle);
-            manager->FillNtupleDColumn(4,4,theTrack->GetGlobalTime());
-            manager->FillNtupleIColumn(4,5, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+            manager->FillNtupleSColumn(4,1,CPName);
+            manager->FillNtupleDColumn(4,2,angle);
+            manager->FillNtupleDColumn(4,3,theTrack->GetGlobalTime());
+            manager->FillNtupleIColumn(4,4, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+            if(!inFile.compare(0,24,"brems_distributions.root"))
+              manager->FillNtupleDColumn(4,5,weight);
             manager->AddNtupleRow(4);
           }
                 // Incident Interrogation Object
@@ -226,11 +231,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
              && previousStep_VolumeName.compare(0, 6, "IntObj") != 0)
           {
               manager->FillNtupleDColumn(5,0, theTrack->GetKineticEnergy()/(MeV));
-              manager->FillNtupleDColumn(5,1, weight);
-              manager->FillNtupleSColumn(5,2, CPName);
-              manager->FillNtupleDColumn(5,3,angle);
-              manager->FillNtupleDColumn(5,4,theTrack->GetGlobalTime());
-              manager->FillNtupleIColumn(5,5,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+              manager->FillNtupleSColumn(5,1, CPName);
+              manager->FillNtupleDColumn(5,2,angle);
+              manager->FillNtupleDColumn(5,3,theTrack->GetGlobalTime());
+              manager->FillNtupleIColumn(5,4,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+              if(!inFile.compare(0,24,"brems_distributions.root"))
+                manager->FillNtupleDColumn(5,5, weight);
               manager->AddNtupleRow(5);
           }
           // Exiting Interrogation Object
@@ -238,8 +244,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
              && previousStep_VolumeName.compare(0,6,"IntObj") == 0)
           {
             manager->FillNtupleDColumn(6,0, theTrack->GetKineticEnergy()/(MeV));
-            manager->FillNtupleDColumn(6,1, weight);
-            manager->FillNtupleSColumn(6,2, CPName);
+            manager->FillNtupleSColumn(6,1, CPName);
+            if(!inFile.compare(0,24,"brems_distributions.root"))
+              manager->FillNtupleDColumn(6,2, weight);
             manager->AddNtupleRow(6);
           }
         }
@@ -255,10 +262,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
              && previousStep_VolumeName.compare(0, 5, "Water") != 0)
           {
             manager->FillNtupleDColumn(7,0, theTrack->GetKineticEnergy()/(MeV));
-            manager->FillNtupleDColumn(7,1, weight);
-            manager->FillNtupleSColumn(7,2, CPName);
-            manager->FillNtupleIColumn(7,3, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
-            manager->FillNtupleIColumn(7,4, theTrack->GetTrackID());
+            manager->FillNtupleSColumn(7,1, CPName);
+            manager->FillNtupleIColumn(7,2, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+            manager->FillNtupleIColumn(7,3, theTrack->GetTrackID());
+            if(!inFile.compare(0,24,"brems_distributions.root"))
+              manager->FillNtupleDColumn(7,4, weight);
             manager->AddNtupleRow(7);
           }
         }
@@ -376,7 +384,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                     procCount = "Det";
                     manager->FillNtupleIColumn(9,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
                     manager->FillNtupleDColumn(9,1, theParticle->GetKineticEnergy()/(MeV));
-                    manager->FillNtupleDColumn(9,2, weight);
                     G4String creatorProcess;
 
                     if(theTrack->GetCreatorProcess() !=0)
@@ -384,8 +391,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                     else
                         creatorProcess = "Brem";
 
-                    manager->FillNtupleSColumn(9,3, creatorProcess);
-                    manager->FillNtupleDColumn(9,4, theTrack->GetGlobalTime()); // time units is nanoseconds
+                    manager->FillNtupleSColumn(9,2, creatorProcess);
+                    manager->FillNtupleDColumn(9,3, theTrack->GetGlobalTime()); // time units is nanoseconds
+                    if(!inFile.compare(0,24,"brems_distributions.root"))
+                      manager->FillNtupleDColumn(9,4, weight);
                     manager->AddNtupleRow(9);
                 }
                 else if (theStatus == NotAtBoundary)
@@ -413,8 +422,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 {
                   manager->FillNtupleIColumn(10,0,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
                   manager->FillNtupleDColumn(10,1, theParticle->GetKineticEnergy()/(MeV));
-                  manager->FillNtupleDColumn(10,2, weight);
-                  manager->FillNtupleSColumn(10,3, procCount);
+                  manager->FillNtupleSColumn(10,2, procCount);
+                  if(!inFile.compare(0,24,"brems_distributions.root"))
+                    manager->FillNtupleDColumn(10,3, weight);
                   manager->AddNtupleRow(10);
                 } // for if keeping track of detector process data
 

@@ -281,6 +281,11 @@ void Rescale(const char* inObj)
     std::cin >> response;
   }
 
+  G4bool same_rescale = false;
+
+  if(!user_files[0].compare(user_files[1]))
+    same_rescale = true;
+
   base->cd();
 
   // Create the base histogram to scale everything else to
@@ -356,8 +361,12 @@ void Rescale(const char* inObj)
       if(binValues[i] == 0)
         newbinValue = 0;
       else
-        newbinValue = binValues[i]*pow(hOut[j]->GetBinContent(i)/binValues[i],1./user_thick[j]);
-
+      {
+        if(same_rescale)
+          newbinValue = binValues[i]*pow(hOut[j]->GetBinContent(i)/binValues[i],user_thick[0]/user_thick[j]);
+        else
+          newbinValue = binValues[i]*pow(hOut[j]->GetBinContent(i)/binValues[i],1./user_thick[j]);
+      }
       hOut[j]->SetBinContent(i, newbinValue);
 
     }

@@ -286,6 +286,9 @@ void Rescale(const char* inObj)
   if(!user_files[0].compare(user_files[1]))
     same_rescale = true;
 
+  if(same_rescale)
+    std::cout << "Rescaling the same histogram." << std::endl;
+
   base->cd();
 
   // Create the base histogram to scale everything else to
@@ -363,7 +366,7 @@ void Rescale(const char* inObj)
       else
       {
         if(same_rescale)
-          newbinValue = binValues[i]*pow(hOut[j]->GetBinContent(i)/binValues[i],user_thick[0]/user_thick[j]);
+          newbinValue = binValues[i]*user_thick[0]/user_thick[j];
         else
           newbinValue = binValues[i]*pow(hOut[j]->GetBinContent(i)/binValues[i],1./user_thick[j]);
       }

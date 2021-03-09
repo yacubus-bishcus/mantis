@@ -56,12 +56,14 @@ void HistoManager::Book()
   manager->CreateNtupleDColumn("Angle");
   //manager->CreateNtupleSColumn("CProcess");
   manager->FinishNtuple();
+
   // Create ID 1 Ntuple for Incident Chopper Data
   manager->CreateNtuple("ChopIn", "Chopper Wheel Incident Data");
   manager->CreateNtupleDColumn("Energy");
   manager->CreateNtupleDColumn("Weight");
   manager->CreateNtupleIColumn("EventID");
   manager->FinishNtuple();
+
   // Create ID 2 Ntuple for Exiting Chopper Data
   manager->CreateNtuple("ChopOut", "Chopper Wheel Exiting Radiation Data");
   manager->CreateNtupleDColumn("Energy");
@@ -109,10 +111,13 @@ void HistoManager::Book()
     manager->FinishNtuple();
 
     // Create ID 7 Ntuple for Incident Water Tank Data
+    // Only Run with smaller runs this ntuple can get quite large 
     manager->CreateNtuple("Water","Incident Water Tank Data");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleDColumn("Weight");
     manager->CreateNtupleSColumn("CreatorProcess");
+    manager->CreateNtupleIColumn("EventID");
+    manager->CreateNtupleIColumn("TrackID");
     manager->FinishNtuple();
 
     // Create ID 8 Ntuple for cherenkov in water

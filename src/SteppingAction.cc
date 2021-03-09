@@ -248,16 +248,19 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
         // Water Analysis
         // First time incident Water keep track of NRF hitting water
+        // Be careful here it will keep track of reflections
         if(drawWaterIncDataFlag && !bremTest)
         {
-                if(nextStep_VolumeName.compare(0, 5,"Water") == 0
-                   && previousStep_VolumeName.compare(0, 5, "Water") != 0)
-                {
-                  manager->FillNtupleDColumn(7,0, theTrack->GetKineticEnergy()/(MeV));
-                  manager->FillNtupleDColumn(7,1, weight);
-                  manager->FillNtupleSColumn(7,2, CPName);
-                  manager->AddNtupleRow(7);
-                }
+          if(nextStep_VolumeName.compare(0, 5,"Water") == 0
+             && previousStep_VolumeName.compare(0, 5, "Water") != 0)
+          {
+            manager->FillNtupleDColumn(7,0, theTrack->GetKineticEnergy()/(MeV));
+            manager->FillNtupleDColumn(7,1, weight);
+            manager->FillNtupleSColumn(7,2, CPName);
+            manager->FillNtupleIColumn(7,3, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+            manager->FillNtupleIColumn(7,4, theTrack->GetTrackID());
+            manager->AddNtupleRow(7);
+          }
         }
 
 // *********************************************** Track Cherenkov Interactions **************************************************** //

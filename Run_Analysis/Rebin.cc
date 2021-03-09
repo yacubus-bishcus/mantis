@@ -142,6 +142,10 @@ void Rebin(bool verbose, const char* inFile, const char* ObjName, const char* Ou
 
 }// end Rebin.cc
 
+// *************************************************************************//
+// *************************************************************************//
+// *************************************************************************//
+
 void Rebin(const char* inFile,const char* ObjName,const char* OutObjName)
 {
   // Check to make sure file exists
@@ -149,6 +153,20 @@ void Rebin(const char* inFile,const char* ObjName,const char* OutObjName)
   {
     std::cerr << "ERROR Could not find " << inFile << "exiting..." << std::endl;
     exit(1);
+  }
+
+  std::string OutFileName = "converted_" + (std::string)inFile;
+  if(!gSystem->AccessPathName(OutFileName.c_str()))
+  {
+    std::cout << "Rebinned File Already exists. Continue to rebin?" << std::endl;
+    string response;
+    std::cin >> response;
+
+    if(!response.compare(0,1,"N"))
+      exit(1);
+    else
+      std::cout << "Continuing rebinning..." << std::endl;
+
   }
 
   TFile *f = new TFile(inFile);
@@ -162,11 +180,8 @@ void Rebin(const char* inFile,const char* ObjName,const char* OutObjName)
   TH1D *hObj = new TH1D(OutObjName, "Weighted Energy Spectrum",100,0.,Emax);
   std::string tCommand = "Energy>>" + (std::string)OutObjName;
   inObj->Draw(tCommand.c_str(), "Weight","goff");
-  //hObj->Sumw2();
-  //hObj->Print();
 
   TFile *fout;
-  std::string OutFileName = "converted_" + (std::string)inFile;
 
   if(!gSystem->AccessPathName(OutFileName.c_str()))
     fout = new TFile(OutFileName.c_str(),"update");

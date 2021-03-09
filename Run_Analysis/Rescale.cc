@@ -281,7 +281,7 @@ void Rescale(const char* inObj)
     std::cin >> response;
   }
 
-  G4bool same_rescale = false;
+  bool same_rescale = false;
 
   if(!user_files[0].compare(user_files[1]))
     same_rescale = true;

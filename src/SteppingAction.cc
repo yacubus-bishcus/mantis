@@ -26,6 +26,7 @@
 extern G4bool bremTest;
 extern G4bool debug;
 extern G4String inFile;
+extern G4bool addNRF;
 
 SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, EventAction* event)
         : G4UserSteppingAction(), kdet(det), krun(run), kevent(event),
@@ -68,7 +69,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
     // throw a warning if energy conservation appears to be broken for gammas
     // small deviations have been observed; attribute to a likely mismatch in database energies
-    if (theTrack->GetKineticEnergy() > beamEnergy)
+    if(theTrack->GetKineticEnergy() > beamEnergy)
     {
       G4cerr << G4endl;
       G4cerr << "Warning: gammaEnergy " << theTrack->GetKineticEnergy() << " MeV > beamEnergy " << beamEnergy << " MeV!!" << G4endl;
@@ -125,9 +126,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if(theTrack->GetCreatorProcess() !=0)
     {
       CPName = theTrack->GetCreatorProcess()->GetProcessName();
-      if(CPName == "NRF")
+      if(addNRF)
       {
-        isNRF = 1;
+        if(CPName == "NRF")
+        {
+          isNRF = 1;
+        }
       }
     }
 
@@ -157,20 +161,24 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 // **************************************************** Track NRF Materials **************************************************** //
 
     const G4VProcess* process = endPoint->GetProcessDefinedStep();
-    // Keep track of Any NRF Created
-    if(drawNRFDataFlag)
+
+    if(addNRF)
     {
-      if(process->GetProcessName() == "NRF")
+      // Keep track of Any NRF Created
+      if(drawNRFDataFlag)
       {
-        krun->AddNRF();
-        manager->FillNtupleIColumn(3,0, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
-        manager->FillNtupleDColumn(3,1,theTrack->GetTotalEnergy()/(MeV));
-        manager->FillNtupleSColumn(3,2,endPoint->GetPhysicalVolume()->GetName());
-        G4ThreeVector NRF_loc = theTrack->GetPosition();
-        manager->FillNtupleDColumn(3,3, NRF_loc.z()/(cm));
-        if(!inFile.compare(0,24,"brems_distributions.root"))
-          manager->FillNtupleDColumn(3,4,weight);
-        manager->AddNtupleRow(3);
+        if(process->GetProcessName() == "NRF")
+        {
+          krun->AddNRF();
+          manager->FillNtupleIColumn(3,0, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+          manager->FillNtupleDColumn(3,1,theTrack->GetTotalEnergy()/(MeV));
+          manager->FillNtupleSColumn(3,2,endPoint->GetPhysicalVolume()->GetName());
+          G4ThreeVector NRF_loc = theTrack->GetPosition();
+          manager->FillNtupleDColumn(3,3, NRF_loc.z()/(cm));
+          if(!inFile.compare(0,24,"brems_distributions.root"))
+            manager->FillNtupleDColumn(3,4,weight);
+          manager->AddNtupleRow(3);
+        }
       }
     }
 

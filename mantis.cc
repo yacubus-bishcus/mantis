@@ -32,7 +32,7 @@ G4bool output;
 // String global variables
 G4String macro, root_output_name, gOutName, inFile;
 // boolean global variables
-G4bool bremTest, resonanceTest, checkEvents, debug;
+G4bool bremTest, resonanceTest, checkEvents, debug, addNRF;
 
 void check_file_exists(const std::string &p)
 {
@@ -54,12 +54,12 @@ namespace
 {
 void PrintUsage()
 {
-        G4cerr << "Usage: " << G4endl;
-        G4cerr << "mantis [-h help] [-m macro=mantis.in] [-a chosen_energy=-1.] [-s seed=1] [-o output_name] [-t bremTest=false] " <<
-                "[-r resonance_test=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] " <<
-                "[-e checkEvents_in=false] [-i inFile] [-d debug]"
-               << G4endl;
-        exit(1);
+  G4cerr << "Usage: " << G4endl;
+  G4cerr << "mantis [-h help] [-m macro=mantis.in] [-a chosen_energy=-1.] [-s seed=1] [-o output_name] [-t bremTest=false] " <<
+          "[-r resonance_test=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] " <<
+          "[-e checkEvents_in=false] [-i inFile] [-d debug]"
+         << G4endl;
+  exit(1);
 }
 }
 
@@ -74,44 +74,44 @@ int main(int argc,char **argv)
 
   check_file_exists((std::string)getenv("G4NRFGAMMADATA"));
 
-        // Defaults
-        G4int start_time = time(0);
-        // Physics List Defaults
-        G4bool use_xsec_tables = true;
-        G4bool use_xsec_integration = true;
-        G4bool force_isotropic = false;
-        G4String standalone_in = "false";
-        G4String verbose_in = "false";
-        G4String addNRF_in = "true";
+  // Defaults
+  G4int start_time = time(0);
+  // Physics List Defaults
+  G4bool use_xsec_tables = true;
+  G4bool use_xsec_integration = true;
+  G4bool force_isotropic = false;
+  G4String standalone_in = "false";
+  G4String verbose_in = "false";
+  G4String addNRF_in = "true";
 
-        G4bool standalone = false;
-        G4bool NRF_Verbose = false;
-        G4bool addNRF = true;
-        // Run Defaults
-        macro = "mantis.in";
-        seed = 1;
-        inFile = "brems_distributions.root";
-        G4String debug_in = "false";
-        debug = false;
-        // Primary Generator Defaults
-        G4String resonance_in = "false";
-        resonanceTest = false;
-        chosen_energy = -1.;
-        G4String bremTest_in = "false";
-        bremTest = false;
+  G4bool standalone = false;
+  G4bool NRF_Verbose = false;
+  addNRF = true;
+  // Run Defaults
+  macro = "mantis.in";
+  seed = 1;
+  inFile = "brems_distributions.root";
+  G4String debug_in = "false";
+  debug = false;
+  // Primary Generator Defaults
+  G4String resonance_in = "false";
+  resonanceTest = false;
+  chosen_energy = -1.;
+  G4String bremTest_in = "false";
+  bremTest = false;
 
-        // Output Defaults
-        output = false;
-        G4String checkEvents_in = "false";
-        checkEvents = false;
+  // Output Defaults
+  output = false;
+  G4String checkEvents_in = "false";
+  checkEvents = false;
 
-        // Detect interactive mode (if no arguments) and define UI session
-        //
-        G4UIExecutive* ui = 0;
+  // Detect interactive mode (if no arguments) and define UI session
+  //
+  G4UIExecutive* ui = 0;
 
-        if ( argc == 1 ) {
-                ui = new G4UIExecutive(argc, argv);
-        }
+  if ( argc == 1 ) {
+          ui = new G4UIExecutive(argc, argv);
+  }
 
 
         for (G4int i=1; i<argc; i=i+2)
@@ -262,7 +262,7 @@ int main(int argc,char **argv)
   G4cout << G4endl << "----------------------------------------------------------------------" << G4endl;
   G4cout << G4endl << "----------------------------------------------------------------------" << G4endl;
   G4cout << G4endl << "The MC took: [" << ((int)std::difftime(stop_time,start_time))/3600
-          << " h " << ((int)std::difftime(stop_time,start_time)%3600)/60 << " m " 
+          << " h " << ((int)std::difftime(stop_time,start_time)%3600)/60 << " m "
           << ((int)std::difftime(stop_time,start_time)%3600)%60 << " s]"
           << G4endl << G4endl;
 

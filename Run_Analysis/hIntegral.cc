@@ -1,17 +1,20 @@
 void hIntegral(TH1D *h)
 {
-  int nentries = h->GetEntries();
+  //int nentries = h->GetEntries();
   TAxis *xaxis = h->GetXaxis();
+  //double hMean = h->GetMean();
+  int nbins = h->GetNbinsX();
 
   double intSum = 0;
-  for(unsigned int i=0;i<nentries;++i)
+  for(unsigned int i=0;i<nbins;++i)
   {
     double xVal = xaxis->GetBinCenter(i);
-    double binVal = h->GetBinCenter(i);
+    double binVal = h->GetBinContent(i);
     double integralVal = xVal*binVal;
     intSum += integralVal;
   }
   std::cout << intSum << std::endl;
+  //std::cout << nentries*hMean << std::endl;
 }
 
 void hIntegral(TTree *inObj,TCut cut1="NA")
@@ -51,5 +54,5 @@ void hIntegral(const char* filename, const char* objName, TCut cut1="NA")
     exit(0);
 
   hIntegral(inObj);
-  delete inObj; // avoids potential memory leak 
+  delete inObj; // avoids potential memory leak
 }

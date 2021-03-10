@@ -19,7 +19,8 @@
 // The output of this file is another ROOT TFile with a bremmstrahlung and importance
 // sampling distributions saved as TGraphs
 
-void Sampling(const char *bremInputFilename, string sample_element="U", double non_nrf_energy_cut=1.5)
+void Sampling(const char *bremInputFilename, string sample_element="U",
+							double deltaE=5.0e-6, double non_nrf_energy_cut=1.5)
 {
 	// Convert Input Bremsstrahlung Spectrum Histogram to TGraph
 	if(gSystem->AccessPathName(bremInputFilename))
@@ -37,7 +38,7 @@ void Sampling(const char *bremInputFilename, string sample_element="U", double n
 	ChopperData->Print();
 
 	double Emax = ChopperData->GetMaximum("Energy");
-	double deltaE = 5.0e-6; // width of each important sampling region in MeV
+
 	Int_t nbins = Emax/deltaE;
 
 	TH1D *hBrems = new TH1D("hBrems","Bremsstrahlung Data",nbins, 0.,Emax);

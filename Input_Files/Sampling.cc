@@ -20,7 +20,7 @@
 // sampling distributions saved as TGraphs
 
 void Sampling(const char *bremInputFilename, string sample_element="U",
-							double deltaE=5.0e-6, double non_nrf_energy_cut=1.5)
+							double deltaE=5.0e-6, bool checkZero=false, double non_nrf_energy_cut=1.5)
 {
 	// Convert Input Bremsstrahlung Spectrum Histogram to TGraph
 	if(gSystem->AccessPathName(bremInputFilename))
@@ -46,6 +46,23 @@ void Sampling(const char *bremInputFilename, string sample_element="U",
 	ChopperData->Draw("Energy>>hBrems","","goff");
 	std::cout << "Data Grabbed." << std::endl;
 	hBrems->Scale(1.0/hBrems->Integral());
+	
+	if(checkZero)
+	{
+		std::cout << "Checking for zeros..." << std::endl;
+
+		for(unsigned int i=0;i<nbins;++i)
+		{
+			int count = 0;
+			if(hBrems->GetBinContent(i) == 0)
+			{
+				while(hBrems->GetBinContent(i-1-count) == 0)
+					count++;
+				hBrems->SetBinContent(i,hBrems->GetBinContent(i-1-count));
+			}
+		}
+	}
+
 	std::cout << "Converting to TGraph..." << std::endl;
 	TGraph *gBrems = new TGraph(hBrems);
 	std::cout << "Conversion Complete." << std::endl;

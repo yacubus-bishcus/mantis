@@ -14,7 +14,7 @@ void hIntegral(TH1D *h)
   std::cout << intSum << std::endl;
 }
 
-void hIntegral(const char* filename, const char* objName)
+void hIntegral(const char* filename, const char* objName, TCut cut1="NA")
 {
   if(gSystem->AccessPathName(filename))
   {
@@ -29,11 +29,20 @@ void hIntegral(const char* filename, const char* objName)
   if(!confirm)
     exit(0);
 
-  TH1D *inObj;
+  TTree *inObj;
   f->GetObject(objName,inObj);
   if(inObj == 0)
     exit(0);
 
   inObj->Print();
-  hIntegral(inObj);
+  double Emax = inObj->GetMaximum("Energy");
+  TH1D *e1 = new TH1D("e1","Histogram",100,0.,Emax);
+
+  if(cut1 == "NA")
+    inObj->Draw("Energy>>e1","","goff");
+  else
+    inObj->Draw("Energy>>e1",cut1,"goff");
+
+  e1->Print();
+  hIntegral(e1);
 }

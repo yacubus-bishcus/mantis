@@ -19,7 +19,7 @@ void hIntegral(TH1D *h)
 
 void hIntegral(TTree *inObj,TCut cut1="NA")
 {
-  inObj->Print();
+  //inObj->Print();
   double Emax = inObj->GetMaximum("Energy");
   TH1D *e1 = new TH1D("e1","Histogram",100,0.,Emax);
 
@@ -28,7 +28,7 @@ void hIntegral(TTree *inObj,TCut cut1="NA")
   else
     inObj->Draw("Energy>>e1",cut1,"goff");
 
-  e1->Print();
+  //e1->Print();
   hIntegral(e1);
   delete e1; // avoids potential memory leak
 }

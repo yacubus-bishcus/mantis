@@ -27,6 +27,7 @@ void hIntegral(TTree *inObj,TCut cut1="NA")
 
   e1->Print();
   hIntegral(e1);
+  delete e1; // avoids potential memory leak
 }
 
 void hIntegral(const char* filename, const char* objName, TCut cut1="NA")
@@ -50,4 +51,5 @@ void hIntegral(const char* filename, const char* objName, TCut cut1="NA")
     exit(0);
 
   hIntegral(inObj);
+  delete inObj; // avoids potential memory leak 
 }

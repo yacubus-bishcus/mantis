@@ -1,4 +1,4 @@
-void hIntegral(TH1D *h)
+void hIntegral(TH1 *h)
 {
   //int nentries = h->GetEntries();
   TAxis *xaxis = h->GetXaxis();

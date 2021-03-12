@@ -71,7 +71,7 @@ void HistoManager::Book()
   manager->CreateNtupleDColumn("Energy");
   manager->CreateNtupleIColumn("EventID");
   manager->CreateNtupleIColumn("isNRF");
-  manager->CreateNtupleIColumn("Angle");
+  manager->CreateNtupleDColumn("Angle");
   if(!inFile.compare(0,24,"brems_distributions.root"))
     manager->CreateNtupleDColumn("Weight");
   manager->FinishNtuple();

@@ -205,9 +205,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       if(nextStep_VolumeName.compare(0,4,"Chop") != 0
          && previousStep_VolumeName.compare(0,4,"Chop") == 0)
       {
+        G4ThreeVector p = aStep->GetPreStepPoint()->GetMomentum();
+        G4double angle = asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()); //the angle of the particle relative to the Z axis
         manager->FillNtupleDColumn(2,0, theTrack->GetKineticEnergy()/(MeV));
         manager->FillNtupleIColumn(2,1,G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
         manager->FillNtupleIColumn(2,2,isNRF);
+        manager->FillNtupleDColumn(2,3,angle);
         if(!inFile.compare(0,24,"brems_distributions.root"))
           manager->FillNtupleDColumn(2,3, weight);
         manager->AddNtupleRow(2);

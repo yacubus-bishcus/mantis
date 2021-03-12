@@ -75,6 +75,17 @@ void EventAction::BeginOfEventAction(const G4Event* anEvent)
       std::stringstream tEventSS;
       tEventSS.precision(3);
       tEventSS << std::scientific << totalEventsToRun;
+      if(debug)
+      {
+        std::cout << "\r**  Event [" << eventSS.str() << "/" << tEventSS.str() << "]    "
+                  << std::setprecision(4) << "Rate [" << eventsPerSec << "]    "
+                  << std::setprecision(2) << "Time2Finish ["
+                  << ((int)timeToFinish)/3600  << "h "
+                  << ((int)timeToFinish%3600)/60 << "m "
+                  << ((int)timeToFinish%3600)%60 << "s]"
+                  << std::setprecision(6) << std::flush;
+      }
+
       G4cout << "\r**  Event [" << eventSS.str() << "/" << tEventSS.str() << "]    "
                 << std::setprecision(4) << "Rate [" << eventsPerSec << "]    "
                 << std::setprecision(2) << "Time2Finish ["

@@ -99,6 +99,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                       G4cerr << "PrimaryGeneratorAction::PrimaryGeneratorAction() -> FATAL ERROR Failure to grab TGraphs from File: " << inFile << G4endl;
                       exit(1);
                     }
+                    G4cout << "Reading Sampled Distribution from: " << inFile << G4endl;
                 }
                 else
                   file_check = true;

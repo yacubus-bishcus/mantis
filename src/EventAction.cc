@@ -25,6 +25,7 @@
 #include <ctime>
 
 extern G4bool debug;
+extern G4bool printEvents;
 extern G4bool bremTest;
 extern G4String inFile;
 
@@ -75,7 +76,7 @@ void EventAction::BeginOfEventAction(const G4Event* anEvent)
       std::stringstream tEventSS;
       tEventSS.precision(3);
       tEventSS << std::scientific << totalEventsToRun;
-      if(debug)
+      if(printEvents)
       {
         std::cout << "\r**  Event [" << eventSS.str() << "/" << tEventSS.str() << "]    "
                   << std::setprecision(4) << "Rate [" << eventsPerSec << "]    "

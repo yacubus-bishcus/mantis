@@ -15,11 +15,67 @@ void hIntegral(TH1 *h)
   }
   std::cout << h->GetTitle() << " BinCenter Method Sum: " << intSum << std::endl;
   std::cout << h->GetTitle() << " Mean Method Sum: " << nentries*hMean << std::endl;
+  std::cout << h->GetTitle() << " Integral Method: " << h->Integral() << std::endl;
+}
+double hIntegral(TH1* h, int returnValue)
+{
+  int nentries = h->GetEntries();
+  TAxis *xaxis = h->GetXaxis();
+  double hMean = h->GetMean();
+  int nbins = h->GetNbinsX();
+
+  double intSum = 0;
+  for(unsigned int i=0;i<nbins;++i)
+  {
+    double xVal = xaxis->GetBinCenter(i);
+    double binVal = h->GetBinContent(i);
+    double integralVal = xVal*binVal;
+    intSum += integralVal;
+  }
+
+  if(returnValue == 1)
+    return intSum;
+  else if(returnValue == 2)
+    return nentries*hMean;
+  else if(returnValue == 3)
+    return h->Integral();
+  else
+    return 0;
+
+}
+
+double hIntegral(TTree *inObj, int returnValue, TCut cut1="NA")
+{
+  inObj->SetEstimate(-1);
+  double Emax = inObj->GetMaximum("Energy");
+  TH1D *e1 = new TH1D("e1",inObj->GetName(),100,0.,Emax);
+
+  if(cut1 == "NA")
+    inObj->Draw("Energy>>e1","","goff");
+  else
+    inObj->Draw("Energy>>e1",cut1,"goff");
+
+  Double_t *energies = inObj->GetVal(0);
+  int nentries = inObj->GetEntries();
+  double intSum = 0;
+
+  for(unsigned int i=0;i<nentries;++i)
+  {
+    intSum +=energies[i];
+  }
+
+  double theSum = hIntegral(e1, returnValue);
+  delete e1;
+
+  if(returnValue == 0)
+    return intSum;
+  else
+    return theSum;
+
 }
 
 void hIntegral(TTree *inObj,TCut cut1="NA")
 {
-  //inObj->Print();
   inObj->SetEstimate(-1);
   double Emax = inObj->GetMaximum("Energy");
   TH1D *e1 = new TH1D("e1",inObj->GetName(),100,0.,Emax);

@@ -33,7 +33,7 @@ extern G4bool debug;
 
 PrimaryGeneratorAction::PrimaryGeneratorAction()
         : G4VUserPrimaryGeneratorAction(), pgaM(NULL),
-        fParticleGun(0),fFileOpen(false)
+        fParticleGun(0),fFileOpen(false), cutE(-1.), lowImportance(-1.)
 {
         fParticleGun = new G4ParticleGun(1);
         if(!bremTest)
@@ -100,6 +100,11 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                       exit(1);
                     }
                     G4cout << "Reading Sampled Distribution from: " << inFile << G4endl;
+
+                    if(cutE > 0.1)
+                      lowImportance = gSample->Eval(cutE - 0.1);
+
+                    G4cout << "Low Importance Value set to: " << lowImportance << G4endl;
                 }
                 else
                   file_check = true;
@@ -141,7 +146,16 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
             // range, a linear extrapolation is computed. Eval here returns the
             // probability per 5 eV for each respective distribution
             G4double dNdE = gBrems->Eval(energy);
-            G4double importanceSampling = gSample->Eval(energy);
+            G4double importanceSampling = 0.;
+            // This hopes to quicken simulation by avoiding TGraph::Eval()
+            if(cutE > 0.1)
+              if(energy < cutE)
+                importanceSampling = lowImportance;
+              else
+                importanceSampling = gSample->Eval(energy);
+            else
+              importanceSampling = gSample->Eval(energy);
+
             // Create importance weighting based on the two distributions probability
             w = dNdE/importanceSampling;
           }

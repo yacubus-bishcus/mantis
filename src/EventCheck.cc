@@ -210,7 +210,7 @@ void EventCheck::WriteEvents()
   nrf_to_cher_to_det_tree->Write();
 
   std::cout << "EventCheck::WriteEvents -> TTrees Written to File: "
-              << OutFileName << std::endl;
+              << root_output_name << std::endl;
   fout->Close();
   time_end = std::time(&timer2);
   G4cout << "Event Check took: " << std::difftime(time_end, time_start)

@@ -192,7 +192,7 @@ void EventCheck::WriteEvents()
     return;
   }
 
-  if(TFile::IsOpen())
+  if(TFile::IsOpen(root_output_name.c_str()))
   {
     std::cerr << "EventCheck::WriteEvents -> File: " << root_output_name << " already opened. Exiting..." << std::endl;
     G4cerr << "EventCheck::WriteEvents -> File: " << root_output_name << " already opened. Exiting..." << G4endl;
@@ -203,9 +203,9 @@ void EventCheck::WriteEvents()
 
   TTree *Cherenkov_in, *NRF_in, *DetInfo_in;
 
-  f->GetObject("Cherenkov",Cherenkov_in);
-  f->GetObject("NRF",NRF_in);
-  f->GetObject("DetInfo",DetInfo_in);
+  fin1->GetObject("Cherenkov",Cherenkov_in);
+  fin1->GetObject("NRF",NRF_in);
+  fin1->GetObject("DetInfo",DetInfo_in);
 
   Cherenkov_in->Print();
   NRF_in->Print();

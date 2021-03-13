@@ -100,11 +100,6 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                       exit(1);
                     }
                     G4cout << "Reading Sampled Distribution from: " << inFile << G4endl;
-
-                    if(cutE > 0.1)
-                      lowImportance = gSample->Eval(cutE - 0.1);
-
-                    G4cout << "Low Importance Value set to: " << lowImportance << G4endl;
                 }
                 else
                   file_check = true;

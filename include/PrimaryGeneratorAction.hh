@@ -73,6 +73,9 @@ void SetEnergyCut(G4double x)
   cutE = x;
   G4cout << "WARNING: " << G4endl;
   G4cout << "PrimaryGeneratorAction::EnergyCut Set to: " << cutE << " MeV" << G4endl;
+  if(cutE > 0.1)
+    lowImportance = gSample->Eval(cutE - 0.1);
+  G4cout << "PrimaryGeneratorAction::LowImportance Set to: " << lowImportance << G4endl;
 }
 
 void CloseInputFile(){if(fFileOpen) fin->Close();}

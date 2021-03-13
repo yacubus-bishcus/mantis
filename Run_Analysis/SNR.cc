@@ -67,16 +67,12 @@ void SNR(const char* inFile)
     std::cout << "Drawing IntObjIn and IntObjOut Histograms..." << std::endl;
     aIntObjIn->Draw("Energy>>eT","Weight","goff");
     aIntObjOut->Draw("Energy>>eT2","Weight","goff");
-    // start integral 5eV prior to energy level peak 
+    // start integral 5eV prior to energy level peak
     double eStart[] = {1.6562312,1.7335419,1.8152525,1.8623129,2.0061941};
     double eEnd[5];
 
     for(int i=0;i<5;++i)
-    {
-      //std::cout << "Bin Start Energy: " << std::setprecision(10) << eStart[i] << std::endl;
       eEnd[i] = eStart[i] + 0.00001; // add 10 eV or 5eV above energy level peak
-      //std::cout << "Bin End Energy: " << std::setprecision(10) << eEnd[i] << std::endl;
-    }
 
     int binStart = e10->GetXaxis()->FindBin(eStart[0]);
     int binEnd = e10->GetXaxis()->FindBin(eEnd[0]);
@@ -97,12 +93,7 @@ void SNR(const char* inFile)
     inSignal[3] = e13->Integral(binStart,binEnd);
     outSignal[3] = e23->Integral(binStart,binEnd);
     binStart = e14->GetXaxis()->FindBin(eStart[4]);
-    //std::cout << "E Start: " << eStart[4] << std::endl;
-    //std::cout << "Bin Start: " << binStart << std::endl;
     binEnd = e14->GetXaxis()->FindBin(eEnd[4]);
-    //std::cout << "E End: " << eEnd[4] << std::endl;
-    //std::cout << "Bin End: " << binEnd << std::endl;
-    //std::cout << "Integral: " << e14->Integral(binStart,binEnd) << std::endl;
     inSignal[4] = e14->Integral(binStart,binEnd);
     outSignal[4] = e24->Integral(binStart,binEnd);
 

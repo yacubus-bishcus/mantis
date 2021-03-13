@@ -1,3 +1,27 @@
+//
+// ********************************************************************
+// * DISCLAIMER                                                       *
+// *                                                                  *
+// * Neither the authors of this software system, nor their employing *
+// * institutes,nor the agencies providing financial support for this *
+// * work  make  any representation or  warranty, express or implied, *
+// * regarding  this  software system or assume any liability for its *
+// * use.                                                             *
+// *                                                                  *
+// * By copying,  distributing  or modifying the Program (or any work *
+// * based  on  the Program)  you indicate  your  acceptance of  this *
+// * statement, and all its terms.                                    *
+// ********************************************************************
+//
+//
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// Author:
+// Jacob E Bickus, 2021
+// MIT, NSE
+// jbickus@mit.edu
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+///////////////////////////////////////////////////////////////////////////////
+
 void hIntegral(TH1 *h)
 {
   int nentries = h->GetEntries();
@@ -15,7 +39,7 @@ void hIntegral(TH1 *h)
   }
   std::cout << h->GetTitle() << " BinCenter Method Sum: " << intSum << std::endl;
   std::cout << h->GetTitle() << " Mean Method Sum: " << nentries*hMean << std::endl;
-  std::cout << h->GetTitle() << " Integral Method: " << h->Integral() << std::endl;
+  std::cout << h->GetTitle() << " Integral Method: " << h->Integral() << std::endl << std::endl;
 }
 double hIntegral(TH1* h, int returnValue)
 {

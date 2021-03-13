@@ -172,7 +172,7 @@ EventCheck::EventCheck()
 
   // deallocate memory
   delete []detWeight;
-  f->Close();
+  f->Close("R");
 }
 
 EventCheck::~EventCheck()
@@ -192,8 +192,32 @@ void EventCheck::WriteEvents()
     return;
   }
 
+  if(TFile::IsOpen())
+  {
+    std::cerr << "EventCheck::WriteEvents -> File: " << root_output_name << " already opened. Exiting..." << std::endl;
+    G4cerr << "EventCheck::WriteEvents -> File: " << root_output_name << " already opened. Exiting..." << G4endl;
+    return;
+  }
+  TFile *fin1 = new TFile(root_output_name.c_str(), "read");
+  fin1->cd();
+
+  TTree *Cherenkov_in, *NRF_in, *DetInfo_in;
+
+  f->GetObject("Cherenkov",Cherenkov_in);
+  f->GetObject("NRF",NRF_in);
+  f->GetObject("DetInfo",DetInfo_in);
+
+  Cherenkov_in->Print();
+  NRF_in->Print();
+  DetInfo_in->Print();
+
+  fin1->Close();
+
+
   TFile *fout = new TFile(root_output_name.c_str(),"update");
   fout->cd();
+
+
 
   // Set up NRF to Cher to Det Tree
   G4int event;

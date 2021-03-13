@@ -169,35 +169,39 @@ EventCheck::~EventCheck()
 
 void EventCheck::WriteEvents()
 {
-    std::string OutFileName = gOutName;
-    OutFileName = "EventCheck_" + OutFileName + ".root";
+  if(gSystem->AccessPathName(root_output_name.c_str()))
+  {
+    std::cerr << "EventCheck::WriteEvents -> File: " << root_output_name << " does not exist." << std::endl;
+    G4cerr << "EventCheck::WriteEvents -> File: " << root_output_name << " does not exist." << G4endl;
+    return;
+  }
 
-    TFile *fout = new TFile(OutFileName.c_str(),"recreate");
-    fout->cd();
+  TFile *fout = new TFile(root_output_name.c_str(),"update");
+  fout->cd();
 
-    // Set up NRF to Cher to Det Tree
-    G4int event;
-    G4double energy, weight, thetimes;
+  // Set up NRF to Cher to Det Tree
+  G4int event;
+  G4double energy, weight, thetimes;
 
-    TTree *nrf_to_cher_to_det_tree = new TTree("event_tree","NRF Events that Lead to Cherenkov that were Detected");
-    nrf_to_cher_to_det_tree->Branch("EventID",&event);
-    nrf_to_cher_to_det_tree->Branch("Energy",&energy);
-    nrf_to_cher_to_det_tree->Branch("Weight",&weight);
-    nrf_to_cher_to_det_tree->Branch("Time",&thetimes);
+  TTree *nrf_to_cher_to_det_tree = new TTree("event_tree","NRF Events that Lead to Cherenkov that were Detected");
+  nrf_to_cher_to_det_tree->Branch("EventID",&event);
+  nrf_to_cher_to_det_tree->Branch("Energy",&energy);
+  nrf_to_cher_to_det_tree->Branch("Weight",&weight);
+  nrf_to_cher_to_det_tree->Branch("Time",&thetimes);
 
-    // Fill nrf_to_cher_to_det Tree
-    if(nrf_to_cher_to_det_event.size() > 0)
+  // Fill nrf_to_cher_to_det Tree
+  if(nrf_to_cher_to_det_event.size() > 0)
+  {
+    // Fill tree
+    for(unsigned int i=0; i<nrf_to_cher_to_det_event.size(); ++i)
     {
-      // Fill tree
-      for(unsigned int i=0; i<nrf_to_cher_to_det_event.size(); ++i)
-      {
-        event = nrf_to_cher_to_det_event[i];
-        energy = nrf_to_cher_to_det_energy[i];
-        weight = nrf_to_cher_to_det_weight[i];
-        thetimes = nrf_to_cher_to_det_time[i];
-        nrf_to_cher_to_det_tree->Fill();
-      }
+      event = nrf_to_cher_to_det_event[i];
+      energy = nrf_to_cher_to_det_energy[i];
+      weight = nrf_to_cher_to_det_weight[i];
+      thetimes = nrf_to_cher_to_det_time[i];
+      nrf_to_cher_to_det_tree->Fill();
     }
+  }
 
 // ******************************************************************************************************************************** //
 // Write TTrees to OutFile

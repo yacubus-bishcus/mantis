@@ -58,7 +58,7 @@ EventCheck::EventCheck()
           G4cout << "EventCheck::EventCheck -> File: " << root_output_name << " exists." << G4endl;
   }
 
-  TFile *f = new TFile(root_output_name.c_str());
+  TFile *f = new TFile(root_output_name.c_str(),"read");
 
   bool confirm = f->cd();
   if(!confirm)
@@ -216,7 +216,7 @@ void EventCheck::WriteEvents()
     {
       event = nrf_to_cher_to_det_event[i];
       energy = nrf_to_cher_to_det_energy[i];
-      
+
       if(!inFile.compare(0,24,"brems_distributions.root"))
         weight = nrf_to_cher_to_det_weight[i];
 
@@ -233,6 +233,8 @@ void EventCheck::WriteEvents()
 
   std::cout << "EventCheck::WriteEvents -> TTrees Written to File: "
               << root_output_name << std::endl;
+  G4cout << "EventCheck::WriteEvents -> TTrees Written to File: "
+              << root_output_name << G4endl;
   fout->Close();
   time_end = std::time(&timer2);
   G4cout << "Event Check took: " << std::difftime(time_end, time_start)

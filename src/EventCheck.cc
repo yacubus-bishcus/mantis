@@ -40,6 +40,7 @@
 
 extern G4String root_output_name;
 extern G4String gOutName;
+extern G4String inFile;
 
 EventCheck::EventCheck()
 {
@@ -102,13 +103,23 @@ EventCheck::EventCheck()
   }
 
   // Grab DetInfo Events
-  G4int det_entries = DetInfo_in->Draw("EventID:Energy:Weight:Time","CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\"","goff");
+  G4int det_entries =0;
+
+  if(!inFile.compare(0,24,"brems_distributions.root"))
+    det_entries = DetInfo_in->Draw("EventID:Energy:Time:Weight","CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\"","goff");
+  else
+    det_entries = DetInfo_in->Draw("EventID:Energy:Time","CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\"","goff");
+
   G4cout << "EventCheck::EventCheck -> Total Number of Detected Optical Photon entries: "
           << det_entries << G4endl << G4endl;
   G4double *detEvent = DetInfo_in->GetVal(0);
   G4double *detEnergy = DetInfo_in->GetVal(1);
-  G4double *detWeight = DetInfo_in->GetVal(2);
-  G4double *detTime = DetInfo_in->GetVal(3);
+  G4double *detTime = DetInfo_in->GetVal(2);
+  // Dynamically Allocate array for weights
+  G4double *detWeight = new G4double[(int)det_entries];
+
+  if(!inFile.compare(0,24,"brems_distributions.root"))
+    detWeight = DetInfo_in->GetVal(3);
 
   std::vector<int> detEventv;
   for(int i=0; i<det_entries; ++i)
@@ -148,7 +159,10 @@ EventCheck::EventCheck()
         G4int index = exists - detEventv.begin();
         // write the rest of the detected info to new vectors
         nrf_to_cher_to_det_energy.push_back(detEnergy[index]);
-        nrf_to_cher_to_det_weight.push_back(detWeight[index]);
+
+        if(!inFile.compare(0,24,"brems_distributions.root"))
+          nrf_to_cher_to_det_weight.push_back(detWeight[index]);
+
         nrf_to_cher_to_det_time.push_back(detTime[index]);
       }
     }
@@ -156,6 +170,8 @@ EventCheck::EventCheck()
             << nrf_to_cher_to_det_event.size() << G4endl;
   } // end if nrf_entries != 0 && cher_entries != 0
 
+  // deallocate memory
+  delete []detWeight;
   f->Close();
 }
 
@@ -186,7 +202,10 @@ void EventCheck::WriteEvents()
   TTree *nrf_to_cher_to_det_tree = new TTree("event_tree","NRF Events that Lead to Cherenkov that were Detected");
   nrf_to_cher_to_det_tree->Branch("EventID",&event);
   nrf_to_cher_to_det_tree->Branch("Energy",&energy);
-  nrf_to_cher_to_det_tree->Branch("Weight",&weight);
+
+  if(!inFile.compare(0,24,"brems_distributions.root"))
+    nrf_to_cher_to_det_tree->Branch("Weight",&weight);
+
   nrf_to_cher_to_det_tree->Branch("Time",&thetimes);
 
   // Fill nrf_to_cher_to_det Tree
@@ -197,7 +216,10 @@ void EventCheck::WriteEvents()
     {
       event = nrf_to_cher_to_det_event[i];
       energy = nrf_to_cher_to_det_energy[i];
-      weight = nrf_to_cher_to_det_weight[i];
+      
+      if(!inFile.compare(0,24,"brems_distributions.root"))
+        weight = nrf_to_cher_to_det_weight[i];
+
       thetimes = nrf_to_cher_to_det_time[i];
       nrf_to_cher_to_det_tree->Fill();
     }

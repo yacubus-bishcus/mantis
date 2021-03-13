@@ -192,12 +192,7 @@ void EventCheck::WriteEvents()
     return;
   }
 
-  if(TFile::IsOpen(root_output_name.c_str()))
-  {
-    std::cerr << "EventCheck::WriteEvents -> File: " << root_output_name << " already opened. Exiting..." << std::endl;
-    G4cerr << "EventCheck::WriteEvents -> File: " << root_output_name << " already opened. Exiting..." << G4endl;
-    return;
-  }
+
   TFile *fin1 = new TFile(root_output_name.c_str(), "read");
   fin1->cd();
 

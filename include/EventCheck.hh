@@ -48,12 +48,18 @@ public:
     ~EventCheck();
 
 public:
+    void Compute();
     void WriteEvents();
+    void CopyATree(const char*, G4bool);
+    void CopyEvents();
+    void Cleanup(G4bool);
+    void Finish();
 
 private:
   time_t timer, timer2, time_start, time_end;
   std::vector<double> nrf_to_cher_to_det_event, nrf_to_cher_to_det_energy, nrf_to_cher_to_det_weight,nrf_to_cher_to_det_time;
   G4int x;
+  G4String event_output_name;
 
 };
 

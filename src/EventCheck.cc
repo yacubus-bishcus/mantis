@@ -58,6 +58,11 @@ EventCheck::EventCheck()
           G4cout << "EventCheck::EventCheck -> File: " << root_output_name << " exists." << G4endl;
   }
 
+  event_output_name = "Events_" + root_output_name;
+}
+
+void EventCheck::Compute()
+{
   TFile *f = new TFile(root_output_name.c_str(),"read");
 
   bool confirm = f->cd();
@@ -171,8 +176,11 @@ EventCheck::EventCheck()
   } // end if nrf_entries != 0 && cher_entries != 0
 
   // deallocate memory
+  f->Close();
   delete []detWeight;
-  f->Close("R");
+  delete Cherenkov_in;
+  delete NRF_in;
+  delete DetInfo_in;
 }
 
 EventCheck::~EventCheck()
@@ -191,35 +199,9 @@ void EventCheck::WriteEvents()
     G4cerr << "EventCheck::WriteEvents -> File: " << root_output_name << " does not exist." << G4endl;
     return;
   }
-
-
-  TTree *Brem_in, *ChopIn_in, *ChopOut_in, *NRF_in, *Air_in, *IntObjIn_in, *IntObjOut_in, *Water_in, *Cherenkov_in, *DetInfo_in, *IncDetInfo_in;
-  TFile *fin = new TFile(root_output_name.c_str(),"update");
+  // write to a temporary file
+  TFile *fin = new TFile(event_output_name.c_str(),"recreate");
   fin->cd();
-
-  fin->GetObject("Brem",Brem_in);
-  fin->GetObject("ChopIn",ChopIn_in);
-  fin->GetObject("ChopOut",ChopOut_in);
-  fin->GetObject("NRF",NRF_in);
-  fin->GetObject("AirIn",Air_in);
-  fin->GetObject("IntObjIn", IntObjIn_in);
-  fin->GetObject("IntObjOut", IntObjOut_in);
-  fin->GetObject("Water",Water_in);
-  fin->GetObject("Cherenkov",Cherenkov_in);
-  fin->GetObject("DetInfo",DetInfo_in);
-  fin->GetObject("IncDetInfo",IncDetInfo_in);
-
-  Brem_in->SetEstimate(-1);
-  ChopIn_in->SetEstimate(-1);
-  ChopOut_in->SetEstimate(-1);
-  NRF_in->SetEstimate(-1);
-  Air_in->SetEstimate(-1);
-  IntObjIn_in->SetEstimate(-1);
-  IntObjOut_in->SetEstimate(-1);
-  Water_in->SetEstimate(-1);
-  Cherenkov_in->SetEstimate(-1);
-  DetInfo_in->SetEstimate(-1);
-  IncDetInfo_in->SetEstimate(-1);
 
   // Set up NRF to Cher to Det Tree
   G4int event;
@@ -255,26 +237,102 @@ void EventCheck::WriteEvents()
 // Write TTrees to OutFile
 // ******************************************************************************************************************************** //
 
-  // This rewrites all of the TTrees to the file...avoids buffer errors
-  Brem_in->Write();
-  ChopIn_in->Write();
-  ChopOut_in->Write();
-  NRF_in->Write();
-  Air_in->Write();
-  IntObjIn_in->Write();
-  IntObjOut_in->Write();
-  Water_in->Write();
-  Cherenkov_in->Write();
-  DetInfo_in->Write();
-  IncDetInfo_in->Write();
   nrf_to_cher_to_det_tree->Write();
 
 
   std::cout << "EventCheck::WriteEvents -> TTrees Written to File: "
-              << root_output_name << std::endl;
+              << event_output_name << std::endl;
   G4cout << "EventCheck::WriteEvents -> TTrees Written to File: "
-              << root_output_name << G4endl;
+              << event_output_name << G4endl;
+
+  // Deallocate memory
   fin->Close();
+  delete nrf_to_cher_to_det_tree;
+}
+
+void EventCheck::CopyATree(const char* tObj, G4bool events=false)
+{
+  TFile *f1;
+  if(events)
+    f1 = new TFile(event_output_name.c_str(),"read");
+  else
+    f1 = new TFile(root_output_name.c_str(),"read");
+
+  if(f1 != 0)
+    f1->cd();
+  else
+  {
+    std::cerr << "EventCheck::CopyATree not reading from " << root_output_name << std::endl;
+    G4cerr << "EventCheck::CopyATree not reading from " << root_output_name << G4endl;
+    return;
+  }
+
+  TTree *oldTree = 0;
+  f1->GetObject(tObj,oldTree);
+  if(oldTree == 0)
+  {
+    std::cerr << "EventCheck::CopyATree Failed to Grab tree to copy!" << std::endl;
+    G4cerr << "EventCheck::CopyATree Failed to Grab tree to copy!" << G4endl;
+    return;
+  }
+  oldTree->SetBranchStatus("*",1);
+
+  G4String outfilename = gOutName + "_w_events.root";
+  TFile *newfile;
+  if(gSystem->AccessPathName(outfilename.c_str()))
+    newfile = new TFile(outfilename.c_str(), "recreate");
+  else
+    newfile = new TFile(outfilename.c_str(),"update");
+
+  auto newtree = oldTree->CloneTree();
+  newfile->Write();
+  newfile->Close();
+  f1->cd();
+  f1->Close();
+  G4cout << "EventCheck::CopyATree -> " << tObj << " Copied!" << G4endl;
+}
+
+void EventCheck::CopyEvents()
+{
+  if(gSystem->AccessPathName(event_output_name.c_str()))
+  {
+    std::cerr << "EventCheck::CopyEvents -> File: " << event_output_name << " does not exist." << std::endl;
+    G4cerr << "EventCheck::CopyEvents -> File: " << event_output_name << " does not exist." << G4endl;
+    return;
+  }
+
+  // now clone all objects to event files
+  CopyATree("Brem");
+  CopyATree("ChopIn");
+  CopyATree("ChopOut");
+  CopyATree("NRF");
+  CopyATree("AirIn");
+  CopyATree("IntObjIn");
+  CopyATree("IntObjOut");
+  CopyATree("Water");
+  CopyATree("Cherenkov");
+  CopyATree("DetInfo");
+  CopyATree("IncDetInfo");
+  CopyATree("event_tree",true);
+
+  std::cout << "EventCheck::CopyEvents -> Complete." << std::endl;
+  G4cout << "EventCheck::CopyEvents -> Complete." << G4endl;
+
+}
+
+void EventCheck::Cleanup(G4bool option=false)
+{
+  if(option)
+  {
+    std::remove(event_output_name.c_str());
+    std::remove(root_output_name.c_str());
+    std::cout << "EventCheck::Cleanup -> Complete." << std::endl;
+    G4cout << "EventCheck::Cleanup -> Complete." << G4endl;
+  }
+}
+
+void EventCheck::Finish()
+{
   time_end = std::time(&timer2);
   G4cout << "Event Check took: " << std::difftime(time_end, time_start)
           << " seconds!" << G4endl << G4endl;

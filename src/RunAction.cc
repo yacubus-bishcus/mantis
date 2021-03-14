@@ -26,6 +26,7 @@
 extern G4bool output;
 extern G4bool checkEvents;
 extern G4double chosen_energy;
+extern G4bool debug;
 
 RunAction::RunAction(HistoManager* histoAnalysis, PrimaryGeneratorAction* pga)
         : G4UserRunAction(), fHistoManager(histoAnalysis), fpga(pga)
@@ -99,6 +100,15 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
   if(checkEvents)
   {
           EventCheck *eCheck = new EventCheck();
+          eCheck->Compute();
           eCheck->WriteEvents();
+          eCheck->CopyEvents();
+
+          if(debug)
+            eCheck->Cleanup(false);
+          else
+            eCheck->Cleanup(true);
+
+          eCheck->Finish();
   }
 }

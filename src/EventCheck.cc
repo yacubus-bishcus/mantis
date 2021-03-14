@@ -193,24 +193,16 @@ void EventCheck::WriteEvents()
   }
 
 
-  TFile *fin1 = new TFile(root_output_name.c_str(), "read");
-  fin1->cd();
-
-  TTree *Cherenkov_in, *NRF_in, *DetInfo_in;
-
-  fin1->GetObject("Cherenkov",Cherenkov_in);
-  fin1->GetObject("NRF",NRF_in);
-  fin1->GetObject("DetInfo",DetInfo_in);
-
-  Cherenkov_in->Print();
-  NRF_in->Print();
-  DetInfo_in->Print();
-
-  fin1->Close();
-
-
+  TTree *Cherenkov_in2, *NRF_in2, *DetInfo_in2;
   TFile *fout = new TFile(root_output_name.c_str(),"update");
   fout->cd();
+
+  fout->GetObject("Cherenkov",Cherenkov_in2);
+  fout->GetObject("NRF",NRF_in2);
+  fout->GetObject("DetInfo",DetInfo_in2);
+  Cherenkov_in2->Print();
+  NRF_in2->Print();
+  DetInfo_in2->Print();
 
 
 
@@ -249,6 +241,10 @@ void EventCheck::WriteEvents()
 // ******************************************************************************************************************************** //
 
   nrf_to_cher_to_det_tree->Write();
+  Cherenkov_in2->Print();
+  NRF_in2->Print();
+  DetInfo_in2->Print();
+
 
   std::cout << "EventCheck::WriteEvents -> TTrees Written to File: "
               << root_output_name << std::endl;

@@ -193,18 +193,33 @@ void EventCheck::WriteEvents()
   }
 
 
-  TTree *Cherenkov_in2, *NRF_in2, *DetInfo_in2;
+  TTree *Brem_in, *ChopIn_in, *ChopOut_in, *NRF_in, *Air_in, *IntObjIn_in, *IntObjOut_in, *Water_in, *Cherenkov_in, *DetInfo_in, *IncDetInfo_in;
   TFile *fout = new TFile(root_output_name.c_str(),"update");
   fout->cd();
 
-  fout->GetObject("Cherenkov",Cherenkov_in2);
-  fout->GetObject("NRF",NRF_in2);
-  fout->GetObject("DetInfo",DetInfo_in2);
-  Cherenkov_in2->Print();
-  NRF_in2->Print();
-  DetInfo_in2->Print();
+  fout->GetObject("Brem",Brem_in);
+  fout->GetObject("ChopIn",ChopIn_in);
+  fout->GetObject("ChopOut",ChopOut_in);
+  fout->GetObject("NRF",NRF_in);
+  fout->GetObject("AirIn",Air_in);
+  fout->GetObject("IntObjIn", IntObjIn_in);
+  fout->GetObject("IntObjOut", IntObjOut_in);
+  fout->GetObject("Water",Water_in);
+  fout->GetObject("Cherenkov",Cherenkov_in);
+  fout->GetObject("DetInfo",DetInfo_in);
+  fout->GetObject("IncDetInfo",IncDetInfo_in);
 
-
+  Brem_in->SetEstimate(-1);
+  ChopIn_in->SetEstimate(-1);
+  ChopOut_in->SetEstimate(-1);
+  NRF_in->SetEstimate(-1);
+  Air_in->SetEstimate(-1);
+  IntObjIn_in->SetEstimate(-1);
+  IntObjOut_in->SetEstimate(-1);
+  Water_in->SetEstimate(-1);
+  Cherenkov_in->SetEstimate(-1);
+  DetInfo_in->SetEstimate(-1);
+  IncDetInfo_in->SetEstimate(-1);
 
   // Set up NRF to Cher to Det Tree
   G4int event;
@@ -240,10 +255,18 @@ void EventCheck::WriteEvents()
 // Write TTrees to OutFile
 // ******************************************************************************************************************************** //
 
+  Brem_in->Write();
+  ChopIn_in->Write();
+  ChopOut_in->Write();
+  NRF_in->Write();
+  Air_in->Write();
+  IntObjIn_in->Write();
+  IntObjOut_in->Write();
+  Water_in->Write();
+  Cherenkov_in->Write();
+  DetInfo_in->Write();
+  IncDetInfo_in->Write();
   nrf_to_cher_to_det_tree->Write();
-  Cherenkov_in2->Print();
-  NRF_in2->Print();
-  DetInfo_in2->Print();
 
 
   std::cout << "EventCheck::WriteEvents -> TTrees Written to File: "

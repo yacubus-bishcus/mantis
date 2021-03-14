@@ -194,20 +194,20 @@ void EventCheck::WriteEvents()
 
 
   TTree *Brem_in, *ChopIn_in, *ChopOut_in, *NRF_in, *Air_in, *IntObjIn_in, *IntObjOut_in, *Water_in, *Cherenkov_in, *DetInfo_in, *IncDetInfo_in;
-  TFile *fout = new TFile(root_output_name.c_str(),"update");
-  fout->cd();
+  TFile *fin = new TFile(root_output_name.c_str(),"read");
+  fin->cd();
 
-  fout->GetObject("Brem",Brem_in);
-  fout->GetObject("ChopIn",ChopIn_in);
-  fout->GetObject("ChopOut",ChopOut_in);
-  fout->GetObject("NRF",NRF_in);
-  fout->GetObject("AirIn",Air_in);
-  fout->GetObject("IntObjIn", IntObjIn_in);
-  fout->GetObject("IntObjOut", IntObjOut_in);
-  fout->GetObject("Water",Water_in);
-  fout->GetObject("Cherenkov",Cherenkov_in);
-  fout->GetObject("DetInfo",DetInfo_in);
-  fout->GetObject("IncDetInfo",IncDetInfo_in);
+  fin->GetObject("Brem",Brem_in);
+  fin->GetObject("ChopIn",ChopIn_in);
+  fin->GetObject("ChopOut",ChopOut_in);
+  fin->GetObject("NRF",NRF_in);
+  fin->GetObject("AirIn",Air_in);
+  fin->GetObject("IntObjIn", IntObjIn_in);
+  fin->GetObject("IntObjOut", IntObjOut_in);
+  fin->GetObject("Water",Water_in);
+  fin->GetObject("Cherenkov",Cherenkov_in);
+  fin->GetObject("DetInfo",DetInfo_in);
+  fin->GetObject("IncDetInfo",IncDetInfo_in);
 
   Brem_in->SetEstimate(-1);
   ChopIn_in->SetEstimate(-1);
@@ -254,6 +254,16 @@ void EventCheck::WriteEvents()
 // ******************************************************************************************************************************** //
 // Write TTrees to OutFile
 // ******************************************************************************************************************************** //
+
+  fin->Close();
+  TFile *fout = new TFile(root_output_name.c_str(),"recreate");
+  bool confirm = fout->cd();
+  
+  if(!confirm)
+  {
+    G4cerr << "EventCheck::WriteEvents -> ERROR EventCheck Line 261" << G4endl;
+    return;
+  }
 
   Brem_in->Write();
   ChopIn_in->Write();

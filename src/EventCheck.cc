@@ -268,6 +268,7 @@ void EventCheck::WriteEvents()
   }
 
   // This rewrites all of the TTrees to the file...avoids buffer errors
+  Brem_in->Print();
   Brem_in->Write();
   ChopIn_in->Write();
   ChopOut_in->Write();

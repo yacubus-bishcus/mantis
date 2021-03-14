@@ -194,7 +194,7 @@ void EventCheck::WriteEvents()
 
 
   TTree *Brem_in, *ChopIn_in, *ChopOut_in, *NRF_in, *Air_in, *IntObjIn_in, *IntObjOut_in, *Water_in, *Cherenkov_in, *DetInfo_in, *IncDetInfo_in;
-  TFile *fin = new TFile(root_output_name.c_str(),"read");
+  TFile *fin = new TFile(root_output_name.c_str(),"update");
   fin->cd();
 
   fin->GetObject("Brem",Brem_in);
@@ -255,18 +255,6 @@ void EventCheck::WriteEvents()
 // Write TTrees to OutFile
 // ******************************************************************************************************************************** //
 
-  fin->Close();
-  std::cout << "Old file closed." << std::endl;
-  // this will erase all data but all data is rewritten with Write() below
-  TFile *fout = new TFile(root_output_name.c_str(),"recreate");
-  bool confirm = fout->cd();
-  std::cout << "New File opened." << std::endl;
-  if(!confirm)
-  {
-    G4cerr << "EventCheck::WriteEvents -> ERROR EventCheck Line 261" << G4endl;
-    return;
-  }
-
   // This rewrites all of the TTrees to the file...avoids buffer errors
   Brem_in->Print();
   Brem_in->Write();
@@ -287,7 +275,7 @@ void EventCheck::WriteEvents()
               << root_output_name << std::endl;
   G4cout << "EventCheck::WriteEvents -> TTrees Written to File: "
               << root_output_name << G4endl;
-  fout->Close();
+  fin->Close();
   time_end = std::time(&timer2);
   G4cout << "Event Check took: " << std::difftime(time_end, time_start)
           << " seconds!" << G4endl << G4endl;

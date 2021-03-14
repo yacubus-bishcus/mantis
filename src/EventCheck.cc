@@ -275,6 +275,8 @@ void EventCheck::WriteEvents()
 
   // Deallocate memory
   fin->Close();
+  if(debug)
+    std::cout << "EventCheck::WriteEvents -> File Closed. Function Complete." << std::endl;
 }
 
 void EventCheck::CopyATree(const char* tObj, G4bool events=false)
@@ -316,6 +318,10 @@ void EventCheck::CopyATree(const char* tObj, G4bool events=false)
   newfile->Close();
   f1->cd();
   f1->Close();
+
+  if(debug)
+    std::cout << "EventCheck::CopyATree -> " << tObj << " Copied!" << std::endl;
+
   G4cout << "EventCheck::CopyATree -> " << tObj << " Copied!" << G4endl;
 }
 
@@ -361,6 +367,8 @@ void EventCheck::Cleanup(G4bool option=false)
 void EventCheck::Finish()
 {
   time_end = std::time(&timer2);
+  std::cout << "Event Check took: " << std::difftime(time_end, time_start)
+          << " seconds!" << std::endl << std::endl;
   G4cout << "Event Check took: " << std::difftime(time_end, time_start)
           << " seconds!" << G4endl << G4endl;
 }

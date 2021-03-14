@@ -178,8 +178,8 @@ void HistoManager::finish()
   manager->Write();
   manager->CloseFile();
 
-  std::cout << "HistoManager::finish -> Ntuples are saved." << std::endl;
-  G4cout << "HistoManager::finish -> Ntuples are saved. " << G4endl;
+  std::cout << std::endl << "HistoManager::finish -> Ntuples are saved." << std::endl;
+  G4cout << G4endl << "HistoManager::finish -> Ntuples are saved. " << G4endl;
   stop_time = time(0);
   G4cout << "HistoManager::finish -> Time: ["
           << ((int)std::difftime(stop_time,start_time))/3600 << " h "

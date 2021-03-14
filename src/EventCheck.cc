@@ -72,7 +72,7 @@ void EventCheck::Compute()
   bool confirm = f->cd();
   if(!confirm)
   {
-    G4cerr << "EventCheck::EventCheck -> Could not confirm Output File" << G4endl;
+    G4cerr << "EventCheck::Compute -> Could not confirm Output File" << G4endl;
     exit(1);
   }
 
@@ -87,17 +87,17 @@ void EventCheck::Compute()
   DetInfo_in->SetEstimate(-1);
 
   if(debug)
-    std::cout << "EventCheck::EventCheck -> Objects Grabbed!" << std::endl;
+    std::cout << "EventCheck::Compute -> Objects Grabbed!" << std::endl;
 
-  G4cout << "EventCheck::EventCheck -> Objects Grabbed!" << G4endl;
+  G4cout << "EventCheck::Compute -> Objects Grabbed!" << G4endl;
 
   // Grab NRF Events
   G4int nrf_entries = NRF_in->Draw("EventID","","goff");
-  
-  if(debug)
-    std::cout << "EventCheck::EventCheck -> NRF Entries: " << nrf_entries << std::endl;
 
-  G4cout << "EventCheck::EventCheck -> NRF Entries: " << nrf_entries << G4endl;
+  if(debug)
+    std::cout << "EventCheck::Compute -> NRF Entries: " << nrf_entries << std::endl;
+
+  G4cout << "EventCheck::Compute -> NRF Entries: " << nrf_entries << G4endl;
   G4double *nrfEvent = NRF_in->GetVal(0);
 
   std::vector<int> nrfEventv;
@@ -109,7 +109,11 @@ void EventCheck::Compute()
 
   // Grab Cherenkov Events
   G4int cher_entries = Cherenkov_in->Draw("EventID","","goff");
-  G4cout << "EventCheck::EventCheck -> Cherenkov Entries: " << cher_entries << G4endl;
+
+  if(debug)
+    std::cout << "EventCheck::Compute -> Cherenkov Entries: " << cher_entries << std::endl;
+
+  G4cout << "EventCheck::Compute -> Cherenkov Entries: " << cher_entries << G4endl;
   G4double *cherEvent = Cherenkov_in->GetVal(0);
 
   std::vector<int> cherEventv;
@@ -127,7 +131,10 @@ void EventCheck::Compute()
   else
     det_entries = DetInfo_in->Draw("EventID:Energy:Time","CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\"","goff");
 
-  G4cout << "EventCheck::EventCheck -> Total Number of Detected Optical Photon entries: "
+  if(debug)
+    std::cout << "EventCheck::Compute -> Total Number of Detected Optical Photon entries: "
+            << det_entries << std::endl << std::endl;
+  G4cout << "EventCheck::Compute -> Total Number of Detected Optical Photon entries: "
           << det_entries << G4endl << G4endl;
   G4double *detEvent = DetInfo_in->GetVal(0);
   G4double *detEnergy = DetInfo_in->GetVal(1);
@@ -147,7 +154,7 @@ void EventCheck::Compute()
   std::vector<int> nrf_to_cherEvents;
   if(nrf_entries != 0 && cher_entries != 0 && det_entries != 0)
   {
-    G4cout << "EventCheck::EventCheck -> Finding NRF Events that Caused Optical Photons..." << G4endl;
+    G4cout << "EventCheck::Compute -> Finding NRF Events that Caused Optical Photons..." << G4endl;
 
     for(int i=0; i<nrf_entries; ++i)
     {
@@ -160,7 +167,7 @@ void EventCheck::Compute()
         // if the eventID is found in cherenkov write to new vector
         nrf_to_cherEvents.push_back(x);
     }
-    G4cout << "EventCheck::EventCheck -> NRF to Optical Photon Number of Events Found: "
+    G4cout << "EventCheck::Compute -> NRF to Optical Photon Number of Events Found: "
             << nrf_to_cherEvents.size() << G4endl;
 
     for(unsigned int i=0; i<nrf_to_cherEvents.size(); ++i)
@@ -183,16 +190,21 @@ void EventCheck::Compute()
         nrf_to_cher_to_det_time.push_back(detTime[index]);
       }
     }
-    G4cout << "EventCheck::EventCheck -> NRF to Optical Photons Detected Number of Events: "
+    G4cout << "EventCheck::Compute -> NRF to Optical Photons Detected Number of Events: "
             << nrf_to_cher_to_det_event.size() << G4endl;
   } // end if nrf_entries != 0 && cher_entries != 0
 
+  if(debug)
+    std::cout << "EventCheck::Compute -> Deallocating memory..." << std::endl;
   // deallocate memory
   f->Close();
   delete []detWeight;
   delete Cherenkov_in;
   delete NRF_in;
   delete DetInfo_in;
+
+  if(debug)
+    std::cout << "EventCheck::Compute -> End." << std::endl;
 }
 
 EventCheck::~EventCheck()

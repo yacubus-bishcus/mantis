@@ -206,10 +206,6 @@ void EventCheck::Compute()
 
   if(debug)
     std::cout << "EventCheck::Compute -> Det Weights deallocated." << std::endl;
-    
-  delete Cherenkov_in;
-  delete NRF_in;
-  delete DetInfo_in;
 
   if(debug)
     std::cout << "EventCheck::Compute -> End." << std::endl;

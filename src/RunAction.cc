@@ -58,7 +58,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
   if(chosen_energy < 0)
   {
     fpga->CloseInputFile();
-    G4cout << "RunAction::EndOfRunAction -> PrimaryGeneratorAction Input File Closed." << G4endl;
+    G4cout << G4endl << "RunAction::EndOfRunAction -> PrimaryGeneratorAction Input File Closed." << G4endl;
   }
 
   G4int TotNbofEvents = aRun->GetNumberOfEvent();

@@ -256,18 +256,17 @@ void EventCheck::WriteEvents()
 // ******************************************************************************************************************************** //
 
   // This rewrites all of the TTrees to the file...avoids buffer errors
-  Brem_in->Print();
-  Brem_in->Write();
-  ChopIn_in->Write();
-  ChopOut_in->Write();
-  NRF_in->Write();
-  Air_in->Write();
-  IntObjIn_in->Write();
-  IntObjOut_in->Write();
-  Water_in->Write();
-  Cherenkov_in->Write();
-  DetInfo_in->Write();
-  IncDetInfo_in->Write();
+  Brem_in->Write("",TObject::kOverwrite);
+  ChopIn_in->Write("",TObject::kOverwrite);
+  ChopOut_in->Write("",TObject::kOverwrite);
+  NRF_in->Write("",TObject::kOverwrite);
+  Air_in->Write("",TObject::kOverwrite);
+  IntObjIn_in->Write("",TObject::kOverwrite);
+  IntObjOut_in->Write("",TObject::kOverwrite);
+  Water_in->Write("",TObject::kOverwrite);
+  Cherenkov_in->Write("",TObject::kOverwrite);
+  DetInfo_in->Write("",TObject::kOverwrite);
+  IncDetInfo_in->Write("",TObject::kOverwrite);
   nrf_to_cher_to_det_tree->Write();
 
 

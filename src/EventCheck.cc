@@ -198,7 +198,15 @@ void EventCheck::Compute()
     std::cout << "EventCheck::Compute -> Deallocating memory..." << std::endl;
   // deallocate memory
   f->Close();
+
+  if(debug)
+    std::cout << "EventCheck::Compute -> File Closed." << std::endl;
+
   delete []detWeight;
+
+  if(debug)
+    std::cout << "EventCheck::Compute -> Det Weights deallocated." << std::endl;
+    
   delete Cherenkov_in;
   delete NRF_in;
   delete DetInfo_in;

@@ -41,6 +41,7 @@
 extern G4String root_output_name;
 extern G4String gOutName;
 extern G4String inFile;
+extern G4bool debug;
 
 EventCheck::EventCheck()
 {
@@ -63,6 +64,9 @@ EventCheck::EventCheck()
 
 void EventCheck::Compute()
 {
+  if(debug)
+    std::cout << "EventCheck::Compute -> Begin." << std::endl;
+
   TFile *f = new TFile(root_output_name.c_str(),"read");
 
   bool confirm = f->cd();
@@ -81,10 +85,18 @@ void EventCheck::Compute()
   Cherenkov_in->SetEstimate(-1);
   NRF_in->SetEstimate(-1);
   DetInfo_in->SetEstimate(-1);
+
+  if(debug)
+    std::cout << "EventCheck::EventCheck -> Objects Grabbed!" << std::endl;
+
   G4cout << "EventCheck::EventCheck -> Objects Grabbed!" << G4endl;
 
   // Grab NRF Events
   G4int nrf_entries = NRF_in->Draw("EventID","","goff");
+  
+  if(debug)
+    std::cout << "EventCheck::EventCheck -> NRF Entries: " << nrf_entries << std::endl;
+
   G4cout << "EventCheck::EventCheck -> NRF Entries: " << nrf_entries << G4endl;
   G4double *nrfEvent = NRF_in->GetVal(0);
 

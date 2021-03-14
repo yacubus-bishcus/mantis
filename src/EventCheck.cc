@@ -256,15 +256,18 @@ void EventCheck::WriteEvents()
 // ******************************************************************************************************************************** //
 
   fin->Close();
+  std::cout << "Old file closed." << std::endl;
+  // this will erase all data but all data is rewritten with Write() below
   TFile *fout = new TFile(root_output_name.c_str(),"recreate");
   bool confirm = fout->cd();
-  
+  std::cout << "New File opened." << std::endl;
   if(!confirm)
   {
     G4cerr << "EventCheck::WriteEvents -> ERROR EventCheck Line 261" << G4endl;
     return;
   }
 
+  // This rewrites all of the TTrees to the file...avoids buffer errors
   Brem_in->Write();
   ChopIn_in->Write();
   ChopOut_in->Write();

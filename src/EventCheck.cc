@@ -275,7 +275,6 @@ void EventCheck::WriteEvents()
 
   // Deallocate memory
   fin->Close();
-  delete nrf_to_cher_to_det_tree;
 }
 
 void EventCheck::CopyATree(const char* tObj, G4bool events=false)

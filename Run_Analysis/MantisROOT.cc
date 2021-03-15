@@ -27,7 +27,7 @@ void Help()
   std::cout << "To Instantiate MantisROOT Call: MantisROOT* mantis = MantisROOT::GetInstance()" << std::endl;
   std::cout << "Calls and Descriptions" << std::endl << std::endl;
 
-  std::cout << "Call: " << std::endl << "CombineFiles(string base_filename, string outfilename)" << std::endl;
+  std::cout << "Call: " << std::endl << "CombineFiles(std::vector<string> filenames, const char* outfilename)" << std::endl;
 
   std::cout << "DESCRIPTION: " << std::endl << "Stitches files together using the root of a filename (without .root extension) "
   << std::endl << "and writes the combined data to a new file with the outfilename. " << std::endl;
@@ -174,7 +174,7 @@ void MantisROOT::Help()
 {
   std::cout << "Calls and Descriptions" << std::endl << std::endl;
 
-  std::cout << "Call: " << std::endl << "CombineFiles(string base_filename, string outfilename)" << std::endl;
+  std::cout << "Call: " << std::endl << "CombineFiles(std::vector<string> filenames, const char* outfilename)" << std::endl;
 
   std::cout << "DESCRIPTION: " << std::endl << "Stitches files together using the root of a filename (without .root extension) "
   << std::endl << "and writes the combined data to a new file with the outfilename. " << std::endl;
@@ -625,11 +625,13 @@ void MantisROOT::hIntegral(const char* filename)
   f->Close();
 } // end of hIntegral Functions
 
-void MantisROOT::CombineFiles(string base_filename, string outfilename)
+void MantisROOT::CombineFiles(std::vector<string> filenames, const char* outfilename)
 {
-  string command = "./stitch.sh \"" + base_filename + "*.root\" " + outfilename + ".root";
-  std::cout << "Running Command: " << command << std::endl;
-  system(command.c_str());
+  TChain ch("chain");
+  for(int i=0;i<filenames.size();++i)
+    ch.Add(filenames[i].c_str());
+
+  ch.Merge(outfilename);
 }
 
 void MantisROOT::CopyTrees(const char* filename, std::vector<string> noObjv)

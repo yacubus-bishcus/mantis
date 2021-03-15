@@ -100,10 +100,8 @@ public:
     void CombineFiles(std::vector<string>, const char*);
     void CopyTrees(const char*, std::vector<string>);
     void Sig2Noise(std::vector<string>);
-    void ZScore(const char*, const char*, string);
-    void ZScore(TFile*,TFile*, string);
+    //void ZScore(const char*, const char*, string);
     void ZScore(const char*, const char*, std::vector<string>);
-    void ZScore(TFile*, TFile*, std::vector<string>);
     void Integral(TTree*);
     void Integral(std::vector<TTree*>);
     void Integral(std::vector<TTree*>,TCut);
@@ -131,7 +129,6 @@ public:
     void hIntegral(const char*, const char*, TCut);
     void hIntegral(const char*);
     double ZTest(double, double);
-    void ZTest(TFile*, TFile*, const char*);
     void ZTest(const char*, const char*, const char*);
     void Rebin(bool,const char*,const char*,const char*,int,double Emin=0.0,double Emax=2.1,TCut cut1="NA",bool VarArray=false,double nrf_bin_width=-1.,double non_nrf_bin_width=-1.);
     void Rebin(const char*, const char*, const char*);
@@ -699,29 +696,12 @@ void MantisROOT::Sig2Noise(std::vector<string> filenames)
 void MantisROOT::ZScore(const char* file1, const char* file2, std::vector<string> objects)
 {
   for(int i=0;i<objects.size();++i)
+  {
+    std::cout << std::endl << objects[i] << " ZScore Results: " << std::endl;
     ZTest(file1, file2, objects[i].c_str());
+  }
 
-  std::cout << "ZScore Analysis Complete." << std::endl;
-}
-
-void MantisROOT::ZScore(const char* file1, const char* file2, string object)
-{
-  ZTest(file1, file2, object.c_str());
-  std::cout << "ZScore Analysis Complete." << std::endl;
-}
-
-void MantisROOT::ZScore(TFile* file1, TFile* file2, std::vector<string> objects)
-{
-  for(int i=0;i<objects.size();++i)
-    ZTest(file1, file2, objects[i].c_str());
-
-  std::cout << "ZScore Analysis Complete." << std::endl;
-}
-
-void MantisROOT::ZScore(TFile* file1, TFile* file2, string object)
-{
-  ZTest(file1,file2, object.c_str());
-  std::cout << "ZScore Analysis Complete." << std::endl;
+  std::cout << std::endl << "ZScore Analysis Complete." << std::endl;
 }
 
 void MantisROOT::Integral(TTree* tree)
@@ -1281,8 +1261,20 @@ double MantisROOT::ZTest(double c1, double c2)
   return zscore;
 }
 
-void MantisROOT::ZTest(TFile* f, TFile* f1, const char* inObj)
+void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
 {
+  if(gSystem->AccessPathName(file1))
+  {
+    std::cerr << "ERROR Could not find " << file1 << "exiting..." << std::endl;
+    exit(1);
+  }
+  if(gSystem->AccessPathName(file2))
+  {
+    std::cerr << "ERROR Could not find " << file2 << "exiting..." << std::endl;
+    exit(1);
+  }
+
+  TFile *f = new TFile(file1);
   if(f != 0)
     f->cd();
   else
@@ -1298,6 +1290,7 @@ void MantisROOT::ZTest(TFile* f, TFile* f1, const char* inObj)
   delete inTree;
   f->Close();
 
+  TFile *f1 = new TFile(file2);
   if(f1 != 0)
     f1->cd();
   else
@@ -1317,24 +1310,7 @@ void MantisROOT::ZTest(TFile* f, TFile* f1, const char* inObj)
 
   delete inTree2;
   f1->Close();
-}
 
-void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
-{
-  if(gSystem->AccessPathName(file1))
-  {
-    std::cerr << "ERROR Could not find " << file1 << "exiting..." << std::endl;
-    exit(1);
-  }
-  if(gSystem->AccessPathName(file2))
-  {
-    std::cerr << "ERROR Could not find " << file2 << "exiting..." << std::endl;
-    exit(1);
-  }
-
-  TFile *f = new TFile(file1);
-  TFile *f1 = new TFile(file2);
-  ZTest(f,f1,inObj);
 
 } // end of ZTest functions
 

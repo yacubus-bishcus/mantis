@@ -116,6 +116,12 @@ void MantisCopyTrees(const char* filename, std::vector<string> noObjv)
       DetData = true;
   }
 
+  std::cout << "Copying Tree Status: " << std::endl << "\t Weight = " << weight
+  << std::endl << "\t Brem = " << BremData << std::endl << "\t Chop = " << ChopData
+  << std::endl << "\t NRF = " << NRFData << std::endl << "\t IntObj = " << IntObjData
+  << std::endl << "\t Water = " << WaterData << std::endl << "\t Cherenkov = " <<
+  CherenkovData << std::endl << "\t Det = " << DetData << std::endl;
+
   // call functions to copy trees
   if(BremData) // brem data never has weights
     MantisCopyATree(filename, "Brem");

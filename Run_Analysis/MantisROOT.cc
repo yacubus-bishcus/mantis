@@ -96,7 +96,7 @@ public:
     void Help();
     void Show(string);
     TFile* OpenFile(const char*);
-    void CombineFiles(string, string);
+    void CombineFiles(std::vector<string>, const char*);
     void CopyTrees(const char*, std::vector<string>);
     void Sig2Noise(std::vector<string>);
     void ZScore(const char*, const char*, std::vector<string>);

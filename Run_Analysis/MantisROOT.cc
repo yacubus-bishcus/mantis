@@ -128,7 +128,8 @@ void MantisCopyTrees(const char* filename, std::vector<string> noObjv)
     }
   }
 
-  std::cout << "All Trees Copied." << std::endl;
+  string outfilename = "converted_" + string(filename);
+  std::cout << "All Trees Copied to " << outfilename << std::endl;
 }
 
 void MantisSNR(std::vector<string> filenames)

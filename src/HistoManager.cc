@@ -114,6 +114,8 @@ void HistoManager::Book()
     manager->CreateNtuple("IntObjOut","Interrogation Object Emission Data");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleSColumn("CreatorProcess");
+    manager->CreateNtupleDColumn("Angle");
+    manager->CreateNtupleDColumn("Time");
     manager->CreateNtupleIColumn("EventID");
     if(!inFile.compare(0,24,"brems_distributions.root"))
       manager->CreateNtupleDColumn("Weight");

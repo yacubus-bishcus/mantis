@@ -242,9 +242,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           {
             manager->FillNtupleDColumn(6,0, energy);
             manager->FillNtupleSColumn(6,1, CPName);
-            manager->FillNtupleIColumn(6,2, eventID);
+            manager->FillNtupleDColumn(6,2, angle);
+            manager->FillNtupleDColumn(6,3, theTrack->GetGlobalTime());
+            manager->FillNtupleIColumn(6,4, eventID);
             if(!inFile.compare(0,24,"brems_distributions.root"))
-              manager->FillNtupleDColumn(6,3, weight);
+              manager->FillNtupleDColumn(6,5, weight);
             manager->AddNtupleRow(6);
           }
         }

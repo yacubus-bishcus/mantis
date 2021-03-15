@@ -86,88 +86,46 @@ void MantisListFunctions()
 
 void MantisCopyTrees(const char* filename, std::vector<string> noObjv)
 {
-  bool weight = false;
-  bool BremData = false;
-  bool ChopData = false;
-  bool NRFData = false;
-  bool IntObjData = false;
-  bool WaterData =false;
-  bool CherenkovData = false;
-  bool DetData = false;
-
+  std::vector<bool> dataList = {0,0,0,0,0,0,0,0,0,0,0,0};
+  std::vector<string> optList = {"Weight","Brem","ChopIn","ChopOut","NRF","AirIn",
+                                  "IntObjIn","IntObjOut","Water","Cherenkov",
+                                  "DetInfo","IncDetInfo"};
   // check which trees to copy
   for(int i=0;i<noObjv.size();++i)
   {
-    if(!noObjv[i].compare("Weight"))
-      weight = true;
-    if(!noObjv[i].compare("Brem"))
-      BremData = true;
-    if(!noObjv[i].compare("Chop"))
-      ChopData = true;
-    if(!noObjv[i].compare("NRF"))
-      NRFData = true;
-    if(!noObjv[i].compare("IntObj"))
-      IntObjData = true;
-    if(!noObjv[i].compare("Water"))
-      WaterData = true;
-    if(!noObjv[i].compare("Cherenkov"))
-      CherenkovData = true;
-    if(!noObjv[i].compare("Det"))
-      DetData = true;
+    for(int j=0;j<optList.size();++j)
+    {
+      int counter = 0;
+      if(!noObjv[i].compare(optList[j]))
+      {
+        dataList[j] = true;
+        continue;
+      }
+      else
+        counter++;
+
+      if(counter == optList.size())
+        std::cout << noObjv[i] << " option not found!" << std::endl;
+
+    }
   }
 
-  std::cout << "Copying Tree Status: " << std::endl << "\t Weight = " << weight
-  << std::endl << "\t Brem = " << BremData << std::endl << "\t Chop = " << ChopData
-  << std::endl << "\t NRF = " << NRFData << std::endl << "\t IntObj = " << IntObjData
-  << std::endl << "\t Water = " << WaterData << std::endl << "\t Cherenkov = " <<
-  CherenkovData << std::endl << "\t Det = " << DetData << std::endl;
+  std::cout << "Copying Tree Status: " << std::endl;
+  for(int i=0;i<optList.size();++i)
+    std::cout << "\t\t " << optList[i] << " = " << dataList[i] << std::endl;
 
-  // call functions to copy trees
-  if(BremData) // brem data never has weights
-    MantisCopyATree(filename, "Brem");
-  if(ChopData && weight)
+  for(int i=1;i<optList.size();++i)
   {
-    MantisCopyATree(filename, "ChopIn");
-    MantisCopyATree(filename, "ChopOut");
-  }
-  if(ChopData && !weight)
-  {
-    MantisCopyATreeNoWeight(filename, "ChopIn");
-    MantisCopyATreeNoWeight(filename, "ChopOut");
-  }
-  if(NRFData && weight)
-    MantisCopyATree(filename, "NRF");
-  if(NRFData && !weight)
-    MantisCopyATreeNoWeight(filename,"NRF");
-  if(IntObjData && weight)
-  {
-    MantisCopyATree(filename, "IntObjIn");
-    MantisCopyATree(filename, "IntObjOut");
-    MantisCopyATree(filename, "AirIn");
-  }
-  if(IntObjData && !weight)
-  {
-    MantisCopyATreeNoWeight(filename, "IntObjIn");
-    MantisCopyATreeNoWeight(filename, "IntObjOut");
-    MantisCopyATreeNoWeight(filename, "AirIn");
-  }
-  if(WaterData && weight)
-    MantisCopyATree(filename, "Water");
-  if(WaterData && !weight)
-    MantisCopyATreeNoWeight(filename, "Water");
-  if(CherenkovData && weight)
-    MantisCopyATree(filename, "Cherenkov");
-  if(CherenkovData && !weight)
-    MantisCopyATreeNoWeight(filename, "Cherenkov");
-  if(DetData && weight)
-  {
-    MantisCopyATree(filename, "DetInfo");
-    MantisCopyATree(filename, "IncDetInfo");
-  }
-  if(DetData && !weight)
-  {
-    MantisCopyATreeNoWeight(filename, "DetInfo");
-    MantisCopyATreeNoWeight(filename, "IncDetInfo");
+    if(dataList[0])
+    {
+      if(dataList[i])
+        MantisCopyATree(filename, optList[i].c_str());
+    }
+    else
+    {
+      if(dataList[i])
+        MantisCopyATreeNoWeight(filename, optList[i].c_str());
+    }
   }
 
   std::cout << "All Trees Copied." << std::endl;

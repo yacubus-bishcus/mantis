@@ -59,16 +59,9 @@ void MantisCopyATreeNoWeight(const char* filename, const char* tObj)
       oldTree->SetBranchStatus(activeBranchName,1);
     }
   }
-  else if(!string(tObj).compare("AirIn") || !string(tObj).compare("IntObjIn"))
+  else if(!string(tObj).compare("AirIn") || !string(tObj).compare(0,6,"IntObj"))
   {
     for(auto activeBranchName : {"Energy", "CreatorProcess", "Angle", "Time", "EventID"})
-    {
-      oldTree->SetBranchStatus(activeBranchName,1);
-    }
-  }
-  else if(!string(tObj).compare("IntObjOut"))
-  {
-    for(auto activeBranchName : {"Energy","CreatorProcess","EventID"})
     {
       oldTree->SetBranchStatus(activeBranchName,1);
     }

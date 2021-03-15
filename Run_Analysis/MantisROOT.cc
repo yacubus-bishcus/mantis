@@ -276,7 +276,7 @@ void MantisVariableBinning(std::vector<string> inFile, std::vector<string> ObjNa
 void MantisShow(string name)
 {
   if(!name.compare("MantisCopyTrees"))
-    std::cout << "MantisCopyTrees(const char* filename, std::vector<string> noObjv)" << std::endl;
+    std::cout << "MantisCopyTrees(const char* filename, std::vector<string> ObjectsToCopy)" << std::endl;
   else if(!name.compare("MantisSNR"))
     std::cout << "MantisSNR(std::vector<string> filenames)" << std::endl;
   else if(!name.compare("MantisZTest"))

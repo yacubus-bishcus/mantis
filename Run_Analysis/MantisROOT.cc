@@ -97,7 +97,7 @@ public:
     void Help();
     void Show(string);
     TFile* OpenFile(const char*);
-    void CombineFiles(std::vector<string>, const char*);
+    void CombineFiles(std::vector<string>, std::vector<string>, const char*);
     void CopyTrees(const char*, std::vector<string>);
     void Sig2Noise(std::vector<string>);
     //void ZScore(const char*, const char*, string);
@@ -628,13 +628,21 @@ void MantisROOT::hIntegral(const char* filename)
   f->Close();
 } // end of hIntegral Functions
 
-void MantisROOT::CombineFiles(std::vector<string> filenames, const char* outfilename)
+void MantisROOT::CombineFiles(std::vector<string> filenames, std::vector<string> objects, const char* outfilename)
 {
-  TChain ch("chain");
-  for(int i=0;i<filenames.size();++i)
-    ch.Add(filenames[i].c_str());
+  for(int i=0;i<objects.size();++i)
+  {
+    TFile *f = new TFile(outfilename, "update");
+    f->cd();
+    TChain ch(objects[i].c_str());
+    for(int i=0;i<filenames.size();++i)
+      ch.Add(filenames[i].c_str());
 
-  ch.Merge(outfilename);
+    ch.Merge(f,1000);
+
+    std::cout << objects[i] << " merged to " << outfilename << std::endl;
+  }
+
 }
 
 void MantisROOT::CopyTrees(const char* filename, std::vector<string> noObjv)

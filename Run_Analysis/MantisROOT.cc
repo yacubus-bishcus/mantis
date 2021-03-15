@@ -29,7 +29,107 @@
 #include "Rebin.cc"
 #include "Rescale.cc"
 
-void MantisListFunctions()
+void Help()
+{
+  std::cout << "Calls and Descriptions" << std::endl << std::endl;
+
+  std::cout << "Call: " << std::endl << "MantisCombineFiles(string base_filename, string outfilename)" << std::endl;
+
+  std::cout << "DESCRIPTION: " << std::endl << "Stitches files together using the root of a filename (without .root extension) "
+  << std::endl << "and writes the combined data to a new file with the outfilename. " << std::endl;
+
+  std::cout << std::endl << "Call:" << std::endl << "MantisCopyTrees(const char* filename, vector<string> CopyData)" << std::endl;
+
+  std::cout << "DESCRIPTION: " << std::endl << "Copies TTrees from filename with names provided by user in the second input option." << std::endl
+  << "If the user wishes to copy trees with weights (importance sampling simulation data) " << std::endl
+  << "simply include 'Weight' in the second input vector." << std::endl
+  << "Available Options for the string vector include: " << std::endl
+  << "Weight, Brem, Chop, NRF, IntObj, Water, Cherenkov, Det" << std::endl;
+
+  std::cout << std::endl << "Call: " << std::endl << "MantisSNR(vector<string> filenames)" << std::endl;
+
+  std::cout << "DESCRIPTION: " << std::endl << "Completes signal to noise ratio calculations on the interrogation object "
+  << "for each of the files provided." << std::endl;
+
+  std::cout << std::endl << "Call: " << std::endl << "MantisZTest(const char* file1, const char* file2, vector<string> DataName)"
+  << std::endl;
+
+  std::cout << "DESCRIPTION: " << std::endl << "Performs ZScore Calculation for files 1 and 2 for the given data sets name." << std::endl
+  << "DataName Options are: " << std::endl << "Brem, ChopIn, ChopOut, NRF, " << std::endl
+  << "AirIn, IntObjIn, IntObjOut, " << std::endl << "Water, Cherenkov" << std::endl
+  << "DetInfo, IncDetInfo" << std::endl;
+
+  std::cout << std::endl << "Call: " << std::endl << "MantisIntegral(std::vector<TTree*> TTreeNames)" << std::endl;
+  std::cout << "MantisIntegral(std::vector<TTree*> TTreeNames, TCut cut)" << std::endl;
+
+  std::cout << "DESCRIPTION: " << std::endl << "Performs Integral Calculation on the TTrees provided." << std::endl;
+  std::cout << "Added Option allows for a cut to be placed on TTree prior to integration." << std::endl;
+
+  std::cout << std::endl << "Call: " << std::endl << "MantisPredictThickness(std::vector<string> PredictData)" << std::endl;
+  std::cout << "MantisPredictThickness(vector<string> PredictData, double Resonance_Energy)" << std::endl;
+
+  std::cout << "DESCRIPTION: " << std::endl << "Predicts spectra adjustment for a given chopper thickness based on the data from another chopper thickness." << std::endl
+  << "Data Options: " << std::endl << "ChopOut, IntObjIn, IntObjOut" << std::endl
+  << "If the additional option for the resonance energy is passed the Output histogram will be centered on the given resonance energy." << std::endl;
+
+  std::cout << std::endl << "Call: " << std::endl << "MantisRebin(vector<string> inFile, vector<string> ObjName, vector<string> OutObjName, int nbins, double Emin, double Emax)" << std::endl;
+  std::cout << "MantisRebin(vector<string> inFile, vector<string> ObjName, vector<string> OutObjName, int nbins, double Emin, double Emax, TCut cut1)" << std::endl;
+
+  std::cout << "DESCRIPTION: " << std::endl << "Saves the histogram of ObjName to OutObjName with nbins [Emin, Emax]." << std::endl;
+  std::cout << "Added Option allows for a TCut to be applied prior to histogramming." << std::endl;
+
+  std::cout << std::endl << "Call: " << std::endl << "MantisVariableBinning(vector<string> inFile, vector<string> ObjName, vector<string> OutObjName, int nbins, double Region1CutoffEnergy, "
+  << std::endl << " \t \t double Region2CutOffEnergy, TCut cut1, double binwidth1, double binwidth2)" <<std::endl;
+
+  std::cout << "DESCRIPTION: " << std::endl << "Saves the histogram of ObjName to OutObjName with nbins with a TCut applied " << std::endl
+  << "pass 'NA' to not apply any cuts. The bin width will vary for the two regions defined by the region cut off energies." << std::endl << std::endl;
+}
+
+class MantisROOT
+{
+  public:
+    MantisROOT();
+    ~MantisROOT();
+
+  public:
+    void Help();
+    void Show(string);
+    void CombineFiles(string, string);
+    void CopyTrees(const char*, std::vector<string>);
+    void Sig2Noise(std::vector<string>);
+    void ZScore(const char*, const char*, std::vector<string>);
+    void Integral(std::vector<TTree*>);
+    void Integral(std::vector<TTree*>,TCut);
+    void PredictThickness(std::vector<string>);
+    void PredictThickness(std::vector<string>, double);
+    void RebinHisto(vector<string>, vector<string>, vector<string>, int, double, double);
+    void RebinHisto(vector<string>, vector<string>, vector<string>, int, double, double, TCut);
+    void VarRebin(vector<string>, vector<string>, vector<string>, int, double, double, TCut, double, double);
+};
+
+MantisROOT* MantisROOT::GetInstance()
+{
+  std::cout << "Mantis ROOT Analysis Package for Mantis Output Analysis" << std::endl;
+  std::cout <<"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% " << std::endl;
+  std::cout << "Author:" <<std::endl;
+  std::cout << "Jacob E Bickus, 2021" << std::endl;
+  std::cout << "MIT, NSE" << std::endl;
+  std::cout << "jbickus@mit.edu" << std::endl;
+  std::cout <<"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% " << std::endl;
+  return (new MantisROOT());
+}
+
+MantisROOT::MantisROOT()
+{
+  std::cout << "Mantis Functions Loaded." << std::endl;
+  std::cout << "Run: MantisROOT* mantis = MantisROOT::GetInstance()." << std::endl;
+  std::cout << "Run: Help() to see the list of available functions." << std::endl;
+}
+
+MantisROOT::~MantisROOT()
+{}
+
+void MantisROOT::Help()
 {
   std::cout << "Calls and Descriptions" << std::endl << std::endl;
 
@@ -86,14 +186,14 @@ void MantisListFunctions()
 
 }
 
-void MantisCombineFiles(string base_filename, string outfilename)
+void MantisROOT::CombineFiles(string base_filename, string outfilename)
 {
   string command = "./stitch.sh \"" + base_filename + "*.root\" " + outfilename + ".root";
   std::cout << "Running Command: " << command << std::endl;
   system(command.c_str());
 }
 
-void MantisCopyTrees(const char* filename, std::vector<string> noObjv)
+void MantisROOT::CopyTrees(const char* filename, std::vector<string> noObjv)
 {
   std::vector<bool> dataList = {0,0,0,0,0,0,0,0,0,0,0,0};
   std::vector<string> optList = {"Weight","Brem","ChopIn","ChopOut","NRF","AirIn",
@@ -141,7 +241,7 @@ void MantisCopyTrees(const char* filename, std::vector<string> noObjv)
   std::cout << "All Trees Copied to " << outfilename << std::endl;
 }
 
-void MantisSNR(std::vector<string> filenames)
+void MantisROOT::Sig2Noise(std::vector<string> filenames)
 {
   for(int i=0;i<filenames.size();++i)
     SNR(filenames[i].c_str());
@@ -149,7 +249,7 @@ void MantisSNR(std::vector<string> filenames)
   std::cout << "Signal to Noise Ratio Analysis Complete." << std::endl;
 }
 
-void MantisZTest(const char* file1, const char* file2, std::vector<string> objects)
+void MantisROOT::ZScore(const char* file1, const char* file2, std::vector<string> objects)
 {
   for(int i=0;i<objects.size();++i)
     ZTest(file1, file2, objects[i].c_str());
@@ -157,7 +257,7 @@ void MantisZTest(const char* file1, const char* file2, std::vector<string> objec
   std::cout << "ZScore Analysis Complete." << std::endl;
 }
 
-void MantisIntegral(std::vector<TTree*> trees)
+void MantisROOT::Integral(std::vector<TTree*> trees)
 {
   for(int i=0;i<trees.size();++i)
     hIntegral(trees[i]);
@@ -165,7 +265,7 @@ void MantisIntegral(std::vector<TTree*> trees)
   std::cout << "Integral Analysis Complete." << std::endl;
 }
 
-void MantisIntegral(std::vector<TTree*> trees, TCut cut1)
+void MantisROOT::Integral(std::vector<TTree*> trees, TCut cut1)
 {
   for(int i=0;i<trees.size();++i)
     hIntegral(trees[i], cut1);
@@ -173,7 +273,7 @@ void MantisIntegral(std::vector<TTree*> trees, TCut cut1)
   std::cout << "Integral Analysis Complete." << std::endl;
 }
 
-void MantisPredictThickness(std::vector<string> obj)
+void MantisROOT::PredictThickness(std::vector<string> obj)
 {
   for(int i=0;i<obj.size();++i)
     Rescale(obj[i].c_str());
@@ -181,7 +281,7 @@ void MantisPredictThickness(std::vector<string> obj)
   std::cout << "Thickness Prediction Analysis Complete." << std::endl;
 }
 
-void MantisPredictThickness(std::vector<string> obj, double Er)
+void MantisROOT::PredictThickness(std::vector<string> obj, double Er)
 {
   for(int i=0;i<obj.size();++i)
     Rescale(obj[i].c_str(),Er);
@@ -189,7 +289,7 @@ void MantisPredictThickness(std::vector<string> obj, double Er)
   std::cout << "Thickness Prediction Analysis Complete." << std::endl;
 }
 
-void MantisRebin(std::vector<string> inFile, std::vector<string> ObjName,
+void MantisROOT::RebinHisto(std::vector<string> inFile, std::vector<string> ObjName,
                  std::vector<string> OutObjName, int nbins, double Emin,
                  double Emax)
 {
@@ -208,7 +308,7 @@ void MantisRebin(std::vector<string> inFile, std::vector<string> ObjName,
   }
 }
 
-void MantisRebin(std::vector<string> inFile, std::vector<string> ObjName,
+void MantisROOT::RebinHisto(std::vector<string> inFile, std::vector<string> ObjName,
                  std::vector<string> OutObjName, int nbins, double Emin,
                  double Emax, TCut cut1)
 {
@@ -227,7 +327,7 @@ void MantisRebin(std::vector<string> inFile, std::vector<string> ObjName,
   }
 }
 
-void MantisVariableBinning(std::vector<string> inFile, std::vector<string> ObjName,
+void MantisROOT::VarRebin(std::vector<string> inFile, std::vector<string> ObjName,
                            std::vector<string> OutObjName, int nbins,
                            double Ecut1, double Ecut2,
                            TCut cut1, double binwidth1, double binwidth2)
@@ -247,7 +347,7 @@ void MantisVariableBinning(std::vector<string> inFile, std::vector<string> ObjNa
   }
 }
 
-void MantisShow(string name)
+void MantisROOT::Show(string name)
 {
   if(!name.compare("MantisCopyTrees"))
     std::cout << "MantisCopyTrees(const char* filename, std::vector<string> ObjectsToCopy)" << std::endl;
@@ -273,23 +373,4 @@ void MantisShow(string name)
     std::cout << "MantisCombineFiles(string base_filename, string outfilename)" << std::endl;
   else
     std::cout << "Error Function Not Found." << std::endl;
-}
-
-void MantisROOT()
-{
-  std::cout << "Mantis ROOT Analysis Package for Mantis Output Analysis" << std::endl;
-  std::cout <<"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% " << std::endl;
-  std::cout << "Author:" <<std::endl;
-  std::cout << "Jacob E Bickus, 2021" << std::endl;
-  std::cout << "MIT, NSE" << std::endl;
-  std::cout << "jbickus@mit.edu" << std::endl;
-  std::cout <<"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% " << std::endl;
-  std::cout << "Mantis Functions Loaded." << std::endl;
-  std::cout << "Run: MantisListFunctions() to see the list of available functions." << std::endl;
-
-}
-
-void MantisROOT(const char* help)
-{
-  MantisListFunctions();
 }

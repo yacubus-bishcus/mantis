@@ -33,7 +33,12 @@ void MantisListFunctions()
 {
   std::cout << "Calls and Descriptions" << std::endl << std::endl;
 
-  std::cout << "Call:" << std::endl << "MantisCopyTrees(const char* filename, vector<string> CopyData)" << std::endl;
+  std::cout << "Call: " << std::endl << "MantisCombineFiles(string base_filename, string outfilename)" << std::endl;
+
+  std::cout << "DESCRIPTION: " << std::endl << "Stitches files together using the root of a filename (without .root extension) "
+  << std::endl << "and writes the combined data to a new file with the outfilename. " << std::endl;
+
+  std::cout << std::endl << "Call:" << std::endl << "MantisCopyTrees(const char* filename, vector<string> CopyData)" << std::endl;
 
   std::cout << "DESCRIPTION: " << std::endl << "Copies TTrees from filename with names provided by user in the second input option." << std::endl
   << "If the user wishes to copy trees with weights (importance sampling simulation data) " << std::endl
@@ -79,9 +84,13 @@ void MantisListFunctions()
   std::cout << "DESCRIPTION: " << std::endl << "Saves the histogram of ObjName to OutObjName with nbins with a TCut applied " << std::endl
   << "pass 'NA' to not apply any cuts. The bin width will vary for the two regions defined by the region cut off energies." << std::endl << std::endl;
 
+}
 
-
-
+void MantisCombineFiles(string base_filename, string outfilename)
+{
+  string command = "./stitch.sh \"" + base_filename + "*.root\" " + outfilename + ".root";
+  std::cout << "Running Command: " << command << std::endl;
+  system(command.c_str());
 }
 
 void MantisCopyTrees(const char* filename, std::vector<string> noObjv)
@@ -259,6 +268,9 @@ void MantisShow(string name)
     std::cout << "MantisVariableBinning(std::vector<string> inFile, std::vector<string> ObjName," << std::endl
               << " std::vector<string> OutObjName, int nbins, double Ecut1, double Ecut2," << std::endl
               << " TCut cut1, double binwidth1, double binwidth2)" << std::endl;
+
+  else if(!name.compare("MantisCombineFiles"))
+    std::cout << "MantisCombineFiles(string base_filename, string outfilename)" << std::endl;
   else
     std::cout << "Error Function Not Found." << std::endl;
 }

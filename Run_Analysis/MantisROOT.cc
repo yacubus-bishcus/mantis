@@ -803,7 +803,7 @@ void MantisROOT::Show(string name)
   else if(!name.compare("ZScore"))
     std::cout << "ZScore(const char* file1, const char* file2, std::vector<string> objects)" << std::endl;
   else if(!name.compare("Integral"))
-    std::cout << "Integral(std::vector<TTree*> trees)" << std::endl << "Integral(std::vector<TTree*> trees, TCut cut1)" << std::endl;
+    std::cout << std::endl << "Integral(TTree*)" << std::endl << "Integral(std::vector<TTree*> trees)" << std::endl << "Integral(std::vector<TTree*> trees, TCut cut1)" << std::endl;
   else if(!name.compare("PredictThickness"))
     std::cout << "PredictThickness(std::vector<string> obj)" << std::endl << "PredictThickness(std::vector<string> obj, double Er)" << std::endl;
   else if(!name.compare("RebinHisto"))

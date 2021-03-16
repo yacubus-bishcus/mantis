@@ -1251,7 +1251,7 @@ void MantisROOT::SNR_IntObj(const char* inFile, bool Weighted)
               << std::endl
               << "A lower SNR is better because you want the signal from NRF to be minimized."
               << std::endl;
-    std::cout << "IntObjIn SNR: \t" << tSignalin/inNoise << std::endl;
+    std::cout << "IntObjIn SNR: \t" << tSignalin/sqrt(inNoise) << std::endl;
   }
   else
     std::cerr << "ERROR IntObjIn Not Found in " << inFile << std::endl;
@@ -1294,8 +1294,8 @@ void MantisROOT::SNR_Det(const char* inFile, bool Weighted)
   std::cout << "Total Detected Counts: " << counts << std::endl;
   std::cout << "Total Detected Energy: " << energy << " MeV" << std::endl;
 
-  std::cout << "Counts SNR: " << eventCounts/counts << std::endl;
-  std::cout << "Energy SNR: " << eventEnergy/energy << std::endl;
+  std::cout << "Counts SNR: " << eventCounts/sqrt(counts) << std::endl;
+  std::cout << "Energy SNR: " << eventEnergy/sqrt(energy) << std::endl;
 
 
 }

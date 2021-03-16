@@ -22,69 +22,6 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-void Help()
-{
-  std::cout << "To Instantiate MantisROOT Call: MantisROOT* mantis = MantisROOT::GetInstance()" << std::endl;
-  std::cout << "Calls and Descriptions" << std::endl << std::endl;
-
-  std::cout << "Call: " << std::endl << "CombineFiles(std::vector<string> filenames, const char* outfilename)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Stitches files together using the root of a filename (without .root extension) "
-  << std::endl << "and writes the combined data to a new file with the outfilename. " << std::endl;
-
-  std::cout << std::endl << "Call:" << std::endl << "CopyTrees(const char* filename, vector<string> CopyData)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Copies TTrees from filename with names provided by user in the second input option." << std::endl
-  << "If the user wishes to copy trees with weights (importance sampling simulation data) " << std::endl
-  << "simply include 'Weight' in the second input vector." << std::endl
-  << "Available Options for the string vector include: " << std::endl
-  << "Weight, Brem, Chop, NRF, IntObj, Water, Cherenkov, Det" << std::endl;
-
-  std::cout << std::endl << "Call: " << std::endl << "Sig2Noise(vector<string> filenames)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Completes signal to noise ratio calculations on the interrogation object "
-  << "for each of the files provided." << std::endl;
-
-  std::cout << std::endl << "Call: " << std::endl << "ZScore(const char* file1, const char* file2, vector<string> DataName)"
-  << std::endl<< "ZScore(const char* file1, const char* file2, string)" << std::endl << "ZScore(TFile* file1, TFile* file2, vector<string> objects)"
-  << std::endl << "ZScore(TFile* file1, TFile* file2, string object)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Performs ZScore Calculation for files 1 and 2 for the given data sets name." << std::endl
-  << "DataName Options are: " << std::endl << "Brem, ChopIn, ChopOut, NRF, " << std::endl
-  << "AirIn, IntObjIn, IntObjOut, " << std::endl << "Water, Cherenkov" << std::endl
-  << "DetInfo, IncDetInfo" << std::endl;
-
-  std::cout << std::endl << "Call: " << std::endl << "Integral(TTree* tree)" << std::endl << "Integral(std::vector<TTree*> TTreeNames)" << std::endl;
-  std::cout << "Integral(std::vector<TTree*> TTreeNames, TCut cut)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Performs Integral Calculation on the TTrees provided." << std::endl;
-  std::cout << "Added Option allows for a cut to be placed on TTree prior to integration." << std::endl;
-
-  std::cout << std::endl << "Call: " << std::endl << "PredictThickness(std::vector<string> PredictData)" << std::endl;
-  std::cout << "PredictThickness(vector<string> PredictData, double Resonance_Energy)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Predicts spectra adjustment for a given chopper thickness based on the data from another chopper thickness." << std::endl
-  << "Data Options: " << std::endl << "ChopOut, IntObjIn, IntObjOut" << std::endl
-  << "If the additional option for the resonance energy is passed the Output histogram will be centered on the given resonance energy." << std::endl;
-
-  std::cout << std::endl << "Call: " << std::endl << "RebinHisto(vector<string> inFile, vector<string> ObjName, vector<string> OutObjName, int nbins, double Emin, double Emax)" << std::endl;
-  std::cout << "RebinHisto(vector<string> inFile, vector<string> ObjName, vector<string> OutObjName, int nbins, double Emin, double Emax, TCut cut1)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Saves the histogram of ObjName to OutObjName with nbins [Emin, Emax]." << std::endl;
-  std::cout << "Added Option allows for a TCut to be applied prior to histogramming." << std::endl;
-
-  std::cout << std::endl << "Call: " << std::endl << "VarRebin(vector<string> inFile, vector<string> ObjName, vector<string> OutObjName, int nbins, double Region1CutoffEnergy, "
-  << std::endl << " \t \t double Region2CutOffEnergy, TCut cut1, double binwidth1, double binwidth2)" <<std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Saves the histogram of ObjName to OutObjName with nbins with a TCut applied " << std::endl
-  << "pass 'NA' to not apply any cuts. The bin width will vary for the two regions defined by the region cut off energies." << std::endl << std::endl;
-
-  std::cout << std::endl << "Call: " << std::endl << "CheckEvents(const char* filename, bool Weighted=false)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Checks TFile with filename for NRF Events that cause optical photons to be detected."
-  << " If the TTrees contain weights include the second input as true." << std::endl << std::endl;
-}
-
 class MantisROOT
 {
 public:
@@ -95,12 +32,11 @@ public:
     static MantisROOT *GetInstance();
     static void Destroy();
     void Help();
-    void Show(string);
+    void Show(string cmd="All");
     TFile* OpenFile(const char*);
     void CombineFiles(std::vector<string>, std::vector<string>, const char*);
     void CopyTrees(const char*, std::vector<string>);
     void Sig2Noise(std::vector<string>, string, bool Weighted=false);
-    //void ZScore(const char*, const char*, string);
     void ZScore(const char*, const char*, std::vector<string>);
     void Integral(TTree*);
     void Integral(std::vector<TTree*>);
@@ -111,6 +47,7 @@ public:
     void RebinHisto(vector<string>, vector<string>, vector<string>, int, double, double, TCut);
     void VarRebin(vector<string>, vector<string>, vector<string>, int, double, double, TCut, double, double);
     void CheckEvents(const char*,bool);
+    void Sampling(const char*, string sample_element="U", double deltaE=5.0e-6, bool checkZero=false, double non_nrf_energy_cut=1.5);
   public:
     static MantisROOT *instance;
 
@@ -136,6 +73,33 @@ public:
     void Rebin(const char*, const char*, const char*);
     void Rescale(const char*, double);
     void Rescale(const char*);
+    void Show_Help();
+    void Show_Help_Description();
+    void Show_Show();
+    void Show_Show_Description();
+    void Show_OpenFile();
+    void Show_OpenFile_Description();
+    void Show_CombineFiles();
+    void Show_CombineFiles_Description();
+    void Show_CopyTrees();
+    void Show_CopyTrees_Description();
+    void Show_Sig2Noise();
+    void Show_Sig2Noise_Description();
+    void Show_ZScore();
+    void Show_ZScore_Description();
+    void Show_Integral();
+    void Show_Integral_Description();
+    void Show_PredictThickness();
+    void Show_PredictThickness_Description();
+    void Show_RebinHisto();
+    void Show_RebinHisto_Description();
+    void Show_VarRebin();
+    void Show_VarRebin_Description();
+    void Show_CheckEvents();
+    void Show_CheckEvents_Description();
+    void Show_Sampling();
+    void Show_Sampling_Description();
+    void Show_GetInstance();
 };
 
 MantisROOT *MantisROOT::instance = 0;
@@ -178,62 +142,44 @@ void MantisROOT::Help()
 {
   std::cout << "Calls and Descriptions" << std::endl << std::endl;
 
-  std::cout << "Call: " << std::endl << "CombineFiles(std::vector<string> filenames, const char* outfilename)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Stitches files together using the root of a filename (without .root extension) "
-  << std::endl << "and writes the combined data to a new file with the outfilename. " << std::endl;
-
-  std::cout << std::endl << "Call:" << std::endl << "CopyTrees(const char* filename, vector<string> CopyData)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Copies TTrees from filename with names provided by user in the second input option." << std::endl
-  << "If the user wishes to copy trees with weights (importance sampling simulation data) " << std::endl
-  << "simply include 'Weight' in the second input vector." << std::endl
-  << "Available Options for the string vector include: " << std::endl
-  << "Weight, Brem, Chop, NRF, IntObj, Water, Cherenkov, Det" << std::endl;
-
-  std::cout << std::endl << "Call: " << std::endl << "Sig2Noise(vector<string> filenames)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Completes signal to noise ratio calculations on the interrogation object "
-  << "for each of the files provided." << std::endl;
-
-  std::cout << std::endl << "Call: " << std::endl << "ZScore(const char* file1, const char* file2, vector<string> DataName)"
-  << std::endl << "ZScore(const char* file1, const char* file2, string)" << std::endl << "ZScore(TFile* file1, TFile* file2, vector<string> objects)"
-  << std::endl << "ZScore(TFile* file1, TFile* file2, string object)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Performs ZScore Calculation for files 1 and 2 for the given data sets name." << std::endl
-  << "DataName Options are: " << std::endl << "Brem, ChopIn, ChopOut, NRF, " << std::endl
-  << "AirIn, IntObjIn, IntObjOut, " << std::endl << "Water, Cherenkov" << std::endl
-  << "DetInfo, IncDetInfo" << std::endl;
-
-  std::cout << std::endl << "Call: " << std::endl << "Integral(TTree* tree)" << std::endl << "Integral(std::vector<TTree*> TTreeNames)" << std::endl;
-  std::cout << "Integral(std::vector<TTree*> TTreeNames, TCut cut)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Performs Integral Calculation on the TTrees provided." << std::endl;
-  std::cout << "Added Option allows for a cut to be placed on TTree prior to integration." << std::endl;
-
-  std::cout << std::endl << "Call: " << std::endl << "PredictThickness(std::vector<string> PredictData)" << std::endl;
-  std::cout << "PredictThickness(vector<string> PredictData, double Resonance_Energy)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Predicts spectra adjustment for a given chopper thickness based on the data from another chopper thickness." << std::endl
-  << "Data Options: " << std::endl << "ChopOut, IntObjIn, IntObjOut" << std::endl
-  << "If the additional option for the resonance energy is passed the Output histogram will be centered on the given resonance energy." << std::endl;
-
-  std::cout << std::endl << "Call: " << std::endl << "RebinHisto(vector<string> inFile, vector<string> ObjName, vector<string> OutObjName, int nbins, double Emin, double Emax)" << std::endl;
-  std::cout << "RebinHisto(vector<string> inFile, vector<string> ObjName, vector<string> OutObjName, int nbins, double Emin, double Emax, TCut cut1)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Saves the histogram of ObjName to OutObjName with nbins [Emin, Emax]." << std::endl;
-  std::cout << "Added Option allows for a TCut to be applied prior to histogramming." << std::endl;
-
-  std::cout << std::endl << "Call: " << std::endl << "VarRebin(vector<string> inFile, vector<string> ObjName, vector<string> OutObjName, int nbins, double Region1CutoffEnergy, "
-  << std::endl << " \t \t double Region2CutOffEnergy, TCut cut1, double binwidth1, double binwidth2)" <<std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Saves the histogram of ObjName to OutObjName with nbins with a TCut applied " << std::endl
-  << "pass 'NA' to not apply any cuts. The bin width will vary for the two regions defined by the region cut off energies." << std::endl << std::endl;
-
-  std::cout << std::endl << "Call: " << std::endl << "CheckEvents(const char* filename, bool Weighted=false)" << std::endl;
-
-  std::cout << "DESCRIPTION: " << std::endl << "Checks TFile with filename for NRF Events that cause optical photons to be detected."
-  << " If the TTrees contain weights include the second input as true." << std::endl << std::endl;
+  Show_Help();
+  Show_Help_Description();
+  std::cout << std::endl;
+  Show_GetInstance();
+  std::cout << std::endl << std::endl;
+  Show_OpenFile();
+  Show_OpenFile_Description();
+  std::cout << std::endl;
+  Show_CombineFiles();
+  Show_CombineFiles_Description();
+  std::cout << std::endl;
+  Show_CopyTrees();
+  Show_CopyTrees_Description();
+  std::cout << std::endl;
+  Show_Sig2Noise();
+  Show_Sig2Noise_Description();
+  std::cout << std::endl;
+  Show_ZScore();
+  Show_ZScore_Description();
+  std::cout << std::endl;
+  Show_Integral();
+  Show_Integral_Description();
+  std::cout << std::endl;
+  Show_PredictThickness();
+  Show_PredictThickness_Description();
+  std::cout << std::endl;
+  Show_RebinHisto();
+  Show_RebinHisto_Description();
+  std::cout << std::endl;
+  Show_VarRebin();
+  Show_VarRebin_Description();
+  std::cout << std::endl;
+  Show_CheckEvents();
+  Show_CheckEvents_Description();
+  std::cout << std::endl;
+  Show_Sampling();
+  Show_Sampling_Description();
+  std::cout << std::endl;
 
 }
 
@@ -849,30 +795,50 @@ void MantisROOT::VarRebin(std::vector<string> inFile, std::vector<string> ObjNam
   }
 }
 
-void MantisROOT::Show(string name)
+void MantisROOT::Show(string name="All")
 {
-  if(!name.compare("CopyTrees"))
-    std::cout << "CopyTrees(const char* filename, std::vector<string> ObjectsToCopy)" << std::endl;
-  else if(!name.compare("Sig2Noise"))
-    std::cout << "Sig2Noise(std::vector<string> filenames)" << std::endl;
-  else if(!name.compare("ZScore"))
-    std::cout << "ZScore(const char* file1, const char* file2, string object)" << std::endl << "ZScore(const char* file1, const char* file2, std::vector<string> objects)" << std::endl << "ZScore(TFile* file1, TFile* file2, string object)" << std::endl << "ZScore(TFile* file1, TFile* file2, std::vector<string> objects)" << std::endl;
-  else if(!name.compare("Integral"))
-    std::cout << std::endl << "Integral(TTree*)" << std::endl << "Integral(std::vector<TTree*> trees)" << std::endl << "Integral(std::vector<TTree*> trees, TCut cut1)" << std::endl;
-  else if(!name.compare("PredictThickness"))
-    std::cout << "PredictThickness(std::vector<string> obj)" << std::endl << "PredictThickness(std::vector<string> obj, double Er)" << std::endl;
-  else if(!name.compare("RebinHisto"))
-    std::cout << "RebinHisto(std::vector<string> inFile, std::vector<string> ObjName," << std::endl
-              << "std::vector<string> OutObjName, int nbins, double Emin, double Emax)" << std::endl
-              << "RebinHisto(std::vector<string> inFile, std::vector<string> ObjName," << std::endl
-              << "std::vector<string> OutObjName, int nbins, double Emin, double Emax, TCut cut1)" << std::endl;
-  else if(!name.compare("VarRebin"))
-    std::cout << "VarRebin(std::vector<string> inFile, std::vector<string> ObjName," << std::endl
-              << " std::vector<string> OutObjName, int nbins, double Ecut1, double Ecut2," << std::endl
-              << " TCut cut1, double binwidth1, double binwidth2)" << std::endl;
-
+  if(!name.compare("All"))
+  {
+    Show_CheckEvents();
+    Show_CombineFiles();
+    Show_CopyTrees();
+    Show_Help();
+    Show_Integral();
+    Show_OpenFile();
+    Show_PredictThickness();
+    Show_RebinHisto();
+    Show_Sampling();
+    Show_Show();
+    Show_Sig2Noise();
+    Show_VarRebin();
+    Show_ZScore();
+  }
+  else if(!name.compare("Help"))
+    Show_Help();
+  else if(!name.compare("Show"))
+    Show_Show();
+  else if(!name.compare("OpenFile"))
+    Show_OpenFile();
+  else if(!name.compare("CopyTrees"))
+    Show_CopyTrees();
   else if(!name.compare("CombineFiles"))
-    std::cout << "CombineFiles(string base_filename, string outfilename)" << std::endl;
+    Show_CombineFiles();
+  else if(!name.compare("Sig2Noise"))
+    Show_Sig2Noise();
+  else if(!name.compare("ZScore"))
+    Show_ZScore();
+  else if(!name.compare("Integral"))
+    Show_Integral();
+  else if(!name.compare("PredictThickness"))
+    Show_PredictThickness();
+  else if(!name.compare("RebinHisto"))
+    Show_RebinHisto();
+  else if(!name.compare("VarRebin"))
+    Show_VarRebin();
+  else if(!name.compare("CheckEvents"))
+    Show_CheckEvents();
+  else if(!name.compare("Sampling"))
+    Show_Sampling();
   else
     std::cout << "Error Function Not Found." << std::endl;
 }
@@ -1851,4 +1817,331 @@ void MantisROOT::Rescale(const char* inObj)
 
 }// end of function
 
+void MantisROOT::Sampling(const char *bremInputFilename, string sample_element="U",
+							double deltaE=5.0e-6, bool checkZero=false, double non_nrf_energy_cut=1.5)
+{
+	// Convert Input Bremsstrahlung Spectrum Histogram to TGraph
+	if(gSystem->AccessPathName(bremInputFilename))
+	{
+		std::cerr << "ERROR Reading: " << bremInputFilename << std::endl;
+		exit(1);
+	}
+
+	TFile *f = TFile::Open(bremInputFilename);
+	bool confirm = f->cd();
+	if(!confirm)
+		exit(10);
+	TTree *ChopperData;
+	f->GetObject("Brem", ChopperData);
+	ChopperData->Print();
+
+	double Emax = ChopperData->GetMaximum("Energy");
+
+	Int_t nbins = Emax/deltaE;
+
+	TH1D *hBrems = new TH1D("hBrems","Bremsstrahlung Data",nbins, 0.,Emax);
+	std::cout << "Grabbing Brem Data..." << std::endl;
+	ChopperData->Draw("Energy>>hBrems","","goff");
+	std::cout << "Data Grabbed." << std::endl;
+	hBrems->Scale(1.0/hBrems->Integral());
+
+	if(checkZero)
+	{
+		std::cout << "Checking for zeros..." << std::endl;
+
+		for(unsigned int i=0;i<nbins;++i)
+		{
+			int count = 0;
+			if(hBrems->GetBinContent(i) == 0)
+			{
+				while(hBrems->GetBinContent(i-1-count) == 0)
+					count++;
+				hBrems->SetBinContent(i,hBrems->GetBinContent(i-1-count));
+			}
+		}
+	}
+
+	std::cout << "Converting to TGraph..." << std::endl;
+	TGraph *gBrems = new TGraph(hBrems);
+	std::cout << "Conversion Complete." << std::endl;
+	// resonance energies in MeV as calculated by G4NRF
+	vector<double> Evec;
+	vector<double> Evec_above_threshold;
+
+	if(sample_element == "U")
+	{
+		std::cout << "Sampling for Uranium!" << std::endl;
+		// U-238
+		Evec.push_back(1.78200716196); // Vavrek
+		Evec.push_back(1.84600768563); // Vavrek
+		Evec.push_back(2.17601067909); // Vavrek
+		Evec.push_back(2.20901100546); // Vavrek
+		Evec.push_back(2.24501136709); // Vavrek
+
+		// U-235
+		Evec.push_back(1.65623622215); // Me
+		Evec.push_back(1.73354686425); // Vavrek
+		Evec.push_back(1.81525753275); // Vavrek
+		Evec.push_back(1.86231786689); // Me
+		//Evec.push_back(2.00336916735); // Vavrek
+		Evec.push_back(2.00619912943); // Me
+	}
+	else if(sample_element == "Pu")
+	{
+		std::cout << "Sampling for Plutonium!" << std::endl;
+		// Pu-239
+		Evec.push_back(2.13501023737);
+		Evec.push_back(2.14357031961);
+		Evec.push_back(2.15101039142);
+		Evec.push_back(2.43171328004);
+
+		// Pu-240
+		Evec.push_back(2.43321324158);
+		Evec.push_back(2.57751485869);
+		Evec.push_back(2.56641473101);
+	}
+	else
+	{
+		std::cout << "Sample element not found. Exiting..." << std::endl;
+		exit(100);
+	}
+
+	for(int i=0;i<Evec.size();i++)
+	{
+	  if(Evec[i] <= Emax)
+	  {
+	    Evec_above_threshold.push_back(Evec[i]);
+	  }
+	}
+
+	TH1D *hSample = new TH1D("hSample", "hSample", nbins, 0., Emax);
+
+	// create the sampling distribution
+	// user can adjust relative scales in SetBinContent
+	for (int i = 1; i <= nbins; ++i) {
+		double e = hSample->GetBinCenter(i);
+
+		for (int j = 0; j < Evec_above_threshold.size(); ++j)
+		{
+			if (e < non_nrf_energy_cut)
+			{
+				hSample->SetBinContent(i, 0.0001);
+			}
+  		else if (e > Evec_above_threshold[j] - deltaE && e < Evec_above_threshold[j] + deltaE)
+  		{
+				hSample->SetBinContent(i, 1);
+				break;
+  		}
+  		else
+  		{
+				hSample->SetBinContent(i, 0.1);
+			}
+		}
+	}
+
+	// normalize hSample so that its integral is 1
+	hSample->Scale(1.0/(hSample->Integral()));
+	TGraph *gSample = new TGraph(hSample);
+	std::cout << "Importance Sampling Distribution Created!" << std::endl << std::endl;
+
+	hSample->SetTitle("NRF importance sampling distribution");
+	gSample->SetTitle("NRF importance sampling distribution");
+	hSample->GetXaxis()->SetTitle("energy #it{E} [MeV]");
+	hSample->GetYaxis()->SetTitle("probability per 5 eV");
+	gSample->GetXaxis()->SetTitle("Energy #it{E} [MeV]");
+	gSample->GetYaxis()->SetTitle("probability per 5 eV");
+
+	// save everything to file
+	TFile *fout = new TFile("brems_distributions.root","recreate");
+	fout->cd();
+	gBrems->Write();
+	hBrems->Write();
+	gSample->Write();
+	hSample->Write();
+	std::cout << "File Complete. Saved to brems_distributions.root" << std::endl;
+}// End of sampling
+
+
+//******************************************************************************//
+//******************************************************************************//
+//******************************************************************************//
+// Begin Show Functions
+
+void MantisROOT::Show_Help()
+{
+  std::cout << "void Help()" << std::endl;
+}
+
+void MantisROOT::Show_Help_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Help lists the available function calls and their descriptions."
+  << std::endl << "To See just the Functions calls try Show()." << std::endl;
+}
+
+void MantisROOT::Show_Show()
+{
+  std::cout << "void Show(string cmd=no)" << std::endl;
+}
+
+void MantisROOT::Show_Show_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Show lists the available functions."
+  << std::endl << "For a Specific Functions call pass the function name to Show()." << std::endl;
+}
+
+void MantisROOT::Show_OpenFile()
+{
+  std::cout << "TFile* OpenFile(const char*)" << std::endl;
+}
+
+void MantisROOT::Show_OpenFile_Description()
+{
+  std::cout <<"DESCRIPTION: " << std::endl << "Opens a TFile with the input filename. Returns TFile*" << std::endl;
+}
+
+void MantisROOT::Show_CombineFiles()
+{
+  std::cout << "void CombineFiles(std::vector<string>, std::vector<string>, const char*)" << std::endl;
+}
+
+void MantisROOT::Show_CombineFiles_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Combines files through TChain Method."
+  << std::endl << "Takes a vector of filenames with the TTree object names in the second input vector to merge into the third input (filename)."
+  << std::endl << "Example: mantis->CombineFiles({\"file1.root\",\"file2.root\"},{\"IntObjIn\",\"DetInfo\"},\"Merged.root\")" << std::endl;
+}
+
+void MantisROOT::Show_CopyTrees()
+{
+  std::cout << "void CopyTrees(const char*, std::vector<string>)" << std::endl;
+}
+
+void MantisROOT::Show_CopyTrees_Description()
+{
+  std::cout << "Clones TTrees from input 1 (filename) to a file named converted_(filename)."
+  << std::endl << "The TTrees to be cloned are inputed as input two as a string vector."
+  << std::endl << "Example: mantis->CopyTrees(\"test.root\",{\"IntObjIn\",\"DetInfo\"})" << std::endl;
+}
+
+void MantisROOT::Show_Sig2Noise()
+{
+  std::cout << "void Sig2Noise(std::vector<string>, string, bool Weighted=false)" << std::endl;
+}
+
+void MantisROOT::Show_Sig2Noise_Description()
+{
+  std::cout << "Computes the Signal to Noise Ratio in the files inputed in the string vector."
+  << std::endl << "The signal to noise ratio can be computed for the Incident Interrogation Object spectrum"
+  << ", the detected spectrum, or both with the second input options: IncObj, Det, Both."
+  << std::endl << "IF the TTrees contain weights be sure to set the third input bool option to true."
+  << std::endl << "Example: mantis->Sig2Noise({\"TestOn.root\",\"TestOff.root\"},\"Both\", true)" << std::endl;
+}
+
+void MantisROOT::Show_ZScore()
+{
+  std::cout << "void ZScore(const char*, const char*, std::vector<string>)" << std::endl;
+}
+
+void MantisROOT::Show_ZScore_Description()
+{
+  std::cout << "Computes ZTest on input 1 filename and input 2 filename for the TTree object names in input 3 string vector."
+  << std::endl << "Example: mantis->ZScore(\"TestOn.root\", \"TestOff.root\", {\"IntObjIn\",\"DetInfo\"})" << std::endl;
+}
+void MantisROOT::Show_Integral()
+{
+  std::cout << "void Integral(TTree*)" << std::endl << "void Integral(std::vector<TTree*>)"
+  << std::endl << "void Integral(std::vector<TTree*>,TCut)" << std::endl;
+}
+
+void MantisROOT::Show_Integral_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Takes either a TTree object input, a vector of TTree objects, or a vector of TTree Objects with a TCut."
+  << std::endl << "Computes the integral of the TTree with various methods."
+  << std::endl << "If TCut is added the integral is determined after the TCut is applied."
+  << std::endl << "Example: mantis->Integral(DetTree)" << std::endl;
+}
+
+void MantisROOT::Show_PredictThickness()
+{
+  std::cout << "void PredictThickness(std::vector<string>)" << std::endl
+  << "void PredictThickness(std::vector<string>, double)" << std::endl;
+}
+
+void MantisROOT::Show_PredictThickness_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Predicts the results of changing the thickness on the objects pass in the string vector."
+  << std::endl << "If the second input is passed the thickness calculations will focus on the given resonance energy."
+  << std::endl << "Example: mantis->PredictThickness({\"IntObjIn\",\"IntObjOut\"},1.73354)" << std::endl;
+}
+
+void MantisROOT::Show_RebinHisto()
+{
+  std::cout << "void RebinHisto(vector<string>, vector<string>, vector<string>, int, double, double)"
+  << std::endl << "void RebinHisto(vector<string>, vector<string>, vector<string>, int, double, double, TCut)"
+  << std::endl;
+}
+
+void MantisROOT::Show_RebinHisto_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Rebins the TTree Objects from multiples files given histogram parameters."
+  << std::endl << "Example: mantis->RebinHisto({\"file1.root\",\"file2.root\"},{\"IntObjIn\",\"IntObjOut\"},{\"Rebinned_IntObjIn\",\"Rebinned_IntObjOut\"},100,1.7334,1.7336)"
+  << std::endl << "This would rebin the Incident and Emission Interrogation object spectra into TH1D objects Rebinned_IntObjIn and Rebinned_IntObjOut respectively."
+  << std::endl << "The rebinned histograms would have 100 bins between 1.7334 and 1.7336 MeV." << std::endl;
+}
+
+void MantisROOT::Show_VarRebin()
+{
+  std::cout << "void VarRebin(vector<string>, vector<string>, vector<string>, int, double, double, TCut, double, double)" << std::endl;
+}
+
+void MantisROOT::Show_VarRebin_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "See RebinHisto. This Function allows variable binning." << std::endl;
+}
+
+void MantisROOT::Show_CheckEvents()
+{
+  std::cout << "void CheckEvents(const char*,bool)" << std::endl;
+}
+
+void MantisROOT::Show_CheckEvents_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Checks TTrees NRF, Cherenkov and DetInfo for EventIDs that match."
+  << std::endl << "If the events match the event data in the detector is collected and written to w_events_(filename)."
+  << std::endl << "This function is called in Sig2Noise." << std::endl
+  << "Example: mantis->CheckEvents(\"test.root\",true) would Check WEIGHTED events in file test.root." << std::endl;
+}
+
+void MantisROOT::Show_Sampling()
+{
+  std::cout << "void Sampling(const char*, string sample_element=U, double deltaE=5.0e-6, bool checkZero=false, double non_nrf_energy_cut=1.5)" << std::endl;
+}
+
+void MantisROOT::Show_Sampling_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Creates an importance sampling distribution and prepares mantis input file brems_distributions.root."
+  << std::endl << "If the user would like a different bin width for hBrems than the user can supply the bin width with input 3."
+  << std::endl << "Example: mantis->Sampling(\"brem.root\",\"U\", 5e-6,true,1.5)"
+  << std::endl << "would create brems_distributions.root with 5e-6 bin widths where if any bin content = 0 that bin would be set to the prior bins content"
+  << std::endl << "the importance sampling distribution energies below 1.5 MeV would have importances 1/1000 of the NRF resonance energies."
+  << std::endl;
+}
+
+void MantisROOT::Show_GetInstance()
+{
+  std::cout << "Run MantisROOT* m = MantisROOT::GetInstance() to get MantisROOT singleton." << std::endl;
+}
+//******************************************************************************//
+//******************************************************************************//
+//******************************************************************************//
+// End Show Functions, Allow Help to be called outside of MantisROOT Class
+
+void Help()
+{
+  MantisROOT* m = MantisROOT::GetInstance();
+  m->Help();
+}
+
+
+//
 // end of file

@@ -99,7 +99,7 @@ public:
     TFile* OpenFile(const char*);
     void CombineFiles(std::vector<string>, std::vector<string>, const char*);
     void CopyTrees(const char*, std::vector<string>);
-    void Sig2Noise(std::vector<string>);
+    void Sig2Noise(std::vector<string>, string, bool Weighted=false);
     //void ZScore(const char*, const char*, string);
     void ZScore(const char*, const char*, std::vector<string>);
     void Integral(TTree*);
@@ -118,11 +118,13 @@ public:
     void Compute(TFile*, time_t, bool);
     void CopyATree(const char*, const char*);
     void CopyATreeNoWeight(const char*, const char*);
-    void SNR(const char*);
+    void SNR_IntObj(const char*, bool);
+    void SNR_Det(const char*, bool);
     void hIntegral(TH1*);
     double hIntegral(TH1*, int);
     double hIntegral(TTree*, int, TCut);
     double hIntegral(TTree*, int);
+    double hIntegralReturn(TTree*);
     void hIntegral(TTree*);
     void hIntegral(TTree*, TCut);
     void hIntegral(const char*, const char*);
@@ -528,6 +530,23 @@ void MantisROOT::hIntegral(TTree* inObj)
   delete e1; // avoids potential memory leak
 }
 
+double MantisROOT::hIntegralReturn(TTree* inObj)
+{
+  inObj->SetEstimate(-1);
+
+  inObj->Draw("Energy","","goff");
+
+  Double_t *energies = inObj->GetVal(0);
+  int nentries = inObj->GetEntries();
+  double intSum = 0;
+
+  for(unsigned int i=0;i<nentries;++i)
+  {
+    intSum +=energies[i];
+  }
+  return intSum;
+}
+
 void MantisROOT::hIntegral(TTree *inObj,TCut cut1)
 {
   inObj->SetEstimate(-1);
@@ -693,10 +712,32 @@ void MantisROOT::CopyTrees(const char* filename, std::vector<string> noObjv)
   std::cout << "All Trees Copied to " << outfilename << std::endl;
 }
 
-void MantisROOT::Sig2Noise(std::vector<string> filenames)
+void MantisROOT::Sig2Noise(std::vector<string> filenames, string object, bool Weighted=false)
 {
-  for(int i=0;i<filenames.size();++i)
-    SNR(filenames[i].c_str());
+  if(!object.compare("IntObj"))
+  {
+    for(int i=0;i<filenames.size();++i)
+      SNR_IntObj(filenames[i].c_str(), Weighted);
+  }
+  else if(!object.compare("Det"))
+  {
+    for(int i=0;i<filenames.size();++i)
+      SNR_Det(filenames[i].c_str(), Weighted);
+  }
+  else if(!object.compare("Both"))
+    for(int i=0;i<filenames.size();++i)
+    {
+      std::cout << filenames[i] << " Interrogation Object Signal to Noise Calculating..." << std::endl;
+      SNR_IntObj(filenames[i].c_str(), Weighted);
+      std::cout << filenames[i] << " Detected Signal to Noise Calculating..." << std::endl;
+      SNR_Det(filenames[i].c_str(), Weighted);
+    }
+  else
+  {
+    std::cerr << "Error: Object Not Found Input Options: " << std::endl
+    << "IntObj" << std::endl << "Det" << std::endl << "Both" << std::endl;
+    return;
+  }
 
   std::cout << "Signal to Noise Ratio Analysis Complete." << std::endl;
 }
@@ -1150,7 +1191,7 @@ void MantisROOT::CopyATreeNoWeight(const char* filename, const char* tObj)
   newfile->Close();
 } // end of CopyTreeNoWeight
 
-void MantisROOT::SNR(const char* inFile)
+void MantisROOT::SNR_IntObj(const char* inFile, bool Weighted)
 {
   // Check to make sure file exists
   if(gSystem->AccessPathName(inFile))
@@ -1158,20 +1199,17 @@ void MantisROOT::SNR(const char* inFile)
     std::cerr << "ERROR Could not find " << inFile << "exiting..." << std::endl;
     exit(1);
   }
+
   TFile *f = new TFile(inFile);
   f->cd();
-  TTree *aIntObjIn, *aIntObjOut;
-  aIntObjIn = (TTree*) f->Get("IntObjIn");
-  aIntObjOut = (TTree*) f->Get("IntObjOut");
+  TTree *aIntObjIn;
+  f->GetObject("IntObjIn", aIntObjIn);
 
-  if(aIntObjIn !=0 && aIntObjOut !=0)
+  if(aIntObjIn !=0)
   {
     aIntObjIn->Print();
-    aIntObjOut->Print();
     double inMax = aIntObjIn->GetMaximum("Energy");
-    double outMax = aIntObjOut->GetMaximum("Energy");
     aIntObjIn->SetEstimate(-1);
-    aIntObjOut->SetEstimate(-1);
 
     TH1D* e11 = new TH1D("e11","IntObjIn NRF Histogram",100,1.73350, 1.73360);
     TH1D* e10 = new TH1D("e10","IntObjIn NRF Histogram",100,1.65620,1.65630);
@@ -1179,32 +1217,33 @@ void MantisROOT::SNR(const char* inFile)
     TH1D* e13 = new TH1D("e13","IntObjIn NRF Histogram",100,1.86230,1.86240);
     TH1D* e14 = new TH1D("e14","IntObjIn NRF Histogram",100,2.00615,2.00625);
 
-    TH1D* e21 = new TH1D("e21","IntObjOut NRF Histogram",100,1.73350,1.73360);
-    TH1D* e20 = new TH1D("e20","IntObjOut NRF Histogram",100,1.65620,1.65630);
-    TH1D* e22 = new TH1D("e22","IntObjOut NRF Histogram",100,1.81520,1.81530);
-    TH1D* e23 = new TH1D("e23","IntObjOut NRF Histogram",100,1.86230,1.86240);
-    TH1D* e24 = new TH1D("e24","IntObjOut NRF Histogram",100,2.00615,2.00625);
-
     TH1D* eT = new TH1D("eT","IntObjIn Histogram",100,0.0,inMax);
-    TH1D* eT2 = new TH1D("eT2","IntObjOut Histogram",100,0.0,outMax);
 
     std::cout << "Drawing IntObjIn NRF Histograms..." << std::endl;
-    aIntObjIn->Draw("Energy>>e10","Weight","goff");
-    aIntObjIn->Draw("Energy>>e11","Weight","goff");
-    aIntObjIn->Draw("Energy>>e12","Weight","goff");
-    aIntObjIn->Draw("Energy>>e13","Weight","goff");
-    aIntObjIn->Draw("Energy>>e14","Weight","goff");
-
-    std::cout << "Drawing IntObjOut NRF Histograms..." << std::endl;
-    aIntObjOut->Draw("Energy>>e20","Weight","goff");
-    aIntObjOut->Draw("Energy>>e21","Weight","goff");
-    aIntObjOut->Draw("Energy>>e22","Weight","goff");
-    aIntObjOut->Draw("Energy>>e23","Weight","goff");
-    aIntObjOut->Draw("Energy>>e24","Weight","goff");
+    if(Weighted)
+    {
+      aIntObjIn->Draw("Energy>>e10","Weight","goff");
+      aIntObjIn->Draw("Energy>>e11","Weight","goff");
+      aIntObjIn->Draw("Energy>>e12","Weight","goff");
+      aIntObjIn->Draw("Energy>>e13","Weight","goff");
+      aIntObjIn->Draw("Energy>>e14","Weight","goff");
+    }
+    else
+    {
+      aIntObjIn->Draw("Energy>>e10","","goff");
+      aIntObjIn->Draw("Energy>>e11","","goff");
+      aIntObjIn->Draw("Energy>>e12","","goff");
+      aIntObjIn->Draw("Energy>>e13","","goff");
+      aIntObjIn->Draw("Energy>>e14","","goff");
+    }
 
     std::cout << "Drawing IntObjIn and IntObjOut Histograms..." << std::endl;
-    aIntObjIn->Draw("Energy>>eT","Weight","goff");
-    aIntObjOut->Draw("Energy>>eT2","Weight","goff");
+
+    if(Weighted)
+      aIntObjIn->Draw("Energy>>eT","Weight","goff");
+    else
+      aIntObjIn->Draw("Energy>>eT","","goff");
+
     // start integral 5eV prior to energy level peak
     double eStart[] = {1.6562312,1.7335419,1.8152525,1.8623129,2.0061941};
     double eEnd[5];
@@ -1215,52 +1254,85 @@ void MantisROOT::SNR(const char* inFile)
     int binStart = e10->GetXaxis()->FindBin(eStart[0]);
     int binEnd = e10->GetXaxis()->FindBin(eEnd[0]);
     double inSignal[5];
-    double outSignal[5];
     inSignal[0] = e10->Integral(binStart, binEnd);
-    outSignal[0] = e20->Integral(binStart,binEnd);
     binStart = e11->GetXaxis()->FindBin(eStart[1]);
     binEnd = e11->GetXaxis()->FindBin(eEnd[1]);
     inSignal[1] = e11->Integral(binStart,binEnd);
-    outSignal[1] = e21->Integral(binStart,binEnd);
     binStart = e12->GetXaxis()->FindBin(eStart[2]);
     binEnd = e12->GetXaxis()->FindBin(eEnd[2]);
     inSignal[2] = e12->Integral(binStart,binEnd);
-    outSignal[2] = e22->Integral(binStart,binEnd);
     binStart = e13->GetXaxis()->FindBin(eStart[3]);
     binEnd = e13->GetXaxis()->FindBin(eEnd[3]);
     inSignal[3] = e13->Integral(binStart,binEnd);
-    outSignal[3] = e23->Integral(binStart,binEnd);
     binStart = e14->GetXaxis()->FindBin(eStart[4]);
     binEnd = e14->GetXaxis()->FindBin(eEnd[4]);
     inSignal[4] = e14->Integral(binStart,binEnd);
-    outSignal[4] = e24->Integral(binStart,binEnd);
 
     double tSignalin = 0;
-    double tSignalout = 0;
 
     for(int i=0;i<5;++i)
     {
       std::cout << "IntObjIn " << eStart[i] << " MeV Signals: \t" << inSignal[i] << std::endl;
       tSignalin += inSignal[i];
-      std::cout << "IntObjOut " << eStart[i] << " MeV Signals: \t" << outSignal[i] << std::endl;
-      tSignalout += outSignal[i];
     }
+
     std::cout << "Total IntObjIn Signal: \t" << tSignalin << std::endl;
-    std::cout << "Total IntObjOut Signal: \t" << tSignalout << std::endl;
 
     double inNoise = eT->Integral();
     std::cout << "IntObjIn Noise: \t" << inNoise << std::endl;
-    double outNoise = eT2->Integral();
-    std::cout << "IntObjOut Noise: \t" << outNoise << std::endl << std::endl;
 
     std::cout << "The NRF photons are removed from the beam in the chopper wheel stage."
               << std::endl
               << "A lower SNR is better because you want the signal from NRF to be minimized."
               << std::endl;
-    std::cout << "IntObjIn SNR: \t" << abs(tSignalin - inNoise)/sqrt(inNoise) << std::endl;
-    std::cout << "IntObjOut SNR: \t" << abs(tSignalout - outNoise)/sqrt(outNoise) << std::endl;
+    std::cout << "IntObjIn SNR: \t" << tSignalin/inNoise << std::endl;
   }
+  else
+    std::cerr << "ERROR IntObjIn Not Found in " << inFile << std::endl;
 }// end of SNR function
+
+void MantisROOT::SNR_Det(const char* inFile, bool Weighted)
+{
+  // Check to make sure file exists
+  if(gSystem->AccessPathName(inFile))
+  {
+    std::cerr << "ERROR Could not find " << inFile << "exiting..." << std::endl;
+    exit(1);
+  }
+  string event_output_name = "w_events_" + string(inFile);
+  // check if event file already exists if not make one
+  if(gSystem->AccessPathName(event_output_name.c_str()))
+  {
+    CheckEvents(inFile,Weighted);
+  }
+
+  // open events file
+  TFile *eventf = new TFile(event_output_name.c_str());
+  eventf->cd();
+  TTree *eventT;
+  eventf->GetObject("event_tree",eventT);
+  double eventCounts = eventT->GetEntries();
+  double eventEnergy = hIntegralReturn(eventT);
+
+  std::cout << "Detected Counts from NRF: " << eventCounts << std::endl;
+  std::cout << "Detected Energy from NRF: " << eventEnergy << " MeV" << std::endl;
+
+  // Open the file
+  TFile *f = new TFile(inFile);
+  f->cd();
+  TTree* detT;
+  f->GetObject("DetInfo",detT);
+  double counts = detT->GetEntries();
+  double energy = hIntegralReturn(detT);
+
+  std::cout << "Total Detected Counts: " << counts << std::endl;
+  std::cout << "Total Detected Energy: " << energy << " MeV" << std::endl;
+
+  std::cout << "Counts SNR: " << eventCounts/counts << std::endl;
+  std::cout << "Energy SNR: " << eventEnergy/energy << std::endl;
+
+
+}
 
 double MantisROOT::ZTest(double c1, double c2)
 {

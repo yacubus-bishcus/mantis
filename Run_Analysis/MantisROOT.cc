@@ -2036,13 +2036,15 @@ void MantisROOT::Show_Help_Description()
 
 void MantisROOT::Show_Show()
 {
-  std::cout << "void Show(string cmd=no)" << std::endl;
+  std::cout << "void Show(string function=All, bool description=false)" << std::endl;
 }
 
 void MantisROOT::Show_Show_Description()
 {
   std::cout << "DESCRIPTION: " << std::endl << "Show lists the available functions."
-  << std::endl << "For a Specific Functions call pass the function name to Show()." << std::endl;
+  << std::endl << "For a Specific Functions call pass the function name to Show()."
+  << std::endl << "For the Description of the function in addition to the call inputs pass a bool true as the second input."
+  << std::endl << "Example: mantis->Show(\"Show\",true)" << std::endl;
 }
 
 void MantisROOT::Show_OpenFile()

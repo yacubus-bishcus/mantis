@@ -36,7 +36,7 @@ public:
     TFile* OpenFile(const char*);
     void CombineFiles(std::vector<string>, std::vector<string>, const char*);
     void CopyTrees(const char*, std::vector<string>);
-    void Sig2Noise(std::vector<string>, string, bool Weighted=false);
+    void Sig2Noise(std::vector<string>, string, bool Weighted=false, bool cut=false,TCut cut1="NA");
     void ZScore(const char*, const char*, std::vector<string>);
     void Integral(TTree*);
     void Integral(std::vector<TTree*>);
@@ -56,12 +56,12 @@ public:
     void CopyATree(const char*, const char*);
     void CopyATreeNoWeight(const char*, const char*);
     void SNR_IntObj(const char*, bool);
-    void SNR_Det(const char*, bool);
+    void SNR_Det(const char*, bool, bool, TCut cut1="NA");
     void hIntegral(TH1*);
     double hIntegral(TH1*, int);
     double hIntegral(TTree*, int, TCut);
     double hIntegral(TTree*, int);
-    double hIntegralReturn(TTree*);
+    double hIntegralReturn(TTree*, bool, TCut cut1="NA");
     void hIntegral(TTree*);
     void hIntegral(TTree*, TCut);
     void hIntegral(const char*, const char*);
@@ -476,11 +476,14 @@ void MantisROOT::hIntegral(TTree* inObj)
   delete e1; // avoids potential memory leak
 }
 
-double MantisROOT::hIntegralReturn(TTree* inObj)
+double MantisROOT::hIntegralReturn(TTree* inObj, bool cut, TCut cut1="NA")
 {
   inObj->SetEstimate(-1);
 
-  inObj->Draw("Energy","","goff");
+  if(cut)
+    inObj->Draw("Energy",cut1,"goff");
+  else
+    inObj->Draw("Energy","","goff");
 
   Double_t *energies = inObj->GetVal(0);
   int nentries = inObj->GetEntries();
@@ -658,7 +661,7 @@ void MantisROOT::CopyTrees(const char* filename, std::vector<string> noObjv)
   std::cout << "All Trees Copied to " << outfilename << std::endl;
 }
 
-void MantisROOT::Sig2Noise(std::vector<string> filenames, string object, bool Weighted=false)
+void MantisROOT::Sig2Noise(std::vector<string> filenames, string object, bool Weighted=false, bool cut=false, TCut cut1="NA")
 {
   if(!object.compare("IntObj"))
   {
@@ -668,7 +671,7 @@ void MantisROOT::Sig2Noise(std::vector<string> filenames, string object, bool We
   else if(!object.compare("Det"))
   {
     for(int i=0;i<filenames.size();++i)
-      SNR_Det(filenames[i].c_str(), Weighted);
+      SNR_Det(filenames[i].c_str(), Weighted,cut,cut1);
   }
   else if(!object.compare("Both"))
     for(int i=0;i<filenames.size();++i)
@@ -676,7 +679,7 @@ void MantisROOT::Sig2Noise(std::vector<string> filenames, string object, bool We
       std::cout << filenames[i] << " Interrogation Object Signal to Noise Calculating..." << std::endl;
       SNR_IntObj(filenames[i].c_str(), Weighted);
       std::cout << filenames[i] << " Detected Signal to Noise Calculating..." << std::endl;
-      SNR_Det(filenames[i].c_str(), Weighted);
+      SNR_Det(filenames[i].c_str(), Weighted,cut,cut1);
     }
   else
   {
@@ -1313,7 +1316,7 @@ void MantisROOT::SNR_IntObj(const char* inFile, bool Weighted)
     std::cerr << "ERROR IntObjIn Not Found in " << inFile << std::endl;
 }// end of SNR function
 
-void MantisROOT::SNR_Det(const char* inFile, bool Weighted)
+void MantisROOT::SNR_Det(const char* inFile, bool Weighted, bool cut, TCut cut1="NA")
 {
   // Check to make sure file exists
   if(gSystem->AccessPathName(inFile))
@@ -1334,7 +1337,7 @@ void MantisROOT::SNR_Det(const char* inFile, bool Weighted)
   TTree *eventT;
   eventf->GetObject("event_tree",eventT);
   double eventCounts = eventT->GetEntries();
-  double eventEnergy = hIntegralReturn(eventT);
+  double eventEnergy = hIntegralReturn(eventT,false);
 
   std::cout << "Detected Counts from NRF: " << eventCounts << std::endl;
   std::cout << "Detected Energy from NRF: " << eventEnergy << " MeV" << std::endl;
@@ -1345,7 +1348,7 @@ void MantisROOT::SNR_Det(const char* inFile, bool Weighted)
   TTree* detT;
   f->GetObject("DetInfo",detT);
   double counts = detT->GetEntries();
-  double energy = hIntegralReturn(detT);
+  double energy = hIntegralReturn(detT,cut,cut1);
 
   std::cout << "Total Detected Counts: " << counts << std::endl;
   std::cout << "Total Detected Energy: " << energy << " MeV" << std::endl;
@@ -2083,7 +2086,7 @@ void MantisROOT::Show_CopyTrees_Description()
 
 void MantisROOT::Show_Sig2Noise()
 {
-  std::cout << "void Sig2Noise(std::vector<string>, string, bool Weighted=false)" << std::endl;
+  std::cout << "void Sig2Noise(std::vector<string>, string, bool Weighted=false, bool cut=false, TCut cut1=\"NA\")" << std::endl;
 }
 
 void MantisROOT::Show_Sig2Noise_Description()
@@ -2092,7 +2095,9 @@ void MantisROOT::Show_Sig2Noise_Description()
   << std::endl << "The signal to noise ratio can be computed for the Incident Interrogation Object spectrum"
   << ", the detected spectrum, or both with the second input options: IncObj, Det, Both."
   << std::endl << "IF the TTrees contain weights be sure to set the third input bool option to true."
-  << std::endl << "Example: mantis->Sig2Noise({\"TestOn.root\",\"TestOff.root\"},\"Both\", true)" << std::endl;
+  << std::endl << "IF the TTrees are to have a cut placed the fourth input should be set to true and "
+  << std::endl << " the fifth input should contain the TCut in parenthesis."
+  << std::endl << "Example: mantis->Sig2Noise({\"TestOn.root\",\"TestOff.root\"},\"Both\", true, true, \"Energy<5e-6\")" << std::endl;
 }
 
 void MantisROOT::Show_ZScore()

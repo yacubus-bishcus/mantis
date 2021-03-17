@@ -2093,7 +2093,7 @@ void MantisROOT::Show_Sig2Noise_Description()
 {
   std::cout << "Computes the Signal to Noise Ratio in the files inputed in the string vector."
   << std::endl << "The signal to noise ratio can be computed for the Incident Interrogation Object spectrum"
-  << ", the detected spectrum, or both with the second input options: IncObj, Det, Both."
+  << std::endl << ", the detected spectrum, or both with the second input options: IncObj, Det, Both."
   << std::endl << "IF the TTrees contain weights be sure to set the third input bool option to true."
   << std::endl << "IF the TTrees are to have a cut placed the fourth input should be set to true and "
   << std::endl << " the fifth input should contain the TCut in parenthesis."

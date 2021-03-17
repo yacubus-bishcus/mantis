@@ -481,7 +481,10 @@ double MantisROOT::hIntegralReturn(TTree* inObj, bool cut, TCut cut1="NA")
   inObj->SetEstimate(-1);
 
   if(cut)
+  {
+    std::cout << "Cut " << cut1 << " placed!" << std::endl;
     inObj->Draw("Energy",cut1,"goff");
+  }
   else
     inObj->Draw("Energy","","goff");
 

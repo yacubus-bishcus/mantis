@@ -669,16 +669,23 @@ void MantisROOT::Sig2Noise(std::vector<string> filenames, string object, bool We
   if(!object.compare("IntObj"))
   {
     for(int i=0;i<filenames.size();++i)
+    {
+      std::cout << std::endl << "Signal to Noise Calculation for " << filenames[i] << std::endl;
       SNR_IntObj(filenames[i].c_str(), Weighted);
+    }
   }
   else if(!object.compare("Det"))
   {
     for(int i=0;i<filenames.size();++i)
+    {
+      std::cout << std::endl << "Signal to Noise Calculation for " << filenames[i] << std::endl;
       SNR_Det(filenames[i].c_str(), Weighted,cut,cut1);
+    }
   }
   else if(!object.compare("Both"))
     for(int i=0;i<filenames.size();++i)
     {
+      std::cout << std::endl << "Signal to Noise Calculation for " << filenames[i] << std::endl;
       std::cout << filenames[i] << " Interrogation Object Signal to Noise Calculating..." << std::endl;
       SNR_IntObj(filenames[i].c_str(), Weighted);
       std::cout << filenames[i] << " Detected Signal to Noise Calculating..." << std::endl;

@@ -32,7 +32,7 @@ public:
     static MantisROOT *GetInstance();
     static void Destroy();
     void Help();
-    void Show(string cmd="All");
+    void Show(string cmd="All", bool=false);
     TFile* OpenFile(const char*);
     void CombineFiles(std::vector<string>, std::vector<string>, const char*);
     void CopyTrees(const char*, std::vector<string>);
@@ -795,9 +795,13 @@ void MantisROOT::VarRebin(std::vector<string> inFile, std::vector<string> ObjNam
   }
 }
 
-void MantisROOT::Show(string name="All")
+void MantisROOT::Show(string name="All", bool description=false)
 {
-  if(!name.compare("All"))
+  if(!name.compare("All") && description)
+  {
+    Help();
+  }
+  else if(!name.compare("All") && !description)
   {
     Show_CheckEvents();
     Show_CombineFiles();
@@ -814,31 +818,83 @@ void MantisROOT::Show(string name="All")
     Show_ZScore();
   }
   else if(!name.compare("Help"))
+  {
     Show_Help();
+    if(description)
+      Show_Help_Description();
+  }
   else if(!name.compare("Show"))
+  {
     Show_Show();
+    if(description)
+      Show_Show_Description();
+  }
   else if(!name.compare("OpenFile"))
+  {
     Show_OpenFile();
+    if(description)
+      Show_OpenFile_Description();
+  }
   else if(!name.compare("CopyTrees"))
+  {
     Show_CopyTrees();
+    if(description)
+      Show_CopyTrees_Description();
+  }
   else if(!name.compare("CombineFiles"))
+  {
     Show_CombineFiles();
+    if(description)
+      Show_CombineFiles_Description();
+  }
   else if(!name.compare("Sig2Noise"))
+  {
     Show_Sig2Noise();
+    if(description)
+      Show_Sig2Noise_Description();
+  }
   else if(!name.compare("ZScore"))
+  {
     Show_ZScore();
+    if(description)
+      Show_ZScore_Description();
+  }
   else if(!name.compare("Integral"))
+  {
     Show_Integral();
+    if(description)
+      Show_Integral_Description();
+  }
   else if(!name.compare("PredictThickness"))
+  {
     Show_PredictThickness();
+    if(description)
+      Show_PredictThickness_Description();
+  }
   else if(!name.compare("RebinHisto"))
+  {
     Show_RebinHisto();
+    if(description)
+      Show_RebinHisto_Description();
+  }
   else if(!name.compare("VarRebin"))
+  {
     Show_VarRebin();
+    if(description)
+      Show_VarRebin_Description();
+  }
   else if(!name.compare("CheckEvents"))
+  {
     Show_CheckEvents();
+    if(description)
+      Show_CheckEvents_Description();
+  }
   else if(!name.compare("Sampling"))
+  {
     Show_Sampling();
+    if(description)
+      Show_Sampling_Description();
+  }
   else
     std::cout << "Error Function Not Found." << std::endl;
 }

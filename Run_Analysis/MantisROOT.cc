@@ -1411,10 +1411,10 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
   {
     TCut intCut = "cos(Angle)>.99";
     std::cout << "MantisROOT::ZTest -> Setting TCut for IntObjIn: " << intCut << std::endl;
-    c2  = hIntegral(inTree2,0,intCut,2.1);
-    c21 = hIntegral(inTree2,1,intCut,2.1);
-    c22 = hIntegral(inTree2,2,intCut,2.1);
-    c23 = hIntegral(inTree2,3,intCut,2.1);
+    c1  = hIntegral(inTree2,0,intCut,2.1);
+    c11 = hIntegral(inTree2,1,intCut,2.1);
+    c12 = hIntegral(inTree2,2,intCut,2.1);
+    c13 = hIntegral(inTree2,3,intCut,2.1);
   }
   else
   {

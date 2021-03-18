@@ -2034,7 +2034,7 @@ void MantisROOT::WriteSampling(TH1D* hBrems, TH1D* hSample, TGraph* gBrems, TGra
   hSample->SetTitle("NRF importance sampling distribution");
   gSample->SetTitle("NRF importance sampling distribution");
   hSample->GetXaxis()->SetTitle("energy #it{E} [MeV]");
-  string titleProb = "probability per " + std::to_string(bin_width) + " eV";
+  string titleProb = "probability per " + std::to_string(bin_width*1e6) + " eV";
   hSample->GetYaxis()->SetTitle(titleProb.c_str());
   gSample->GetXaxis()->SetTitle("Energy #it{E} [MeV]");
   gSample->GetYaxis()->SetTitle(titleProb.c_str());

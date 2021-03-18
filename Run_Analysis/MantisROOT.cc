@@ -59,7 +59,7 @@ public:
     void SNR_Det(const char*, bool, bool, TCut cut1="NA");
     void hIntegral(TH1*);
     double hIntegral(TH1*, int);
-    double hIntegral(TTree*, int, TCut);
+    double hIntegral(TTree*, int, TCut, double);
     double hIntegral(TTree*, int);
     double hIntegralReturn(TTree*, bool, TCut cut1="NA");
     void hIntegral(TTree*);
@@ -423,10 +423,9 @@ double MantisROOT::hIntegral(TTree *inObj, int returnValue)
     return theSum;
 
 }
-double MantisROOT::hIntegral(TTree *inObj, int returnValue, TCut cut1)
+double MantisROOT::hIntegral(TTree *inObj, int returnValue, TCut cut1, double Emax)
 {
   inObj->SetEstimate(-1);
-  double Emax = inObj->GetMaximum("Energy");
   TH1D *e1 = new TH1D("e1",inObj->GetName(),100,0.,Emax);
 
   if(cut1 == "NA")
@@ -1397,10 +1396,22 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
 
   TTree *inTree;
   f->GetObject(inObj, inTree);
-  double c1 = hIntegral(inTree, 0);
-  double c11 = hIntegral(inTree,1);
-  double c12 = hIntegral(inTree,2);
-  double c13 = hIntegral(inTree,3);
+  double c1,c11,c12,c13;
+  if(!string(inObj).compare("DetInfo"))
+  {
+    TCut detCut = "Energy<5e-6";
+    c1  = hIntegral(inTree,0,detCut,5e-6);
+    c11 = hIntegral(inTree,1,detCut,5e-6);
+    c12 = hIntegral(inTree,2,detCut,5e-6);
+    c13 = hIntegral(inTree,3,detCut,5e-6);
+  }
+  else
+  {
+    c1  = hIntegral(inTree,0);
+    c11 = hIntegral(inTree,1);
+    c12 = hIntegral(inTree,2);
+    c13 = hIntegral(inTree,3);
+  }
 
   delete inTree;
   f->Close();
@@ -1413,10 +1424,23 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
 
   TTree *inTree2;
   f1->GetObject(inObj,inTree2);
-  double c2 = hIntegral(inTree2,0);
-  double c21 = hIntegral(inTree2,1);
-  double c22 = hIntegral(inTree2,2);
-  double c23 = hIntegral(inTree2,3);
+  double c2,c21,c22,c23;
+  if(!string(inObj).compare("DetInfo"))
+  {
+    TCut detCut = "Energy<5e-6";
+    c2  = hIntegral(inTree2,0,detCut,5e-6);
+    c21 = hIntegral(inTree2,1,detCut,5e-6);
+    c22 = hIntegral(inTree2,2,detCut,5e-6);
+    c23 = hIntegral(inTree2,3,detCut,5e-6);
+  }
+  else
+  {
+    c2  = hIntegral(inTree2,0);
+    c21 = hIntegral(inTree2,1);
+    c22 = hIntegral(inTree2,2);
+    c23 = hIntegral(inTree2,3);
+  }
+
 
   std::cout << "TTree Method Z-Score: " << ZTest(c1,c2) << std::endl;
   std::cout << "Bin Center Method Z-Score: " << ZTest(c11,c21) << std::endl;

@@ -31,7 +31,7 @@ G4bool output;
 // String global variables
 G4String macro, root_output_name, gOutName, inFile;
 // boolean global variables
-G4bool bremTest, resonanceTest, checkEvents, debug, addNRF, printEvents, SampleEnergyRange;
+G4bool bremTest, resonanceTest, checkEvents, debug, addNRF, printEvents, SampleEnergyRangebool;
 // double global variables
 G4double uniform_width, chosen_energy;
 
@@ -103,7 +103,7 @@ int main(int argc,char **argv)
   chosen_energy = -1.;
   G4String bremTest_in = "false";
   bremTest = false;
-  SampleEnergyRange = false;
+  SampleEnergyRangebool = false;
   uniform_width = 0.005; // units MeV
 
   // Output Defaults
@@ -215,7 +215,7 @@ int main(int argc,char **argv)
         {
           G4cout << "Sampling Uniform Centered on " << chosen_energy
           << " with normal width " << uniform_width << std::endl;
-          SampleEnergyRange = true;
+          SampleEnergyRangebool = true;
         }
 
         // Some User Error Checking

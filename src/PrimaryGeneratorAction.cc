@@ -29,6 +29,8 @@ extern G4String inFile;
 extern G4double chosen_energy;
 extern G4bool resonanceTest;
 extern G4bool bremTest;
+extern G4bool SampleEnergyRange;
+extern G4double uniform_width;
 extern G4bool debug;
 
 PrimaryGeneratorAction::PrimaryGeneratorAction()
@@ -162,10 +164,12 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
             energy = hBrems->GetRandom()*MeV;
         }
         // The user has selected a mono-energetic beam
-        else if(chosen_energy > 0)
+        else if(chosen_energy > 0 && !SampleEnergyRange)
           energy = chosen_energy*MeV;
         // User wishes to sample from Uranium resonance energies. dNdE will not
         // be used here
+        else if(chosen_energy > 0 && SampleEnergyRange)
+          energy = SampleEnergyRange(chosen_energy,uniform_width);
         else
           energy = SampleUResonances();
 
@@ -210,4 +214,9 @@ G4double PrimaryGeneratorAction::SampleUResonances()
         G4double de = 25.0*eV;
 
         return Random.Uniform(er[idx]-de, er[idx]+de);
+}
+
+G4double PrimaryGeneratorAction::SampleEnergyRange(double center_energy, double width=0.005)
+{
+  return Random.Uniform(center_energy-width, center_energy+width);
 }

@@ -27,12 +27,13 @@ G4VisManager* visManager;
 
 // declare global variables
 G4long seed;
-G4double chosen_energy;
 G4bool output;
 // String global variables
 G4String macro, root_output_name, gOutName, inFile;
 // boolean global variables
-G4bool bremTest, resonanceTest, checkEvents, debug, addNRF, printEvents;
+G4bool bremTest, resonanceTest, checkEvents, debug, addNRF, printEvents, SampleEnergyRange;
+// double global variables
+G4double uniform_width, chosen_energy;
 
 void check_file_exists(const std::string &p)
 {
@@ -57,7 +58,7 @@ void PrintUsage()
   G4cerr << "Usage: " << G4endl;
   G4cerr << "mantis [-h help] [-m macro=mantis.in] [-a chosen_energy=-1.] [-s seed=1] [-o output_name] [-t bremTest=false] " <<
           "[-r resonance_test=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] " <<
-          "[-e checkEvents_in=false] [-i inFile] [-d debug] [-f printEvents]"
+          "[-e checkEvents_in=false] [-i inFile] [-d debug] [-f printEvents] [-u SampleEnergyRange] [-w uniform_width]"
          << G4endl;
   exit(1);
 }
@@ -84,6 +85,7 @@ int main(int argc,char **argv)
   G4String verbose_in = "false";
   G4String addNRF_in = "true";
   G4String printEvents_in = "false";
+  G4String SampleEnergyRange_in = "false";
 
   G4bool standalone = false;
   G4bool NRF_Verbose = false;
@@ -101,6 +103,8 @@ int main(int argc,char **argv)
   chosen_energy = -1.;
   G4String bremTest_in = "false";
   bremTest = false;
+  SampleEnergyRange = false;
+  uniform_width = 0.005; // units MeV
 
   // Output Defaults
   output = false;
@@ -132,6 +136,8 @@ int main(int argc,char **argv)
       else if (G4String(argv[i]) == "-i") inFile = argv[i+1];
       else if (G4String(argv[i]) == "-d") debug_in = argv[i+1];
       else if (G4String(argv[i]) == "-f") printEvents_in = argv[i+1];
+      else if (G4String(argv[i]) == "-u") SampleEnergyRange_in = argv[i+1];
+      else if (G4String(argv[i]) == "-w") bin_width = std::stod(argv[i+1]);
       else
       {
         PrintUsage();
@@ -203,6 +209,13 @@ int main(int argc,char **argv)
         {
                 G4cout << "Completing Resonance Test!" << G4endl;
                 resonanceTest = true;
+        }
+
+        if(SampleEnergyRange_in == "True" || SampleEnergyRange_in == "true")
+        {
+          G4cout << "Sampling Uniform Centered on " << chosen_energy
+          << " with normal width " << uniform_width << std::endl;
+          SampleEnergyRange = true;
         }
 
         // Some User Error Checking

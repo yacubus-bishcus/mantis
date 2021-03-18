@@ -79,7 +79,9 @@ void SetEnergyCut(G4double x)
 }
 
 void CloseInputFile(){if(fFileOpen) fin->Close();}
+private:
 G4double SampleUResonances();
+G4double SampleEnergyRange(double,double);
 
 private:
   PGAMessenger* pgaM;

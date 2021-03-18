@@ -230,6 +230,18 @@ int main(int argc,char **argv)
                 exit(1);
         }
 
+        if(SampleEnergyRangebool && chosen_energy < 0)
+        {
+          G4cerr << "FATAL ERROR mantis.cc -> Cannot Sample Energy Range without choosing uniform center!" << G4endl;
+          exit(1);
+        }
+
+        if(SampleEnergyRangebool && uniform_width < 0)
+        {
+          G4cerr << "FATAL ERROR mantis.cc -> Cannot Sample Energy Range with a width < 0." << G4endl;
+          exit(1);
+        }
+
         G4cout << "Seed set to: " << seed << G4endl;
         std::cout << "Seed set to: " << seed << std::endl;
 

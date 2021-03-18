@@ -137,7 +137,7 @@ int main(int argc,char **argv)
       else if (G4String(argv[i]) == "-d") debug_in = argv[i+1];
       else if (G4String(argv[i]) == "-f") printEvents_in = argv[i+1];
       else if (G4String(argv[i]) == "-u") SampleEnergyRange_in = argv[i+1];
-      else if (G4String(argv[i]) == "-w") bin_width = std::stod(argv[i+1]);
+      else if (G4String(argv[i]) == "-w") uniform_width = std::stod(argv[i+1]);
       else
       {
         PrintUsage();

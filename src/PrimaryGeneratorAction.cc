@@ -67,7 +67,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 
                 if(gSystem->AccessPathName(inFile.c_str()))
                 {
-                  G4cerr << "PrimaryGeneratorAction::PrimaryActionGenerator FATAL ERROR -> " << inFile << " NOT FOUND!" << G4endl;
+                  G4cerr << "PrimaryGeneratorAction::PrimaryGeneratorAction FATAL ERROR -> " << inFile << " NOT FOUND!" << G4endl;
                   exit(1);
                 }
                 fin = TFile::Open(inFile.c_str());
@@ -99,10 +99,13 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
                       G4cerr << "PrimaryGeneratorAction::PrimaryGeneratorAction() -> FATAL ERROR Failure to grab TGraphs from File: " << inFile << G4endl;
                       exit(1);
                     }
-                    G4cout << "Reading Sampled Distribution from: " << inFile << G4endl;
+                    G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction -> Reading SAMPLED Distribution from: " << inFile << G4endl;
                 }
                 else
+                {
                   file_check = true;
+                  G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction -> Reading NON-SAMPLED Distribution from: " << inFile << G4endl;
+                }
 
         }
         else

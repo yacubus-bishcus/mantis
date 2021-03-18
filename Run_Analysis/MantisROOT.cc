@@ -425,7 +425,7 @@ double MantisROOT::hIntegral(TTree *inObj, int returnValue)
 }
 double MantisROOT::hIntegral(TTree *inObj, int returnValue, TCut cut1, double Emax)
 {
-  std::cout << "MantisROOT::hIntegral -> Setting TCut to: " << cut1 << std::endl;
+  //std::cout << "MantisROOT::hIntegral -> Setting TCut to: " << cut1 << std::endl;
   inObj->SetEstimate(-1);
   TH1D *e1 = new TH1D("e1",inObj->GetName(),100,0.,Emax);
 
@@ -1401,6 +1401,7 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
   if(!string(inObj).compare("DetInfo"))
   {
     TCut detCut = "Energy<5e-6";
+    std::cout << "MantisROOT::ZTest -> Setting TCut for DetInfo: " << detCut << std::endl;
     c1  = hIntegral(inTree,0,detCut,5e-6);
     c11 = hIntegral(inTree,1,detCut,5e-6);
     c12 = hIntegral(inTree,2,detCut,5e-6);
@@ -1429,6 +1430,7 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
   if(!string(inObj).compare("DetInfo"))
   {
     TCut detCut = "Energy<5e-6";
+    std::cout << "MantisROOT::ZTest -> Setting TCut for DetInfo: " << detCut << std::endl;
     c2  = hIntegral(inTree2,0,detCut,5e-6);
     c21 = hIntegral(inTree2,1,detCut,5e-6);
     c22 = hIntegral(inTree2,2,detCut,5e-6);

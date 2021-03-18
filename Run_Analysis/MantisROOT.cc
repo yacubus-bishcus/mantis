@@ -78,7 +78,7 @@ public:
     double ReturnBremMax(const char*);
     TH1D* BuildBrem(const char*, double, bool);
     TH1D* BuildSimpleSample(const char*, double, double);
-    void WriteSampling(TH1D*, TH1D*, TGraph*, TGraph*);
+    void WriteSampling(TH1D*, TH1D*, TGraph*, TGraph*, double);
 
     void Show_Help();
     void Show_Help_Description();
@@ -2028,15 +2028,16 @@ TH1D* MantisROOT::BuildSimpleSample(const char* bremInputFilename, double deltaE
   return hSample;
 }
 
-void MantisROOT::WriteSampling(TH1D* hBrems, TH1D* hSample, TGraph* gBrems, TGraph* gSample)
+void MantisROOT::WriteSampling(TH1D* hBrems, TH1D* hSample, TGraph* gBrems, TGraph* gSample, double bin_width)
 {
   std::cout << "MantisROOT::WriteSampling -> Writing to file..." << std::endl;
   hSample->SetTitle("NRF importance sampling distribution");
   gSample->SetTitle("NRF importance sampling distribution");
   hSample->GetXaxis()->SetTitle("energy #it{E} [MeV]");
-  hSample->GetYaxis()->SetTitle("probability per 5 eV");
+  string titleProb = "probability per " + std::to_string(bin_width) + " eV";
+  hSample->GetYaxis()->SetTitle(titleProb.c_str());
   gSample->GetXaxis()->SetTitle("Energy #it{E} [MeV]");
-  gSample->GetYaxis()->SetTitle("probability per 5 eV");
+  gSample->GetYaxis()->SetTitle(titleProb.c_str());
 
   // save everything to file
   TFile *fout = new TFile("brems_distributions.root","recreate");
@@ -2063,7 +2064,7 @@ void MantisROOT::SimpleSampling(const char* bremInputFilename, double deltaE=5.0
   TH1D* hSample = BuildSimpleSample(bremInputFilename, deltaE, cut_energy);
   TGraph *gSample = new TGraph(hSample);
 
-  WriteSampling(hBrems,hSample,gBrems,gSample);
+  WriteSampling(hBrems,hSample,gBrems,gSample,deltaE);
 
   std::cout << "MantisROOT::SimpleSampling -> Complete." << std::endl;
 
@@ -2161,7 +2162,7 @@ void MantisROOT::Sampling(const char *bremInputFilename, string sample_element="
 	// normalize hSample so that its integral is 1
 	hSample->Scale(1.0/(hSample->Integral()));
 	TGraph *gSample = new TGraph(hSample);
-	WriteSampling(hBrems,hSample,gBrems,gSample);
+	WriteSampling(hBrems,hSample,gBrems,gSample,deltaE);
 
 }// End of sampling
 

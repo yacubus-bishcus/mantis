@@ -48,6 +48,7 @@ public:
     void VarRebin(vector<string>, vector<string>, vector<string>, int, double, double, TCut, double, double);
     void CheckEvents(const char*,bool);
     void Sampling(const char*, string sample_element="U", double deltaE=5.0e-6, bool checkZero=false, double non_nrf_energy_cut=1.5);
+    void SimpleSampling(const char*, double deltaE=5.0e-6, double cut_energy=1.5, bool checkZero=false);
   public:
     static MantisROOT *instance;
 
@@ -73,6 +74,12 @@ public:
     void Rebin(const char*, const char*, const char*);
     void Rescale(const char*, double);
     void Rescale(const char*);
+
+    double ReturnBremMax(const char*);
+    TH1D* BuildBrem(const char*, double, bool);
+    TH1D* BuildSimpleSample(const char*, double, double);
+    void WriteSampling(TH1D*, TH1D*, TGraph*, TGraph*);
+
     void Show_Help();
     void Show_Help_Description();
     void Show_Show();
@@ -100,6 +107,8 @@ public:
     void Show_Sampling();
     void Show_Sampling_Description();
     void Show_GetInstance();
+    void Show_SimpleSampling();
+    void Show_SimpleSampling_Description();
 };
 
 MantisROOT *MantisROOT::instance = 0;
@@ -827,6 +836,7 @@ void MantisROOT::Show(string name="All", bool description=false)
     Show_Sampling();
     Show_Show();
     Show_Sig2Noise();
+    Show_SimpleSampling();
     Show_VarRebin();
     Show_ZScore();
   }
@@ -907,6 +917,12 @@ void MantisROOT::Show(string name="All", bool description=false)
     Show_Sampling();
     if(description)
       Show_Sampling_Description();
+  }
+  else if(!name.compare("SimpleSampling"))
+  {
+    Show_SimpleSampling();
+    if(description)
+      Show_SimpleSampling_Description();
   }
   else
     std::cout << "Error Function Not Found." << std::endl;
@@ -1930,6 +1946,128 @@ void MantisROOT::Rescale(const char* inObj)
   std::cout << "Histograms saved." << std::endl;
 
 }// end of function
+TH1D* MantisROOT::BuildBrem(const char* bremInputFilename, double deltaE, bool checkZero)
+{
+  std::cout << "MantisROOT::BuildBrem -> Building Brem Distribution..." << std::endl;
+  TFile *f = TFile::Open(bremInputFilename);
+  bool confirm = f->cd();
+  if(!confirm)
+    exit(10);
+  TTree *ChopperData;
+  f->GetObject("Brem", ChopperData);
+  //ChopperData->Print();
+
+  double Emax = ChopperData->GetMaximum("Energy");
+
+  Int_t nbins = Emax/deltaE;
+
+  TH1D *hBrems = new TH1D("hBrems","Bremsstrahlung Data",nbins, 0.,Emax);
+  std::cout << "MantisROOT::BuildBrem -> Grabbing Brem Data..." << std::endl;
+  ChopperData->Draw("Energy>>hBrems","","goff");
+  std::cout << "MantisROOT::BuildBrem -> Data Grabbed." << std::endl;
+  hBrems->Scale(1.0/hBrems->Integral());
+
+  if(checkZero)
+  {
+    std::cout << "MantisROOT::BuildBrem -> Checking for zeros..." << std::endl;
+
+    for(unsigned int i=0;i<nbins;++i)
+    {
+      int count = 0;
+      if(hBrems->GetBinContent(i) == 0)
+      {
+        while(hBrems->GetBinContent(i-1-count) == 0)
+          count++;
+        hBrems->SetBinContent(i,hBrems->GetBinContent(i-1-count));
+      }
+    }
+  }
+  std::cout << "MantisROOT::BuildBrem -> Brem Distribution Created." << std::endl;
+  return hBrems;
+}
+
+double MantisROOT::ReturnBremMax(const char* bremInputFilename)
+{
+  std::cout << "MantisROOT::ReturnBremMax -> Searching Max Energy..." << std::endl;
+  TFile *f = TFile::Open(bremInputFilename);
+  bool confirm = f->cd();
+  if(!confirm)
+    exit(10);
+  TTree *ChopperData;
+  f->GetObject("Brem", ChopperData);
+  //ChopperData->Print();
+
+  double Emax = ChopperData->GetMaximum("Energy");
+  std::cout << "MantisROOT::ReturnBremMax -> Max Found: " << Emax << std::endl;
+  return Emax;
+}
+
+TH1D* MantisROOT::BuildSimpleSample(const char* bremInputFilename, double deltaE, double cut_energy)
+{
+  double Emax = ReturnBremMax(bremInputFilename);
+
+  int nbins = Emax/deltaE;
+  TH1D *hSample = new TH1D("hSample", "hSample", nbins, 0., Emax);
+
+	// create the sampling distribution
+	// user can adjust relative scales in SetBinContent
+	for (int i = 1; i <= nbins; ++i)
+  {
+		double e = hSample->GetBinCenter(i);
+
+		if (e < cut_energy)
+			hSample->SetBinContent(i, 0.0001);
+		else
+			hSample->SetBinContent(i, 1);
+	}
+
+
+	// normalize hSample so that its integral is 1
+	hSample->Scale(1.0/(hSample->Integral()));
+  std::cout << "MantisROOT::BuildSimpleSample -> Sampling Distribution Created." << std::endl;
+  return hSample;
+}
+
+void MantisROOT::WriteSampling(TH1D* hBrems, TH1D* hSample, TGraph* gBrems, TGraph* gSample)
+{
+  std::cout << "MantisROOT::WriteSampling -> Writing to file..." << std::endl;
+  hSample->SetTitle("NRF importance sampling distribution");
+  gSample->SetTitle("NRF importance sampling distribution");
+  hSample->GetXaxis()->SetTitle("energy #it{E} [MeV]");
+  hSample->GetYaxis()->SetTitle("probability per 5 eV");
+  gSample->GetXaxis()->SetTitle("Energy #it{E} [MeV]");
+  gSample->GetYaxis()->SetTitle("probability per 5 eV");
+
+  // save everything to file
+  TFile *fout = new TFile("brems_distributions.root","recreate");
+  fout->cd();
+  gBrems->Write();
+  hBrems->Write();
+  gSample->Write();
+  hSample->Write();
+  std::cout << "MantisROOT::WriteSampling -> File Complete. Saved to brems_distributions.root" << std::endl;
+  fout->Close();
+}
+
+void MantisROOT::SimpleSampling(const char* bremInputFilename, double deltaE=5.0e-6, double cut_energy=1.5, bool checkZero=false)
+{
+  if(gSystem->AccessPathName(bremInputFilename))
+  {
+    std::cerr << "ERROR Reading: " << bremInputFilename << std::endl;
+    exit(1);
+  }
+
+  TH1D* hBrems = BuildBrem(bremInputFilename, deltaE, checkZero);
+  hBrems->Print();
+	TGraph *gBrems = new TGraph(hBrems);
+  TH1D* hSample = BuildSimpleSample(bremInputFilename, deltaE, cut_energy);
+  TGraph *gSample = new TGraph(hSample);
+
+  WriteSampling(hBrems,hSample,gBrems,gSample);
+
+  std::cout << "MantisROOT::SimpleSampling -> Complete." << std::endl;
+
+}
 
 void MantisROOT::Sampling(const char *bremInputFilename, string sample_element="U",
 							double deltaE=5.0e-6, bool checkZero=false, double non_nrf_energy_cut=1.5)
@@ -1941,43 +2079,10 @@ void MantisROOT::Sampling(const char *bremInputFilename, string sample_element="
 		exit(1);
 	}
 
-	TFile *f = TFile::Open(bremInputFilename);
-	bool confirm = f->cd();
-	if(!confirm)
-		exit(10);
-	TTree *ChopperData;
-	f->GetObject("Brem", ChopperData);
-	ChopperData->Print();
-
-	double Emax = ChopperData->GetMaximum("Energy");
-
-	Int_t nbins = Emax/deltaE;
-
-	TH1D *hBrems = new TH1D("hBrems","Bremsstrahlung Data",nbins, 0.,Emax);
-	std::cout << "Grabbing Brem Data..." << std::endl;
-	ChopperData->Draw("Energy>>hBrems","","goff");
-	std::cout << "Data Grabbed." << std::endl;
-	hBrems->Scale(1.0/hBrems->Integral());
-
-	if(checkZero)
-	{
-		std::cout << "Checking for zeros..." << std::endl;
-
-		for(unsigned int i=0;i<nbins;++i)
-		{
-			int count = 0;
-			if(hBrems->GetBinContent(i) == 0)
-			{
-				while(hBrems->GetBinContent(i-1-count) == 0)
-					count++;
-				hBrems->SetBinContent(i,hBrems->GetBinContent(i-1-count));
-			}
-		}
-	}
-
-	std::cout << "Converting to TGraph..." << std::endl;
-	TGraph *gBrems = new TGraph(hBrems);
-	std::cout << "Conversion Complete." << std::endl;
+  TH1D* hBrems = BuildBrem(bremInputFilename, deltaE, checkZero);
+  TGraph* gBrems = new TGraph(hBrems);
+  double Emax = ReturnBremMax(bremInputFilename);
+  int nbins = Emax/deltaE;
 	// resonance energies in MeV as calculated by G4NRF
 	vector<double> Evec;
 	vector<double> Evec_above_threshold;
@@ -2056,23 +2161,8 @@ void MantisROOT::Sampling(const char *bremInputFilename, string sample_element="
 	// normalize hSample so that its integral is 1
 	hSample->Scale(1.0/(hSample->Integral()));
 	TGraph *gSample = new TGraph(hSample);
-	std::cout << "Importance Sampling Distribution Created!" << std::endl << std::endl;
+	WriteSampling(hBrems,hSample,gBrems,gSample);
 
-	hSample->SetTitle("NRF importance sampling distribution");
-	gSample->SetTitle("NRF importance sampling distribution");
-	hSample->GetXaxis()->SetTitle("energy #it{E} [MeV]");
-	hSample->GetYaxis()->SetTitle("probability per 5 eV");
-	gSample->GetXaxis()->SetTitle("Energy #it{E} [MeV]");
-	gSample->GetYaxis()->SetTitle("probability per 5 eV");
-
-	// save everything to file
-	TFile *fout = new TFile("brems_distributions.root","recreate");
-	fout->cd();
-	gBrems->Write();
-	hBrems->Write();
-	gSample->Write();
-	hSample->Write();
-	std::cout << "File Complete. Saved to brems_distributions.root" << std::endl;
 }// End of sampling
 
 
@@ -2242,6 +2332,21 @@ void MantisROOT::Show_Sampling_Description()
   << std::endl << "Example: mantis->Sampling(\"brem.root\",\"U\", 5e-6,true,1.5)"
   << std::endl << "would create brems_distributions.root with 5e-6 bin widths where if any bin content = 0 that bin would be set to the prior bins content"
   << std::endl << "the importance sampling distribution energies below 1.5 MeV would have importances 1/1000 of the NRF resonance energies."
+  << std::endl;
+}
+
+void MantisROOT::Show_SimpleSampling()
+{
+  std::cout << "void SimpleSampling(const char*, double deltaE=5.0e-6, double cut_energy=1.5, bool checkZero=false)" << std::endl;
+}
+
+void MantisROOT::Show_SimpleSampling_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Creates an importance sampling distribution and prepares mantis input file brems_distributions.root."
+  << std::endl << "If the User would like a different bin width for hBrems than the user can supply the bin width with input 2."
+  << std::endl << "Example: mantis->Sampling(\"brem.root\", 5e-6,1.5, true)"
+  << std::endl << "would create brems_distributions.root with 5e-6 bin widths where if any bin content = 0 that bin would be set to the prior bins content"
+  << std::endl << "the importance sampling distribution energies below 1.5 MeV would have importances 1/1000 of all energies above 1.5 MeV."
   << std::endl;
 }
 

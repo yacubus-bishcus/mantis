@@ -1407,6 +1407,15 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
     c12 = hIntegral(inTree,2,detCut,5e-6);
     c13 = hIntegral(inTree,3,detCut,5e-6);
   }
+  else if(!string(inObj).compare("IntObjIn"))
+  {
+    TCut intCut = "cos(Angle)>.99";
+    std::cout << "MantisROOT::ZTest -> Setting TCut for IntObjIn: " << intCut << std::endl;
+    c2  = hIntegral(inTree2,0,intCut,2.1);
+    c21 = hIntegral(inTree2,1,intCut,2.1);
+    c22 = hIntegral(inTree2,2,intCut,2.1);
+    c23 = hIntegral(inTree2,3,intCut,2.1);
+  }
   else
   {
     c1  = hIntegral(inTree,0);
@@ -1435,6 +1444,15 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
     c21 = hIntegral(inTree2,1,detCut,5e-6);
     c22 = hIntegral(inTree2,2,detCut,5e-6);
     c23 = hIntegral(inTree2,3,detCut,5e-6);
+  }
+  else if(!string(inObj).compare("IntObjIn"))
+  {
+    TCut intCut = "cos(Angle)>.99";
+    std::cout << "MantisROOT::ZTest -> Setting TCut for IntObjIn: " << intCut << std::endl;
+    c2  = hIntegral(inTree2,0,intCut,2.1);
+    c21 = hIntegral(inTree2,1,intCut,2.1);
+    c22 = hIntegral(inTree2,2,intCut,2.1);
+    c23 = hIntegral(inTree2,3,intCut,2.1);
   }
   else
   {

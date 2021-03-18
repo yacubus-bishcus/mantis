@@ -425,6 +425,7 @@ double MantisROOT::hIntegral(TTree *inObj, int returnValue)
 }
 double MantisROOT::hIntegral(TTree *inObj, int returnValue, TCut cut1, double Emax)
 {
+  std::cout << "MantisROOT::hIntegral -> Setting TCut to: " << cut1 << std::endl;
   inObj->SetEstimate(-1);
   TH1D *e1 = new TH1D("e1",inObj->GetName(),100,0.,Emax);
 

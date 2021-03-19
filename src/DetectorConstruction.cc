@@ -28,14 +28,24 @@ extern G4bool bremTest;
 
 DetectorConstruction::DetectorConstruction()
         : G4VUserDetectorConstruction(), // chopper properties
-        chopperDensity(19.1*g/cm3), chopper_thick(30*mm), chopper_z(2*cm), chopperOn(false), // interrogation object properties
-        IntObj_rad(4.5*cm), intObjDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm), IntObj_Selection("Uranium"), // radio abundances
-        chopper_radio_abundance(0), intObj_radio_abundance(0), // Attenuator Properties
-        attenuatorState(false), attenuatorState2(false), attenThickness(0.1*mm), attenThickness2(0.1*mm), attenuatorMat("G4_AIR"), attenuatorMat2("G4_AIR"), // Water Tank properties
-        theAngle(120.0), water_size_x(60*cm), water_size_y(2.5908*m), water_size_z(40*cm), // plexi/tape properties
-        plexiThickness(0.18*mm), tapeThick(0.01*cm), // PMT Properties
-        PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), // Output Properties
-        DetectorViewOnly(false), material_verbose(false), RemoveContainer(false), checkOverlaps(true), // Messenger
+        chopperDensity(19.1*g/cm3), chopper_thick(30*mm), chopper_z(2*cm), chopperOn(false),
+        // Container Properties
+        RemoveContainer(false),
+        // interrogation object properties
+        IntObj_rad(4.5*cm), intObjDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm), IntObj_Selection("Uranium"),
+        // radio abundances
+        chopper_radio_abundance(0), intObj_radio_abundance(0),
+        // Attenuator Properties
+        attenuatorState(false), attenuatorState2(false), attenThickness(0.1*mm), attenThickness2(0.1*mm), attenuatorMat("G4_AIR"), attenuatorMat2("G4_AIR"),
+        // Water Tank properties
+        theAngle(120.0), water_size_x(60*cm), water_size_y(2.5908*m), water_size_z(40*cm),
+        // plexi/tape properties
+        plexiThickness(0.18*mm), tapeThick(0.01*cm),
+        // PMT Properties
+        PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"),
+        // Output Properties
+        DetectorViewOnly(false), material_verbose(false), checkOverlaps(true),
+        // Messenger
         detectorM(NULL)
 {
         detectorM = new DetectorMessenger(this);

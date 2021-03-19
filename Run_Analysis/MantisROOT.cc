@@ -21,11 +21,12 @@
 // jbickus@mit.edu
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
+bool debug;
 
 class MantisROOT
 {
 public:
-    MantisROOT();
+    MantisROOT(bool debug_in=false);
     ~MantisROOT();
 
   public:
@@ -53,7 +54,7 @@ public:
     static MantisROOT *instance;
 
   private:
-    void Compute(TFile*, time_t, bool);
+    void Compute(const char*, time_t, bool);
     void CopyATree(const char*, const char*);
     void CopyATreeNoWeight(const char*, const char*);
     void SNR_IntObj(const char*, bool);
@@ -63,6 +64,8 @@ public:
     double hIntegral(TTree*, int, TCut, double);
     double hIntegral(TTree*, int);
     double hIntegralReturn(TTree*, bool, TCut cut1="NA");
+    double hIntegralReturnWeightedCounts(TTree*, double cut_energy=5e-6);
+    double hIntegralReturnWeightedEnergy(TTree*, double cut_energy=5e-6);
     void hIntegral(TTree*);
     void hIntegral(TTree*, TCut);
     void hIntegral(const char*, const char*);
@@ -130,8 +133,11 @@ MantisROOT *MantisROOT::GetInstance()
   return instance;
 }
 
-MantisROOT::MantisROOT()
+MantisROOT::MantisROOT(bool debug_in=false)
 {
+  debug = debug_in;
+  if(debug)
+    std::cout << "Set to Debugging Mode!" << std::endl;
   std::cout << "Run: Help() to see the list of available functions." << std::endl;
 }
 
@@ -482,6 +488,8 @@ void MantisROOT::hIntegral(TTree* inObj)
   std::cout << inObj->GetName() << " TTree Sum: " << intSum << std::endl;
 
   hIntegral(e1);
+  if(debug)
+    std::cout << "MantisROOT::hIntegral -> Deallocating Memory." << std::endl;
   delete e1; // avoids potential memory leak
 }
 
@@ -491,7 +499,8 @@ double MantisROOT::hIntegralReturn(TTree* inObj, bool cut, TCut cut1="NA")
 
   if(cut)
   {
-    std::cout << "Cut " << cut1 << " placed!" << std::endl;
+    if(debug)
+      std::cout << "Cut " << cut1 << " placed!" << std::endl;
     inObj->Draw("Energy",cut1,"goff");
   }
   else
@@ -505,6 +514,44 @@ double MantisROOT::hIntegralReturn(TTree* inObj, bool cut, TCut cut1="NA")
   {
     intSum +=energies[i];
   }
+  return intSum;
+}
+
+double MantisROOT::hIntegralReturnWeightedCounts(TTree* inObj, double cut_energy=5e-6)
+{
+  inObj->SetEstimate(-1);
+  TH1D* h = new TH1D("h","Det Integral",100,0.,cut_energy);
+
+  if(debug)
+    std::cout << "Cut " << cut_energy << " MeV placed!" << std::endl;
+  inObj->Draw("Energy>>h","Weight","goff");
+  double intSum = h->Integral();
+  if(debug)
+    std::cout << "MantisROOT::hIntegralReturnWeightedCounts -> Deallocating Memory..." << std::endl;
+  //delete h;
+  return intSum;
+
+}
+
+double MantisROOT::hIntegralReturnWeightedEnergy(TTree* inObj, double cut_energy=5e-6)
+{
+  inObj->SetEstimate(-1);
+  if(debug)
+    std::cout << "Cut " << cut_energy << " MeV placed!" << std::endl;
+  int nentries = inObj->Draw("Energy:Weight","","goff");
+  double *Energies = inObj->GetVal(0);
+  double *Weights = inObj->GetVal(1);
+
+  double intSum = 0;
+  for(int i=0;i<nentries;++i)
+  {
+    intSum += Energies[i]*Weights[i];
+  }
+  if(debug)
+    std::cout << "MantisROOT::hIntegralReturnWeightedEnergy -> Deallocating Memory..." << std::endl;
+  //delete Energies;
+  //delete Weights;
+
   return intSum;
 }
 
@@ -531,6 +578,8 @@ void MantisROOT::hIntegral(TTree *inObj,TCut cut1)
   std::cout << inObj->GetName() << " TTree Sum: " << intSum << std::endl;
 
   hIntegral(e1);
+  if(debug)
+    std::cout << "MantisROOT::hIntegral -> Deallocating Memory..." << std::endl;
   delete e1; // avoids potential memory leak
 }
 
@@ -555,6 +604,8 @@ void MantisROOT::hIntegral(const char* filename, const char* objName)
     exit(0);
 
   hIntegral(inObj);
+  if(debug)
+    std::cout << "MantisROOT::hIntegral -> Deallocating Memory..." << std::endl;
   delete inObj; // avoids potential memory leak
 }
 
@@ -604,6 +655,8 @@ void MantisROOT::hIntegral(const char* filename)
   TH1D *e1 = new TH1D("e1","DetInfo Histogram",100,0.,10e-6);
   inDetInfo->Draw("Energy>>e1","Energy<10e-6","goff");
   std::cout << "DetInfo Integral: " << e1->Integral() << std::endl;
+  if(debug)
+    std::cout << "MantisROOT::hIntegral -> Deallocating Memory..." << std::endl;
   delete e1;
   f->Close();
 } // end of hIntegral Functions
@@ -942,26 +995,21 @@ void MantisROOT::CheckEvents(const char* filename, bool Weighted=false)
   }
   time_t timer;
   time_t time_start = std::time(&timer);
-  TFile *f = new TFile(filename, "read");
-  bool confirm = f->cd();
-  if(!confirm)
-  {
-    std::cerr << "ERROR: TFile not accessed." << std::endl;
-    return;
-  }
-  Compute(f,time_start,Weighted);
+  Compute(filename,time_start,Weighted);
 }
 
-void MantisROOT::Compute(TFile* f, time_t time_start, bool Weighted)
+void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted)
 {
   int x =0;
   std::vector<int> nrf_to_cher_to_det_event;
   std::vector<double> nrf_to_cher_to_det_time, nrf_to_cher_to_det_energy, nrf_to_cher_to_det_weight;
-  string filename = f->GetName();
+  TFile *fMaincompute = new TFile(fname);
+  fMaincompute->cd();
+  string filename = fMaincompute->GetName();
   TTree *Cherenkov_in, *NRF_in, *DetInfo_in;
-  f->GetObject("Cherenkov",Cherenkov_in);
-  f->GetObject("NRF",NRF_in);
-  f->GetObject("DetInfo",DetInfo_in);
+  fMaincompute->GetObject("Cherenkov",Cherenkov_in);
+  fMaincompute->GetObject("NRF",NRF_in);
+  fMaincompute->GetObject("DetInfo",DetInfo_in);
   Cherenkov_in->SetEstimate(-1);
   NRF_in->SetEstimate(-1);
   DetInfo_in->SetEstimate(-1);
@@ -1063,11 +1111,16 @@ void MantisROOT::Compute(TFile* f, time_t time_start, bool Weighted)
             << nrf_to_cher_to_det_event.size() << std::endl;
   } // end if nrf_entries != 0 && cher_entries != 0
 
-  std::cout << "CheckEvents::Compute -> Deallocating memory..." << std::endl;
+  if(debug)
+    std::cout << "CheckEvents::Compute -> Deallocating memory..." << std::endl;
   // deallocate memory
-  f->Close();
-
-  delete []detWeight;
+  //delete []detWeight;
+  if(debug)
+    std::cout << "CheckEvents::Compute -> Closing File... " << &fMaincompute << std::endl;
+  //f->cd();
+  fMaincompute->Close();
+  if(debug)
+    std::cout << "CheckEvents::Compute -> File Closed." << std::endl;
 
   // Open New TFile to write to
   string event_output_name = "w_events_" + filename;
@@ -1110,7 +1163,11 @@ void MantisROOT::Compute(TFile* f, time_t time_start, bool Weighted)
   std::cout << "CheckEvents::Compute -> TTrees Written to File: "
               << event_output_name << std::endl;
 
+  if(debug)
+    std::cout << "CheckEvents::Compute -> Closing Event File..." << std::endl;
   fin->Close();
+  if(debug)
+    std::cout << "CheckEvents::Compute -> Event File Closed." << std::endl;
 
   time_t timer2;
   time_t time_end = std::time(&timer2);
@@ -1362,26 +1419,52 @@ void MantisROOT::SNR_Det(const char* inFile, bool Weighted, bool cut, TCut cut1=
   eventf->cd();
   TTree *eventT;
   eventf->GetObject("event_tree",eventT);
-  double eventCounts = eventT->GetEntries();
-  double eventEnergy = hIntegralReturn(eventT,false);
+  double eventCounts, eventEnergy;
+  if(!Weighted)
+  {
+    eventCounts = eventT->GetEntries();
+    eventEnergy = hIntegralReturn(eventT,false);
+  }
+  else
+  {
+    eventCounts = hIntegralReturnWeightedCounts(eventT);
+    eventEnergy = hIntegralReturnWeightedEnergy(eventT);
+  }
 
   std::cout << "Detected Counts from NRF: " << eventCounts << std::endl;
   std::cout << "Detected Energy from NRF: " << eventEnergy << " MeV" << std::endl;
-
+  if(debug)
+    std::cout << "MantisROOT::SNR_Det -> Closing Event File..." << std::endl;
+  eventf->Close();
+  if(debug)
+    std::cout << "MantisROOT::SNR_Det -> Event File Closed." << std::endl;
   // Open the file
-  TFile *f = new TFile(inFile);
-  f->cd();
+  TFile *mainf = new TFile(inFile);
+  mainf->cd();
   TTree* detT;
-  f->GetObject("DetInfo",detT);
-  double counts = detT->GetEntries();
-  double energy = hIntegralReturn(detT,cut,cut1);
+  mainf->GetObject("DetInfo",detT);
+  double counts, energy;
+  if(!Weighted)
+  {
+    counts = detT->GetEntries();
+    energy = hIntegralReturn(detT,cut,cut1);
+  }
+  else
+  {
+    counts = hIntegralReturnWeightedCounts(detT);
+    energy = hIntegralReturnWeightedEnergy(detT);
+  }
 
   std::cout << "Total Detected Counts: " << counts << std::endl;
   std::cout << "Total Detected Energy: " << energy << " MeV" << std::endl;
 
   std::cout << "Counts SNR: " << eventCounts/sqrt(counts) << std::endl;
-  std::cout << "Energy SNR: " << eventEnergy/sqrt(energy) << std::endl;
-
+  //std::cout << "Energy SNR: " << eventEnergy/sqrt(energy) << std::endl;
+  if(debug)
+    std::cout << "MantisROOT::SNR_Det -> Closing Main File..." << std::endl;
+  mainf->Close();
+  if(debug)
+    std::cout << "MantisROOT::SNR_Det -> Main File Closed." << std::endl;
 
 }
 
@@ -2353,7 +2436,7 @@ void MantisROOT::Show_SimpleSampling_Description()
 
 void MantisROOT::Show_GetInstance()
 {
-  std::cout << "Run MantisROOT* m = MantisROOT::GetInstance() to get MantisROOT singleton." << std::endl;
+  std::cout << "Run MantisROOT* m = MantisROOT::GetInstance(bool debug=false) to get MantisROOT singleton." << std::endl;
 }
 //******************************************************************************//
 //******************************************************************************//

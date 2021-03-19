@@ -437,10 +437,19 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4cout << "Begin of Interrogation Object: " << container_z_pos/(cm) + intObj_z_pos/(cm) -  IntObj_rad/(cm) << " cm" << G4endl;
     setEndIntObj(container_z_pos, 2.4384*m);
 
-    physIntObj = new G4PVPlacement(0,
+    if(!RemoveContainer)
+    {
+      physIntObj = new G4PVPlacement(0,
                                    G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos),
                                    logicIntObj, "IntObj", logicHollowC, false,
                                    0, checkOverlaps);
+    }
+    else
+    {
+      physIntObj = new G4PVPlacement(0,
+                                      G4ThreeVector(intObj_x_pos,intObj_y_pos,intObj_z_pos + chopper_end_edge_position+1.0*m),
+                                    logicIntObj, "IntObj",logicWorld, false, 0, checkOverlaps);
+    }
 
 
 // ******************************************************** Interrogation Object Setup Complete ******************************************************* //

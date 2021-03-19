@@ -32,11 +32,13 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         myDir3 = new G4UIdirectory("/chopper/");
         myDir4 = new G4UIdirectory("/myvisualization/");
         myDir5 = new G4UIdirectory("/material/");
+        myDir6 = new G4UIdirectory("/removebuild/");
         myDir2->SetGuidance("Target Setup Commands");
         myDir->SetGuidance("Detector Setup Commands");
         myDir3->SetGuidance("Chopper Setup Commands");
         myDir4->SetGuidance("Customized Visualization Commands");
         myDir5->SetGuidance("Material Table Verbosity");
+        myDir6->SetGuidance("Remove Geometries from Simulation.");
         Cmd = new G4UIcmdWithADouble("/mydet/PCrad",this);
         CmdX = new G4UIcmdWithADouble("/mydet/WaterX",this);
         CmdY = new G4UIcmdWithADouble("/mydet/WaterY",this);
@@ -66,6 +68,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdVis = new G4UIcmdWithAString("/myvisualization/DetectorViewOnly", this);
         CmdVerbose = new G4UIcmdWithAString("/material/verbose",this);
         CmdCheckOverlaps = new G4UIcmdWithAString("/material/CheckOverlaps",this);
+        CmdRemoveObjects = new G4UIcmdWithAString("/removebuild/Geometry",this);
 
 
         Cmd->SetGuidance("Choose Desired PhotoCathode Radius");
@@ -96,6 +99,8 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdTape->SetGuidance("Choose desired optical tape wrap thickness in cm");
         CmdVis->SetGuidance("Choose if visualization will show Cherenkov Detector Only");
         CmdCheckOverlaps->SetGuidance("Choose to check for geometric overlaps");
+        CmdRemoveObjects->SetGuidance("Choose to remove objects for simulation");
+
         Cmd->SetParameterName("radius",false);
         CmdX->SetParameterName("waterx",false);
         CmdY->SetParameterName("watery",false);
@@ -129,6 +134,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdVis->SetParameterName("visualization",false);
         CmdVerbose->SetParameterName("verbosity",false);
         CmdCheckOverlaps->SetParameterName("overlaps",false);
+        CmdRemoveObjects->SetParameterName("Remove",false);
 
         Cmdtsel->SetCandidates("Uranium NaturalU Plutonium NaturalPu Lead Steel Plastic");
         Cmdpcmat->SetCandidates("GaAsP Bialkali");
@@ -140,6 +146,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdVis->SetCandidates("True true False false");
         CmdVerbose->SetCandidates("True true False false On on Off off");
         CmdCheckOverlaps->SetCandidates("True true False false");
+        CmdRemoveObjects->SetCandidates("Container None");
 
 }
 
@@ -174,6 +181,7 @@ DetectorMessenger::~DetectorMessenger()
         delete CmdChopMaterial;
         delete CmdVerbose;
         delete CmdCheckOverlaps;
+        delete CmdRemoveObjects;
 }
 
 
@@ -405,6 +413,15 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
                         theCheckBool = false;
                 }
                 DetectorA->SetCheckOverlaps(theCheckBool);
+        }
+        else if(command == CmdRemoveObjects)
+        {
+          G4String theObject = newValue;
+          if(!theObject.compare("Container"))
+          {
+            G4cout << "DetectorMessenger::SetNewValue -> WARNING Container Geometry Removed!" << G4endl;
+            DetectorA->SetRemoveContainer(true);
+          }
         }
         else
         {

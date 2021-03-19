@@ -219,20 +219,14 @@ void setEndIntObj(G4double z_pos_con, G4double con_z_size)
         G4cout << "Z-Cut set to: " << EndIntObj/(cm) << " cm" << G4endl << G4endl;
 }
 
-void setBeginChopper(G4double z_pos)
-{
-  BeginChopper = z_pos;
-}
+void setBeginChopper(G4double z_pos){BeginChopper = z_pos;}
 
 G4double getBeginChopper()const
 {
   return BeginChopper;
 }
 
-void setEndChop(G4double z_pos)
-{
-  EndChop = z_pos;
-}
+void setEndChop(G4double z_pos){EndChop = z_pos;}
 
 G4double getEndChop()const
 {
@@ -241,24 +235,13 @@ G4double getEndChop()const
 
 G4double getEndIntObj()const
 {
-        return EndIntObj;
+  return EndIntObj;
 }
-void SetPC_material(G4String val)
-{
-        pc_mat = val;
-}
-void SetnPMT(G4int val)
-{
-        nPMT = val;
-}
-void SetChopperOn(G4bool val)
-{
-        chopperOn = val;
-}
+void SetPC_material(G4String val){pc_mat = val;}
+void SetnPMT(G4int val){nPMT = val;}
+void SetChopperOn(G4bool val){chopperOn = val;}
 G4bool GetChopperState()const
-{
-        return chopperOn;
-}
+{return chopperOn;}
 void SetChopperThick(G4double val)
 {
         chopper_thick = val;
@@ -269,10 +252,7 @@ void SetChopper_z(G4double val)
         chopper_z = val;
         chopper_z = chopper_z*cm;
 }
-void SettheAngle(G4double val)
-{
-        theAngle = val;
-}
+void SettheAngle(G4double val){theAngle = val;}
 void SetPlexiThickness(G4double val)
 {
   plexiThickness = val;
@@ -283,32 +263,27 @@ void SetTapeThickness(G4double val)
   tapeThick = val;
   tapeThick = tapeThick*cm;
 }
-void SetDetectorViewOnly(G4bool val)
-{
-  DetectorViewOnly = val;
-}
-void SetMaterialVerbosity(G4bool val)
-{
-  material_verbose = val;
-}
-void SetCheckOverlaps(G4bool val)
-{
-  checkOverlaps = val;
-}
+void SetDetectorViewOnly(G4bool val){DetectorViewOnly = val;}
+void SetMaterialVerbosity(G4bool val){material_verbose = val;}
+void SetCheckOverlaps(G4bool val){checkOverlaps = val;}
+void SetRemoveContainer(G4bool val){RemoveContainer=val;}
 
 private:
 
-// Brem Properties 
+// Brem Properties
 G4double linac_size = 9*cm;
 
-// Chopper Properties 
+// Chopper Properties
 G4double chopperDensity, chopper_thick, chopper_z;
 G4bool chopperOn;
 G4double chopper_U235_abundance, chopper_U238_abundance, chopper_Pu239_abundance, chopper_Pu240_abundance;
 G4double BeginChopper;
 G4double EndChop;
 
-// Interrogation Object Properties 
+// Container Properties
+G4bool RemoveContainer;
+
+// Interrogation Object Properties
 G4double EndIntObj, IntObj_rad, intObjDensity, intObj_x_pos, intObj_y_pos, intObj_z_pos;
 G4String IntObj_Selection;
 G4VPhysicalVolume* physIntObj;
@@ -316,7 +291,7 @@ G4double intObj_U235_abundance, intObj_U238_abundance, intObj_Pu239_abundance, i
 
 G4double chopper_radio_abundance, intObj_radio_abundance;
 
-// Material, Logical and Physical Volumes 
+// Material, Logical and Physical Volumes
 G4Material* PC_mat;
 G4LogicalVolume *logicalLinac;
 G4LogicalVolume *logicalVacuum;
@@ -330,28 +305,28 @@ G4LogicalVolume* logicChopper;
 G4VPhysicalVolume* physWater;
 G4VPhysicalVolume* physTape;
 
-// Detector Properties 
+// Detector Properties
 
-// Attenuator Properties 
+// Attenuator Properties
 G4bool attenuatorState, attenuatorState2;
 G4double attenThickness, attenThickness2;
 G4String attenuatorMat, attenuatorMat2;
 
-// Water Tank Properties 
+// Water Tank Properties
 G4double theAngle, water_size_x, water_size_y, water_size_z;
 
-// Plexi/Tape Properties 
+// Plexi/Tape Properties
 G4double plexiThickness, tapeThick;
 
-// PMT Properties 
+// PMT Properties
 G4double PMT_rmax;
 G4int nPMT;
 G4String pc_mat;
 
-// Output Properties 
+// Output Properties
 G4bool DetectorViewOnly, material_verbose, checkOverlaps;
 
-// Messenger 
+// Messenger
 DetectorMessenger* detectorM;
 
 };

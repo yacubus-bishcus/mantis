@@ -32,17 +32,17 @@
 # Set the Low Importance Energy Cutoff (this is done in Sampling.cc)
 # This will speed up simulation by avoiding the call of TGraph::Eval every primary particle
 # Unit (MeV) must be greater than 0.1 MeV
-/PGA/EnergyCut 1.5
+#/PGA/EnergyCut 1.5
 
 #################################################################################################
 # EVENT OPTIONS
 # Set the Event Info Frequency
-/mantisevent/eventInfoFreq 100000
+/mantisevent/eventInfoFreq 10
 
 #################################################################################################
 # CHOPPER WHEEL OPTIONS
 #units mm
-/chopper/thickness 30.337
+/chopper/thickness 37.415
 # This is the distance from the Chopper wheel to the source units cm must be between 1 and 50
 /chopper/distance 2
 
@@ -64,7 +64,7 @@
 
 # Attenuator Settings Surrounding Cherenkov Detector (optional)
 
-#/mydet/attenuator On
+/mydet/attenuator Off
 # Attenuator Thickness in cm
 #/mydet/attenuatorThickness 1
 # Attenuator Material Options from NIST materials
@@ -105,4 +105,4 @@
 #################################################################################################
 # RUN OPTIONS
 # Number of Events
-/run/beamOn 50000000
+/run/beamOn 100

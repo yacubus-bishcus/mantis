@@ -79,11 +79,14 @@ private:
   G4UIcmdWithAString* CmdVis;
   G4UIcmdWithAString* CmdVerbose;
   G4UIcmdWithAString* CmdCheckOverlaps;
+  G4UIcmdWithAString* CmdRemoveObjects;
+  
   G4UIdirectory *myDir;
   G4UIdirectory *myDir2;
   G4UIdirectory *myDir3;
   G4UIdirectory *myDir4;
   G4UIdirectory *myDir5;
+  G4UIdirectory *myDir6;
 };
 
 #endif

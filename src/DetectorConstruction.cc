@@ -35,7 +35,7 @@ DetectorConstruction::DetectorConstruction()
         theAngle(120.0), water_size_x(60*cm), water_size_y(2.5908*m), water_size_z(40*cm), // plexi/tape properties
         plexiThickness(0.18*mm), tapeThick(0.01*cm), // PMT Properties
         PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"), // Output Properties
-        DetectorViewOnly(false), material_verbose(false), checkOverlaps(true), // Messenger
+        DetectorViewOnly(false), material_verbose(false), RemoveContainer(false), checkOverlaps(true), // Messenger
         detectorM(NULL)
 {
         detectorM = new DetectorMessenger(this);
@@ -316,16 +316,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     new G4PVPlacement(0, G4ThreeVector(0,0,rearCol_Z_pos),
                       logicCollimatorRear, "ColRe-Pb", logicWorld,
                       false, 0, checkOverlaps);
+
+
 // Set up shipping container environment (8ft wide and 8.5ft high)
     G4double c_thick = 0.1905*cm; // approx 0.075 inch thick
     G4Box *solidContainer = new G4Box("Container", 0.6096*m, 2.5908*m, 2.4384*m);
     G4cout << "Edge of Container Placement: " << container_edge_position/(cm) << " cm" << G4endl << G4endl;
     G4LogicalVolume *logicContainer = new G4LogicalVolume(solidContainer, steel, "Container");
-    new G4PVPlacement(0,
+    if(!RemoveContainer)
+    {
+      new G4PVPlacement(0,
                       G4ThreeVector(0, 0, container_z_pos),
                       logicContainer, "Con-Steel",logicWorld,
                       false,0,checkOverlaps);
-
+    }
     if(col_edge_position < container_edge_position)
     {
       G4cerr << "ERROR: Collimator does not cover to edge of Cargo Container!!!" << G4endl;
@@ -335,8 +339,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 // make container hollow
     G4Box *hollowContainer = new G4Box("ContainerAir", 0.6096*m -c_thick, 2.5908*m -c_thick, 2.4384*m -c_thick);
     G4LogicalVolume *logicHollowC = new G4LogicalVolume(hollowContainer, air, "hollowContainer");
-    new G4PVPlacement(0, G4ThreeVector(),
-                      logicHollowC, "Con-Air",logicContainer, false,0,checkOverlaps);
+    if(!RemoveContainer)
+    {
+      new G4PVPlacement(0, G4ThreeVector(),
+                        logicHollowC, "Con-Air",logicContainer, false,
+                        0,checkOverlaps);
+    }
 
   // *********************************************** End of Shipping Container and Collimator Geometries ************************************ //
 

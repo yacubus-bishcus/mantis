@@ -266,7 +266,11 @@ void SetTapeThickness(G4double val)
 void SetDetectorViewOnly(G4bool val){DetectorViewOnly = val;}
 void SetMaterialVerbosity(G4bool val){material_verbose = val;}
 void SetCheckOverlaps(G4bool val){checkOverlaps = val;}
-void SetRemoveContainer(G4bool val){RemoveContainer=val;}
+void SetRemoveContainer(G4bool val)
+{
+  RemoveContainer=val;
+  G4cout << "DetectorConstruction:: WARNING Container has been removed!" << G4endl;
+}
 
 private:
 

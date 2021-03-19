@@ -291,7 +291,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4cout << "Brem Target Beginning Edge Position: " << brem_target_edge_position/(cm) << " cm" << G4endl << G4endl;
     if(brem_target_edge_position/(cm) < beamStart/(cm))
     {
-            G4cerr << "DetectorConstruction::Build::291 -> FATAL ERROR DURING BREM TEST: Beam Started downstream of Brem Radiator!" << G4endl << G4endl;
+            G4cerr << "DetectorConstruction::Build::292 -> FATAL ERROR DURING BREM TEST: Beam Started downstream of Brem Radiator!" << G4endl << G4endl;
             exit(1);
     }
   }
@@ -325,6 +325,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4LogicalVolume *logicContainer = new G4LogicalVolume(solidContainer, steel, "Container");
     if(!RemoveContainer)
     {
+      G4cout << "DetectorConstruction::Construct -> Building Container!" << G4endl;
       new G4PVPlacement(0,
                       G4ThreeVector(0, 0, container_z_pos),
                       logicContainer, "Con-Steel",logicWorld,
@@ -341,6 +342,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4LogicalVolume *logicHollowC = new G4LogicalVolume(hollowContainer, air, "hollowContainer");
     if(!RemoveContainer)
     {
+      G4cout << "DetectorConstruction::Construct -> Container Built!" << G4endl;
       new G4PVPlacement(0, G4ThreeVector(),
                         logicHollowC, "Con-Air",logicContainer, false,
                         0,checkOverlaps);

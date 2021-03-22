@@ -2044,26 +2044,40 @@ TH1D* MantisROOT::BuildBrem(const char* bremInputFilename, double deltaE, bool c
 
   Int_t nbins = Emax/deltaE;
 
-  TH1D *hBrems = new TH1D("hBrems","Bremsstrahlung Data",nbins, 0.,Emax);
+  TH1D *tmp_Brems = new TH1D("tmp_Brems","Temporary Bremsstrahlung Data",250, 0.,Emax);
   std::cout << "MantisROOT::BuildBrem -> Grabbing Brem Data..." << std::endl;
-  ChopperData->Draw("Energy>>hBrems","","goff");
+  ChopperData->Draw("Energy>>tmp_Brems","","goff");
+  tmp_Brems->Smooth(4);
   std::cout << "MantisROOT::BuildBrem -> Data Grabbed." << std::endl;
-  hBrems->Scale(1.0/hBrems->Integral());
+  std::cout << "MantisROOT::BuildBrem -> Rebinning Brem Data..." << std::endl;
+  TH1D* hBrems = new TH1D("hBrems","Final Bremsstrahlung Data",nbins, 0.,Emax);
 
+  for(int i=1;i<=nbins;++i)
+  {
+    hBrems->SetBinContent(i,tmp_Brems->GetBinContent(tmp_Brems->GetNbinsX()*(i-1)/nbins+1));
+  }
+
+  hBrems->Scale(1.0/hBrems->Integral());
+  std::cout << "MantisROOT::BuildBrem -> Rebin Complete." << std::endl;
   if(checkZero)
   {
     std::cout << "MantisROOT::BuildBrem -> Checking for zeros..." << std::endl;
-
+    bool zero_present = false;
     for(unsigned int i=0;i<nbins;++i)
     {
       int count = 0;
       if(hBrems->GetBinContent(i) == 0)
       {
+        zero_present = true;
         while(hBrems->GetBinContent(i-1-count) == 0)
           count++;
         hBrems->SetBinContent(i,hBrems->GetBinContent(i-1-count));
       }
     }
+    if(zero_present)
+      std::cout << "MantisROOT::BuildBrem -> Zeros Found and Corrected." << std::endl;
+    else
+      std::cout << "MantisROOT::BuildBrem -> No Zeros Found Correction not needed." << std::endl;
   }
   std::cout << "MantisROOT::BuildBrem -> Brem Distribution Created." << std::endl;
   return hBrems;

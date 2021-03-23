@@ -101,7 +101,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     }
 
     // Run Time Cut
-    if(theTrack->GetGlobalTime() > 1500) // cut placed on particles time greater than 1500 ns 
+    if(theTrack->GetGlobalTime() > 1500) // cut placed on particles time greater than 1500 ns
     {
       theTrack->SetTrackStatus(fStopAndKill);
       krun->AddStatusKilledTime();
@@ -141,7 +141,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         if(cos(angle) < 0.94 || CPName != "eBrem")
         {
           theTrack->SetTrackStatus(fStopAndKill);
-          krun->AddStatusKilled();
+          krun->AddStatusKilledPosition();
         }
         else
         {
@@ -288,7 +288,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           if(bremTest)
           {
             theTrack->SetTrackStatus(fStopAndKill); // kill track only intersted in incident chopper Data
-            krun->AddStatusKilled();
+            krun->AddStatusKilledPosition();
           }
 
           const std::vector<const G4Track*>* secondaries = aStep->GetSecondaryInCurrentStep();

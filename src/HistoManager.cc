@@ -89,17 +89,17 @@ void HistoManager::Book()
     manager->FinishNtuple();
 
     // Create Testing TTree ID 4 for Incident Air just prior to Interrogation Object
-    manager->CreateNtuple("AirIn","Incident Air Pocket Just Prior to Int Obj");
-    manager->CreateNtupleDColumn("Energy");
-    manager->CreateNtupleSColumn("CreatorProcess");
-    manager->CreateNtupleDColumn("Angle");
-    manager->CreateNtupleDColumn("Time");
-    manager->CreateNtupleIColumn("EventID");
-    if(!inFile.compare(0,24,"brems_distributions.root"))
-      manager->CreateNtupleDColumn("Weight");
-    manager->FinishNtuple();
+    //manager->CreateNtuple("AirIn","Incident Air Pocket Just Prior to Int Obj");
+    //manager->CreateNtupleDColumn("Energy");
+    //manager->CreateNtupleSColumn("CreatorProcess");
+    //manager->CreateNtupleDColumn("Angle");
+    //manager->CreateNtupleDColumn("Time");
+    //manager->CreateNtupleIColumn("EventID");
+    //if(!inFile.compare(0,24,"brems_distributions.root"))
+    //  manager->CreateNtupleDColumn("Weight");
+    //manager->FinishNtuple();
 
-    // Create ID 5 NTuple for Incident Interrogation Object Information
+    // Create ID 4 NTuple for Incident Interrogation Object Information
     manager->CreateNtuple("IntObjIn","Incident Interrogation Object Data");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleSColumn("CreatorProcess");
@@ -110,7 +110,7 @@ void HistoManager::Book()
       manager->CreateNtupleDColumn("Weight");
     manager->FinishNtuple();
 
-    // Create ID 6 Ntuple for IntObj Emission Data
+    // Create ID 5 Ntuple for IntObj Emission Data
     manager->CreateNtuple("IntObjOut","Interrogation Object Emission Data");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleSColumn("CreatorProcess");
@@ -121,7 +121,7 @@ void HistoManager::Book()
       manager->CreateNtupleDColumn("Weight");
     manager->FinishNtuple();
 
-    // Create ID 7 Ntuple for Incident Water Tank Data
+    // Create ID 6 Ntuple for Incident Water Tank Data
     // Only Run with smaller runs this ntuple can get quite large
     manager->CreateNtuple("Water","Incident Water Tank Data");
     manager->CreateNtupleDColumn("Energy");
@@ -132,7 +132,7 @@ void HistoManager::Book()
       manager->CreateNtupleDColumn("Weight");
     manager->FinishNtuple();
 
-    // Create ID 8 Ntuple for cherenkov in water
+    // Create ID 7 Ntuple for cherenkov in water
     manager->CreateNtuple("Cherenkov","Cherenkov in Water Data");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleIColumn("EventID");
@@ -142,7 +142,7 @@ void HistoManager::Book()
       manager->CreateNtupleDColumn("Weight");
     manager->FinishNtuple();
 
-    // Create ID 9 Ntuple for Detected Information
+    // Create ID 8 Ntuple for Detected Information
     manager->CreateNtuple("DetInfo","Detected Information");
     manager->CreateNtupleIColumn("EventID");
     manager->CreateNtupleDColumn("Energy");
@@ -152,7 +152,7 @@ void HistoManager::Book()
       manager->CreateNtupleDColumn("Weight");
     manager->FinishNtuple();
 
-    // Create ID 10 Ntuple for Detector Process Information
+    // Create ID 9 Ntuple for Detector Process Information
     manager->CreateNtuple("IncDetInfo","Incident Detector Process Information");
     manager->CreateNtupleIColumn("EventID");
     manager->CreateNtupleDColumn("Energy");

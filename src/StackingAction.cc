@@ -41,7 +41,7 @@ G4ClassificationOfNewTrack StackingAction::ClassifyNewTrack(const G4Track* curre
         G4double trackZ = currentTrack->GetPosition().z();
         if(trackZ/(cm) > EndIntObj/(cm))
         {
-                local_run->AddStatusKilled();
+                local_run->AddStatusKilledPosition();
                 return fKill;
         }
         G4ParticleDefinition *pdef = currentTrack->GetDefinition();

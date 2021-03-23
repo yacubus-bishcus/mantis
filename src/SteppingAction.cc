@@ -83,7 +83,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         if(theTrack->GetPosition().z() > EndChop)
         {
           theTrack->SetTrackStatus(fStopAndKill);
-          krun->AddStatusKilled();
+          krun->AddStatusKilledPosition();
         }
     }
 
@@ -91,13 +91,20 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     {
       // kill photons that go beyond the interrogation object
       theTrack->SetTrackStatus(fStopAndKill);
-      krun->AddStatusKilled();
+      krun->AddStatusKilledPosition();
     }
     else if(nextStep_VolumeName.compare(0, 3, "Col") == 0)
     {
       // kill photons in collimator
       theTrack->SetTrackStatus(fStopAndKill);
-      krun->AddStatusKilled();
+      krun->AddStatusKilledPosition();
+    }
+
+    // Run Time Cut
+    if(theTrack->GetGlobalTime() > 1500)
+    {
+      theTrack->SetTrackStatus(fStopAndKill);
+      krun->AddStatusKilledTime();
     }
 
     G4int eventID = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();

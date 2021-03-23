@@ -53,13 +53,14 @@ class RunAction : public G4UserRunAction
     void AddScintillation(void) {fScintCount++;}
     void AddTotalSurface(void) {fTotalSurface += 1;}
     void AddNRF(void){fNRF++;}
-    void AddStatusKilled(void){fStatusKilled++;}
+    void AddStatusKilledPosition(void){fStatusKilledPosition++;}
+    void AddStatusKilledTime(void){fStatusKilledTime++;}
 
   private:
     HistoManager* fHistoManager;
     PrimaryGeneratorAction* fpga;
     G4double fCerenkovEnergy, fScintEnergy, fCerenkovCount;
-    G4int fScintCount, fTotalSurface, fNRF, fStatusKilled;
+    G4int fScintCount, fTotalSurface, fNRF, fStatusKilledPosition, fStatusKilledTime;
 };
 
 

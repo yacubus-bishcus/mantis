@@ -39,19 +39,20 @@ RunAction::~RunAction()
 
 void RunAction::BeginOfRunAction(const G4Run*)
 {
-        if(output)
-        {
-                fHistoManager->Book();
-        }
+  if(output)
+  {
+    fHistoManager->Book();
+  }
 
-        fTotalSurface = 0;
-        fCerenkovCount = 0;
-        fScintCount = 0;
-        fCerenkovEnergy = 0;
-        fScintEnergy = 0;
-        fNRF = 0;
-        fStatusKilled = 0;
-        G4cout << G4endl << "Beginning Run..." << G4endl;
+  fTotalSurface = 0;
+  fCerenkovCount = 0;
+  fScintCount = 0;
+  fCerenkovEnergy = 0;
+  fScintEnergy = 0;
+  fNRF = 0;
+  fStatusKilledPosition = 0;
+  fStatusKilledTime = 0;
+  G4cout << G4endl << "Beginning Run..." << G4endl;
 }
 
 void RunAction::EndOfRunAction(const G4Run* aRun)
@@ -73,7 +74,8 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
   G4cout << "Total number of Cherenkov Photons:                     " << fCerenkovCount << G4endl;
   G4cout << "Total number of Scintillation Photons:                 " << fScintCount << G4endl;
   G4cout << "Total number of Optical Photons:                       " << fCerenkovCount + fScintCount << G4endl;
-  G4cout << "Total number of Tracks Cut Based on Position:          " << fStatusKilled << G4endl;
+  G4cout << "Total number of Tracks Cut Based on Position:          " << fStatusKilledPosition << G4endl;
+  G4cout << "Total number of Tracks Cut Based on Time:              " << fStatusKilledTime << G4endl;
 
   if (fCerenkovCount > 0)
   {

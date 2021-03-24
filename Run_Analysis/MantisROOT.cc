@@ -51,7 +51,7 @@ public:
     void Sampling(const char*, string sample_element="U", double deltaE=5.0e-6, bool checkZero=false, double non_nrf_energy_cut=1.5);
     void SimpleSampling(const char*, double deltaE=5.0e-6, double cut_energy=1.5, bool checkZero=false);
     void CheckIntObj(const char*, const char*, double, bool Weighted=false);
-    void CheckAngles(const char*);
+    void CheckAngles(const char*, int estimate=-1);
   public:
     static MantisROOT *instance;
 
@@ -2368,7 +2368,7 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er,
 
 } // end of CheckIntObj
 
-void MantisROOT::CheckAngles(const char* filename)
+void MantisROOT::CheckAngles(const char* filename, int estimate=-1)
 {
   if(debug)
     std::cout << "MantisROOT::CheckAngles -> Checking Angles..." << std::endl;
@@ -2391,8 +2391,8 @@ void MantisROOT::CheckAngles(const char* filename)
   TTree *t1, *t2;
   f->GetObject("IntObjOut",t1);
   f->GetObject("DetInfo",t2);
-  t1->SetEstimate(-1);
-  t2->SetEstimate(-1);
+  t1->SetEstimate(estimate);
+  t2->SetEstimate(estimate);
   std::cout << "MantisROOT::CheckAngles -> Grabbing IntObjOut Angles and Events." << std::endl;
   int entries = t1->Draw("Angle:EventID","","goff");
 
@@ -2404,11 +2404,23 @@ void MantisROOT::CheckAngles(const char* filename)
 
   std::vector<double> anglesv;
   std::vector<int> eventsv;
-  for(int i=0;i<entries;++i)
+  if(estimate == -1)
   {
-    anglesv.push_back(angles[i]);
-    eventsv.push_back((int)eventID[i]);
+    for(int i=0;i<entries;++i)
+    {
+      anglesv.push_back(angles[i]);
+      eventsv.push_back((int)eventID[i]);
+    }
   }
+  else
+  {
+    for(int i=0;i<estimate;++i)
+    {
+      anglesv.push_back(angles[i]);
+      eventsv.push_back((int)eventID[i]);
+    }
+  }
+
   std::cout << "MantisROOT::CheckAngles -> IntObjOut Angles and Events Grabbed." << std::endl;
   std::cout << "MantisROOT::CheckAngles -> Grabbing Detinfo Events..." << std::endl;
 
@@ -2420,47 +2432,85 @@ void MantisROOT::CheckAngles(const char* filename)
   Double_t* eventID2 = t2->GetVal(0);
   std::vector<int> events2v;
 
-  for(int i=0;i<entries2;++i)
-    events2v.push_back((int)eventID2[i]);
+  if(estimate == -1)
+  {
+    for(int i=0;i<entries2;++i)
+      events2v.push_back((int)eventID2[i]);
+  }
+  else
+  {
+    for(int i=0;i<estimate;++i)
+      events2v.push_back((int)eventID2[i]);
+  }
 
   std::cout << "MantisROOT::CheckAngles -> DetInfo Events Grabbed." << std::endl;
 
   std::cout << "MantisROOT::CheckAngles -> Removing Duplicates and Sorting DetInfo..." << std::endl;
   std::sort(events2v.begin(),events2v.end());
   events2v.erase(unique(events2v.begin(),events2v.end()),events2v.end());
-  std::cout << "MantisROOT::CheckAngles -> Duplicates Removed. New Vector Size: " << events2v.size() << std::endl;
+  if(debug)
+    std::cout << "MantisROOT::CheckAngles -> Duplicates Removed. New Vector Size: " << events2v.size() << std::endl;
 
   // Compare Event IDs
   std::vector<double> det_anglesv;
   std::vector<int> det_eventsv;
   int x;
 
-  for(int i=0;i<eventsv.size();++i)
+  if(estimate == -1)
   {
-    if(i % 100 == 0)
-      std::cout << "\r** Checking Entry: " << i << std::flush;
-    // Grab IntObjOut EventID
-    x = eventsv[i];
-    // Check if DetInfo EventID matches IntObjOut EventID
-    auto exists = std::find(events2v.begin(),events2v.end(), x);
-
-    if(exists != events2v.end())
+    for(int i=0;i<eventsv.size();++i)
     {
-      det_eventsv.push_back(x);
-      det_anglesv.push_back(anglesv[i]);
-    }
+      if(i % 100 == 0)
+        std::cout << "\r** Checking Entry: " << i << std::flush;
+      // Grab IntObjOut EventID
+      x = eventsv[i];
+      // Check if DetInfo EventID matches IntObjOut EventID
+      auto exists = std::find(events2v.begin(),events2v.end(), x);
 
+      if(exists != events2v.end())
+      {
+        det_eventsv.push_back(x);
+        det_anglesv.push_back(anglesv[i]);
+      }
+
+    }
+  }
+  else
+  {
+    for(int i=0;i<estimate;++i)
+    {
+      if(i % 100 == 0)
+        std::cout << "\r** Checking Entry: " << i << std::flush;
+      // Grab IntObjOut EventID
+      x = eventsv[i];
+      // Check if DetInfo EventID matches IntObjOut EventID
+      auto exists = std::find(events2v.begin(),events2v.end(), x);
+
+      if(exists != events2v.end())
+      {
+        det_eventsv.push_back(x);
+        det_anglesv.push_back(anglesv[i]);
+      }
+
+    }
   }
 
-  std::cout << std::endl << "Mantis::CheckAngles -> Search complete." << std::endl;
+  std::cout << std::endl << "MantisROOT::CheckAngles -> Search complete." << std::endl;
 
   TFile *fout = new TFile("Check_Angles.root","RECREATE");
   fout->cd();
-  TTree *tAngle;
+  TTree *tAngle = new TTree("tAngle","IntObjOut Emission Angles Leading to Detection");
   int theEvent;
   double theAngle;
+
+  if(debug)
+    std::cout << "MantisROOT::CheckAngles -> Assigning Branches..." << std::endl;
+
   tAngle->Branch("EventID",&theEvent);
   tAngle->Branch("Angle", &theAngle);
+
+  if(debug)
+    std::cout << "MantisROOT::CheckAngles -> Filling TTree..." << std::endl;
 
   for(int i=0;i<det_eventsv.size();++i)
   {
@@ -2468,6 +2518,9 @@ void MantisROOT::CheckAngles(const char* filename)
     theAngle = det_anglesv[i];
     tAngle->Fill();
   }
+
+  if(debug)
+    std::cout << "MantisROOT::CheckAngles -> Writing..." << std::endl;
 
   tAngle->Write();
   std::cout << "MantisROOT::CheckAngles -> Events and Angles written to Check_Angles.root" << std::endl;
@@ -2675,12 +2728,13 @@ void MantisROOT::Show_CheckIntObj_Description()
 
 void MantisROOT::Show_CheckAngles()
 {
-  std::cout << "void MantisROOT::CheckAngles(const char* filename)" << std::endl;
+  std::cout << "void MantisROOT::CheckAngles(const char* filename, int estimate)" << std::endl;
 }
 
 void MantisROOT::Show_CheckAngles_Description()
 {
   std::cout << "DESCRIPTION: " << std::endl << "Determines which Angles emitted from IntObjOut are Detected."
+  << std::endl << "Estimate sets the limit on how many events to check. "
   << std::endl << "Usefull for determining emission angle cuts to place." << std::endl;
 }
 

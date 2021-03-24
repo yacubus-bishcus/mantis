@@ -54,7 +54,9 @@ void HistoManager::Book()
   // Create ID 0 Ntuple for Brem Beam Emission
   manager->CreateNtuple("Brem","Bremsstrahlung Beam");
   manager->CreateNtupleDColumn("Energy");
-  manager->CreateNtupleDColumn("Angle");
+  manager->CreateNtupleDColumn("X_Angle");
+  manager->CreateNtupleDColumn("Y_Angle");
+  manager->CreateNtupleDColumn("Z_Angle");
   //manager->CreateNtupleSColumn("CProcess");
   manager->FinishNtuple();
 
@@ -71,7 +73,9 @@ void HistoManager::Book()
   manager->CreateNtupleDColumn("Energy");
   manager->CreateNtupleIColumn("EventID");
   manager->CreateNtupleIColumn("isNRF");
-  manager->CreateNtupleDColumn("Angle");
+  manager->CreateNtupleDColumn("X_Angle");
+  manager->CreateNtupleDColumn("Y_Angle");
+  manager->CreateNtupleDColumn("Z_Angle");
   if(!inFile.compare(0,24,"brems_distributions.root"))
     manager->CreateNtupleDColumn("Weight");
   manager->FinishNtuple();
@@ -103,7 +107,9 @@ void HistoManager::Book()
     manager->CreateNtuple("IntObjIn","Incident Interrogation Object Data");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleSColumn("CreatorProcess");
-    manager->CreateNtupleDColumn("Angle");
+    manager->CreateNtupleDColumn("X_Angle");
+    manager->CreateNtupleDColumn("Y_Angle");
+    manager->CreateNtupleDColumn("Z_Angle");
     manager->CreateNtupleDColumn("Time");
     manager->CreateNtupleIColumn("EventID");
     if(!inFile.compare(0,24,"brems_distributions.root"))
@@ -114,7 +120,9 @@ void HistoManager::Book()
     manager->CreateNtuple("IntObjOut","Interrogation Object Emission Data");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleSColumn("CreatorProcess");
-    manager->CreateNtupleDColumn("Angle");
+    manager->CreateNtupleDColumn("X_Angle");
+    manager->CreateNtupleDColumn("Y_Angle");
+    manager->CreateNtupleDColumn("Z_Angle");
     manager->CreateNtupleDColumn("Time");
     manager->CreateNtupleIColumn("EventID");
     if(!inFile.compare(0,24,"brems_distributions.root"))

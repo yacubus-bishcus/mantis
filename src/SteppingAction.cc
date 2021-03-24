@@ -78,8 +78,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if(bremTest)
     {
         G4double EndChop = kdet->getEndChop();
-        //G4ThreeVector pB = aStep->GetPreStepPoint()->GetMomentum();
-        //G4double tB = asin(sqrt(pow(pB.x(),2)+pow(pB.y(),2))/pB.mag()); //the angle of the particle relative to the Z axis
         if(theTrack->GetPosition().z() > EndChop)
         {
           theTrack->SetTrackStatus(fStopAndKill);
@@ -128,6 +126,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       }
     }
 
+    G4ThreeVector p = aStep->GetPreStepPoint()->GetMomentumDirection();
+
 // *********************************** Track Bremsstrahlung Beam for Brem Test ***************************************** //
 
     if(bremTest)
@@ -136,9 +136,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           && previousStep_VolumeName.compare(0,11,"BremBacking") == 0
           && theTrack->GetParticleDefinition() == G4Gamma::Definition())
       {
-        G4ThreeVector p = aStep->GetPreStepPoint()->GetMomentum();
-        G4double angle = asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()); //the angle of the particle relative to the Z axis
-        if(cos(angle) < 0.94 || CPName != "eBrem")
+        if(cos(p.z()) < 0.94 || CPName != "eBrem")
         {
           theTrack->SetTrackStatus(fStopAndKill);
           krun->AddStatusKilledPosition();
@@ -146,7 +144,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         else
         {
           manager->FillNtupleDColumn(0,0,energy);
-          manager->FillNtupleDColumn(0,1, angle);
+          manager->FillNtupleDColumn(0,1, p.x());
+          manager->FillNtupleDColumn(0,2, p.y());
+          manager->FillNtupleDColumn(0,3, p.z());
           manager->AddNtupleRow(0);
         }
       }
@@ -198,14 +198,14 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       if(nextStep_VolumeName.compare(0,4,"Chop") != 0
          && previousStep_VolumeName.compare(0,4,"Chop") == 0)
       {
-        G4ThreeVector p = aStep->GetPreStepPoint()->GetMomentum();
-        G4double angle = asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()); //the angle of the particle relative to the Z axis
         manager->FillNtupleDColumn(2,0, energy);
         manager->FillNtupleIColumn(2,1,eventID);
         manager->FillNtupleIColumn(2,2,isNRF);
-        manager->FillNtupleDColumn(2,3,angle);
+        manager->FillNtupleDColumn(2,3,p.x());
+        manager->FillNtupleDColumn(2,4,p.y());
+        manager->FillNtupleDColumn(2,5,p.z());
         if(!inFile.compare(0,24,"brems_distributions.root"))
-          manager->FillNtupleDColumn(2,4, weight);
+          manager->FillNtupleDColumn(2,6, weight);
         manager->AddNtupleRow(2);
       }
     }
@@ -215,8 +215,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         // Interrogation Object Analysis
         if(drawIntObjDataFlag && !bremTest)
         {
-          G4ThreeVector p = aStep->GetPreStepPoint()->GetMomentum();
-          G4double angle = asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag()); //the angle of the particle relative to the Z axis
           // Incident Air Pocket Just Prior to Interrogation Object
           //if(nextStep_VolumeName.compare(0,9,"AirPocket") == 0
           //  && previousStep_VolumeName.compare(0,9,"AirPocket") !=0)
@@ -237,11 +235,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           {
               manager->FillNtupleDColumn(4,0, energy);
               manager->FillNtupleSColumn(4,1, CPName);
-              manager->FillNtupleDColumn(4,2,angle);
-              manager->FillNtupleDColumn(4,3,theTrack->GetGlobalTime());
-              manager->FillNtupleIColumn(4,4,eventID);
+              manager->FillNtupleDColumn(4,2,p.x());
+              manager->FillNtupleDColumn(4,3,p.y());
+              manager->FillNtupleDColumn(4,4,p.z());
+              manager->FillNtupleDColumn(4,4,theTrack->GetGlobalTime());
+              manager->FillNtupleIColumn(4,5,eventID);
               if(!inFile.compare(0,24,"brems_distributions.root"))
-                manager->FillNtupleDColumn(4,5, weight);
+                manager->FillNtupleDColumn(4,6, weight);
               manager->AddNtupleRow(4);
           }
           // Exiting Interrogation Object
@@ -250,11 +250,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           {
             manager->FillNtupleDColumn(5,0, energy);
             manager->FillNtupleSColumn(5,1, CPName);
-            manager->FillNtupleDColumn(5,2, angle);
-            manager->FillNtupleDColumn(5,3, theTrack->GetGlobalTime());
-            manager->FillNtupleIColumn(5,4, eventID);
+            manager->FillNtupleDColumn(5,2, p.x());
+            manager->FillNtupleDColumn(5,3, p.y());
+            manager->FillNtupleDColumn(5,4, p.z());
+            manager->FillNtupleDColumn(5,5, theTrack->GetGlobalTime());
+            manager->FillNtupleIColumn(5,6, eventID);
             if(!inFile.compare(0,24,"brems_distributions.root"))
-              manager->FillNtupleDColumn(5,5, weight);
+              manager->FillNtupleDColumn(5,7, weight);
             manager->AddNtupleRow(5);
           }
         }

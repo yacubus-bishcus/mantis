@@ -52,6 +52,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         Cmdpcmat = new G4UIcmdWithAString("/mydet/PCmat",this);
         CmdnPMT = new G4UIcmdWithAnInteger("/mydet/nPMT",this);
         CmdAngle = new G4UIcmdWithADouble("/mydet/Angle",this);
+        CmdNTank = new G4UIcmdWithADouble("/mydet/NumTanksPerSide",this);
         CmdChopMaterial = new G4UIcmdWithAString("/chopper/material",this);
         CmdChopthick = new G4UIcmdWithADouble("/chopper/thickness", this);
         CmdChopZ = new G4UIcmdWithADouble("/chopper/distance", this);
@@ -75,12 +76,12 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdX->SetGuidance("Choose Desired X Size of Water Tank");
         CmdY->SetGuidance("Choose Desired Y Size of Water Tank");
         CmdZ->SetGuidance("Choose Desired Z Size of Water Tank");
-        Cmdtr->SetGuidance("Choose Desired radius Size of Interogation Target");
+        Cmdtr->SetGuidance("Choose Desired radius Size of Interrogation Target");
         Cmdtrad->SetGuidance("Choose Desired fission isotope abundance(enrichment) of Interrogation Target");
         Cmdtsel->SetGuidance("Choose Desired target");
-        CmdtXpos->SetGuidance("Choose Desired X Position of Interogation Target");
-        CmdtYpos->SetGuidance("Choose Desired Y Position of Interogation Target");
-        CmdtZpos->SetGuidance("Choose Desired Z Position of Interogation Target");
+        CmdtXpos->SetGuidance("Choose Desired X Position of Interrogation Target");
+        CmdtYpos->SetGuidance("Choose Desired Y Position of Interrogation Target");
+        CmdtZpos->SetGuidance("Choose Desired Z Position of Interrogation Target");
         Cmdpcmat->SetGuidance("Choose desired photocathode material");
         CmdnPMT->SetGuidance("Choose desired number of PMTs");
         CmdChopMaterial->SetGuidance("Choose desired Chopper Material");
@@ -89,6 +90,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdChopperOn->SetGuidance("Choose desired chopper wheel state");
         CmdChopperAbundance->SetGuidance("Choose desired chopper wheel material isotope abundance(enrichment)");
         CmdAngle->SetGuidance("Choose desired Detector BackScatter Angle in Degrees");
+        CmdNTank->SetGuidance("Choose Number of Water Tanks On Each Side of Cargo Container.");
         CmdAttenOn->SetGuidance("Choose if Attenuator Present or not");
         CmdAttenThick->SetGuidance("Choose Desired attenuator thickness");
         CmdAttenMat->SetGuidance("Choose desired attenuator material from NIST materials");
@@ -122,7 +124,9 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdChopperAbundance->SetParameterName("chopperAbundance",false);
         CmdChopperAbundance->SetRange("chopperAbundance > 0 && chopperAbundance < 100");
         CmdAngle->SetParameterName("Angle",false);
-        CmdAngle->SetRange("Angle > 90 && Angle < 135");
+        CmdAngle->SetRange("Angle > 90 && Angle < 180");
+        CmdNTank->SetParameterName("NumTanks",false);
+        CmdNTank->SetRange("NumTanks>0 && NumTanks > 4");
         CmdAttenOn->SetParameterName("attenuator",false);
         CmdAttenThick->SetParameterName("attenThickness",false);
         CmdAttenMat->SetParameterName("attenMaterial",false);
@@ -169,6 +173,7 @@ DetectorMessenger::~DetectorMessenger()
         delete CmdChopperOn;
         delete CmdChopperAbundance;
         delete CmdAngle;
+        delete CmdNTank;
         delete CmdAttenOn;
         delete CmdAttenThick;
         delete CmdAttenMat;
@@ -296,6 +301,12 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
                 G4double thecmdAngle = CmdAngle->GetNewDoubleValue(newValue);
                 DetectorA->SettheAngle(thecmdAngle);
                 G4cout << "The Detector angle manually set to: " << thecmdAngle << " degrees" << G4endl;
+        }
+        else if(command == CmdNTank)
+        {
+          G4double theNtanks = CmdNTank->GetNewDoubleValue(newValue);
+          DetectorA->SetNTanks((int)theNtanks);
+          G4cout << "The Number of Water Tanks on Each Side of Container set to: " << theNtanks << G4endl;
         }
         else if(command == CmdAttenOn)
         {

@@ -66,6 +66,7 @@ private:
   G4UIcmdWithAString* CmdChopperOn;
   G4UIcmdWithADouble* CmdChopperAbundance;
   G4UIcmdWithADouble* CmdAngle;
+  G4UIcmdWithADouble* CmdNTank;
   G4UIcmdWithAString* CmdAttenOn;
   G4bool check_atten_on = false;
   G4UIcmdWithADouble* CmdAttenThick;
@@ -80,7 +81,7 @@ private:
   G4UIcmdWithAString* CmdVerbose;
   G4UIcmdWithAString* CmdCheckOverlaps;
   G4UIcmdWithAString* CmdRemoveObjects;
-  
+
   G4UIdirectory *myDir;
   G4UIdirectory *myDir2;
   G4UIdirectory *myDir3;

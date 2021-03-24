@@ -64,6 +64,7 @@
 #/mydet/WaterX
 # Units degrees Backscatter angle Default 120
 #/mydet/Angle 120
+#/mydet/NumTanksPerSide 1
 
 # Attenuator Settings Surrounding Cherenkov Detector (optional)
 

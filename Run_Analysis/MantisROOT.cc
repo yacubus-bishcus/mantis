@@ -2425,17 +2425,21 @@ void MantisROOT::CheckAngles(const char* filename)
 
   std::cout << "MantisROOT::CheckAngles -> DetInfo Events Grabbed." << std::endl;
 
+  std::cout << "MantisROOT::CheckAngles -> Removing Duplicates and Sorting DetInfo..." << std::endl;
+  std::sort(events2v.begin(),events2v.end());
+  events2v.erase(unique(events2v.begin(),events2v.end()),events2v.end());
+  std::cout << "MantisROOT::CheckAngles -> Duplicates Removed. New Vector Size: " << events2v.size() << std::endl;
+
   // Compare Event IDs
   std::vector<double> det_anglesv;
   std::vector<int> det_eventsv;
   int x;
 
-  std::cout << "Checking Entry: " << std::endl;
   for(int i=0;i<eventsv.size();++i)
   {
     if(i % 100 == 0)
       std::cout << "\r** Checking Entry: " << i << std::flush;
-    // Grab DetInfo EventID
+    // Grab IntObjOut EventID
     x = eventsv[i];
     // Check if DetInfo EventID matches IntObjOut EventID
     auto exists = std::find(events2v.begin(),events2v.end(), x);
@@ -2447,7 +2451,6 @@ void MantisROOT::CheckAngles(const char* filename)
     }
 
   }
-
 
   std::cout << std::endl << "Mantis::CheckAngles -> Search complete." << std::endl;
 

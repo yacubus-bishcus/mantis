@@ -50,6 +50,8 @@ public:
     void CheckEvents(const char*,bool);
     void Sampling(const char*, string sample_element="U", double deltaE=5.0e-6, bool checkZero=false, double non_nrf_energy_cut=1.5);
     void SimpleSampling(const char*, double deltaE=5.0e-6, double cut_energy=1.5, bool checkZero=false);
+    void CheckIntObj(const char*, const char*, double, bool Weighted=false);
+    void CheckAngles(const char*);
   public:
     static MantisROOT *instance;
 
@@ -112,6 +114,10 @@ public:
     void Show_GetInstance();
     void Show_SimpleSampling();
     void Show_SimpleSampling_Description();
+    void Show_CheckIntObj();
+    void Show_CheckIntObj_Description();
+    void Show_CheckAngles();
+    void Show_CheckAngles_Description();
 };
 
 MantisROOT *MantisROOT::instance = 0;
@@ -195,7 +201,15 @@ void MantisROOT::Help()
   Show_Sampling();
   Show_Sampling_Description();
   std::cout << std::endl;
-
+  Show_SimpleSampling();
+  Show_SimpleSampling_Description();
+  std::cout << std::endl;
+  Show_CheckIntObj();
+  Show_CheckIntObj_Description();
+  std::cout << std::endl;
+  Show_CheckAngles();
+  Show_CheckAngles_Description();
+  std::cout << std::endl;
 }
 
 void MantisROOT::Rebin(bool verbose, const char* inFile, const char* ObjName, const char* OutObjName,
@@ -878,7 +892,9 @@ void MantisROOT::Show(string name="All", bool description=false)
   }
   else if(!name.compare("All") && !description)
   {
+    Show_CheckAngles();
     Show_CheckEvents();
+    Show_CheckIntObj();
     Show_CombineFiles();
     Show_CopyTrees();
     Show_Help();
@@ -976,6 +992,18 @@ void MantisROOT::Show(string name="All", bool description=false)
     Show_SimpleSampling();
     if(description)
       Show_SimpleSampling_Description();
+  }
+  else if(!name.compare("CheckIntObj"))
+  {
+    Show_CheckIntObj();
+    if(description)
+      Show_CheckIntObj_Description();
+  }
+  else if(!name.compare("CheckAngles"))
+  {
+    Show_CheckAngles();
+    if(description)
+      Show_CheckAngles_Description();
   }
   else
     std::cout << "Error Function Not Found." << std::endl;
@@ -2263,6 +2291,189 @@ void MantisROOT::Sampling(const char *bremInputFilename, string sample_element="
 
 }// End of sampling
 
+void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er, bool Weighted=false)
+{
+  if(gSystem->AccessPathName(onFile) || gSystem->AccessPathName(offFile))
+  {
+    std::cout << "MantisROOT::CheckIntObj -> Files Not Found." << std::endl;
+    exit(1);
+  }
+
+  // On Analysis
+  TFile *f = new TFile(onFile);
+  if(f ==0)
+  {
+    std::cout << "MantisROOT::CheckIntObj -> File " << onFile << " NULL!" << std::endl;
+    exit(1);
+  }
+  bool confirmf = f->cd();
+  if(!confirmf)
+  {
+    std::cout << "MantisROOT::CheckIntObj -> Cound Not Change into " << onFile << " directory." << std::endl;
+    exit(1);
+  }
+  TTree* inTree;
+  f->GetObject("IntObjIn", inTree);
+  double emin = Er - 100e-6;
+  double emax = Er + 100e-6;
+  TH1D *e1 = new TH1D("e1","Incident Interrogation Object 2eV Binning",100, emin, emax);
+  if(Weighted)
+    inTree->Draw("Energy>>e1","Weight","goff");
+  else
+    inTree->Draw("Energy>>e1","","goff");
+
+  e1->SetStats(0);
+  e1->Sumw2();
+
+  // Off Analysis
+  TFile *f2 = new TFile(offFile);
+  if(f2 ==0)
+  {
+    std::cout << "MantisROOT::CheckIntObj -> ERROR File " << offFile << " NULL!" << std::endl;
+    exit(1);
+  }
+  bool confirmf2 = f2->cd();
+  if(!confirmf2)
+  {
+    std::cout << "MantisROOT::CheckIntObj -> ERROR Could NOT Change into " << offFile << " directory." << std::endl;
+    exit(1);
+  }
+
+  TTree *inTree2;
+  f2->GetObject("IntObjIn", inTree2);
+  TH1D *e2 = new TH1D("e2","Incident Interrogation Object 2eV Binning",100, emin, emax);
+  if(Weighted)
+    inTree2->Draw("Energy>>e2","Weight","goff");
+  else
+    inTree2->Draw("Energy>>e2","","goff");
+
+  e2->SetStats(0);
+  e2->Sumw2();
+  e2->SetLineColor(kRed);
+
+  TCanvas *c1 = new TCanvas();
+  c1->cd();
+  e2->Draw("C");
+  f->cd();
+  e1->Draw("C,SAME");
+
+  auto legend = new TLegend();
+  legend->SetHeader("Chopper State", "C");
+  legend->AddEntry(e1, "Chopper On");
+  legend->AddEntry(e2, "Chopper Off");
+  legend->Draw();
+
+  f->Close();
+  f2->Close();
+
+} // end of CheckIntObj
+
+void MantisROOT::CheckAngles(const char* filename)
+{
+  if(debug)
+    std::cout << "MantisROOT::CheckAngles -> Checking Angles..." << std::endl;
+
+  if(gSystem->AccessPathName(filename))
+  {
+    std::cout << "MantisROOT::CheckAngles -> File " << filename << " Not Found." << std::endl;
+    exit(1);
+  }
+
+  if(debug)
+    std::cout << "MantisROOT::CheckAngles -> Opening File." << std::endl;
+
+  TFile *f = new TFile(filename);
+  f->cd();
+
+  if(debug)
+    std::cout << "MantisROOT::CheckAngles -> File opened." << std::endl;
+
+  TTree *t1, *t2;
+  f->GetObject("IntObjOut",t1);
+  f->GetObject("DetInfo",t2);
+  t1->SetEstimate(-1);
+  t2->SetEstimate(-1);
+  std::cout << "MantisROOT::CheckAngles -> Grabbing IntObjOut Angles and Events." << std::endl;
+  int entries = t1->Draw("Angle:EventID","","goff");
+
+  if(debug)
+    std::cout << "MantisROOT::CheckAngles -> IntObjOut Entries: " << entries << std::endl;
+
+  Double_t* angles = t1->GetVal(0);
+  Double_t* eventID = t1->GetVal(1);
+
+  std::vector<double> anglesv;
+  std::vector<int> eventsv;
+  for(int i=0;i<entries;++i)
+  {
+    anglesv.push_back(angles[i]);
+    eventsv.push_back((int)eventID[i]);
+  }
+  std::cout << "MantisROOT::CheckAngles -> IntObjOut Angles and Events Grabbed." << std::endl;
+  std::cout << "MantisROOT::CheckAngles -> Grabbing Detinfo Events..." << std::endl;
+
+  int entries2 = t2->Draw("EventID","","goff");
+
+  if(debug)
+    std::cout << "MantisROOT::CheckAngles -> DetInfo Entries: " << entries2 << std::endl;
+
+  Double_t* eventID2 = t2->GetVal(0);
+  std::vector<int> events2v;
+
+  for(int i=0;i<entries2;++i)
+    events2v.push_back((int)eventID2[i]);
+
+  std::cout << "MantisROOT::CheckAngles -> DetInfo Events Grabbed." << std::endl;
+
+  // Compare Event IDs
+  std::vector<double> det_anglesv;
+  std::vector<int> det_eventsv;
+  int x;
+
+  std::cout << "Checking Entry: " << std::endl;
+  for(int i=0;i<eventsv.size();++i)
+  {
+    if(i % 100 == 0)
+      std::cout << "\r** Checking Entry: " << i << std::flush;
+    // Grab DetInfo EventID
+    x = eventsv[i];
+    // Check if DetInfo EventID matches IntObjOut EventID
+    auto exists = std::find(events2v.begin(),events2v.end(), x);
+
+    if(exists != events2v.end())
+    {
+      det_eventsv.push_back(x);
+      det_anglesv.push_back(anglesv[i]);
+    }
+
+  }
+
+
+  std::cout << std::endl << "Mantis::CheckAngles -> Search complete." << std::endl;
+
+  TFile *fout = new TFile("Check_Angles.root","RECREATE");
+  fout->cd();
+  TTree *tAngle;
+  int theEvent;
+  double theAngle;
+  tAngle->Branch("EventID",&theEvent);
+  tAngle->Branch("Angle", &theAngle);
+
+  for(int i=0;i<det_eventsv.size();++i)
+  {
+    theEvent = det_eventsv[i];
+    theAngle = det_anglesv[i];
+    tAngle->Fill();
+  }
+
+  tAngle->Write();
+  std::cout << "MantisROOT::CheckAngles -> Events and Angles written to Check_Angles.root" << std::endl;
+  fout->Close();
+  f->cd();
+  f->Close();
+
+
+} // end of CheckAngles
 
 //******************************************************************************//
 //******************************************************************************//
@@ -2446,6 +2657,28 @@ void MantisROOT::Show_SimpleSampling_Description()
   << std::endl << "would create brems_distributions.root with 5e-6 bin widths where if any bin content = 0 that bin would be set to the prior bins content"
   << std::endl << "the importance sampling distribution energies below 1.5 MeV would have importances 1/1000 of all energies above 1.5 MeV."
   << std::endl;
+}
+
+void MantisROOT::Show_CheckIntObj()
+{
+  std::cout << "void CheckIntObj(const char* onFile, const char* offFile, double Er, bool Weighted=false)" << std::endl;
+}
+
+void MantisROOT::Show_CheckIntObj_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Draws a 200eV Wide Region centered on Er with 2eV bin widths for both Chopper States (On/Off)."
+  << std::endl << "If the spectra contain weights be sure to add the boolean true to the fourth input." << std::endl;
+}
+
+void MantisROOT::Show_CheckAngles()
+{
+  std::cout << "void MantisROOT::CheckAngles(const char* filename)" << std::endl;
+}
+
+void MantisROOT::Show_CheckAngles_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Determines which Angles emitted from IntObjOut are Detected."
+  << std::endl << "Usefull for determining emission angle cuts to place." << std::endl;
 }
 
 void MantisROOT::Show_GetInstance()

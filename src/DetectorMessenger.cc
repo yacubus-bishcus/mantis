@@ -126,7 +126,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdAngle->SetParameterName("Angle",false);
         CmdAngle->SetRange("Angle > 90 && Angle < 180");
         CmdNTank->SetParameterName("NumTanks",false);
-        CmdNTank->SetRange("NumTanks>0 && NumTanks > 4");
+        CmdNTank->SetRange("NumTanks > 0 && NumTanks < 4");
         CmdAttenOn->SetParameterName("attenuator",false);
         CmdAttenThick->SetParameterName("attenThickness",false);
         CmdAttenMat->SetParameterName("attenMaterial",false);

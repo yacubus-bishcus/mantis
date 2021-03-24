@@ -238,10 +238,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
               manager->FillNtupleDColumn(4,2,p.x());
               manager->FillNtupleDColumn(4,3,p.y());
               manager->FillNtupleDColumn(4,4,p.z());
-              manager->FillNtupleDColumn(4,4,theTrack->GetGlobalTime());
-              manager->FillNtupleIColumn(4,5,eventID);
+              manager->FillNtupleDColumn(4,5,theTrack->GetGlobalTime());
+              manager->FillNtupleIColumn(4,6,eventID);
               if(!inFile.compare(0,24,"brems_distributions.root"))
-                manager->FillNtupleDColumn(4,6, weight);
+                manager->FillNtupleDColumn(4,7, weight);
               manager->AddNtupleRow(4);
           }
           // Exiting Interrogation Object

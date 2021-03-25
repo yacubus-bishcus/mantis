@@ -259,7 +259,7 @@ void SetRemoveContainer(G4bool val)
 
 private:
 // Private Member Functions
-void DefDetPositionConstraintLeft(double, double);
+void DefDetPositionConstraintLeft(double, double, double, double);
 void DefDetPositionConstraintRight(double, double);
 void DefDetPositionConstraintUpper(double, double, double);
 void DefIntObjPositionConstraint(double, double, double);

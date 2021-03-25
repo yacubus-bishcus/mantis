@@ -556,9 +556,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                               checkOverlaps); //overlaps checking
 
                 // Conduct Final Tank Position Check
-                DefDetPositionConstraintUpper(container_z_pos, water_size_z, water_z_pos);
-                DefDetPositionConstraintLeft(water_size_x, water_x_pos);
-                DefDetPositionConstraintRight(water_size_x, water_x_pos);
+                DefDetPositionConstraintUpper(container_z_pos/(m), water_size_z/(m), water_z_pos/(m));
+                DefDetPositionConstraintLeft(water_size_x/(m), water_x_pos/(m));
+                DefDetPositionConstraintRight(water_size_x/(m), water_x_pos/(m));
 
 // **************************************************** End of Water Tank Construction Setup ********************************************************* //
 
@@ -1030,10 +1030,10 @@ void DetectorConstruction::DefDetPositionConstraintUpper(double container_z_pos,
 
 void DetectorConstruction::DefDetPositionConstraintLeft(double water_x, double water_x_pos)
 {
-  G4double left_boundary = -0.3048/2. + -1.0e-2; // add a cm of wiggle room
+  G4double left_boundary = (-0.3048/2. + -1.0e-2)*m; // add a cm of wiggle room
   G4double left_pos = water_x/2. + water_x_pos;
 
-  if(left_pos > left_boundary)
+  if(left_pos/(m) > left_boundary/(m))
   {
     G4cerr << "DetectorConstruction::DefDetPositionConstraintLeft -> ERROR Left Boundary Constraint Test Failed."
     << G4endl << "Position: " << left_pos/(m) << " Greater than Boundary: " << left_boundary/(m) << G4endl;
@@ -1043,10 +1043,10 @@ void DetectorConstruction::DefDetPositionConstraintLeft(double water_x, double w
 
 void DetectorConstruction::DefDetPositionConstraintRight(double water_x, double water_x_pos)
 {
-  G4double right_boundary = 0.3048/2. + 1.0e-2; // add a cm of wiggle room
+  G4double right_boundary = (0.3048/2. + 1.0e-2)*m; // add a cm of wiggle room
   G4double right_pos = water_x/2. + water_x_pos;
 
-  if(right_pos > right_boundary)
+  if(right_pos/(m) > right_boundary/(m))
   {
     G4cerr << "DetectorConstruction::DefDetPositionConstraintRight -> ERROR Right Boundary Constraint Test Failed."
     << G4endl << "Position: " << right_pos/(m) << " Greater than Boundary: " << right_boundary/(m) << G4endl;

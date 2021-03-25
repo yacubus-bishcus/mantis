@@ -1047,10 +1047,10 @@ void DetectorConstruction::DefDetPositionConstraintRight(double water_x, double 
   G4double right_boundary = 0.3048/2. + 1.0e-2; // add a cm of wiggle room
   G4double right_pos = water_x + water_x_pos;
 
-  if(right_pos > right_boundary)
+  if(right_pos < right_boundary)
   {
     G4cerr << "DetectorConstruction::DefDetPositionConstraintRight -> ERROR Right Boundary Constraint Test Failed."
-    << G4endl << "Position: " << right_pos << " Greater than Boundary: " << right_boundary << G4endl;
+    << G4endl << "Position: " << right_pos << " Less than Boundary: " << right_boundary << G4endl;
     exit(1);
   }
 

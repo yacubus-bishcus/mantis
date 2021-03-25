@@ -1040,6 +1040,11 @@ void DetectorConstruction::DefDetPositionConstraintLeft(double water_x, double w
     << G4endl << "Position: " << left_pos << " Greater than Boundary: " << left_boundary << G4endl;
     exit(1);
   }
+  else
+  {
+    G4cout << "DetectorConstruction::DefDetPositionConstraintLeft -> Left Boundary Constraint Test Passed."
+    << G4endl << "Position: " << left_pos << " Less than Boundary: " << left_boundary << G4endl;
+  }
 }
 
 void DetectorConstruction::DefDetPositionConstraintRight(double water_x, double water_x_pos)
@@ -1052,6 +1057,11 @@ void DetectorConstruction::DefDetPositionConstraintRight(double water_x, double 
     G4cerr << "DetectorConstruction::DefDetPositionConstraintRight -> ERROR Right Boundary Constraint Test Failed."
     << G4endl << "Position: " << right_pos << " Less than Boundary: " << right_boundary << G4endl;
     exit(1);
+  }
+  else
+  {
+    G4cout << "DetectorConstruction::DefDetPositionConstraintRight -> Right Boundary Constraint Test Passed."
+    << G4endl << "Position: " << right_pos << " Greater than Boundary: " << right_boundary << G4endl;
   }
 
 }

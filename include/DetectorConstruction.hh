@@ -126,21 +126,6 @@ void SetIntObj_radius(G4double val)
         IntObj_rad = val;
         IntObj_rad = IntObj_rad*cm;
 }
-void SetIntObjX_pos(G4double val)
-{
-        intObj_x_pos = val;
-        intObj_x_pos = intObj_x_pos*cm;
-}
-void SetIntObjY_pos(G4double val)
-{
-        intObj_y_pos = val;
-        intObj_y_pos = intObj_y_pos*cm;
-}
-void SetIntObjZ_pos(G4double val)
-{
-        intObj_z_pos = val;
-        intObj_z_pos = intObj_z_pos*cm;
-}
 void SetIntObjAbundance(G4double val)
 {
         intObj_radio_abundance = val;

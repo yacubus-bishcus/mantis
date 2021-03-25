@@ -1031,7 +1031,7 @@ void DetectorConstruction::DefDetPositionConstraintUpper(double container_z_pos,
 void DetectorConstruction::DefDetPositionConstraintLeft(double water_x, double water_x_pos)
 {
   G4double left_boundary = -0.3048/2. + -1.0e-2; // add a cm of wiggle room
-  G4double left_pos = water_x/2. + water_x_pos;
+  G4double left_pos = water_x - water_x_pos;
 
   if(left_pos > left_boundary)
   {
@@ -1045,7 +1045,7 @@ void DetectorConstruction::DefDetPositionConstraintLeft(double water_x, double w
 void DetectorConstruction::DefDetPositionConstraintRight(double water_x, double water_x_pos)
 {
   G4double right_boundary = 0.3048/2. + 1.0e-2; // add a cm of wiggle room
-  G4double right_pos = water_x/2. + water_x_pos;
+  G4double right_pos = water_x + water_x_pos;
 
   if(right_pos > right_boundary)
   {

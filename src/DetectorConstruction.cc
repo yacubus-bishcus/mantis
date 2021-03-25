@@ -668,7 +668,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 std::vector<G4double> PMT_y_posv;
                 if(nPMT>1)
                 {
-                        if(PMT_rmax*2 > water_size_y/(nPMT))
+                        if(PMT_rmax*2 > water_size_y*2/(nPMT))
                         {
                                 G4cerr << "ERROR Too many PMTs to fit on Water Surface!" << G4endl;
                                 exit(10);

@@ -680,7 +680,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                   PMT_y_posv.push_back(PMT_y_pos_start);
                   for(G4int i=1;i<nPMT;++i)
                   {
-                    PMT_y_pos = PMT_y_pos_start/(cm) + i*(PMT_rmax*2.);
+                    PMT_y_pos = PMT_y_pos_start + i*(PMT_rmax*2.);
                     PMT_y_posv.push_back(PMT_y_pos);
                     G4cout << "PMT Position " << i << " set to " << PMT_y_posv[i-1]/(cm)<< " cm" << G4endl;
                   }

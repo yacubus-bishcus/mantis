@@ -169,7 +169,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   // ********************************************************** World and Materials Complete ************************************************************//
   // Parameters used later
-  G4double container_z_pos = 1.2192*m +water_size_x + 1.0*m;
+  G4double container_z_pos = 1.2192*m + 1.5*m;
   G4double container_edge_position = container_z_pos - 1.2192*m;
   G4double colimator_size = 50*cm;
   G4double col_position = 1.0*cm + container_z_pos - 1.2192*m - colimator_size; // should go 1cm past the container
@@ -191,8 +191,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   setEndChop(chopper_end_edge_position);
   if(chopper_end_edge_position > container_edge_position)
   {
-          G4cerr << "ERROR: Chopper wheel location should be behind cargo container, exiting." << G4endl;
-          exit(100);
+    G4cerr << "ERROR: Chopper wheel location should be behind cargo container, exiting." << G4endl;
+    exit(100);
   }
 
   G4Tubs *solidChopper = new G4Tubs("Chop", 0*cm, 15*cm, chopper_thick/2, 0.*deg, 180.*deg);
@@ -581,7 +581,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                   if((PMT_rmax*2)/(cm) > (water_size_y*2./(cm)/nPMT))
                   {
                     G4cerr << "ERROR Too many PMTs to fit on Water Surface!"
-                    << G4endl << "Water Tank Size: " << water_size_y/(cm) << " cm" 
+                    << G4endl << "Water Tank Size: " << water_size_y/(cm) << " cm"
                     << G4endl << "PMT Diameter: " << (PMT_rmax*2.)/(cm) << " Greater than "
                     << (water_size_y/(cm)/nPMT) << G4endl;
                     exit(10);

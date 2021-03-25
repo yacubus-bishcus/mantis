@@ -557,7 +557,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
                 // Conduct Final Tank Position Check
                 DefDetPositionConstraintUpper(container_z_pos/(m), water_size_z/(m), water_z_pos/(m));
-                DefDetPositionConstraintLeft(water_size_x/(m), water_x_pos/(m), 180. - theAngle, water_size_z);
+                DefDetPositionConstraintLeft(water_size_x/(m), water_x_pos/(m), 180. - theAngle, water_size_z/(m));
                 DefDetPositionConstraintRight(water_size_x/(m), water_x_pos/(m));
 
 // **************************************************** End of Water Tank Construction Setup ********************************************************* //
@@ -1031,6 +1031,7 @@ void DetectorConstruction::DefDetPositionConstraintUpper(double container_z_pos,
 void DetectorConstruction::DefDetPositionConstraintLeft(double water_x, double water_x_pos, double angle, double water_z)
 {
   G4double left_boundary = -0.3048 - 5e-2; // add 5 cm of wiggle room
+  angle = angle*pi/180
   G4double left_pos = -water_x_pos + (water_x*cos(angle) + water_z*sin(angle));
 
   if(left_pos > left_boundary)

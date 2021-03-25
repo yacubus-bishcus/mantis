@@ -49,7 +49,7 @@ public:
     void VarRebin(vector<string>, vector<string>, vector<string>, int, double, double, TCut, double, double);
     void CheckEvents(const char*,bool);
     void Sampling(const char*, string sample_element="U", double deltaE=5.0e-6, bool checkZero=false, double non_nrf_energy_cut=1.5);
-    void SimpleSampling(const char*, double deltaE=5.0e-6, double cut_energy=1.5, bool checkZero=false);
+    void SimpleSampling(const char*, double deltaE=5.0e-6, double cut_energy=1.5, double weight=10000, bool checkZero=false);
     void CheckIntObj(const char*, const char*, double, bool Weighted=false);
     void CheckAngles(const char*, int estimate=-1);
   public:
@@ -82,7 +82,7 @@ public:
 
     double ReturnBremMax(const char*);
     TH1D* BuildBrem(const char*, double, bool);
-    TH1D* BuildSimpleSample(const char*, double, double);
+    TH1D* BuildSimpleSample(const char*, double, double, double);
     void WriteSampling(TH1D*, TH1D*, TGraph*, TGraph*, double);
 
     void Show_Help();
@@ -2127,13 +2127,19 @@ double MantisROOT::ReturnBremMax(const char* bremInputFilename)
   return Emax;
 }
 
-TH1D* MantisROOT::BuildSimpleSample(const char* bremInputFilename, double deltaE, double cut_energy)
+TH1D* MantisROOT::BuildSimpleSample(const char* bremInputFilename, double deltaE, double cut_energy, double weight)
 {
   double Emax = ReturnBremMax(bremInputFilename);
 
   int nbins = Emax/deltaE;
   TH1D *hSample = new TH1D("hSample", "hSample", nbins, 0., Emax);
+  double theWeight = 1./weight;
 
+  if(debug)
+  {
+    std::cout << "MantisROOT::BuildSimpleSample -> Weights below: " << cut_energy << " set to: "
+    << theWeight << std::endl;
+  }
 	// create the sampling distribution
 	// user can adjust relative scales in SetBinContent
 	for (int i = 1; i <= nbins; ++i)
@@ -2141,7 +2147,7 @@ TH1D* MantisROOT::BuildSimpleSample(const char* bremInputFilename, double deltaE
 		double e = hSample->GetBinCenter(i);
 
 		if (e < cut_energy)
-			hSample->SetBinContent(i, 0.0001);
+			hSample->SetBinContent(i, theWeight);
 		else
 			hSample->SetBinContent(i, 1);
 	}
@@ -2175,7 +2181,7 @@ void MantisROOT::WriteSampling(TH1D* hBrems, TH1D* hSample, TGraph* gBrems, TGra
   fout->Close();
 }
 
-void MantisROOT::SimpleSampling(const char* bremInputFilename, double deltaE=5.0e-6, double cut_energy=1.5, bool checkZero=false)
+void MantisROOT::SimpleSampling(const char* bremInputFilename, double deltaE=5.0e-6, double cut_energy=1.5, double weight=10000, bool checkZero=false)
 {
   if(gSystem->AccessPathName(bremInputFilename))
   {
@@ -2186,7 +2192,7 @@ void MantisROOT::SimpleSampling(const char* bremInputFilename, double deltaE=5.0
   TH1D* hBrems = BuildBrem(bremInputFilename, deltaE, checkZero);
   hBrems->Print();
 	TGraph *gBrems = new TGraph(hBrems);
-  TH1D* hSample = BuildSimpleSample(bremInputFilename, deltaE, cut_energy);
+  TH1D* hSample = BuildSimpleSample(bremInputFilename, deltaE, cut_energy, weight);
   TGraph *gSample = new TGraph(hSample);
 
   WriteSampling(hBrems,hSample,gBrems,gSample,deltaE);
@@ -2702,16 +2708,16 @@ void MantisROOT::Show_Sampling_Description()
 
 void MantisROOT::Show_SimpleSampling()
 {
-  std::cout << "void SimpleSampling(const char*, double deltaE=5.0e-6, double cut_energy=1.5, bool checkZero=false)" << std::endl;
+  std::cout << "void SimpleSampling(const char* bremInputFilename, double deltaE=5.0e-6, double cut_energy=1.5, double weight=10000, bool checkZero=false)" << std::endl;
 }
 
 void MantisROOT::Show_SimpleSampling_Description()
 {
   std::cout << "DESCRIPTION: " << std::endl << "Creates an importance sampling distribution and prepares mantis input file brems_distributions.root."
   << std::endl << "If the User would like a different bin width for hBrems than the user can supply the bin width with input 2."
-  << std::endl << "Example: mantis->Sampling(\"brem.root\", 5e-6,1.5, true)"
+  << std::endl << "Example: mantis->SimpleSampling(\"brem.root\", 5e-6,1.5, 10000, true)"
   << std::endl << "would create brems_distributions.root with 5e-6 bin widths where if any bin content = 0 that bin would be set to the prior bins content"
-  << std::endl << "the importance sampling distribution energies below 1.5 MeV would have importances 1/1000 of all energies above 1.5 MeV."
+  << std::endl << "the importance sampling distribution energies below 1.5 MeV would have importances 1/10000 of all energies above 1.5 MeV."
   << std::endl;
 }
 

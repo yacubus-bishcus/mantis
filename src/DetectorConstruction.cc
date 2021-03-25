@@ -668,7 +668,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 std::vector<G4double> PMT_y_posv;
                 if(nPMT>1)
                 {
-                        if(PMT_rmax*2 > water_size_y/(nPMT+1))
+                        if(PMT_rmax*2 > water_size_y/(nPMT))
                         {
                                 G4cerr << "ERROR Too many PMTs to fit on Water Surface!" << G4endl;
                                 exit(10);
@@ -1078,20 +1078,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 air->SetMaterialPropertiesTable(airMPT);
 
         // Material Verbosity to print materials properties tables
-                if(material_verbose)
-                {
-                        G4cout << "Material Verbose set to True/On!" << G4endl;
-                        G4cout << "Material Properties Table for: " << air->GetName() << G4endl;
-                        airMPT->DumpTable();
-                        G4cout << "Material Properties Table for: " << teflonTape->GetName() << G4endl;
-                        tapeOPMPT->DumpTable();
-                        G4cout << "Material Properties Table for: " << pc_mat << G4endl;
-                        photocath_mt->DumpTable();
-                        G4cout << "Material Properties Table for: " << Water->GetName() << G4endl;
-                        waterMPT->DumpTable();
-                        G4cout << "Material Properties Table for: " << plexiglass->GetName() << G4endl;
-                        casingOPMPT->DumpTable();
-                }
+            if(material_verbose)
+            {
+              G4cout << "Material Verbose set to True/On!" << G4endl;
+              G4cout << "Material Properties Table for: " << air->GetName() << G4endl;
+              airMPT->DumpTable();
+              G4cout << "Material Properties Table for: " << teflonTape->GetName() << G4endl;
+              tapeOPMPT->DumpTable();
+              G4cout << "Material Properties Table for: " << pc_mat << G4endl;
+              photocath_mt->DumpTable();
+              G4cout << "Material Properties Table for: " << Water->GetName() << G4endl;
+              waterMPT->DumpTable();
+              G4cout << "Material Properties Table for: " << plexiglass->GetName() << G4endl;
+              casingOPMPT->DumpTable();
+            }
        // } // for if !bremTest
 
 //always return the physical World!!!

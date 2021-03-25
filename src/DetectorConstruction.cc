@@ -670,17 +670,17 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 {
                         if((PMT_rmax*2)/(cm) > (water_size_y*2./(cm)/nPMT))
                         {
-                                G4cerr << "ERROR Too many PMTs to fit on Water Surface!"
-                                << G4endl << "Water Tank Size: " << water_size_y/(cm)
-                                << G4endl << "PMT Diameter: " << (PMT_rmax*2.)/(cm) << " Greater than "
-                                << (water_size_y/(cm)/nPMT) << G4endl;
-                                exit(10);
+                          G4cerr << "ERROR Too many PMTs to fit on Water Surface!"
+                          << G4endl << "Water Tank Size: " << water_size_y/(cm)
+                          << G4endl << "PMT Diameter: " << (PMT_rmax*2.)/(cm) << " Greater than "
+                          << (water_size_y/(cm)/nPMT) << G4endl;
+                          exit(10);
                         }
                         for(G4int i=1; i<=nPMT; i++)
                         {
-                                PMT_y_pos = 0. - water_size_y/2 + i*(water_size_y/(nPMT));
-                                PMT_y_posv.push_back(PMT_y_pos);
-                                G4cout << "PMT Position " << i << " set to " << PMT_y_posv[i-1]/(cm)<< " cm" << G4endl;
+                          PMT_y_pos = 0. - water_size_y + i*(water_size_y/(nPMT));
+                          PMT_y_posv.push_back(PMT_y_pos);
+                          G4cout << "PMT Position " << i << " set to " << PMT_y_posv[i-1]/(cm)<< " cm" << G4endl;
                         }
                 }
                 else

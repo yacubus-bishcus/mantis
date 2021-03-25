@@ -32,7 +32,7 @@ DetectorConstruction::DetectorConstruction()
         // Container Properties
         RemoveContainer(false),
         // interrogation object properties
-        IntObj_rad(4.5*cm), intObjDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), intObj_z_pos(0*cm), IntObj_Selection("Uranium"),
+        IntObj_rad(4.5*cm), intObjDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), IntObj_Selection("Uranium"),
         // radio abundances
         chopper_radio_abundance(0), intObj_radio_abundance(0),
         // Attenuator Properties
@@ -431,23 +431,23 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     }
     G4cout << "The User's Interrogation Object Radius: " << IntObj_rad/(cm) << " cm" << G4endl;
     G4cout << "The User's Interrogation Object Density: " << intObjDensity/(g/cm3) << " g/cm3" << G4endl;
-    G4cout << "The User's Interrogation Object Location: (" << intObj_x_pos/(cm) << ", " << intObj_y_pos/(cm) << ", " << intObj_z_pos/(cm) << ")" << " cm" << G4endl;
+    G4cout << "The User's Interrogation Object Location: (" << intObj_x_pos/(cm) << ", " << intObj_y_pos/(cm) << ", " << 0/(cm) << ")" << " cm" << G4endl;
 
     G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObj");
-    G4cout << "Begin of Interrogation Object: " << container_z_pos/(cm) + intObj_z_pos/(cm) -  IntObj_rad/(cm) << " cm" << G4endl;
+    G4cout << "Begin of Interrogation Object: " << container_z_pos/(cm) + 0/(cm) -  IntObj_rad/(cm) << " cm" << G4endl;
     setEndIntObj(container_z_pos, 2.4384*m);
 
     if(!RemoveContainer)
     {
       physIntObj = new G4PVPlacement(0,
-                                   G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos),
+                                   G4ThreeVector(intObj_x_pos, intObj_y_pos, 0),
                                    logicIntObj, "IntObj", logicHollowC, false,
                                    0, checkOverlaps);
     }
     else
     {
       physIntObj = new G4PVPlacement(0,
-                                      G4ThreeVector(intObj_x_pos,intObj_y_pos,intObj_z_pos + chopper_end_edge_position+1.0*m),
+                                      G4ThreeVector(intObj_x_pos,intObj_y_pos,0 + chopper_end_edge_position+1.0*m),
                                     logicIntObj, "IntObj",logicWorld, false, 0, checkOverlaps);
     }
 
@@ -477,7 +477,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
                 G4double water_z_pos = container_z_pos - 2.4384*m;
                 G4double myangle = (180. - theAngle)*pi/180.;
-                G4double water_x_pos = tan(myangle)*(container_z_pos + intObj_z_pos - water_z_pos);
+                G4double water_x_pos = tan(myangle)*(container_z_pos + 0 - water_z_pos);
                 G4double detDistance = water_x_pos/sin(myangle) + water_size_z;
                 G4RotationMatrix* waterRot = new G4RotationMatrix;
                 waterRot->rotateY((180. - theAngle)*deg);
@@ -499,21 +499,22 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                   G4RotationMatrix* waterRot3 = new G4RotationMatrix;
                   G4RotationMatrix* waterRot4 = new G4RotationMatrix;
                   G4double water_x_pos2 = 0.;
+                  G4double add_angle = 20.;
 
                   if(theAngle > 110.0)
                   {
                     // Take the Angle and add 10 degrees
-                    myangle = (180. - (theAngle +10.))*pi/180.;
-                    water_x_pos2 = tan(myangle)*(container_z_pos + intObj_z_pos - water_z_pos);
+                    myangle = (180. - (theAngle +add_angle))*pi/180.;
+                    water_x_pos2 = tan(myangle)*(container_z_pos + 0 - water_z_pos);
                   }
                   else
                   {
                     // The Second Tank will be put at a higher angle if the theAngle < 110
-                    myangle = (180. - (theAngle - 10.))*pi/180.;
-                    water_x_pos2 = tan(myangle)*(container_z_pos + intObj_z_pos - water_z_pos);
+                    myangle = (180. - (theAngle - add_angle))*pi/180.;
+                    water_x_pos2 = tan(myangle)*(container_z_pos + 0 - water_z_pos);
                   }
-                  waterRot3->rotateY((180. - (theAngle + 10.))*deg);
-                  waterRot4->rotateY((180. + (theAngle + 10.))*deg);
+                  waterRot3->rotateY((180. - (theAngle + add_angle))*deg);
+                  waterRot4->rotateY((180. + (theAngle + add_angle))*deg);
 
                   new G4PVPlacement(waterRot,
                                     G4ThreeVector(water_x_pos,0,water_z_pos), logicAttenuator,
@@ -549,9 +550,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                   }
 
                   myangle = (180. - (theAngle +10.))*pi/180.;
-                  water_x_pos2 = tan(myangle)*(container_z_pos + intObj_z_pos - water_z_pos);
+                  water_x_pos2 = tan(myangle)*(container_z_pos + 0 - water_z_pos);
                   myangle = (180. - (theAngle - 10.))*pi/180.;
-                  water_x_pos3 = tan(myangle)*(container_z_pos + intObj_z_pos - water_z_pos);
+                  water_x_pos3 = tan(myangle)*(container_z_pos + 0 - water_z_pos);
 
                   waterRot3->rotateY((180. - (theAngle + 10.))*deg);
                   waterRot4->rotateY((180. + (theAngle + 10.))*deg);
@@ -1098,3 +1099,61 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         return physWorld;
 }
 /* ************************************************************************************ */
+
+void DetectorConstruction::DefIntObjPositionConstraint(double intObj_x, double intObj_y, double intObj_radius)
+{
+  G4double x_constraint = 0.6096;
+  G4double y_constraint = 2.5908;
+  G4double z_constraint = 2.4384;
+
+  if(abs(intObj_x) + intObj_radius > x_constraint)
+  {
+    G4cerr << "DetectorConstruction::DefIntObjPositionConstraint -> ERROR X Constraint Test Failed." << G4endl;
+    exit(1);
+  }
+  if(abs(intObj_y) + intObj_radius > y_constraint)
+  {
+    G4cerr << "DetectorConstruction::DefIntObjPositionConstraint -> ERROR Y Constraint Test Failed." << G4endl;
+    exit(1);
+  }
+}
+
+void DetectorConstruction::DefDetPositionConstraintUpper(double container_z_pos, double water_z, double water_z_pos)
+{
+  G4double upper_boundary = container_z_pos;
+  G4double upper_pos = water_z/2. + water_z_pos;
+
+  if(upper_pos > upper_boundary)
+  {
+    G4cerr << "DetectorConstruction::DefDetPositionConstraintUpper -> ERROR Upper Boundary Constraint Test Failed."
+    << G4endl << "Position: " << upper_pos/(m) << " Greater than Boundary: " << upper_boundary/(m) << G4endl;
+    exit(1);
+  }
+}
+
+void DetectorConstruction::DefDetPositionConstraintLeft(double water_x, double water_x_pos)
+{
+  G4double left_boundary = -0.6096/2. + -1.0e-2; // add a cm of wiggle room
+  G4double left_pos = water_x/2. + water_x_pos;
+
+  if(left_pos > left_boundary)
+  {
+    G4cerr << "DetectorConstruction::DefDetPositionConstraintLeft -> ERROR Left Boundary Constraint Test Failed."
+    << G4endl << "Position: " << left_pos/(m) << " Greater than Boundary: " << left_boundary/(m) << G4endl;
+    exit(1);
+  }
+}
+
+void DetectorConstruction::DefDetPositionConstraintRight(double water_x, double water_x_pos)
+{
+  G4double right_boundary = 0.6096/2. + 1.0e-2; // add a cm of wiggle room
+  G4double right_pos = water_x/2. + water_x_pos;
+
+  if(right_pos > right_boundary)
+  {
+    G4cerr << "DetectorConstruction::DefDetPositionConstraintRight -> ERROR Right Boundary Constraint Test Failed."
+    << G4endl << "Position: " << right_pos/(m) << " Greater than Boundary: " << right_boundary/(m) << G4endl;
+    exit(1);
+  }
+
+}

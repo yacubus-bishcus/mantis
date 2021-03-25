@@ -274,7 +274,10 @@ void SetRemoveContainer(G4bool val)
 }
 
 private:
-
+// Private Member Functions 
+DefDetPositionConstraintLeft(double, double);
+DefDetPositionConstraintRight(double, double);
+DefDetPositionConstraintUpper(double, double, double);
 // Brem Properties
 G4double linac_size = 9*cm;
 

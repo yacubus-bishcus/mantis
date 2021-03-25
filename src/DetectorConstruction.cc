@@ -603,7 +603,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 for(G4int k=0;k<nPMT;++k)
                 {
                     new G4PVPlacement(0,
-                                      G4ThreeVector(0, PMT_y_posv[k], -water_size_z + PMT_z),
+                                      G4ThreeVector(0, PMT_y_posv[k], -water_size_z + PMT_z + 1.0*cm),
                                       logicPMT,
                                       "PMT",
                                       logicWater,

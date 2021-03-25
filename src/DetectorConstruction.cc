@@ -38,11 +38,11 @@ DetectorConstruction::DetectorConstruction()
         // Attenuator Properties
         attenuatorState(false), attenuatorState2(false), attenThickness(0.1*mm), attenThickness2(0.1*mm), attenuatorMat("G4_AIR"), attenuatorMat2("G4_AIR"),
         // Water Tank properties
-        numTanksPerSide(1), theAngle(120.0), water_size_x(60*cm), water_size_y(2.5908*m), water_size_z(40*cm),
+        numTanksPerSide(1), theAngle(120.0), water_size_x(60*cm), water_size_y(1.2954*m), water_size_z(40*cm),
         // plexi/tape properties
         plexiThickness(0.18*mm), tapeThick(0.01*cm),
         // PMT Properties
-        PMT_rmax(25.4*cm), nPMT(4), pc_mat("GaAsP"),
+        PMT_rmax(25.4*cm), nPMT(5), pc_mat("GaAsP"),
         // Output Properties
         DetectorViewOnly(false), material_verbose(false), checkOverlaps(true),
         // Messenger
@@ -169,10 +169,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   // ********************************************************** World and Materials Complete ************************************************************//
   // Parameters used later
-  G4double container_z_pos = 2.4384*m +water_size_x + 1.0*m;
-  G4double container_edge_position = container_z_pos - 2.4384*m;
+  G4double container_z_pos = 1.2192*m +water_size_x + 1.0*m;
+  G4double container_edge_position = container_z_pos - 1.2192*m;
   G4double colimator_size = 50*cm;
-  G4double col_position = 1.0*cm + container_z_pos - 2.4384*m - colimator_size; // should go 1cm past the container
+  G4double col_position = 1.0*cm + container_z_pos - 1.2192*m - colimator_size; // should go 1cm past the container
   G4double col_edge_position = col_position + colimator_size;
   G4double bremStartPos = 135*cm;
   G4double bremBacking_thickness = 100.0*mm;
@@ -311,16 +311,16 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Set up Collimator
     G4double rearCol_Z_pos = bremStartPos - linac_size - 1.0*cm;
     G4Box *solidCollimator = new G4Box("Collimator", 1*cm, water_size_y, colimator_size);
-    G4Box *solidCollimatorRear = new G4Box("Collimator",0.6096*m - 2*cm, 2.5908*m, 1*cm);
+    G4Box *solidCollimatorRear = new G4Box("Collimator",0.3048*m - 2*cm, 1.2954*m, 1*cm);
     G4LogicalVolume *logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");
     G4LogicalVolume *logicCollimatorRear = new G4LogicalVolume(solidCollimatorRear, lead, "Collimator");
     G4cout << G4endl << "Container and Collimator Information" << G4endl;
     G4cout << "----------------------------------------------------------------------" << G4endl;
     G4cout << "Edge of Colimator placement: " << col_edge_position/(cm) << " cm" << G4endl << G4endl;
-    new G4PVPlacement(0, G4ThreeVector(-0.6096*m - 1*cm, 0, col_position),
+    new G4PVPlacement(0, G4ThreeVector(-0.3048*m - 1*cm, 0, col_position),
                       logicCollimator, "ColL-Pb", logicWorld,
                       false, 0, checkOverlaps);
-    new G4PVPlacement(0, G4ThreeVector(0.6096*m + 1*cm, 0, col_position),
+    new G4PVPlacement(0, G4ThreeVector(0.3048*m + 1*cm, 0, col_position),
                       logicCollimator, "ColRi-Pb", logicWorld,
                       false, 0, checkOverlaps);
     new G4PVPlacement(0, G4ThreeVector(0,0,rearCol_Z_pos),
@@ -330,7 +330,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 // Set up shipping container environment (8ft wide and 8.5ft high)
     G4double c_thick = 0.1905*cm; // approx 0.075 inch thick
-    G4Box *solidContainer = new G4Box("Container", 0.6096*m, 2.5908*m, 2.4384*m);
+    G4Box *solidContainer = new G4Box("Container", 0.3048*m, 1.2954*m, 1.2192*m);
     G4cout << "Edge of Container Placement: " << container_edge_position/(cm) << " cm" << G4endl << G4endl;
     G4LogicalVolume *logicContainer = new G4LogicalVolume(solidContainer, steel, "Container");
     if(!RemoveContainer)
@@ -348,7 +348,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     }
 
 // make container hollow
-    G4Box *hollowContainer = new G4Box("ContainerAir", 0.6096*m -c_thick, 2.5908*m -c_thick, 2.4384*m -c_thick);
+    G4Box *hollowContainer = new G4Box("ContainerAir", 0.3048*m -c_thick, 1.2954*m -c_thick, 1.2192*m -c_thick);
     G4LogicalVolume *logicHollowC = new G4LogicalVolume(hollowContainer, air, "hollowContainer");
     if(!RemoveContainer)
     {
@@ -435,7 +435,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
     G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObj");
     G4cout << "Begin of Interrogation Object: " << container_z_pos/(cm) + 0/(cm) -  IntObj_rad/(cm) << " cm" << G4endl;
-    setEndIntObj(container_z_pos, 2.4384*m);
+    setEndIntObj(container_z_pos, 1.2192*m);
 
     if(!RemoveContainer)
     {
@@ -475,7 +475,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                         G4cout<< "Second Attenuator Thickness automatically set to Off." << G4endl;
                 }
 
-                G4double water_z_pos = container_z_pos - 2.4384*m;
+                G4double water_z_pos = container_z_pos - 1.2192*m;
                 G4double myangle = (180. - theAngle)*pi/180.;
                 G4double water_x_pos = tan(myangle)*(container_z_pos + 0 - water_z_pos);
                 G4double detDistance = water_x_pos/sin(myangle) + water_size_z;
@@ -668,7 +668,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 std::vector<G4double> PMT_y_posv;
                 if(nPMT>1)
                 {
-                        if((PMT_rmax*2)/(cm) > (water_size_y/(cm)/nPMT))
+                        if((PMT_rmax*2)/(cm) > (water_size_y*2./(cm)/nPMT))
                         {
                                 G4cerr << "ERROR Too many PMTs to fit on Water Surface!"
                                 << G4endl << "Water Tank Size: " << water_size_y/(cm)
@@ -1105,9 +1105,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 void DetectorConstruction::DefIntObjPositionConstraint(double intObj_x, double intObj_y, double intObj_radius)
 {
-  G4double x_constraint = 0.6096;
-  G4double y_constraint = 2.5908;
-  G4double z_constraint = 2.4384;
+  G4double x_constraint = 0.3048;
+  G4double y_constraint = 1.2954;
+  G4double z_constraint = 1.2192;
 
   if(abs(intObj_x) + intObj_radius > x_constraint)
   {
@@ -1136,7 +1136,7 @@ void DetectorConstruction::DefDetPositionConstraintUpper(double container_z_pos,
 
 void DetectorConstruction::DefDetPositionConstraintLeft(double water_x, double water_x_pos)
 {
-  G4double left_boundary = -0.6096/2. + -1.0e-2; // add a cm of wiggle room
+  G4double left_boundary = -0.3048/2. + -1.0e-2; // add a cm of wiggle room
   G4double left_pos = water_x/2. + water_x_pos;
 
   if(left_pos > left_boundary)
@@ -1149,7 +1149,7 @@ void DetectorConstruction::DefDetPositionConstraintLeft(double water_x, double w
 
 void DetectorConstruction::DefDetPositionConstraintRight(double water_x, double water_x_pos)
 {
-  G4double right_boundary = 0.6096/2. + 1.0e-2; // add a cm of wiggle room
+  G4double right_boundary = 0.3048/2. + 1.0e-2; // add a cm of wiggle room
   G4double right_pos = water_x/2. + water_x_pos;
 
   if(right_pos > right_boundary)

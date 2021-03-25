@@ -278,6 +278,7 @@ private:
 void DefDetPositionConstraintLeft(double, double);
 void DefDetPositionConstraintRight(double, double);
 void DefDetPositionConstraintUpper(double, double, double);
+void DefIntObjPositionConstraint(double, double, double);
 // Brem Properties
 G4double linac_size = 9*cm;
 

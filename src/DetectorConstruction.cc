@@ -1030,7 +1030,7 @@ void DetectorConstruction::DefDetPositionConstraintUpper(double container_z_pos,
 
 void DetectorConstruction::DefDetPositionConstraintLeft(double water_x, double water_x_pos, double angle, double water_z)
 {
-  G4double left_boundary = -0.3048 - 3e-2; // add 3 cm of wiggle room
+  G4double left_boundary = -0.3048 - 1e-2; // add 1 cm of wiggle room
   angle = angle*pi/180;
   G4double left_pos = -water_x_pos + (water_x*cos(angle) + water_z*sin(angle));
 
@@ -1051,7 +1051,7 @@ void DetectorConstruction::DefDetPositionConstraintLeft(double water_x, double w
 
 void DetectorConstruction::DefDetPositionConstraintRight(double water_x, double water_x_pos, double angle, double water_z)
 {
-  G4double right_boundary = 0.3048 + 3e-2; // add 3 cm of wiggle room
+  G4double right_boundary = 0.3048 + 1e-2; // add 1 cm of wiggle room
   angle = angle*pi/180;
   G4double right_pos = water_x_pos - (water_x*cos(angle) + water_z*sin(angle));
 

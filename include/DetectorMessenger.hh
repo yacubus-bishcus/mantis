@@ -53,9 +53,6 @@ private:
   G4UIcmdWithADouble* CmdY;
   G4UIcmdWithADouble* CmdZ;
   G4UIcmdWithADouble* Cmdtr;
-  G4UIcmdWithADouble* CmdtXpos;
-  G4UIcmdWithADouble* CmdtYpos;
-  G4UIcmdWithADouble* CmdtZpos;
   G4UIcmdWithADouble* Cmdtrad;
   G4UIcmdWithAString* Cmdtsel;
   G4UIcmdWithAString* Cmdpcmat;
@@ -66,7 +63,6 @@ private:
   G4UIcmdWithAString* CmdChopperOn;
   G4UIcmdWithADouble* CmdChopperAbundance;
   G4UIcmdWithADouble* CmdAngle;
-  G4UIcmdWithADouble* CmdNTank;
   G4UIcmdWithAString* CmdAttenOn;
   G4bool check_atten_on = false;
   G4UIcmdWithADouble* CmdAttenThick;

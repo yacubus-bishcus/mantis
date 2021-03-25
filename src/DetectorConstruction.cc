@@ -32,13 +32,13 @@ DetectorConstruction::DetectorConstruction()
         // Container Properties
         RemoveContainer(false),
         // interrogation object properties
-        IntObj_rad(4.5*cm), intObjDensity(19.1*g/cm3), intObj_x_pos(0*cm), intObj_y_pos(0*cm), IntObj_Selection("Uranium"),
+        IntObj_rad(4.5*cm), intObjDensity(19.1*g/cm3), IntObj_Selection("Uranium"),
         // radio abundances
         chopper_radio_abundance(0), intObj_radio_abundance(0),
         // Attenuator Properties
         attenuatorState(false), attenuatorState2(false), attenThickness(0.1*mm), attenThickness2(0.1*mm), attenuatorMat("G4_AIR"), attenuatorMat2("G4_AIR"),
         // Water Tank properties
-        numTanksPerSide(1), theAngle(120.0), water_size_x(60*cm), water_size_y(1.2954*m), water_size_z(40*cm),
+        theAngle(120.0), water_size_x(60*cm), water_size_y(1.2954*m), water_size_z(40*cm),
         // plexi/tape properties
         plexiThickness(0.18*mm), tapeThick(0.01*cm),
         // PMT Properties
@@ -365,7 +365,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Set Up Testing Air Pocket Just Prior
     G4Box* solidAirPocket = new G4Box("AirPocket",IntObj_rad,IntObj_rad,0.5*cm);
     G4LogicalVolume *logicAirPocket = new G4LogicalVolume(solidAirPocket, air, "AirPocket");
-    new G4PVPlacement(0,G4ThreeVector(intObj_x_pos, intObj_y_pos, intObj_z_pos - IntObj_rad - 1*cm), logicAirPocket,
+    new G4PVPlacement(0,G4ThreeVector(0, 0,-IntObj_rad - 1*cm), logicAirPocket,
                       "AirPocket",logicHollowC, false,0,checkOverlaps);
 
   // Set Up the Interrogation Object
@@ -431,7 +431,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     }
     G4cout << "The User's Interrogation Object Radius: " << IntObj_rad/(cm) << " cm" << G4endl;
     G4cout << "The User's Interrogation Object Density: " << intObjDensity/(g/cm3) << " g/cm3" << G4endl;
-    G4cout << "The User's Interrogation Object Location: (" << intObj_x_pos/(cm) << ", " << intObj_y_pos/(cm) << ", " << 0/(cm) << ")" << " cm" << G4endl;
 
     G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObj");
     G4cout << "Begin of Interrogation Object: " << container_z_pos/(cm) + 0/(cm) -  IntObj_rad/(cm) << " cm" << G4endl;
@@ -440,14 +439,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     if(!RemoveContainer)
     {
       physIntObj = new G4PVPlacement(0,
-                                   G4ThreeVector(intObj_x_pos, intObj_y_pos, 0),
+                                   G4ThreeVector(0, 0, 0),
                                    logicIntObj, "IntObj", logicHollowC, false,
                                    0, checkOverlaps);
     }
     else
     {
       physIntObj = new G4PVPlacement(0,
-                                      G4ThreeVector(intObj_x_pos,intObj_y_pos,0 + chopper_end_edge_position+1.0*m),
+                                      G4ThreeVector(0,0,chopper_end_edge_position+1.0*m),
                                     logicIntObj, "IntObj",logicWorld, false, 0, checkOverlaps);
     }
 
@@ -477,113 +476,19 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
                 G4double water_z_pos = container_z_pos - 1.2192*m;
                 G4double myangle = (180. - theAngle)*pi/180.;
-                G4double water_x_pos = tan(myangle)*(container_z_pos + 0 - water_z_pos);
+                G4double water_x_pos = tan(myangle)*(container_z_pos - water_z_pos);
                 G4double detDistance = water_x_pos/sin(myangle) + water_size_z;
                 G4RotationMatrix* waterRot = new G4RotationMatrix;
                 waterRot->rotateY((180. - theAngle)*deg);
                 G4RotationMatrix* waterRot2 = new G4RotationMatrix;
                 waterRot2->rotateY((180. + theAngle)*deg);
 
-                if(numTanksPerSide == 1)
-                {
-                  new G4PVPlacement(waterRot,
-                                    G4ThreeVector(water_x_pos,0,water_z_pos), logicAttenuator,
-                                    "1Lay1L", logicWorld, false, 0, checkOverlaps);
-                  new G4PVPlacement(waterRot2,
-                                    G4ThreeVector(-1*water_x_pos,0,water_z_pos), logicAttenuator,
-                                    "1Lay1R", logicWorld, false, 0, checkOverlaps);
-                }
-                else if(numTanksPerSide == 2)
-                {
-                  // The second Tank will be put at a lower angle so long as theAngle > 110
-                  G4RotationMatrix* waterRot3 = new G4RotationMatrix;
-                  G4RotationMatrix* waterRot4 = new G4RotationMatrix;
-                  G4double water_x_pos2 = 0.;
-                  G4double add_angle = 20.;
-
-                  if(theAngle > 110.0)
-                  {
-                    // Take the Angle and add 10 degrees
-                    myangle = (180. - (theAngle +add_angle))*pi/180.;
-                    water_x_pos2 = tan(myangle)*(container_z_pos + 0 - water_z_pos);
-                  }
-                  else
-                  {
-                    // The Second Tank will be put at a higher angle if the theAngle < 110
-                    myangle = (180. - (theAngle - add_angle))*pi/180.;
-                    water_x_pos2 = tan(myangle)*(container_z_pos + 0 - water_z_pos);
-                  }
-                  waterRot3->rotateY((180. - (theAngle + add_angle))*deg);
-                  waterRot4->rotateY((180. + (theAngle + add_angle))*deg);
-
-                  new G4PVPlacement(waterRot,
-                                    G4ThreeVector(water_x_pos,0,water_z_pos), logicAttenuator,
-                                    "1Lay1L", logicWorld, false, 0, checkOverlaps);
-                  new G4PVPlacement(waterRot2,
-                                    G4ThreeVector(-1*water_x_pos,0,water_z_pos), logicAttenuator,
-                                    "1Lay1R", logicWorld, false, 0, checkOverlaps);
-                  new G4PVPlacement(waterRot3,
-                                    G4ThreeVector(water_x_pos2,0,water_z_pos), logicAttenuator,
-                                    "2Lay1L", logicWorld, false, 0, checkOverlaps);
-                  new G4PVPlacement(waterRot4,
-                                    G4ThreeVector(-1*water_x_pos2,0,water_z_pos), logicAttenuator,
-                                    "2Lay1R",logicWorld, false, 0, checkOverlaps);
-                }
-                else if(numTanksPerSide == 3)
-                {
-                  G4RotationMatrix* waterRot3 = new G4RotationMatrix;
-                  G4RotationMatrix* waterRot4 = new G4RotationMatrix;
-                  G4RotationMatrix* waterRot5 = new G4RotationMatrix;
-                  G4RotationMatrix* waterRot6 = new G4RotationMatrix;
-                  G4double water_x_pos2 = 0;
-                  G4double water_x_pos3 = 0;
-
-                  // Now Create a Water Tank at angles less than and greater than center angle
-                  // User Defines center angle
-                  if(theAngle < 110.0 || theAngle > 160)
-                  {
-                    G4cerr << "DetectorConstruction::Build -> ERROR The Center Water Tank Angle for a "
-                    << G4endl << "simulation with 3 water tanks on both sides requires a User Input Angle "
-                    << G4endl << "GREATER THAN 110 but LESS THAN 160"
-                    << G4endl << "USER ANGLE WAS SET TO: " << theAngle << G4endl;
-                    exit(1);
-                  }
-
-                  myangle = (180. - (theAngle +10.))*pi/180.;
-                  water_x_pos2 = tan(myangle)*(container_z_pos + 0 - water_z_pos);
-                  myangle = (180. - (theAngle - 10.))*pi/180.;
-                  water_x_pos3 = tan(myangle)*(container_z_pos + 0 - water_z_pos);
-
-                  waterRot3->rotateY((180. - (theAngle + 10.))*deg);
-                  waterRot4->rotateY((180. + (theAngle + 10.))*deg);
-                  waterRot5->rotateY((180. - (theAngle - 10.))*deg);
-                  waterRot6->rotateY((180. + (theAngle - 10.))*deg);
-
-                  new G4PVPlacement(waterRot,
-                                    G4ThreeVector(water_x_pos,0,water_z_pos), logicAttenuator,
-                                    "1Lay1L", logicWorld, false, 0, checkOverlaps);
-                  new G4PVPlacement(waterRot2,
-                                    G4ThreeVector(-1*water_x_pos,0,water_z_pos), logicAttenuator,
-                                    "1Lay1R", logicWorld, false, 0, checkOverlaps);
-                  new G4PVPlacement(waterRot3,
-                                    G4ThreeVector(water_x_pos2,0,water_z_pos), logicAttenuator,
-                                    "2Lay1L", logicWorld, false, 0, checkOverlaps);
-                  new G4PVPlacement(waterRot4,
-                                    G4ThreeVector(-1*water_x_pos2,0,water_z_pos), logicAttenuator,
-                                    "2Lay1R", logicWorld, false, 0, checkOverlaps);
-                  new G4PVPlacement(waterRot5,
-                                    G4ThreeVector(water_x_pos3,0,water_z_pos), logicAttenuator,
-                                    "3Lay1L", logicWorld, false, 0, checkOverlaps);
-                  new G4PVPlacement(waterRot6,
-                                    G4ThreeVector(-1*water_x_pos3,0,water_z_pos), logicAttenuator,
-                                    "3Lay1R", logicWorld, false, 0, checkOverlaps);
-
-                }
-                else
-                {
-                  G4cerr << "DetectorConstruction::Build -> ERROR Number of Water Tanks Per Side MUST BE GREATER THAN 1" << G4endl;
-                  exit(1);
-                }
+                new G4PVPlacement(waterRot,
+                                  G4ThreeVector(water_x_pos,0,water_z_pos), logicAttenuator,
+                                  "1Lay1L", logicWorld, false, 0, checkOverlaps);
+                new G4PVPlacement(waterRot2,
+                                  G4ThreeVector(-1*water_x_pos,0,water_z_pos), logicAttenuator,
+                                  "1Lay1R", logicWorld, false, 0, checkOverlaps);
 
         // Option to add second layer of low Z attenuation material
 
@@ -649,6 +554,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                               false, //no boolean operation
                                               0, //copy number
                                               checkOverlaps); //overlaps checking
+
+                // Conduct Final Tank Position Check
+                DefDetPositionConstraintUpper(container_z_pos, water_size_z, water_z_pos);
+                DefDetPositionConstraintLeft(water_size_x, water_x_pos);
+                DefDetPositionConstraintRight(water_size_x, water_x_pos);
 
 // **************************************************** End of Water Tank Construction Setup ********************************************************* //
 
@@ -1104,24 +1014,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         return physWorld;
 }
 /* ************************************************************************************ */
-
-void DetectorConstruction::DefIntObjPositionConstraint(double intObj_x, double intObj_y, double intObj_radius)
-{
-  G4double x_constraint = 0.3048;
-  G4double y_constraint = 1.2954;
-  G4double z_constraint = 1.2192;
-
-  if(abs(intObj_x) + intObj_radius > x_constraint)
-  {
-    G4cerr << "DetectorConstruction::DefIntObjPositionConstraint -> ERROR X Constraint Test Failed." << G4endl;
-    exit(1);
-  }
-  if(abs(intObj_y) + intObj_radius > y_constraint)
-  {
-    G4cerr << "DetectorConstruction::DefIntObjPositionConstraint -> ERROR Y Constraint Test Failed." << G4endl;
-    exit(1);
-  }
-}
 
 void DetectorConstruction::DefDetPositionConstraintUpper(double container_z_pos, double water_z, double water_z_pos)
 {

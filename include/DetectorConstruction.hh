@@ -253,7 +253,6 @@ void SetChopper_z(G4double val)
         chopper_z = chopper_z*cm;
 }
 void SettheAngle(G4double val){theAngle = val;}
-void SetNTanks(G4int val){numTanksPerSide = val;}
 void SetPlexiThickness(G4double val)
 {
   plexiThickness = val;
@@ -293,7 +292,7 @@ G4double EndChop;
 G4bool RemoveContainer;
 
 // Interrogation Object Properties
-G4double EndIntObj, IntObj_rad, intObjDensity, intObj_x_pos, intObj_y_pos, intObj_z_pos;
+G4double EndIntObj, IntObj_rad, intObjDensity;
 G4String IntObj_Selection;
 G4VPhysicalVolume* physIntObj;
 G4double intObj_U235_abundance, intObj_U238_abundance, intObj_Pu239_abundance, intObj_Pu240_abundance;
@@ -322,7 +321,6 @@ G4double attenThickness, attenThickness2;
 G4String attenuatorMat, attenuatorMat2;
 
 // Water Tank Properties
-G4int numTanksPerSide;
 G4double theAngle, water_size_x, water_size_y, water_size_z;
 
 // Plexi/Tape Properties

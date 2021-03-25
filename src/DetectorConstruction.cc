@@ -475,7 +475,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 }
 
                 //G4double water_z_pos = container_z_pos - 1.2192*m;
-                G4double water_z_pos = container_z_pos - 1.3*m;
+                G4double water_z_pos = rearCol_Z_pos;
                 G4double myangle = (180. - theAngle)*pi/180.;
                 G4double water_x_pos = tan(myangle)*(container_z_pos - water_z_pos);
                 G4double detDistance = water_x_pos/sin(myangle) + water_size_z;

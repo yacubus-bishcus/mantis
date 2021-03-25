@@ -10,7 +10,6 @@
 /chopper/thickness 30
 /chopper/distance 2
 /mydet/Angle 120
-/mydet/NumTanksPerSide 1
 /mydet/attenuator Off
 /mydet/attenuator2 Off
 /mydet/nPMT 4

@@ -668,14 +668,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 std::vector<G4double> PMT_y_posv;
                 if(nPMT>1)
                 {
-                        if(PMT_rmax*2 > water_size_y*2/(nPMT))
+                        if(PMT_rmax*2 > water_size_y/(nPMT))
                         {
                                 G4cerr << "ERROR Too many PMTs to fit on Water Surface!" << G4endl;
                                 exit(10);
                         }
                         for(G4int i=1; i<=nPMT; i++)
                         {
-                                PMT_y_pos = 0. - water_size_y/2 + i*(water_size_y/(nPMT + 1));
+                                PMT_y_pos = 0. - water_size_y/2 + i*(water_size_y/(nPMT));
                                 PMT_y_posv.push_back(PMT_y_pos);
                                 G4cout << "PMT Position " << i << " set to " << PMT_y_posv[i-1]/(cm)<< " cm" << G4endl;
                         }

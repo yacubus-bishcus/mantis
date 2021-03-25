@@ -558,7 +558,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                 // Conduct Final Tank Position Check
                 DefDetPositionConstraintUpper(container_z_pos/(m), water_size_z/(m), water_z_pos/(m));
                 DefDetPositionConstraintLeft(water_size_x/(m), water_x_pos/(m), 180. - theAngle, water_size_z/(m));
-                DefDetPositionConstraintRight(water_size_x/(m), water_x_pos/(m));
+                DefDetPositionConstraintRight(water_size_x/(m), water_x_pos/(m), 180. - theAngle, water_size_z/(m));
 
 // **************************************************** End of Water Tank Construction Setup ********************************************************* //
 
@@ -1030,7 +1030,7 @@ void DetectorConstruction::DefDetPositionConstraintUpper(double container_z_pos,
 
 void DetectorConstruction::DefDetPositionConstraintLeft(double water_x, double water_x_pos, double angle, double water_z)
 {
-  G4double left_boundary = -0.3048 - 5e-2; // add 5 cm of wiggle room
+  G4double left_boundary = -0.3048 - 3e-2; // add 3 cm of wiggle room
   angle = angle*pi/180;
   G4double left_pos = -water_x_pos + (water_x*cos(angle) + water_z*sin(angle));
 
@@ -1049,14 +1049,16 @@ void DetectorConstruction::DefDetPositionConstraintLeft(double water_x, double w
   }
 }
 
-void DetectorConstruction::DefDetPositionConstraintRight(double water_x, double water_x_pos)
+void DetectorConstruction::DefDetPositionConstraintRight(double water_x, double water_x_pos, double angle, double water_z)
 {
-  G4double right_boundary = 2*(0.3048 + 5e-2); // add 5 cm of wiggle room
-  G4double right_pos = water_x_pos - water_x/2.;
+  G4double right_boundary = 0.3048 + 3e-2; // add 3 cm of wiggle room
+  angle = angle*pi/180;
+  G4double right_pos = water_x_pos - (water_x*cos(angle) + water_z*sin(angle));
 
   if(right_pos < right_boundary)
   {
     G4cerr << "DetectorConstruction::DefDetPositionConstraintRight -> ERROR Right Boundary Constraint Test Failed."
+    << G4endl << "Water Size set to: " << water_x << G4endl << "Water Position Set to: " << water_x_pos
     << G4endl << "Position: " << right_pos << " Less than Boundary: " << right_boundary << G4endl;
     exit(1);
   }

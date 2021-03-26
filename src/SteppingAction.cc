@@ -205,13 +205,15 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       {
         theTrack->SetTrackStatus(fStopAndKill);
         krun->AddStatusKilledThetaAngle();
+        return;
       }
       else if(abs(phi) > 0.1)
       {
         theTrack->SetTrackStatus(fStopAndKill);
         krun->AddStatusKilledPhiAngle();
+        return;
       }
-      else
+      else if(abs(phi) < 0.1 && abs(theta) < 0.1)
       {
         if(drawChopperOutDataFlag)
         {

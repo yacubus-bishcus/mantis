@@ -214,7 +214,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         manager->FillNtupleDColumn(2,3,theta);
         manager->FillNtupleDColumn(2,4, phi);
         if(!inFile.compare(0,24,"brems_distributions.root"))
-          manager->FillNtupleDColumn(2,6, weight);
+          manager->FillNtupleDColumn(2,5, weight);
         manager->AddNtupleRow(2);
       }
     }

@@ -85,6 +85,8 @@ public:
     TH1D* BuildSimpleSample(const char*, double, double, double);
     void WriteSampling(TH1D*, TH1D*, TGraph*, TGraph*, double);
 
+    string EraseSubStr(string&, const string&);
+
     void Show_Help();
     void Show_Help_Description();
     void Show_Show();
@@ -2510,8 +2512,9 @@ void MantisROOT::CheckAngles(const char* filename, int estimate=-1)
   }
 
   std::cout << std::endl << "MantisROOT::CheckAngles -> Search complete." << std::endl;
-
-  TFile *fout = new TFile("Check_Angles.root","RECREATE");
+  string filenamebase = EraseSubStr((string)filename, ".root");
+  string outfile = "Check_Angles_" + filenamebase + ".root";
+  TFile *fout = new TFile(outfile.c_str(),"RECREATE");
   fout->cd();
   TTree *tAngle = new TTree("tAngle","IntObjOut Emission Angles Leading to Detection");
   int theEvent;
@@ -2762,6 +2765,19 @@ void MantisROOT::Show_GetInstance()
 //******************************************************************************//
 //******************************************************************************//
 // End Show Functions, Allow Help to be called outside of MantisROOT Class
+
+string MantisROOT::EraseSubStr(string & mainStr, const string & toErase)
+{
+    // Search for the substring in string
+    string newString = mainStr;
+    size_t pos = newString.find(toErase);
+    if (pos != std::string::npos)
+    {
+        // If found then erase it from string
+        newString.erase(pos, toErase.length());
+    }
+    return newString;
+}
 
 void Help()
 {

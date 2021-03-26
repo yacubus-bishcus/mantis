@@ -52,6 +52,7 @@ void RunAction::BeginOfRunAction(const G4Run*)
   fNRF = 0;
   fStatusKilledPosition = 0;
   fStatusKilledTime = 0;
+  fStatusKilledAngle = 0;
   G4cout << G4endl << "Beginning Run..." << G4endl;
 }
 
@@ -76,6 +77,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
   G4cout << "Total number of Optical Photons:                       " << fCerenkovCount + fScintCount << G4endl;
   G4cout << "Total number of Tracks Cut Based on Position:          " << fStatusKilledPosition << G4endl;
   G4cout << "Total number of Tracks Cut Based on Time:              " << fStatusKilledTime << G4endl;
+  G4cout << "Total number of Tracks Cut Based on Emission Angle:    " << fStatusKilledAngle << G4endl;
 
   if (fCerenkovCount > 0)
   {

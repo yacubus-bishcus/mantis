@@ -196,11 +196,17 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         manager->AddNtupleRow(1);
       }
     }
-    if(drawChopperOutDataFlag)
+
+    // Gammas Exiting Chopper Wheel
+    if(nextStep_VolumeName.compare(0,4,"Chop") != 0
+       && previousStep_VolumeName.compare(0,4,"Chop") == 0)
     {
-      // Gammas Exiting Chopper Wheel
-      if(nextStep_VolumeName.compare(0,4,"Chop") != 0
-         && previousStep_VolumeName.compare(0,4,"Chop") == 0)
+      if(abs(theta)>0.1 || abs(phi)>0.1)
+      {
+        theTrack->SetTrackStatus(fStopAndKill);
+        krun->AddStatusKilledAngle();
+      }
+      if(drawChopperOutDataFlag)
       {
         manager->FillNtupleIColumn(2,0,eventID);
         manager->FillNtupleDColumn(2,1, energy);

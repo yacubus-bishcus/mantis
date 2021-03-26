@@ -309,7 +309,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // ***************************************** End of Brem Test Materials ***************************************** //
 
   // Set up Collimator
-    G4double rearCol_Z_pos = bremStartPos - linac_size - 1.0*cm;
+    G4double rearCol_Z_pos = bremStartPos - linac_size - 10.0*cm;
     G4Box *solidCollimator = new G4Box("Collimator", 1*cm, water_size_y, colimator_size);
     G4Box *solidCollimatorRear = new G4Box("Collimator",0.3048*m - 2*cm, 1.2954*m, 1*cm);
     G4LogicalVolume *logicCollimator = new G4LogicalVolume(solidCollimator, lead, "Collimator");

@@ -395,8 +395,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                     procCount = "Det";
                     manager->FillNtupleIColumn(8,0,eventID);
                     manager->FillNtupleDColumn(8,1, theParticle->GetKineticEnergy()/(MeV));
-                    manager->FillNtupleDColumn(8,2, loc.x());
-                    manager->FillNtupleDColumn(8,3, loc.y());
+                    manager->FillNtupleDColumn(8,2, loc.x()/(cm));
+                    manager->FillNtupleDColumn(8,3, loc.y()/(cm));
                     G4String creatorProcess;
 
                     if(theTrack->GetCreatorProcess() !=0)

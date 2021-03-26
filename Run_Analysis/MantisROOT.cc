@@ -2512,7 +2512,8 @@ void MantisROOT::CheckAngles(const char* filename, int estimate=-1)
   }
 
   std::cout << std::endl << "MantisROOT::CheckAngles -> Search complete." << std::endl;
-  string filenamebase = EraseSubStr(string(filename), ".root");
+  string filename_string = string(filename);
+  string filenamebase = EraseSubStr(filename_string, ".root");
   string outfile = "Check_Angles_" + filenamebase + ".root";
   TFile *fout = new TFile(outfile.c_str(),"RECREATE");
   fout->cd();

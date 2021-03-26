@@ -129,9 +129,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     G4ThreeVector p = aStep->GetPreStepPoint()->GetMomentum();
     // sin(theta) = (vector magnitude in XY plane)/(total vector magnitude)
     // polar angle measured between the positive Z axis and the vector
-    G4double theta = asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag());
+    G4double theta = std::asin(std::sqrt(std::pow(p.x(),2)+std::pow(p.y(),2))/p.mag());
     // sin(phi) -> angle in the XY plane reference to the positive X axis
-    G4double phi = asin(p.y()/p.mag());
+    G4double phi = std::asin(p.y()/p.mag());
     G4ThreeVector loc = theTrack->GetPosition();
 
 // *********************************** Track Bremsstrahlung Beam for Brem Test ***************************************** //
@@ -142,7 +142,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           && previousStep_VolumeName.compare(0,11,"BremBacking") == 0
           && theTrack->GetParticleDefinition() == G4Gamma::Definition())
       {
-        if(cos(theta) < 0.94 || CPName != "eBrem")
+        if(std::cos(theta) < 0.94 || CPName != "eBrem")
         {
           theTrack->SetTrackStatus(fStopAndKill);
           krun->AddStatusKilledPosition();
@@ -156,6 +156,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         }
       }
     }
+
 // **************************************************** Track NRF Materials **************************************************** //
 
     const G4VProcess* process = endPoint->GetProcessDefinedStep();
@@ -213,7 +214,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         krun->AddStatusKilledPhiAngle();
         return;
       }
-      else if(std::abs(phi) < 0.1 && std::abs(theta) < 0.1)
+      else
       {
         if(drawChopperOutDataFlag)
         {

@@ -206,16 +206,19 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         theTrack->SetTrackStatus(fStopAndKill);
         krun->AddStatusKilledAngle();
       }
-      if(drawChopperOutDataFlag)
+      else
       {
-        manager->FillNtupleIColumn(2,0,eventID);
-        manager->FillNtupleDColumn(2,1, energy);
-        manager->FillNtupleIColumn(2,2,isNRF);
-        manager->FillNtupleDColumn(2,3,theta);
-        manager->FillNtupleDColumn(2,4, phi);
-        if(!inFile.compare(0,24,"brems_distributions.root"))
-          manager->FillNtupleDColumn(2,5, weight);
-        manager->AddNtupleRow(2);
+        if(drawChopperOutDataFlag)
+        {
+          manager->FillNtupleIColumn(2,0,eventID);
+          manager->FillNtupleDColumn(2,1, energy);
+          manager->FillNtupleIColumn(2,2,isNRF);
+          manager->FillNtupleDColumn(2,3,theta);
+          manager->FillNtupleDColumn(2,4, phi);
+          if(!inFile.compare(0,24,"brems_distributions.root"))
+            manager->FillNtupleDColumn(2,5, weight);
+          manager->AddNtupleRow(2);
+        }
       }
     }
 

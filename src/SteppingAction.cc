@@ -127,7 +127,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     }
 
     G4ThreeVector p = aStep->GetPreStepPoint()->GetMomentum();
-    double ptheta = aStep->GetPostStepPoint()->GetMomentum.theta();
+    // sin(theta) = (vector magnitude in XY plane)/(total vector magnitude)
+    // polar angle measured between the positive Z axis and the vector
+    G4double theta = asin(sqrt(pow(p.x(),2)+pow(p.y(),2))/p.mag());
+    // sin(phi) -> angle in the XY plane reference to the positive X axis
+    G4double phi = asin(p.y()/p.mag());
+    G4ThreeVector loc = theTrack->GetPosition();
 
 // *********************************** Track Bremsstrahlung Beam for Brem Test ***************************************** //
 
@@ -137,7 +142,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           && previousStep_VolumeName.compare(0,11,"BremBacking") == 0
           && theTrack->GetParticleDefinition() == G4Gamma::Definition())
       {
-        if(cos(p.z()) < 0.94 || CPName != "eBrem")
+        if(cos(theta) < 0.94 || CPName != "eBrem")
         {
           theTrack->SetTrackStatus(fStopAndKill);
           krun->AddStatusKilledPosition();
@@ -145,9 +150,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         else
         {
           manager->FillNtupleDColumn(0,0,energy);
-          manager->FillNtupleDColumn(0,1, p.x());
-          manager->FillNtupleDColumn(0,2, p.y());
-          manager->FillNtupleDColumn(0,3, p.z());
+          manager->FillNtupleDColumn(0,1, theta);
+          manager->FillNtupleDColumn(0,2, phi);
           manager->AddNtupleRow(0);
         }
       }
@@ -167,8 +171,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           manager->FillNtupleIColumn(3,0, eventID);
           manager->FillNtupleDColumn(3,1,energy);
           manager->FillNtupleSColumn(3,2,endPoint->GetPhysicalVolume()->GetName());
-          G4ThreeVector NRF_loc = theTrack->GetPosition();
-          manager->FillNtupleDColumn(3,3, NRF_loc.z()/(cm));
+          manager->FillNtupleDColumn(3,3, loc.z()/(cm));
           if(!inFile.compare(0,24,"brems_distributions.root"))
             manager->FillNtupleDColumn(3,4,weight);
           manager->AddNtupleRow(3);
@@ -202,9 +205,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         manager->FillNtupleDColumn(2,0, energy);
         manager->FillNtupleIColumn(2,1,eventID);
         manager->FillNtupleIColumn(2,2,isNRF);
-        manager->FillNtupleDColumn(2,3,p.x());
-        manager->FillNtupleDColumn(2,4,p.y());
-        manager->FillNtupleDColumn(2,5,p.z());
+        manager->FillNtupleDColumn(2,3,theta);
+        manager->FillNtupleDColumn(2,4, phi);
         if(!inFile.compare(0,24,"brems_distributions.root"))
           manager->FillNtupleDColumn(2,6, weight);
         manager->AddNtupleRow(2);
@@ -236,13 +238,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           {
               manager->FillNtupleDColumn(4,0, energy);
               manager->FillNtupleSColumn(4,1, CPName);
-              manager->FillNtupleDColumn(4,2,p.x());
-              manager->FillNtupleDColumn(4,3,p.y());
-              manager->FillNtupleDColumn(4,4,p.z());
-              manager->FillNtupleDColumn(4,5,theTrack->GetGlobalTime());
-              manager->FillNtupleIColumn(4,6,eventID);
+              manager->FillNtupleDColumn(4,2,theta);
+              manager->FillNtupleDColumn(4,3,phi);
+              manager->FillNtupleDColumn(4,4,theTrack->GetGlobalTime());
+              manager->FillNtupleIColumn(4,5,eventID);
               if(!inFile.compare(0,24,"brems_distributions.root"))
-                manager->FillNtupleDColumn(4,7, weight);
+                manager->FillNtupleDColumn(4,6, weight);
               manager->AddNtupleRow(4);
           }
           // Exiting Interrogation Object
@@ -251,13 +252,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           {
             manager->FillNtupleDColumn(5,0, energy);
             manager->FillNtupleSColumn(5,1, CPName);
-            manager->FillNtupleDColumn(5,2, p.x());
-            manager->FillNtupleDColumn(5,3, p.y());
-            manager->FillNtupleDColumn(5,4, p.z());
-            manager->FillNtupleDColumn(5,5, theTrack->GetGlobalTime());
-            manager->FillNtupleIColumn(5,6, eventID);
+            manager->FillNtupleDColumn(5,2, theta);
+            manager->FillNtupleDColumn(5,3, phi);
+            manager->FillNtupleDColumn(5,4, theTrack->GetGlobalTime());
+            manager->FillNtupleIColumn(5,5, eventID);
             if(!inFile.compare(0,24,"brems_distributions.root"))
-              manager->FillNtupleDColumn(5,7, weight);
+              manager->FillNtupleDColumn(5,6, weight);
             manager->AddNtupleRow(5);
           }
         }
@@ -395,6 +395,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                     procCount = "Det";
                     manager->FillNtupleIColumn(8,0,eventID);
                     manager->FillNtupleDColumn(8,1, theParticle->GetKineticEnergy()/(MeV));
+                    manager->FillNtupleDColumn(8,2, loc.x());
+                    manager->FillNtupleDColumn(8,3, loc.y());
                     G4String creatorProcess;
 
                     if(theTrack->GetCreatorProcess() !=0)
@@ -402,10 +404,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                     else
                         creatorProcess = "Brem";
 
-                    manager->FillNtupleSColumn(8,2, creatorProcess);
-                    manager->FillNtupleDColumn(8,3, theTrack->GetGlobalTime()); // time units is nanoseconds
+                    manager->FillNtupleSColumn(8,4, creatorProcess);
+                    manager->FillNtupleDColumn(8,5, theTrack->GetGlobalTime()); // time units is nanoseconds
                     if(!inFile.compare(0,24,"brems_distributions.root"))
-                      manager->FillNtupleDColumn(8,4, weight);
+                      manager->FillNtupleDColumn(8,6, weight);
                     manager->AddNtupleRow(8);
                 }
                 else if (theStatus == NotAtBoundary)

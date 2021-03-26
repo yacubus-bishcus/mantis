@@ -54,9 +54,8 @@ void HistoManager::Book()
   // Create ID 0 Ntuple for Brem Beam Emission
   manager->CreateNtuple("Brem","Bremsstrahlung Beam");
   manager->CreateNtupleDColumn("Energy");
-  manager->CreateNtupleDColumn("X_Angle");
-  manager->CreateNtupleDColumn("Y_Angle");
-  manager->CreateNtupleDColumn("Z_Angle");
+  manager->CreateNtupleDColumn("Theta");
+  manager->CreateNtupleDColumn("Phi");
   //manager->CreateNtupleSColumn("CProcess");
   manager->FinishNtuple();
 
@@ -73,9 +72,8 @@ void HistoManager::Book()
   manager->CreateNtupleDColumn("Energy");
   manager->CreateNtupleIColumn("EventID");
   manager->CreateNtupleIColumn("isNRF");
-  manager->CreateNtupleDColumn("X_Angle");
-  manager->CreateNtupleDColumn("Y_Angle");
-  manager->CreateNtupleDColumn("Z_Angle");
+  manager->CreateNtupleDColumn("Theta");
+  manager->CreateNtupleDColumn("Phi");
   if(!inFile.compare(0,24,"brems_distributions.root"))
     manager->CreateNtupleDColumn("Weight");
   manager->FinishNtuple();
@@ -107,9 +105,8 @@ void HistoManager::Book()
     manager->CreateNtuple("IntObjIn","Incident Interrogation Object Data");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleSColumn("CreatorProcess");
-    manager->CreateNtupleDColumn("X_Angle");
-    manager->CreateNtupleDColumn("Y_Angle");
-    manager->CreateNtupleDColumn("Z_Angle");
+    manager->CreateNtupleDColumn("Theta");
+    manager->CreateNtupleDColumn("Phi");
     manager->CreateNtupleDColumn("Time");
     manager->CreateNtupleIColumn("EventID");
     if(!inFile.compare(0,24,"brems_distributions.root"))
@@ -120,9 +117,8 @@ void HistoManager::Book()
     manager->CreateNtuple("IntObjOut","Interrogation Object Emission Data");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleSColumn("CreatorProcess");
-    manager->CreateNtupleDColumn("X_Angle");
-    manager->CreateNtupleDColumn("Y_Angle");
-    manager->CreateNtupleDColumn("Z_Angle");
+    manager->CreateNtupleDColumn("Theta");
+    manager->CreateNtupleDColumn("Phi");
     manager->CreateNtupleDColumn("Time");
     manager->CreateNtupleIColumn("EventID");
     if(!inFile.compare(0,24,"brems_distributions.root"))
@@ -154,6 +150,8 @@ void HistoManager::Book()
     manager->CreateNtuple("DetInfo","Detected Information");
     manager->CreateNtupleIColumn("EventID");
     manager->CreateNtupleDColumn("Energy");
+    manager->CreateNtupleDColumn("X");
+    manager->CreateNtupleDColumn("Y");
     manager->CreateNtupleSColumn("CreatorProcess");
     manager->CreateNtupleDColumn("Time");
     if(!inFile.compare(0,24,"brems_distributions.root"))

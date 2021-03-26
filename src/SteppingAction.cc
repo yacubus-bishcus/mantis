@@ -201,10 +201,15 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     if(nextStep_VolumeName.compare(0,4,"Chop") != 0
        && previousStep_VolumeName.compare(0,4,"Chop") == 0)
     {
-      if(abs(theta)>0.1 || abs(phi)>0.1)
+      if(abs(theta) > 0.1)
       {
         theTrack->SetTrackStatus(fStopAndKill);
-        krun->AddStatusKilledAngle();
+        krun->AddStatusKilledThetaAngle();
+      }
+      else if(abs(phi) > 0.1)
+      {
+        theTrack->SetTrackStatus(fStopAndKill);
+        krun->AddStatusKilledPhiAngle();
       }
       else
       {

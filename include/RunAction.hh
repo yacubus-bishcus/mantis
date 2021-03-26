@@ -55,13 +55,14 @@ class RunAction : public G4UserRunAction
     void AddNRF(void){fNRF++;}
     void AddStatusKilledPosition(void){fStatusKilledPosition++;}
     void AddStatusKilledTime(void){fStatusKilledTime++;}
-    void AddStatusKilledAngle(void){fStatusKilledAngle++;}
+    void AddStatusKilledThetaAngle(void){fStatusKilledThetaAngle++;}
+    void AddStatusKilledPhiAngle(void){fStatusKilledPhiAngle++;}
 
   private:
     HistoManager* fHistoManager;
     PrimaryGeneratorAction* fpga;
     G4double fCerenkovEnergy, fScintEnergy, fCerenkovCount;
-    G4int fScintCount, fTotalSurface, fNRF, fStatusKilledPosition, fStatusKilledTime, fStatusKilledAngle;
+    G4int fScintCount, fTotalSurface, fNRF, fStatusKilledPosition, fStatusKilledTime, fStatusKilledThetaAngle, fStatusKilledPhiAngle;
 };
 
 

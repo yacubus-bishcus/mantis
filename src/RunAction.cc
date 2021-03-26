@@ -52,7 +52,8 @@ void RunAction::BeginOfRunAction(const G4Run*)
   fNRF = 0;
   fStatusKilledPosition = 0;
   fStatusKilledTime = 0;
-  fStatusKilledAngle = 0;
+  fStatusKilledThetaAngle = 0;
+  fStatusKilledPhiAngle = 0;
   G4cout << G4endl << "Beginning Run..." << G4endl;
 }
 
@@ -69,15 +70,16 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
   G4int prec = G4cout.precision(2);
   G4cout << G4endl << "Run Summary" << G4endl;
   G4cout << "----------------------------------------------------------------------" << G4endl;
-  G4cout << "Total Number of Events:                                " << TotNbofEvents << G4endl;
-  G4cout << "Total number of Surface Events:                        " << fTotalSurface << G4endl;
-  G4cout << "Total number of NRF Photons:                           " << fNRF << G4endl;
-  G4cout << "Total number of Cherenkov Photons:                     " << fCerenkovCount << G4endl;
-  G4cout << "Total number of Scintillation Photons:                 " << fScintCount << G4endl;
-  G4cout << "Total number of Optical Photons:                       " << fCerenkovCount + fScintCount << G4endl;
-  G4cout << "Total number of Tracks Cut Based on Position:          " << fStatusKilledPosition << G4endl;
-  G4cout << "Total number of Tracks Cut Based on Time:              " << fStatusKilledTime << G4endl;
-  G4cout << "Total number of Tracks Cut Based on Emission Angle:    " << fStatusKilledAngle << G4endl;
+  G4cout << "Total Number of Events:                                      " << TotNbofEvents << G4endl;
+  G4cout << "Total number of Surface Events:                              " << fTotalSurface << G4endl;
+  G4cout << "Total number of NRF Photons:                                 " << fNRF << G4endl;
+  G4cout << "Total number of Cherenkov Photons:                           " << fCerenkovCount << G4endl;
+  G4cout << "Total number of Scintillation Photons:                       " << fScintCount << G4endl;
+  G4cout << "Total number of Optical Photons:                             " << fCerenkovCount + fScintCount << G4endl;
+  G4cout << "Total number of Tracks Cut Based on Position:                " << fStatusKilledPosition << G4endl;
+  G4cout << "Total number of Tracks Cut Based on Time:                    " << fStatusKilledTime << G4endl;
+  G4cout << "Total number of Tracks Cut Based on Theta Emission Angle:    " << fStatusKilledThetaAngle << G4endl;
+  G4cout << "Total number of Tracks Cut Based on Phi Emission Angle:      " << fStatusKilledPhiAngle << G4endl;
 
   if (fCerenkovCount > 0)
   {

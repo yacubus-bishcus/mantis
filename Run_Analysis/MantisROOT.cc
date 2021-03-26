@@ -2400,21 +2400,25 @@ void MantisROOT::CheckAngles(const char* filename, int estimate=-1)
   t1->SetEstimate(estimate);
   t2->SetEstimate(estimate);
   std::cout << "MantisROOT::CheckAngles -> Grabbing IntObjOut Angles and Events." << std::endl;
-  int entries = t1->Draw("Angle:EventID","","goff");
+  int entries = t1->Draw("Theta:Phi:EventID","","goff");
 
   if(debug)
     std::cout << "MantisROOT::CheckAngles -> IntObjOut Entries: " << entries << std::endl;
 
-  Double_t* angles = t1->GetVal(0);
-  Double_t* eventID = t1->GetVal(1);
+  Double_t* thetas = t1->GetVal(0);
+  Double_t* phis = t1->GetVal(1);
+  Double_t* eventID = t1->GetVal(2);
 
-  std::vector<double> anglesv;
+  std::vector<double> thetasv;
+  std::vector<double> phisv;
   std::vector<int> eventsv;
+
   if(estimate == -1)
   {
     for(int i=0;i<entries;++i)
     {
-      anglesv.push_back(angles[i]);
+      thetasv.push_back(thetas[i]);
+      phisv.push_back(phis[i]);
       eventsv.push_back((int)eventID[i]);
     }
   }
@@ -2422,7 +2426,8 @@ void MantisROOT::CheckAngles(const char* filename, int estimate=-1)
   {
     for(int i=0;i<estimate;++i)
     {
-      anglesv.push_back(angles[i]);
+      thetasv.push_back(thetas[i]);
+      phisv.push_back(phis[i]);
       eventsv.push_back((int)eventID[i]);
     }
   }
@@ -2458,7 +2463,8 @@ void MantisROOT::CheckAngles(const char* filename, int estimate=-1)
     std::cout << "MantisROOT::CheckAngles -> Duplicates Removed. New Vector Size: " << events2v.size() << std::endl;
 
   // Compare Event IDs
-  std::vector<double> det_anglesv;
+  std::vector<double> det_thetasv;
+  std::vector<double> det_phisv;
   std::vector<int> det_eventsv;
   int x;
 
@@ -2476,7 +2482,8 @@ void MantisROOT::CheckAngles(const char* filename, int estimate=-1)
       if(exists != events2v.end())
       {
         det_eventsv.push_back(x);
-        det_anglesv.push_back(anglesv[i]);
+        det_thetasv.push_back(thetasv[i]);
+        det_phisv.push_back(phisv[i]);
       }
 
     }
@@ -2495,7 +2502,8 @@ void MantisROOT::CheckAngles(const char* filename, int estimate=-1)
       if(exists != events2v.end())
       {
         det_eventsv.push_back(x);
-        det_anglesv.push_back(anglesv[i]);
+        det_thetasv.push_back(thetasv[i]);
+        det_phisv.push_back(phisv[i]);
       }
 
     }
@@ -2507,13 +2515,14 @@ void MantisROOT::CheckAngles(const char* filename, int estimate=-1)
   fout->cd();
   TTree *tAngle = new TTree("tAngle","IntObjOut Emission Angles Leading to Detection");
   int theEvent;
-  double theAngle;
+  double theTheta, thePhi;
 
   if(debug)
     std::cout << "MantisROOT::CheckAngles -> Assigning Branches..." << std::endl;
 
   tAngle->Branch("EventID",&theEvent);
-  tAngle->Branch("Angle", &theAngle);
+  tAngle->Branch("Theta", &theTheta);
+  tAngle->Branch("Phi", &thePhi);
 
   if(debug)
     std::cout << "MantisROOT::CheckAngles -> Filling TTree..." << std::endl;
@@ -2521,7 +2530,8 @@ void MantisROOT::CheckAngles(const char* filename, int estimate=-1)
   for(int i=0;i<det_eventsv.size();++i)
   {
     theEvent = det_eventsv[i];
-    theAngle = det_anglesv[i];
+    theTheta = det_thetasv[i];
+    thePhi = det_phisv[i];
     tAngle->Fill();
   }
 

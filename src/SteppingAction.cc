@@ -267,15 +267,26 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           if(nextStep_VolumeName.compare(0, 6,"IntObj") != 0
              && previousStep_VolumeName.compare(0,6,"IntObj") == 0)
           {
-            manager->FillNtupleIColumn(5,0, eventID);
-            manager->FillNtupleDColumn(5,1, energy);
-            manager->FillNtupleSColumn(5,2, CPName);
-            manager->FillNtupleDColumn(5,3, theta);
-            manager->FillNtupleDColumn(5,4, phi);
-            manager->FillNtupleDColumn(5,5, theTrack->GetGlobalTime());
-            if(!inFile.compare(0,24,"brems_distributions.root"))
-              manager->FillNtupleDColumn(5,6, weight);
-            manager->AddNtupleRow(5);
+            if(theta/(deg) > 0)
+            {
+              theTrack->SetTrackStatus(fStopAndKill);
+              krun->AddStatusKilledThetaAngle();
+              return;
+            }
+            else
+            {
+              manager->FillNtupleIColumn(5,0, eventID);
+              manager->FillNtupleDColumn(5,1, energy);
+              manager->FillNtupleSColumn(5,2, CPName);
+              manager->FillNtupleDColumn(5,3, theta);
+              manager->FillNtupleDColumn(5,4, phi);
+              manager->FillNtupleDColumn(5,5, theTrack->GetGlobalTime());
+
+              if(!inFile.compare(0,24,"brems_distributions.root"))
+                manager->FillNtupleDColumn(5,6, weight);
+
+              manager->AddNtupleRow(5);
+            }
           }
         }
 

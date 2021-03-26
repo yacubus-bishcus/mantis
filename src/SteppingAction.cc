@@ -126,7 +126,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       }
     }
 
-    G4ThreeVector p = aStep->GetPreStepPoint()->GetMomentumDirection();
+    G4ThreeVector p = aStep->GetPreStepPoint()->GetMomentum().theta();
 
 // *********************************** Track Bremsstrahlung Beam for Brem Test ***************************************** //
 

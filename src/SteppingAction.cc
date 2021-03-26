@@ -189,8 +189,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
          && previousStep_VolumeName.compare(0, 4, "Chop") != 0
          && theTrack->GetParticleDefinition() == G4Gamma::Definition())
       {
-        manager->FillNtupleDColumn(1,0, energy);
-        manager->FillNtupleIColumn(1,1,eventID);
+        manager->FillNtupleIColumn(1,0,eventID);
+        manager->FillNtupleDColumn(1,1, energy);
         if(!inFile.compare(0,24,"brems_distributions.root"))
           manager->FillNtupleDColumn(1,2, weight);
         manager->AddNtupleRow(1);
@@ -202,8 +202,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       if(nextStep_VolumeName.compare(0,4,"Chop") != 0
          && previousStep_VolumeName.compare(0,4,"Chop") == 0)
       {
-        manager->FillNtupleDColumn(2,0, energy);
-        manager->FillNtupleIColumn(2,1,eventID);
+        manager->FillNtupleIColumn(2,0,eventID);
+        manager->FillNtupleDColumn(2,1, energy);
         manager->FillNtupleIColumn(2,2,isNRF);
         manager->FillNtupleDColumn(2,3,theta);
         manager->FillNtupleDColumn(2,4, phi);
@@ -236,12 +236,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           if(nextStep_VolumeName.compare(0, 6,"IntObj") == 0
              && previousStep_VolumeName.compare(0, 6, "IntObj") != 0)
           {
-              manager->FillNtupleDColumn(4,0, energy);
-              manager->FillNtupleSColumn(4,1, CPName);
-              manager->FillNtupleDColumn(4,2,theta);
-              manager->FillNtupleDColumn(4,3,phi);
-              manager->FillNtupleDColumn(4,4,theTrack->GetGlobalTime());
-              manager->FillNtupleIColumn(4,5,eventID);
+              manager->FillNtupleIColumn(4,0,eventID);
+              manager->FillNtupleDColumn(4,1, energy);
+              manager->FillNtupleSColumn(4,2, CPName);
+              manager->FillNtupleDColumn(4,3,theta);
+              manager->FillNtupleDColumn(4,4,phi);
+              manager->FillNtupleDColumn(4,5,theTrack->GetGlobalTime());
               if(!inFile.compare(0,24,"brems_distributions.root"))
                 manager->FillNtupleDColumn(4,6, weight);
               manager->AddNtupleRow(4);
@@ -250,12 +250,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           if(nextStep_VolumeName.compare(0, 6,"IntObj") != 0
              && previousStep_VolumeName.compare(0,6,"IntObj") == 0)
           {
-            manager->FillNtupleDColumn(5,0, energy);
-            manager->FillNtupleSColumn(5,1, CPName);
-            manager->FillNtupleDColumn(5,2, theta);
-            manager->FillNtupleDColumn(5,3, phi);
-            manager->FillNtupleDColumn(5,4, theTrack->GetGlobalTime());
-            manager->FillNtupleIColumn(5,5, eventID);
+            manager->FillNtupleIColumn(5,0, eventID);
+            manager->FillNtupleDColumn(5,1, energy);
+            manager->FillNtupleSColumn(5,2, CPName);
+            manager->FillNtupleDColumn(5,3, theta);
+            manager->FillNtupleDColumn(5,4, phi);
+            manager->FillNtupleDColumn(5,5, theTrack->GetGlobalTime());
             if(!inFile.compare(0,24,"brems_distributions.root"))
               manager->FillNtupleDColumn(5,6, weight);
             manager->AddNtupleRow(5);
@@ -272,10 +272,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           if(nextStep_VolumeName.compare(0, 5,"Water") == 0
              && previousStep_VolumeName.compare(0, 5, "Water") != 0)
           {
-            manager->FillNtupleDColumn(6,0, energy);
-            manager->FillNtupleSColumn(6,1, CPName);
-            manager->FillNtupleIColumn(6,2, eventID);
-            manager->FillNtupleIColumn(6,3, theTrack->GetTrackID());
+            manager->FillNtupleIColumn(6,0, eventID);
+            manager->FillNtupleIColumn(6,1, theTrack->GetTrackID());
+            manager->FillNtupleDColumn(6,2, energy);
+            manager->FillNtupleSColumn(6,3, CPName);
             if(!inFile.compare(0,24,"brems_distributions.root"))
               manager->FillNtupleDColumn(6,4, weight);
             manager->AddNtupleRow(6);

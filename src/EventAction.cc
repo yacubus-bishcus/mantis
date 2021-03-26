@@ -126,8 +126,8 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
                         c_time = 0;
                 // Fill the TTree
                 G4AnalysisManager* manager = G4AnalysisManager::Instance();
-                manager->FillNtupleDColumn(7,0,maxE);
-                manager->FillNtupleIColumn(7,1,anEvent->GetEventID());
+                manager->FillNtupleIColumn(7,0,anEvent->GetEventID());
+                manager->FillNtupleDColumn(7,1,maxE);
                 manager->FillNtupleIColumn(7,2,c_secondaries);
                 manager->FillNtupleDColumn(7,3,c_time);
                 if(!inFile.compare(0,24,"brems_distributions.root"))

@@ -61,16 +61,16 @@ void HistoManager::Book()
 
   // Create ID 1 Ntuple for Incident Chopper Data
   manager->CreateNtuple("ChopIn", "Chopper Wheel Incident Data");
-  manager->CreateNtupleDColumn("Energy");
   manager->CreateNtupleIColumn("EventID");
+  manager->CreateNtupleDColumn("Energy");
   if(!inFile.compare(0,24,"brems_distributions.root"))
     manager->CreateNtupleDColumn("Weight");
   manager->FinishNtuple();
 
   // Create ID 2 Ntuple for Exiting Chopper Data
   manager->CreateNtuple("ChopOut", "Chopper Wheel Exiting Radiation Data");
-  manager->CreateNtupleDColumn("Energy");
   manager->CreateNtupleIColumn("EventID");
+  manager->CreateNtupleDColumn("Energy");
   manager->CreateNtupleIColumn("isNRF");
   manager->CreateNtupleDColumn("Theta");
   manager->CreateNtupleDColumn("Phi");
@@ -103,24 +103,24 @@ void HistoManager::Book()
 
     // Create ID 4 NTuple for Incident Interrogation Object Information
     manager->CreateNtuple("IntObjIn","Incident Interrogation Object Data");
+    manager->CreateNtupleIColumn("EventID");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleSColumn("CreatorProcess");
     manager->CreateNtupleDColumn("Theta");
     manager->CreateNtupleDColumn("Phi");
     manager->CreateNtupleDColumn("Time");
-    manager->CreateNtupleIColumn("EventID");
     if(!inFile.compare(0,24,"brems_distributions.root"))
       manager->CreateNtupleDColumn("Weight");
     manager->FinishNtuple();
 
     // Create ID 5 Ntuple for IntObj Emission Data
     manager->CreateNtuple("IntObjOut","Interrogation Object Emission Data");
+    manager->CreateNtupleIColumn("EventID");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleSColumn("CreatorProcess");
     manager->CreateNtupleDColumn("Theta");
     manager->CreateNtupleDColumn("Phi");
     manager->CreateNtupleDColumn("Time");
-    manager->CreateNtupleIColumn("EventID");
     if(!inFile.compare(0,24,"brems_distributions.root"))
       manager->CreateNtupleDColumn("Weight");
     manager->FinishNtuple();
@@ -128,18 +128,18 @@ void HistoManager::Book()
     // Create ID 6 Ntuple for Incident Water Tank Data
     // Only Run with smaller runs this ntuple can get quite large
     manager->CreateNtuple("Water","Incident Water Tank Data");
-    manager->CreateNtupleDColumn("Energy");
-    manager->CreateNtupleSColumn("CreatorProcess");
     manager->CreateNtupleIColumn("EventID");
     manager->CreateNtupleIColumn("TrackID");
+    manager->CreateNtupleDColumn("Energy");
+    manager->CreateNtupleSColumn("CreatorProcess");
     if(!inFile.compare(0,24,"brems_distributions.root"))
       manager->CreateNtupleDColumn("Weight");
     manager->FinishNtuple();
 
     // Create ID 7 Ntuple for cherenkov in water
     manager->CreateNtuple("Cherenkov","Cherenkov in Water Data");
-    manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleIColumn("EventID");
+    manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleIColumn("NumSecondaries");
     manager->CreateNtupleDColumn("Time");
     if(!inFile.compare(0,24,"brems_distributions.root"))

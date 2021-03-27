@@ -2582,7 +2582,7 @@ void MantisROOT::Show_Show_Description()
 
 void MantisROOT::Show_OpenFile()
 {
-  std::cout << "TFile* OpenFile(const char*)" << std::endl;
+  std::cout << "TFile* OpenFile(const char* filename)" << std::endl;
 }
 
 void MantisROOT::Show_OpenFile_Description()
@@ -2592,7 +2592,7 @@ void MantisROOT::Show_OpenFile_Description()
 
 void MantisROOT::Show_CombineFiles()
 {
-  std::cout << "void CombineFiles(std::vector<string>, std::vector<string>, const char*)" << std::endl;
+  std::cout << "void CombineFiles(std::vector<string> filenames, std::vector<string> ObjectsToCombine, const char* Outfilename)" << std::endl;
 }
 
 void MantisROOT::Show_CombineFiles_Description()
@@ -2604,7 +2604,7 @@ void MantisROOT::Show_CombineFiles_Description()
 
 void MantisROOT::Show_CopyTrees()
 {
-  std::cout << "void CopyTrees(const char*, std::vector<string>)" << std::endl;
+  std::cout << "void CopyTrees(const char* filename, std::vector<string> TTreeNamesToCopy)" << std::endl;
 }
 
 void MantisROOT::Show_CopyTrees_Description()

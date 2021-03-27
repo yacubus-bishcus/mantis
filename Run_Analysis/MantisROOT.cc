@@ -1452,11 +1452,15 @@ void MantisROOT::SNR_Det(const char* inFile, bool Weighted, bool cut, TCut cut1=
   double eventCounts, eventEnergy;
   if(!Weighted)
   {
+    if(debug)
+      std::cout << "MantisROOT::SNR_Det -> !Weighted hIntegralReturn" << std::endl;
     eventCounts = eventT->GetEntries();
     eventEnergy = hIntegralReturn(eventT,false);
   }
   else
   {
+    if(debug)
+      std::cout << "MantisROOT::SNR_Det-> Weighted hIntegralReturnWeighted" << std::endl;
     eventCounts = hIntegralReturnWeightedCounts(eventT);
     eventEnergy = hIntegralReturnWeightedEnergy(eventT);
   }

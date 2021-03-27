@@ -2367,9 +2367,14 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er,
 
   TCanvas *c1 = new TCanvas();
   c1->cd();
-  e2->Draw("C");
+  gPad->SetTicks(1,1);
+  e2->Draw();
   f->cd();
-  e1->Draw("C,SAME");
+
+  e1->Draw("SAME");
+
+  e2->GetXaxis()->SetTitle("Incident Energy [MeV]");
+  e2->GetYaxis()->SetTitle("Counts/2eV");
 
   auto legend = new TLegend();
   legend->SetHeader("Chopper State", "C");
@@ -2377,8 +2382,8 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er,
   legend->AddEntry(e2, "Chopper Off");
   legend->Draw();
 
-  f->Close();
-  f2->Close();
+  //f->Close();
+  //f2->Close();
   std::cout << "MantisROOT::CheckIntObj -> Complete." << std::endl;
 
 } // end of CheckIntObj

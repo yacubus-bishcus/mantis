@@ -2616,7 +2616,7 @@ void MantisROOT::Show_CopyTrees_Description()
 
 void MantisROOT::Show_Sig2Noise()
 {
-  std::cout << "void Sig2Noise(std::vector<string>, string, bool Weighted=false, bool cut=false, TCut cut1=\"NA\")" << std::endl;
+  std::cout << "void Sig2Noise(std::vector<string> Filenames, string DataName, bool Weighted=false, bool cut=false, TCut cut1=\"NA\")" << std::endl;
 }
 
 void MantisROOT::Show_Sig2Noise_Description()
@@ -2632,7 +2632,7 @@ void MantisROOT::Show_Sig2Noise_Description()
 
 void MantisROOT::Show_ZScore()
 {
-  std::cout << "void ZScore(const char*, const char*, std::vector<string>)" << std::endl;
+  std::cout << "void ZScore(const char* filename1, const char* filename2, std::vector<string> ObjectNames)" << std::endl;
 }
 
 void MantisROOT::Show_ZScore_Description()
@@ -2642,8 +2642,8 @@ void MantisROOT::Show_ZScore_Description()
 }
 void MantisROOT::Show_Integral()
 {
-  std::cout << "void Integral(TTree*)" << std::endl << "void Integral(std::vector<TTree*>)"
-  << std::endl << "void Integral(std::vector<TTree*>,TCut)" << std::endl;
+  std::cout << "void Integral(TTree* Object)" << std::endl << "void Integral(std::vector<TTree*> Objects)"
+  << std::endl << "void Integral(std::vector<TTree*> Object, TCut IntegralCut)" << std::endl;
 }
 
 void MantisROOT::Show_Integral_Description()
@@ -2656,21 +2656,21 @@ void MantisROOT::Show_Integral_Description()
 
 void MantisROOT::Show_PredictThickness()
 {
-  std::cout << "void PredictThickness(std::vector<string>)" << std::endl
-  << "void PredictThickness(std::vector<string>, double)" << std::endl;
+  std::cout << "void PredictThickness(std::vector<string> ObjectNames)" << std::endl
+  << "void PredictThickness(std::vector<string> ObjectNames, double ResonanceEnergy)" << std::endl;
 }
 
 void MantisROOT::Show_PredictThickness_Description()
 {
-  std::cout << "DESCRIPTION: " << std::endl << "Predicts the results of changing the thickness on the objects pass in the string vector."
+  std::cout << "DESCRIPTION: " << std::endl << "Predicts the results of changing the thickness on the objects passed in the string vector."
   << std::endl << "If the second input is passed the thickness calculations will focus on the given resonance energy."
   << std::endl << "Example: mantis->PredictThickness({\"IntObjIn\",\"IntObjOut\"},1.73354)" << std::endl;
 }
 
 void MantisROOT::Show_RebinHisto()
 {
-  std::cout << "void RebinHisto(vector<string>, vector<string>, vector<string>, int, double, double)"
-  << std::endl << "void RebinHisto(vector<string>, vector<string>, vector<string>, int, double, double, TCut)"
+  std::cout << "void RebinHisto(std::vector<string> inFile, std::vector<string> ObjName, std::vector<string> OutObjName, int nbins, double Emin, double Emax)"
+  << std::endl << "void RebinHisto(std::vector<string> inFile, std::vector<string> ObjName,std::vector<string> OutObjName, int nbins, double Emin, double Emax, TCut cut1)"
   << std::endl;
 }
 
@@ -2694,7 +2694,7 @@ void MantisROOT::Show_VarRebin_Description()
 
 void MantisROOT::Show_CheckEvents()
 {
-  std::cout << "void CheckEvents(const char*,bool)" << std::endl;
+  std::cout << "void CheckEvents(const char* filename, bool Weighted)" << std::endl;
 }
 
 void MantisROOT::Show_CheckEvents_Description()
@@ -2707,7 +2707,7 @@ void MantisROOT::Show_CheckEvents_Description()
 
 void MantisROOT::Show_Sampling()
 {
-  std::cout << "void Sampling(const char*, string sample_element=U, double deltaE=5.0e-6, bool checkZero=false, double non_nrf_energy_cut=1.5)" << std::endl;
+  std::cout << "void Sampling(const char* bremInputFilename, string sample_element=U, double deltaE=5.0e-6, bool checkZero=false, double non_nrf_energy_cut=1.5)" << std::endl;
 }
 
 void MantisROOT::Show_Sampling_Description()
@@ -2748,7 +2748,7 @@ void MantisROOT::Show_CheckIntObj_Description()
 
 void MantisROOT::Show_CheckAngles()
 {
-  std::cout << "void MantisROOT::CheckAngles(const char* filename, int estimate)" << std::endl;
+  std::cout << "void CheckAngles(const char* filename, int estimate)" << std::endl;
 }
 
 void MantisROOT::Show_CheckAngles_Description()

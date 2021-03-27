@@ -2322,6 +2322,7 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er,
   }
   TTree* inTree;
   f->GetObject("IntObjIn", inTree);
+  std::cout << "MantisROOT::CheckIntObj -> " << onFile << " IntObjIn grabbed." << std::endl;
   double emin = Er - 100e-6;
   double emax = Er + 100e-6;
   TH1D *e1 = new TH1D("e1","Incident Interrogation Object 2eV Binning",100, emin, emax);
@@ -2332,6 +2333,7 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er,
 
   e1->SetStats(0);
   e1->Sumw2();
+  e1->Print();
 
   // Off Analysis
   TFile *f2 = new TFile(offFile);
@@ -2349,7 +2351,10 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er,
 
   TTree *inTree2;
   f2->GetObject("IntObjIn", inTree2);
+  std::cout << "MantisROOT::CheckIntObj -> " << offFile << " IntObjIn grabbed." << std::endl;
+
   TH1D *e2 = new TH1D("e2","Incident Interrogation Object 2eV Binning",100, emin, emax);
+
   if(Weighted)
     inTree2->Draw("Energy>>e2","Weight","goff");
   else
@@ -2358,6 +2363,7 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er,
   e2->SetStats(0);
   e2->Sumw2();
   e2->SetLineColor(kRed);
+  e2->Print();
 
   TCanvas *c1 = new TCanvas();
   c1->cd();
@@ -2373,6 +2379,7 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er,
 
   f->Close();
   f2->Close();
+  std::cout << "MantisROOT::CheckIntObj -> Complete." << std::endl;
 
 } // end of CheckIntObj
 

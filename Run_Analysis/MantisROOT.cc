@@ -2078,18 +2078,18 @@ TH1D* MantisROOT::BuildBrem(const char* bremInputFilename, double deltaE, bool c
 
   Int_t nbins = Emax/deltaE;
 
-  TH1D *hBrems = new TH1D("hBrems","Temporary Bremsstrahlung Data",250, 0.,Emax);
+  TH1D *tmp_hBrems = new TH1D("tmp_hBrems","Temporary Bremsstrahlung Data",250, 0.,Emax);
   std::cout << "MantisROOT::BuildBrem -> Grabbing Brem Data..." << std::endl;
-  ChopperData->Draw("Energy>>hBrems","","goff");
+  ChopperData->Draw("Energy>>tmp_hBrems","","goff");
   //tmp_Brems->Smooth(4);
   std::cout << "MantisROOT::BuildBrem -> Data Grabbed." << std::endl;
   //std::cout << "MantisROOT::BuildBrem -> Rebinning Brem Data..." << std::endl;
-  //TH1D* hBrems = new TH1D("hBrems","Final Bremsstrahlung Data",nbins, 0.,Emax);
+  TH1D* hBrems = new TH1D("hBrems","Final Bremsstrahlung Data",nbins, 0.,Emax);
 
-  //for(int i=1;i<=nbins;++i)
-  //{
-  //  hBrems->SetBinContent(i,tmp_Brems->GetBinContent(tmp_Brems->GetNbinsX()*(i-1)/nbins+1));
-  //}
+  for(int i=1;i<=nbins;++i)
+  {
+    hBrems->SetBinContent(i,tmp_hBrems->GetBinContent(tmp_hBrems->GetNbinsX()*(i-1)/nbins+1));
+  }
 
   hBrems->Scale(1.0/hBrems->Integral());
   //std::cout << "MantisROOT::BuildBrem -> Rebin Complete." << std::endl;

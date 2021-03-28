@@ -52,10 +52,13 @@ public:
     void SimpleSampling(const char*, double deltaE=5.0e-6, double cut_energy=1.5, double weight=10000, bool checkZero=false);
     void CheckIntObj(const char*, const char*, double, bool Weighted=false);
     void CheckAngles(const char*, int estimate=-1);
+    TGraph* CreateTKDE(const char*, int nentries=10000);
+
   public:
     static MantisROOT *instance;
 
   private:
+    void CheckFile(const char*);
     void Compute(const char*, time_t, bool);
     void CopyATree(const char*, const char*);
     void CopyATreeNoWeight(const char*, const char*);
@@ -120,6 +123,8 @@ public:
     void Show_CheckIntObj_Description();
     void Show_CheckAngles();
     void Show_CheckAngles_Description();
+    void Show_CreateTKDE();
+    void Show_CreateTKDE_Description();
 };
 
 MantisROOT *MantisROOT::instance = 0;
@@ -164,53 +169,71 @@ void MantisROOT::Destroy()
 void MantisROOT::Help()
 {
   std::cout << "Calls and Descriptions" << std::endl << std::endl;
+  Show_CheckAngles();
+  Show_CheckAngles_Description();
+  std::cout << std::endl;
+
+  Show_CheckEvents();
+  Show_CheckEvents_Description();
+  std::cout << std::endl;
+
+  Show_CheckIntObj();
+  Show_CheckIntObj_Description();
+  std::cout << std::endl;
+
+  Show_CombineFiles();
+  Show_CombineFiles_Description();
+  std::cout << std::endl;
+
+  Show_CopyTrees();
+  Show_CopyTrees_Description();
+  std::cout << std::endl;
+
+  Show_CreateTKDE();
+  Show_CreateTKDE_Description();
+  std::cout << std::endl << std::endl;
+
+  Show_GetInstance();
+  std::cout << std::endl << std::endl;
 
   Show_Help();
   Show_Help_Description();
   std::cout << std::endl;
-  Show_GetInstance();
-  std::cout << std::endl << std::endl;
-  Show_OpenFile();
-  Show_OpenFile_Description();
-  std::cout << std::endl;
-  Show_CombineFiles();
-  Show_CombineFiles_Description();
-  std::cout << std::endl;
-  Show_CopyTrees();
-  Show_CopyTrees_Description();
-  std::cout << std::endl;
-  Show_Sig2Noise();
-  Show_Sig2Noise_Description();
-  std::cout << std::endl;
-  Show_ZScore();
-  Show_ZScore_Description();
-  std::cout << std::endl;
+
   Show_Integral();
   Show_Integral_Description();
   std::cout << std::endl;
+
+  Show_OpenFile();
+  Show_OpenFile_Description();
+  std::cout << std::endl;
+
   Show_PredictThickness();
   Show_PredictThickness_Description();
   std::cout << std::endl;
+
   Show_RebinHisto();
   Show_RebinHisto_Description();
   std::cout << std::endl;
-  Show_VarRebin();
-  Show_VarRebin_Description();
-  std::cout << std::endl;
-  Show_CheckEvents();
-  Show_CheckEvents_Description();
-  std::cout << std::endl;
+
   Show_Sampling();
   Show_Sampling_Description();
   std::cout << std::endl;
+
   Show_SimpleSampling();
   Show_SimpleSampling_Description();
   std::cout << std::endl;
-  Show_CheckIntObj();
-  Show_CheckIntObj_Description();
+
+  Show_Sig2Noise();
+  Show_Sig2Noise_Description();
   std::cout << std::endl;
-  Show_CheckAngles();
-  Show_CheckAngles_Description();
+
+  Show_VarRebin();
+  Show_VarRebin_Description();
+  std::cout << std::endl;
+
+  Show_ZScore();
+  Show_ZScore_Description();
   std::cout << std::endl;
 }
 
@@ -220,11 +243,7 @@ void MantisROOT::Rebin(bool verbose, const char* inFile, const char* ObjName, co
 {
 
   // Check to make sure file exists
-  if(gSystem->AccessPathName(inFile))
-  {
-    std::cerr << "ERROR Could not find " << inFile << "exiting..." << std::endl;
-    exit(1);
-  }
+  CheckFile(inFile);
 
   // Complete User Input Checks
   if(VarArray && (nrf_bin_width < 0. || non_nrf_bin_width < 0.))
@@ -338,11 +357,7 @@ void MantisROOT::Rebin(bool verbose, const char* inFile, const char* ObjName, co
 void MantisROOT::Rebin(const char* inFile,const char* ObjName,const char* OutObjName)
 {
   // Check to make sure file exists
-  if(gSystem->AccessPathName(inFile))
-  {
-    std::cerr << "ERROR Could not find " << inFile << "exiting..." << std::endl;
-    exit(1);
-  }
+  CheckFile(inFile);
 
   std::string OutFileName = "converted_" + (std::string)inFile;
   if(!gSystem->AccessPathName(OutFileName.c_str()))
@@ -601,11 +616,7 @@ void MantisROOT::hIntegral(TTree *inObj,TCut cut1)
 
 void MantisROOT::hIntegral(const char* filename, const char* objName)
 {
-  if(gSystem->AccessPathName(filename))
-  {
-    std::cerr << "File not found." << std::endl;
-    exit(100);
-  }
+  CheckFile(filename);
   TFile *f = new TFile(filename);
   if(f == 0)
     exit(0);
@@ -627,11 +638,7 @@ void MantisROOT::hIntegral(const char* filename, const char* objName)
 
 void MantisROOT::hIntegral(const char* filename, const char* objName, TCut cut1)
 {
-  if(gSystem->AccessPathName(filename))
-  {
-    std::cerr << "File not found." << std::endl;
-    exit(100);
-  }
+  CheckFile(filename);
   TFile *f = new TFile(filename);
   if(f == 0)
     exit(0);
@@ -652,11 +659,7 @@ void MantisROOT::hIntegral(const char* filename, const char* objName, TCut cut1)
 void MantisROOT::hIntegral(const char* filename)
 {
   // Doing the integral for chopOut, IntObjIn and DetInfo
-  if(gSystem->AccessPathName(filename))
-  {
-    std::cerr << "File not found." << std::endl;
-    exit(100);
-  }
+  CheckFile(filename);
   TFile *f = new TFile(filename);
   if(f == 0)
     exit(0);
@@ -899,6 +902,7 @@ void MantisROOT::Show(string name="All", bool description=false)
     Show_CheckIntObj();
     Show_CombineFiles();
     Show_CopyTrees();
+    Show_CreateTKDE();
     Show_Help();
     Show_Integral();
     Show_OpenFile();
@@ -940,6 +944,12 @@ void MantisROOT::Show(string name="All", bool description=false)
     Show_CombineFiles();
     if(description)
       Show_CombineFiles_Description();
+  }
+  else if(!name.compare("CreateTKDE"))
+  {
+    Show_CreateTKDE();
+    if(description)
+      Show_CreateTKDE_Description();
   }
   else if(!name.compare("Sig2Noise"))
   {
@@ -1018,11 +1028,7 @@ TFile* MantisROOT::OpenFile(const char* filename)
 
 void MantisROOT::CheckEvents(const char* filename, bool Weighted=false)
 {
-  if(gSystem->AccessPathName(filename))
-  {
-    std::cerr << "CheckEvents -> File: " << filename << " does not exist." << std::endl;
-    return;
-  }
+  CheckFile(filename);
   time_t timer;
   time_t time_start = std::time(&timer);
   Compute(filename,time_start,Weighted);
@@ -1207,11 +1213,7 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted)
 
 void MantisROOT::CopyATree(const char* filename, const char* tObj)
 {
-  if(gSystem->AccessPathName(filename))
-  {
-    std::cerr << "File not found." << std::endl;
-    exit(100);
-  }
+  CheckFile(filename);
   TFile *f = new TFile(filename);
   if(f == 0)
     exit(0);
@@ -1237,11 +1239,7 @@ void MantisROOT::CopyATree(const char* filename, const char* tObj)
 
 void MantisROOT::CopyATreeNoWeight(const char* filename, const char* tObj)
 {
-  if(gSystem->AccessPathName(filename))
-  {
-    std::cerr << "File not found." << std::endl;
-    exit(100);
-  }
+  CheckFile(filename);
   TFile *f = new TFile(filename);
   if(f == 0)
     exit(0);
@@ -1332,11 +1330,7 @@ void MantisROOT::CopyATreeNoWeight(const char* filename, const char* tObj)
 void MantisROOT::SNR_IntObj(const char* inFile, bool Weighted)
 {
   // Check to make sure file exists
-  if(gSystem->AccessPathName(inFile))
-  {
-    std::cerr << "ERROR Could not find " << inFile << "exiting..." << std::endl;
-    exit(1);
-  }
+  CheckFile(inFile);
 
   TFile *f = new TFile(inFile);
   f->cd();
@@ -1432,11 +1426,7 @@ void MantisROOT::SNR_IntObj(const char* inFile, bool Weighted)
 void MantisROOT::SNR_Det(const char* inFile, bool Weighted, bool cut, TCut cut1="NA")
 {
   // Check to make sure file exists
-  if(gSystem->AccessPathName(inFile))
-  {
-    std::cerr << "ERROR Could not find " << inFile << "exiting..." << std::endl;
-    exit(1);
-  }
+  CheckFile(inFile);
   string event_output_name = "w_events_" + string(inFile);
   // check if event file already exists if not make one
   if(gSystem->AccessPathName(event_output_name.c_str()))
@@ -1511,16 +1501,8 @@ double MantisROOT::ZTest(double c1, double c2)
 
 void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
 {
-  if(gSystem->AccessPathName(file1))
-  {
-    std::cerr << "ERROR Could not find " << file1 << "exiting..." << std::endl;
-    exit(1);
-  }
-  if(gSystem->AccessPathName(file2))
-  {
-    std::cerr << "ERROR Could not find " << file2 << "exiting..." << std::endl;
-    exit(1);
-  }
+  CheckFile(file1);
+  CheckFile(file2);
 
   TFile *f = new TFile(file1);
   if(f != 0)
@@ -1617,11 +1599,7 @@ void MantisROOT::Rescale(const char* inObj, double Er)
   std::vector<TFile*> tfilesv;
 
   // check to make sure file exists
-  if(gSystem->AccessPathName(filename.c_str()))
-  {
-    std::cout << "ERROR Input Filename not found." << std::endl;
-    exit(1);
-  }
+  CheckFile(filename.c_str());
 
   // Handle the Base File
   user_files.push_back(filename);
@@ -1643,11 +1621,7 @@ void MantisROOT::Rescale(const char* inObj, double Er)
     std::cin >> filename;
     user_files.push_back(filename);
 
-    if(gSystem->AccessPathName(filename.c_str()))
-    {
-      std::cerr << "ERROR File not found." << std::endl;
-      exit(1);
-    }
+    CheckFile(filename.c_str());
 
     TFile *data_file = TFile::Open(filename.c_str());
     tfilesv.push_back(data_file);
@@ -1849,11 +1823,7 @@ void MantisROOT::Rescale(const char* inObj)
   std::vector<TFile*> tfilesv;
 
   // check to make sure file exists
-  if(gSystem->AccessPathName(filename.c_str()))
-  {
-    std::cout << "ERROR Input Filename not found." << std::endl;
-    exit(1);
-  }
+  CheckFile(filename.c_str());
 
   // Handle the Base File
   user_files.push_back(filename);
@@ -1875,11 +1845,7 @@ void MantisROOT::Rescale(const char* inObj)
     std::cin >> filename;
     user_files.push_back(filename);
 
-    if(gSystem->AccessPathName(filename.c_str()))
-    {
-      std::cerr << "ERROR File not found." << std::endl;
-      exit(1);
-    }
+    CheckFile(filename.c_str());
 
     TFile *data_file = TFile::Open(filename.c_str());
     tfilesv.push_back(data_file);
@@ -2189,11 +2155,7 @@ void MantisROOT::WriteSampling(TH1D* hBrems, TH1D* hSample, TGraph* gBrems, TGra
 
 void MantisROOT::SimpleSampling(const char* bremInputFilename, double deltaE=5.0e-6, double cut_energy=1.5, double weight=10000, bool checkZero=false)
 {
-  if(gSystem->AccessPathName(bremInputFilename))
-  {
-    std::cerr << "ERROR Reading: " << bremInputFilename << std::endl;
-    exit(1);
-  }
+  CheckFile(bremInputFilename);
 
   TH1D* hBrems = BuildBrem(bremInputFilename, deltaE, checkZero);
   hBrems->Print();
@@ -2211,11 +2173,7 @@ void MantisROOT::Sampling(const char *bremInputFilename, string sample_element="
 							double deltaE=5.0e-6, bool checkZero=false, double non_nrf_energy_cut=1.5)
 {
 	// Convert Input Bremsstrahlung Spectrum Histogram to TGraph
-	if(gSystem->AccessPathName(bremInputFilename))
-	{
-		std::cerr << "ERROR Reading: " << bremInputFilename << std::endl;
-		exit(1);
-	}
+	CheckFile(bremInputFilename);
 
   TH1D* hBrems = BuildBrem(bremInputFilename, deltaE, checkZero);
   TGraph* gBrems = new TGraph(hBrems);
@@ -2305,11 +2263,8 @@ void MantisROOT::Sampling(const char *bremInputFilename, string sample_element="
 
 void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er, bool Weighted=false)
 {
-  if(gSystem->AccessPathName(onFile) || gSystem->AccessPathName(offFile))
-  {
-    std::cout << "MantisROOT::CheckIntObj -> Files Not Found." << std::endl;
-    exit(1);
-  }
+  CheckFile(onFile);
+  CheckFile(offFile);
 
   // On Analysis
   TFile *f = new TFile(onFile);
@@ -2386,8 +2341,6 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er,
   legend->AddEntry(e2, "Chopper Off");
   legend->Draw();
 
-  //f->Close();
-  //f2->Close();
   std::cout << "MantisROOT::CheckIntObj -> Complete." << std::endl;
 
 } // end of CheckIntObj
@@ -2397,11 +2350,7 @@ void MantisROOT::CheckAngles(const char* filename, int estimate=-1)
   if(debug)
     std::cout << "MantisROOT::CheckAngles -> Checking Angles..." << std::endl;
 
-  if(gSystem->AccessPathName(filename))
-  {
-    std::cout << "MantisROOT::CheckAngles -> File " << filename << " Not Found." << std::endl;
-    exit(1);
-  }
+  CheckFile(filename);
 
   if(debug)
     std::cout << "MantisROOT::CheckAngles -> Opening File." << std::endl;
@@ -2567,6 +2516,71 @@ void MantisROOT::CheckAngles(const char* filename, int estimate=-1)
 
 } // end of CheckAngles
 
+TGraph* MantisROOT::CreateTKDE(const char* filename, int nentries=10000)
+{
+  CheckFile(filename);
+  TFile *f = new TFile(filename);
+  f->cd();
+  TTree* tBrem;
+
+  f->GetObject("Brem",tBrem);
+  tBrem->SetEstimate(nentries);
+
+  double xmin = 0.;
+  double xmax = tBrem->GetMaximum("Energy");
+  double rho = 1.0;
+  int nbins = xmax/5e-6;
+
+  TH1D* h1 = new TH1D("h1","h1",nbins,xmin, xmax);
+
+  tBrem->Draw("Energy","","goff");
+
+  std::vector<double> energyv(nentries);
+  Double_t* energies = tBrem->GetVal(0);
+  std::cout << "MantisROOT::CreateTKDE -> Energies Grabbed." << std::endl;
+
+  for(int i=0;i<nentries;++i)
+  {
+    energyv[i] = energies[i];
+    h1->Fill(energyv[i]);
+  }
+
+  // Scale histogram
+  h1->Scale(1./h1->Integral(),"width");
+  h1->SetStats(0);
+  h1->SetTitle("Bremsstrahlung Data");
+  h1->Draw();
+
+  std::cout << "MantisROOT::CreateTKDE -> Creating TKDE..." << std::endl;
+  TKDE* kde = new TKDE(nentries, &energyv[0], xmin, xmax, "", rho);
+
+  // Normalize kde
+  //kde->ComputeKernelL2Norm();
+  std::cout << "MantisROOT::CreateTKDE -> TKDE Created." << std::endl;
+
+  kde->Draw("SAME");
+  std::cout << "MantisROOT::CreateTKDE -> TKDE Drawn." << std::endl;
+
+  TLegend* legend = new TLegend();
+  legend->SetHeader("Bremsstrahlung Data","C");
+  legend->AddEntry(h1,"Bremsstrahlung Histogram");
+  legend->AddEntry(kde, "Bremsstrahlung kde");
+  legend->Draw();
+  std::cout << "MantisROOT::CreateTKDE -> Complete." << std::endl;
+
+  TCanvas* c2 = new TCanvas();
+  c2->cd();
+  kde->Draw();
+
+  TCanvas* c3 = new TCanvas();
+  c3->cd();
+  TF1* const hk = kde->GetFunction(nentries);
+  TGraph* gBrems = new TGraph(hk);
+  gBrems->Draw();
+
+  return gBrems;
+
+}
 //******************************************************************************//
 //******************************************************************************//
 //******************************************************************************//
@@ -2774,6 +2788,16 @@ void MantisROOT::Show_CheckAngles_Description()
   << std::endl << "Usefull for determining emission angle cuts to place." << std::endl;
 }
 
+void MantisROOT::Show_CreateTKDE()
+{
+  std::cout << "void CreateTKDE(const char* filename, int nentries=10000)" << std::endl;
+}
+
+void MantisROOT::Show_CreateTKDE_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Creates TKDE for Bremsstrahlung Input with given number of entries." << std::endl;
+}
+
 void MantisROOT::Show_GetInstance()
 {
   std::cout << "Run MantisROOT* m = MantisROOT::GetInstance(bool debug=false) to get MantisROOT singleton." << std::endl;
@@ -2794,6 +2818,15 @@ string MantisROOT::EraseSubStr(string & mainStr, const string & toErase)
         newString.erase(pos, toErase.length());
     }
     return newString;
+}
+
+void MantisROOT::CheckFile(const char* filename)
+{
+  if(gSystem->AccessPathName(filename))
+  {
+    std::cout << "File " << filename << " Not Found." << std::endl;
+    exit(1);
+  }
 }
 
 void Help()

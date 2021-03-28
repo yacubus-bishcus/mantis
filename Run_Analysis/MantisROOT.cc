@@ -39,6 +39,7 @@ public:
     void CopyTrees(const char*, std::vector<string>);
     void Sig2Noise(std::vector<string>, string, bool Weighted=false, bool cut=false,TCut cut1="NA");
     void ZScore(const char*, const char*, std::vector<string>);
+    void ZScore(double,double);
     void Integral(TTree*);
     void Integral(std::vector<TTree*>);
     void Integral(std::vector<TTree*>,TCut);
@@ -53,6 +54,7 @@ public:
     void CheckIntObj(const char*, const char*, double, bool Weighted=false);
     void CheckAngles(const char*, int estimate=-1);
     TGraph* CreateTKDE(const char*, int nentries=10000);
+    void CheckDet(const char*, bool weighted=false, int estimate=-1);
 
   public:
     static MantisROOT *instance;
@@ -96,6 +98,8 @@ public:
     void Show_Show_Description();
     void Show_OpenFile();
     void Show_OpenFile_Description();
+    void Show_CheckDet();
+    void Show_CheckDet_Description();
     void Show_CombineFiles();
     void Show_CombineFiles_Description();
     void Show_CopyTrees();
@@ -171,6 +175,10 @@ void MantisROOT::Help()
   std::cout << "Calls and Descriptions" << std::endl << std::endl;
   Show_CheckAngles();
   Show_CheckAngles_Description();
+  std::cout << std::endl;
+
+  Show_CheckDet();
+  Show_CheckDet_Description();
   std::cout << std::endl;
 
   Show_CheckEvents();
@@ -790,7 +798,14 @@ void MantisROOT::ZScore(const char* file1, const char* file2, std::vector<string
     ZTest(file1, file2, objects[i].c_str());
   }
 
-  std::cout << std::endl << "ZScore Analysis Complete." << std::endl;
+  std::cout << std::endl << "MantisROOT::ZScore -> Complete." << std::endl;
+}
+
+void MantisROOT::ZScore(double c1, double c2)
+{
+  double zscore = ZTest(c1,c2);
+  std::cout << "ZScore Result: " << zscore << std::endl;
+  std::cout << std::endl << "MantisROOT::ZScore -> Complete." << std::endl;
 }
 
 void MantisROOT::Integral(TTree* tree)
@@ -898,6 +913,7 @@ void MantisROOT::Show(string name="All", bool description=false)
   else if(!name.compare("All") && !description)
   {
     Show_CheckAngles();
+    Show_CheckDet();
     Show_CheckEvents();
     Show_CheckIntObj();
     Show_CombineFiles();
@@ -932,6 +948,12 @@ void MantisROOT::Show(string name="All", bool description=false)
     Show_OpenFile();
     if(description)
       Show_OpenFile_Description();
+  }
+  else if(!name.compare("CheckDet"))
+  {
+    Show_CheckDet();
+    if(description)
+      Show_CheckDet_Description();
   }
   else if(!name.compare("CopyTrees"))
   {
@@ -1149,8 +1171,7 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted)
 
   if(debug)
     std::cout << "CheckEvents::Compute -> Deallocating memory..." << std::endl;
-  // deallocate memory
-  //delete []detWeight;
+
   if(debug)
     std::cout << "CheckEvents::Compute -> Closing File... " << &fMaincompute << std::endl;
   //f->cd();
@@ -1519,7 +1540,7 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
 
     if(debug)
       std::cout << "MantisROOT::ZTest -> Setting TCut for DetInfo: " << detCut << std::endl;
-      
+
     c1  = hIntegral(inTree,0,detCut,5e-6);
     c11 = hIntegral(inTree,1,detCut,5e-6);
     c12 = hIntegral(inTree,2,detCut,5e-6);
@@ -2592,7 +2613,132 @@ TGraph* MantisROOT::CreateTKDE(const char* filename, int nentries=10000)
 
   return gBrems;
 
-}
+} // End of CreateTKDE Function
+
+void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimate=-1)
+{
+  CheckFile(filename);
+  TFile *f = new TFile(filename);
+  f->cd();
+  TTree *tDet, *tIntObjOut;
+  f->GetObject("IntObjOut",tIntObjOut);
+  f->GetObject("DetInfo",tDet);
+  tIntObjOut->SetEstimate(estimate);
+  tDet->SetEstimate(estimate);
+
+  int intObj_entries = tIntObjOut->Draw("EventID","","goff");
+  Double_t* intObj_ids = tIntObjOut->GetVal(0);
+
+  int det_entries = tDet->Draw("EventID:Energy:Weight","","goff");
+  Double_t* det_ids = tDet->GetVal(0);
+  Double_t* det_energies = tDet->GetVal(1);
+
+  int n_intObj = 0;
+  int n_det = 0;
+  if(estimate == -1)
+  {
+    n_intObj = intObj_entries;
+    n_det = det_entries;
+  }
+  else
+  {
+    n_intObj = estimate;
+    n_det = estimate;
+  }
+
+  Double_t *det_weights = new Double_t[n_det];
+
+  if(weighted)
+    det_weights = tDet->GetVal(2);
+
+  if(debug)
+    std::cout << "MantisROOT::CheckDet -> All Objects Grabbed!" << std::endl;
+
+  std::vector<int> intObj_eventsv, det_eventsv;
+  std::vector<Double_t> det_energiesv, det_weightsv;
+
+  for(int i=0;i<n_intObj;++i)
+    intObj_eventsv.push_back((int)intObj_ids[i]);
+
+  for(int i=0;i<n_det;++i)
+  {
+    det_eventsv.push_back((int)det_ids[i]);
+    det_energiesv.push_back(det_energies[i]);
+    if(weighted)
+      det_weightsv.push_back(det_weights[i]);
+  }
+
+  std::vector<int> final_det_eventsv;
+  std::vector<double> final_det_energiesv, final_det_weightsv;
+  int x=0;
+  // Now Complete check
+  for(int i=0;i<det_eventsv.size();++i)
+  {
+    if(i % 100 == 0)
+      std::cout << "\r** Checking Entry: " << i << std::flush;
+    // Grab Det EventID
+    x = det_eventsv[i];
+    // Check if DetInfo EventID matches IntObjOut EventID
+    auto exists = std::find(intObj_eventsv.begin(),intObj_eventsv.end(), x);
+
+    // if found write event info to new vectors
+    if(exists != intObj_eventsv.end())
+    {
+      final_det_eventsv.push_back(x);
+      final_det_energiesv.push_back(det_energiesv[i]);
+      if(weighted)
+        final_det_weightsv.push_back(det_weightsv[i]);
+    }
+
+  }
+
+  // Write vectors to new TTree
+  string outfile = "Corrected_DetInfo_" + string(filename);
+
+  if(debug)
+  {
+    std::cout << "MantisROOT::CheckDet -> Writing Corrected DetInfo to file: "
+              << outfile << std::endl;
+  }
+
+  TFile *fout = new TFile(outfile.c_str(),"RECREATE");
+  fout->cd();
+
+  int a;
+  double b,c;
+  TTree* Corrected_DetInfo = new TTree("Corrected_DetInfo","Corrected Detector Information");
+  Corrected_DetInfo->Branch("EventID",&a);
+  Corrected_DetInfo->Branch("Energy",&b);
+
+  if(weighted)
+    Corrected_DetInfo->Branch("Weight",&c);
+
+  if(debug)
+    std::cout << "MantisROOT::CheckDet -> Corrected DetInfo Filling..." << std::endl;
+
+  for(int i=0;i<final_det_eventsv.size();++i)
+  {
+    a = final_det_eventsv[i];
+    b = final_det_energiesv[i];
+    if(weighted)
+      c = final_det_weightsv[i];
+
+    Corrected_DetInfo->Fill();
+  }
+
+  if(debug)
+    std::cout << "MantisROOT::CheckDet -> Corrected DetInfo Filled." << std::endl;
+
+  Corrected_DetInfo->Write();
+  std::cout << std::endl << "MantisROOT::CheckDet -> Corrected DetInfo Written to file: " << outfile << std::endl;
+
+  fout->Close();
+
+  std::cout <<"MantisROOT::CheckDet -> Complete." << std::endl;
+
+  //return Corrected_DetInfo;
+
+} // end of CheckDet Function
 //******************************************************************************//
 //******************************************************************************//
 //******************************************************************************//
@@ -2675,6 +2821,7 @@ void MantisROOT::Show_Sig2Noise_Description()
 void MantisROOT::Show_ZScore()
 {
   std::cout << "void ZScore(const char* filename1, const char* filename2, std::vector<string> ObjectNames)" << std::endl;
+  std::cout << "void ZScore(double c1, double c2)" << std::endl;
 }
 
 void MantisROOT::Show_ZScore_Description()
@@ -2745,6 +2892,19 @@ void MantisROOT::Show_CheckEvents_Description()
   << std::endl << "If the events match the event data in the detector is collected and written to w_events_(filename)."
   << std::endl << "This function is called in Sig2Noise." << std::endl
   << "Example: mantis->CheckEvents(\"test.root\",true) would Check WEIGHTED events in file test.root." << std::endl;
+}
+
+void MantisROOT::Show_CheckDet()
+{
+  std::cout << "void CheckDet(const char* filename, bool weighted=false, int estimate=-1)" << std::endl;
+}
+
+void MantisROOT::Show_CheckDet_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Checks DetInfo TTree for matches in IntObjOut TTree event IDs."
+  << std::endl << "If there is not a matching ID the DetInfo is removed for that event."
+  << std::endl << "If DetInfo is a weighted spectrum include the second input bool true."
+  << std::endl << "For a subset of the data include the third input." << std::endl;
 }
 
 void MantisROOT::Show_Sampling()

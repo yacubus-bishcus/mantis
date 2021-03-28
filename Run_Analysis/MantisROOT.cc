@@ -1516,7 +1516,10 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
   if(!string(inObj).compare("DetInfo"))
   {
     TCut detCut = "Energy<5e-6";
-    std::cout << "MantisROOT::ZTest -> Setting TCut for DetInfo: " << detCut << std::endl;
+
+    if(debug)
+      std::cout << "MantisROOT::ZTest -> Setting TCut for DetInfo: " << detCut << std::endl;
+      
     c1  = hIntegral(inTree,0,detCut,5e-6);
     c11 = hIntegral(inTree,1,detCut,5e-6);
     c12 = hIntegral(inTree,2,detCut,5e-6);
@@ -1525,7 +1528,10 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
   else if(!string(inObj).compare("IntObjIn"))
   {
     TCut intCut = "CreatorProcess == \"beam\"";
-    std::cout << "MantisROOT::ZTest -> Setting TCut for IntObjIn: " << intCut << std::endl;
+
+    if(debug)
+      std::cout << "MantisROOT::ZTest -> Setting TCut for IntObjIn: " << intCut << std::endl;
+
     c1  = hIntegral(inTree,0,intCut,2.1);
     c11 = hIntegral(inTree,1,intCut,2.1);
     c12 = hIntegral(inTree,2,intCut,2.1);
@@ -1554,7 +1560,10 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
   if(!string(inObj).compare("DetInfo"))
   {
     TCut detCut = "Energy<5e-6";
-    std::cout << "MantisROOT::ZTest -> Setting TCut for DetInfo: " << detCut << std::endl;
+
+    if(debug)
+      std::cout << "MantisROOT::ZTest -> Setting TCut for DetInfo: " << detCut << std::endl;
+
     c2  = hIntegral(inTree2,0,detCut,5e-6);
     c21 = hIntegral(inTree2,1,detCut,5e-6);
     c22 = hIntegral(inTree2,2,detCut,5e-6);
@@ -1563,7 +1572,10 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
   else if(!string(inObj).compare("IntObjIn"))
   {
     TCut intCut = "CreatorProcess == \"beam\"";
-    std::cout << "MantisROOT::ZTest -> Setting TCut for IntObjIn: " << intCut << std::endl;
+
+    if(debug)
+      std::cout << "MantisROOT::ZTest -> Setting TCut for IntObjIn: " << intCut << std::endl;
+
     c2  = hIntegral(inTree2,0,intCut,2.1);
     c21 = hIntegral(inTree2,1,intCut,2.1);
     c22 = hIntegral(inTree2,2,intCut,2.1);

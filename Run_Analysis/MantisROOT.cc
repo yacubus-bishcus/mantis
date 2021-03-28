@@ -1562,7 +1562,7 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
   }
   else if(!string(inObj).compare("IntObjIn"))
   {
-    TCut intCut = "cos(Angle)>.99";
+    TCut intCut = "CreatorProcess == \"beam\"";
     std::cout << "MantisROOT::ZTest -> Setting TCut for IntObjIn: " << intCut << std::endl;
     c2  = hIntegral(inTree2,0,intCut,2.1);
     c21 = hIntegral(inTree2,1,intCut,2.1);

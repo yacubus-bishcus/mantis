@@ -22,62 +22,39 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef DetectorMessenger_h
-#define DetectorMessenger_h 1
+#ifndef ChopperMessenger_h
+#define ChopperMessenger_h 1
 
 #include "globals.hh"
 #include "G4UImessenger.hh"
 #include "G4ApplicationState.hh"
 #include "G4UIcmdWithADouble.hh"
 #include "G4UIcmdWithAString.hh"
-#include "G4UIcmdWithAnInteger.hh"
-#include "DetectorConstruction.hh"
+#include "ChopperSetup.hh"
 #include "G4UIdirectory.hh"
 
-class DetectorConstruction;
+class ChopperSetup;
 class G4UIcmdWithADouble;
 class G4UIcmdWithAString;
 class G4UIdirectory;
 
-class DetectorMessenger: public G4UImessenger
+class ChopperMessenger: public G4UImessenger
 {
 public:
-  DetectorMessenger(DetectorConstruction*);
-  ~DetectorMessenger();
+  ChopperMessenger(ChopperSetup*);
+  ~ChopperMessenger();
 
   void SetNewValue(G4UIcommand*, G4String); // must always be a string input
 private:
-  DetectorConstruction* DetectorA;
-  G4UIcmdWithADouble* Cmd;
-  G4UIcmdWithADouble* CmdX;
-  G4UIcmdWithADouble* CmdY;
-  G4UIcmdWithADouble* CmdZ;
-  G4UIcmdWithADouble* Cmdtr;
-  G4UIcmdWithADouble* Cmdtrad;
-  G4UIcmdWithAString* Cmdtsel;
-  G4UIcmdWithAString* Cmdpcmat;
-  G4UIcmdWithAnInteger* CmdnPMT;
-  G4UIcmdWithADouble* CmdAngle;
-  G4UIcmdWithAString* CmdAttenOn;
-  G4bool check_atten_on = false;
-  G4UIcmdWithADouble* CmdAttenThick;
-  G4UIcmdWithAString* CmdAttenMat;
-  G4UIcmdWithAString* CmdAttenOn2;
-  G4bool check_atten2_on = false;
-  G4UIcmdWithADouble* CmdAttenThick2;
-  G4UIcmdWithAString* CmdAttenMat2;
-  G4UIcmdWithADouble* CmdPlexi;
-  G4UIcmdWithADouble* CmdTape;
-  G4UIcmdWithAString* CmdVis;
-  G4UIcmdWithAString* CmdVerbose;
+  ChopperSetup* ChopperA;
+  G4UIcmdWithAString* CmdChopMaterial;
+  G4UIcmdWithADouble* CmdChopthick;
+  G4UIcmdWithADouble* CmdChopZ;
+  G4UIcmdWithAString* CmdChopperOn;
+  G4UIcmdWithADouble* CmdChopperAbundance;
   G4UIcmdWithAString* CmdCheckOverlaps;
-  G4UIcmdWithAString* CmdRemoveObjects;
 
   G4UIdirectory *myDir;
-  G4UIdirectory *myDir2;
-  G4UIdirectory *myDir4;
-  G4UIdirectory *myDir5;
-  G4UIdirectory *myDir6;
 };
 
 #endif

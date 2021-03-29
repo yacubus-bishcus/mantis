@@ -27,14 +27,13 @@
 extern G4bool bremTest;
 
 DetectorConstruction::DetectorConstruction()
-        : G4VUserDetectorConstruction(), // chopper properties
-        chopperDensity(19.1*g/cm3), chopper_thick(30*mm), chopper_z(2*cm), chopperOn(false),
+        : G4VUserDetectorConstruction(),
         // Container Properties
         RemoveContainer(false),
         // interrogation object properties
         IntObj_rad(4.5*cm), intObjDensity(19.1*g/cm3), IntObj_Selection("Uranium"),
         // radio abundances
-        chopper_radio_abundance(0), intObj_radio_abundance(0),
+        intObj_radio_abundance(0),
         // Attenuator Properties
         attenuatorState(false), attenuatorState2(false), attenThickness(0.1*mm), attenThickness2(0.1*mm), attenuatorMat("G4_AIR"), attenuatorMat2("G4_AIR"),
         // Water Tank properties
@@ -53,7 +52,7 @@ DetectorConstruction::DetectorConstruction()
 
 DetectorConstruction::~DetectorConstruction()
 {
-        delete detectorM;
+  delete detectorM;
 }
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
@@ -97,32 +96,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Isotope* Uranium238 = new G4Isotope("Uranium238", 92, 238, 238.02891*g/mole);
   G4Isotope* Plutonium239 = new G4Isotope("Plutonium239",94, 239, 239.0521634*g/mole);
   G4Isotope* Plutonium240 = new G4Isotope("Plutonium240", 94, 240, 240.05381*g/mole);
-  // Setting up Chopper Isotopes
-  G4Isotope* Lead204 = new G4Isotope("Lead204", 82, 204, 203.973043*g/mole);
-  G4Isotope* Lead206 = new G4Isotope("Lead206", 82, 206, 205.974465*g/mole);
-  G4Isotope* Lead207 = new G4Isotope("Lead207", 82, 207, 206.975897*g/mole);
-  G4Isotope* Lead208 = new G4Isotope("Lead208", 82, 208, 207.976652*g/mole);
-
-  G4Isotope* Tungsten180 = new G4Isotope("Tung180", 74, 180, 179.9467*g/mole);
-  G4Isotope* Tungsten182 = new G4Isotope("Tung182", 74, 182, 181.9482*g/mole);
-  G4Isotope* Tungsten183 = new G4Isotope("Tung183", 74, 183, 182.9502*g/mole);
-  G4Isotope* Tungsten184 = new G4Isotope("Tung182", 74, 184, 183.9509*g/mole);
-  G4Isotope* Tungsten186 = new G4Isotope("Tung186", 74, 186, 185.9543*g/mole);
-
-  // Setting up Chopper Materials
-  G4Element* Uranium_chopper = new G4Element("Chopper_Uranium", "U", 2); // name, element symbol, #isotopes
-  G4Element* Plutonium_chopper = new G4Element("Chopper_Plutonium","Pu",2);
-  G4Element* Lead_chopper = new G4Element("Chopper_Lead","Pb",4);
-  Lead_chopper->AddIsotope(Lead204, 1.4*perCent);
-  Lead_chopper->AddIsotope(Lead206, 24.1*perCent);
-  Lead_chopper->AddIsotope(Lead207, 22.1*perCent);
-  Lead_chopper->AddIsotope(Lead208, 52.4*perCent);
-  G4Element* Tungsten_chopper = new G4Element("Chopper_Tungsten","W",5);
-  Tungsten_chopper->AddIsotope(Tungsten180, 0.000012*perCent);
-  Tungsten_chopper->AddIsotope(Tungsten182, 26.50*perCent);
-  Tungsten_chopper->AddIsotope(Tungsten183, 14.31*perCent);
-  Tungsten_chopper->AddIsotope(Tungsten184, 30.759988*perCent);
-  Tungsten_chopper->AddIsotope(Tungsten186, 28.43*perCent);
 
   // Setting up Interrogation object materials
   G4Element* Uranium_interrogation = new G4Element("Interrogation_Uranium","U",2);
@@ -179,100 +152,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double beamStart = bremStartPos - bremBacking_thickness/2.0 - 0.1*cm;
   G4cout << "DetectorConstruction::Build -> Beam Should Start at " << beamStart/(cm) << " cm" << G4endl;
 
-  // *********************************************************** Set up Chopper Wheel ****************************************************************** //
-
-  G4cout << G4endl << "Chopper Wheel Information" << G4endl;
-  G4cout << "----------------------------------------------------------------------" << G4endl;
-  G4double chopper_beginning_edge_position = (bremStartPos+ chopper_z + linac_size) - chopper_thick/2.;
-  G4double chopper_end_edge_position = (bremStartPos + chopper_z + linac_size) + chopper_thick/2.;
-  setBeginChopper(chopper_beginning_edge_position);
-  G4cout << "Chopper Beginning Edge Set to: " << chopper_beginning_edge_position/(cm) << " cm" << G4endl;
-  G4cout << "Chopper End Edge Set to: " << chopper_end_edge_position/(cm) << " cm" << G4endl;
+  ChopperSetup* chopper = new ChopperSetup();
+  G4VPhysicalVolume* chopper_p = chopper->Construct(logicWorld, bremStartPos, linac_size, container_edge_position);
+  G4double chopper_end_edge_position = chopper->getEndChop();
   setEndChop(chopper_end_edge_position);
-  if(chopper_end_edge_position > container_edge_position)
-  {
-    G4cerr << "ERROR: Chopper wheel location should be behind cargo container, exiting." << G4endl;
-    exit(100);
-  }
-
-  G4Tubs *solidChopper = new G4Tubs("Chop", 0*cm, 15*cm, chopper_thick/2, 0.*deg, 180.*deg);
-  G4Material *chopperMat = new G4Material("chopperMaterial", chopperDensity, 1);
-  G4cout << "The Chopper State was set to: " << chopperOn << G4endl;
-
-  if(chopperDensity == 19.1*g/cm3)
-  {
-          if(chopper_radio_abundance <= 0.0)
-          {
-                  G4cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << G4endl;
-                  exit(100);
-          }
-
-          if(chopperOn)
-          {
-                  chopper_U235_abundance = chopper_radio_abundance;
-                  chopper_U238_abundance = 100. - chopper_radio_abundance;
-          }
-          else
-          {
-                  chopper_U235_abundance = 100. - chopper_radio_abundance;
-                  chopper_U238_abundance = chopper_radio_abundance;
-          }
-
-          Uranium_chopper->AddIsotope(Uranium235, chopper_U235_abundance*perCent);
-          Uranium_chopper->AddIsotope(Uranium238, chopper_U238_abundance*perCent);
-          chopperMat->AddElement(Uranium_chopper,1);
-          G4cout << "The Chopper material selected was: Uranium" << G4endl;
-          G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
-  }
-  else if(chopperDensity == 19.6*g/cm3)
-  {
-          if(chopper_radio_abundance <= 0.0)
-          {
-                  G4cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << G4endl;
-                  exit(100);
-          }
-
-          if(chopperOn)
-          {
-                  chopper_Pu239_abundance = chopper_radio_abundance;
-                  chopper_Pu240_abundance = 100. - chopper_radio_abundance;
-          }
-          else
-          {
-                  chopper_Pu239_abundance = 100. - chopper_radio_abundance;
-                  chopper_Pu240_abundance = chopper_radio_abundance;
-          }
-
-          Plutonium_chopper->AddIsotope(Plutonium239, chopper_Pu239_abundance*perCent);
-          Plutonium_chopper->AddIsotope(Plutonium240, chopper_Pu240_abundance*perCent);
-          chopperMat->AddElement(Plutonium_chopper, 1);
-          G4cout << "The Chopper material selected was: Plutonium" << G4endl;
-          G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
-  }
-  else if(chopperDensity == 11.34*g/cm3)
-  {
-          chopperMat->AddElement(Lead_chopper,1);
-          G4cout << "The Chopper material selected was: Lead" << G4endl;
-  }
-  else if(chopperDensity == 19.3*g/cm3)
-  {
-          chopperMat->AddElement(Tungsten_chopper,1);
-          G4cout << "The Chopper material selected was: Tungsten" << G4endl;
-  }
-  else{G4cerr << "ERROR Chopper Density not found!" << G4endl; exit(100);}
-
-  G4cout << "The Chopper material density selected was: " << chopperDensity/(g/cm3) << " g/cm3" << G4endl;
-
-
-  G4cout << "The Chopper thickness was: " << chopper_thick/(mm) << " mm" << G4endl;
-  G4cout << "The Chopper center distance from the source was set as: " << (linac_size + chopper_z)/(cm) << " cm" << G4endl;
-
-  logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chop");
-
-  new G4PVPlacement(0, G4ThreeVector(0, -7*cm,bremStartPos + chopper_z + linac_size),
-                  logicChopper, "Chop", logicWorld, false,
-                  0, checkOverlaps);
-
   // Set up Linac configuration if Brem Test
 
   if(bremTest)
@@ -615,81 +498,30 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
         // **************************************************** Construct Photocathode ****************************************************** //
 
-                G4double PC_z = 20*nm;
-                G4cout << "The Photocathode material was set as: " << pc_mat << G4endl << G4endl;
-                if(pc_mat == "GaAsP")
-                {
-                        PC_mat = GaAsP;
-                }
-                else if(pc_mat == "Bialkali")
-                {
-                        PC_mat = bialkali;
-                }
-                else exit(1);
+        G4double PC_z = 20*nm;
+        G4cout << "The Photocathode material was set as: " << pc_mat << G4endl << G4endl;
+        if(pc_mat == "GaAsP")
+        {
+                PC_mat = GaAsP;
+        }
+        else if(pc_mat == "Bialkali")
+        {
+                PC_mat = bialkali;
+        }
+        else exit(1);
 
-                G4Tubs* solidPhotoCathode = new G4Tubs("PC", PMT_rmin, PMT_rmax, PC_z, 0*deg, 360.*deg);
-                logicPC = new G4LogicalVolume(solidPhotoCathode, PC_mat, "PC");
-                G4double PMT_window_thickness = 3*mm;
-                physPC = new G4PVPlacement(0,
-                                           G4ThreeVector(0,0,PMT_z-PMT_window_thickness),
-                                           logicPC,
-                                           "PC",
-                                           logicPMT, // daughter of PMT logical
-                                           false,
-                                           0,
-                                           checkOverlaps);
+        G4Tubs* solidPhotoCathode = new G4Tubs("PC", PMT_rmin, PMT_rmax, PC_z, 0*deg, 360.*deg);
+        logicPC = new G4LogicalVolume(solidPhotoCathode, PC_mat, "PC");
+        G4double PMT_window_thickness = 3*mm;
+        physPC = new G4PVPlacement(0,
+                                   G4ThreeVector(0,0,PMT_z-PMT_window_thickness),
+                                   logicPC,
+                                   "PC",
+                                   logicPMT, // daughter of PMT logical
+                                   false,
+                                   0,
+                                   checkOverlaps);
 
-        // ****************************** Visualization Handler ******************************** //
-
-                G4VisAttributes *yellow= new G4VisAttributes( G4Colour(255/255.,255/255.,51/255. ));
-                G4VisAttributes *red= new G4VisAttributes( G4Colour(255/255., 0/255., 0/255. ));
-                G4VisAttributes *blue= new G4VisAttributes( G4Colour(0/255., 0/255.,  255/255. ));
-                G4VisAttributes *grayc= new G4VisAttributes( G4Colour(128/255., 128/255.,  128/255. ));
-                G4VisAttributes *lightGray= new G4VisAttributes( G4Colour(178/255., 178/255.,  178/255. ));
-                G4VisAttributes *green= new G4VisAttributes( G4Colour(0/255., 255/255.,  0/255. ));
-                G4VisAttributes *black = new G4VisAttributes(G4Colour(0.,0.,0.));
-                G4VisAttributes *magenta = new G4VisAttributes(G4Colour(1.0, 0.0, 1.0));
-
-                yellow->SetForceWireframe(true);
-                logicAttenuator->SetVisAttributes(yellow);
-                magenta->SetForceWireframe(true);
-                logicSecondAttenuator->SetVisAttributes(magenta);
-                black->SetForceWireframe(true);
-                logicTape->SetVisAttributes(black);
-                lightGray->SetForceWireframe(true);
-                logicCasing->SetVisAttributes(lightGray);
-                blue->SetForceWireframe(true);
-                logicWater->SetVisAttributes(blue);
-                green->SetForceWireframe(true);
-                logicPMT->SetVisAttributes(green);
-                red->SetForceSolid(true);
-                logicPC->SetVisAttributes(red);
-
-        // Set Visual colors
-                if(bremTest)
-                {
-                        logicalLinac->SetVisAttributes(lightGray);
-                        grayc->SetForceWireframe(true);
-                        logicalVacuum->SetVisAttributes(grayc);
-                        logicBremTarget->SetVisAttributes(red);
-                        logicBremTargetBacking->SetVisAttributes(blue);
-                }
-                if(DetectorViewOnly)
-                {
-                        logicIntObj->SetVisAttributes(G4VisAttributes::Invisible);
-                        logicContainer->SetVisAttributes(G4VisAttributes::Invisible);
-                        logicHollowC->SetVisAttributes(G4VisAttributes::Invisible);
-                        logicCollimator->SetVisAttributes(G4VisAttributes::Invisible);
-                        logicChopper->SetVisAttributes(G4VisAttributes::Invisible);
-                }
-                else
-                {
-                        logicIntObj->SetVisAttributes(red);
-                        logicContainer->SetVisAttributes(black);
-                        logicHollowC->SetVisAttributes(lightGray);
-                        logicCollimator->SetVisAttributes(magenta);
-                        logicChopper->SetVisAttributes(red);
-                }
 
 
         //

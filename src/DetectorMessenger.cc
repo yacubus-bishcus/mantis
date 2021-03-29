@@ -29,13 +29,11 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
 {
         myDir = new G4UIdirectory("/mydet/");
         myDir2 = new G4UIdirectory("/mytar/");
-        myDir3 = new G4UIdirectory("/chopper/");
         myDir4 = new G4UIdirectory("/myvisualization/");
         myDir5 = new G4UIdirectory("/material/");
         myDir6 = new G4UIdirectory("/removebuild/");
         myDir2->SetGuidance("Target Setup Commands");
         myDir->SetGuidance("Detector Setup Commands");
-        myDir3->SetGuidance("Chopper Setup Commands");
         myDir4->SetGuidance("Customized Visualization Commands");
         myDir5->SetGuidance("Material Table Verbosity");
         myDir6->SetGuidance("Remove Geometries from Simulation.");
@@ -49,11 +47,6 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         Cmdpcmat = new G4UIcmdWithAString("/mydet/PCmat",this);
         CmdnPMT = new G4UIcmdWithAnInteger("/mydet/nPMT",this);
         CmdAngle = new G4UIcmdWithADouble("/mydet/Angle",this);
-        CmdChopMaterial = new G4UIcmdWithAString("/chopper/material",this);
-        CmdChopthick = new G4UIcmdWithADouble("/chopper/thickness", this);
-        CmdChopZ = new G4UIcmdWithADouble("/chopper/distance", this);
-        CmdChopperOn = new G4UIcmdWithAString("/chopper/state", this);
-        CmdChopperAbundance = new G4UIcmdWithADouble("/chopper/abundance",this);
         CmdAttenOn = new G4UIcmdWithAString("/mydet/attenuator", this);
         CmdAttenOn2 = new G4UIcmdWithAString("/mydet/attenuator2",this);
         CmdAttenThick = new G4UIcmdWithADouble("/mydet/attenuatorThickness",this);
@@ -77,11 +70,6 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         Cmdtsel->SetGuidance("Choose Desired target");
         Cmdpcmat->SetGuidance("Choose desired photocathode material");
         CmdnPMT->SetGuidance("Choose desired number of PMTs");
-        CmdChopMaterial->SetGuidance("Choose desired Chopper Material");
-        CmdChopthick->SetGuidance("Choose desired chopper thickness");
-        CmdChopZ->SetGuidance("Choose desired chopper distance from brem beam");
-        CmdChopperOn->SetGuidance("Choose desired chopper wheel state");
-        CmdChopperAbundance->SetGuidance("Choose desired chopper wheel material isotope abundance(enrichment)");
         CmdAngle->SetGuidance("Choose desired Detector BackScatter Angle in Degrees");
         CmdAttenOn->SetGuidance("Choose if Attenuator Present or not");
         CmdAttenThick->SetGuidance("Choose Desired attenuator thickness");
@@ -105,13 +93,6 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         Cmdtsel->SetParameterName("targetsel",false);
         Cmdpcmat->SetParameterName("photocathodeMat", false);
         CmdnPMT->SetParameterName("numberPMT", false);
-        CmdChopMaterial->SetParameterName("ChopperMaterial",false);
-        CmdChopZ->SetParameterName("chopperZ", false);
-        CmdChopZ->SetRange("chopperZ > 0.5 && chopperZ < 6");
-        CmdChopthick->SetParameterName("chopperthickness",false);
-        CmdChopperOn->SetParameterName("chopperOn",false);
-        CmdChopperAbundance->SetParameterName("chopperAbundance",false);
-        CmdChopperAbundance->SetRange("chopperAbundance > 0 && chopperAbundance < 100");
         CmdAngle->SetParameterName("Angle",false);
         CmdAngle->SetRange("Angle > 90 && Angle < 180");
         CmdAttenOn->SetParameterName("attenuator",false);
@@ -129,8 +110,6 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
 
         Cmdtsel->SetCandidates("Uranium NaturalU Plutonium NaturalPu Lead Steel Plastic");
         Cmdpcmat->SetCandidates("GaAsP Bialkali");
-        CmdChopperOn->SetCandidates("On on Off off");
-        CmdChopMaterial->SetCandidates("Uranium Plutonium Lead Tungsten");
         CmdAttenOn->SetCandidates("On on Off off");
         CmdAttenMat->SetCandidates("G4_Pb G4_Cu G4_Zn G4_Ag G4_Cd G4_Th G4_U G4_Au G4_W G4_Fe");
         CmdAttenMat2->SetCandidates("G4_POLYETHYLENE G4_POLYPROPYLENE G4_POLYSTYRENE G4_POLYVINYL_CHLORIDE G4_POLYCARBONATE");
@@ -152,10 +131,6 @@ DetectorMessenger::~DetectorMessenger()
         delete Cmdtsel;
         delete Cmdpcmat;
         delete CmdnPMT;
-        delete CmdChopthick;
-        delete CmdChopZ;
-        delete CmdChopperOn;
-        delete CmdChopperAbundance;
         delete CmdAngle;
         delete CmdAttenOn;
         delete CmdAttenThick;
@@ -166,7 +141,6 @@ DetectorMessenger::~DetectorMessenger()
         delete CmdPlexi;
         delete CmdTape;
         delete CmdVis;
-        delete CmdChopMaterial;
         delete CmdVerbose;
         delete CmdCheckOverlaps;
         delete CmdRemoveObjects;
@@ -228,38 +202,6 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
                 G4int thecmdnPMT = CmdnPMT->GetNewIntValue(newValue);
                 DetectorA->SetnPMT(thecmdnPMT);
                 G4cout << "The number of photocathodes per cherenkov Detector manually set to: " << thecmdnPMT << G4endl;
-        }
-        else if(command == CmdChopZ)
-        {
-                G4double thecmdchopz = CmdChopZ->GetNewDoubleValue(newValue);
-                DetectorA->SetChopper_z(thecmdchopz);
-                G4cout << "The Chopper distance from the source manually set to: " << thecmdchopz << " cm" << G4endl;
-        }
-        else if(command == CmdChopthick)
-        {
-                G4double thecmdchopthick = CmdChopthick->GetNewDoubleValue(newValue);
-                DetectorA->SetChopperThick(thecmdchopthick);
-                G4cout << "The Chopper thickness manually set to: " << thecmdchopthick << " mm" <<G4endl;
-        }
-        else if(command == CmdChopperOn)
-        {
-                G4String thecmdchopperon = newValue;
-                if(thecmdchopperon == "On" || thecmdchopperon == "on")
-                {
-                        DetectorA->SetChopperOn(true);
-                        G4cout << "The Chopper state set to On!" << G4endl;
-                }
-                else
-                {
-                        DetectorA->SetChopperOn(false);
-                        G4cout << "The Chopper state set to Off!" << G4endl;
-                }
-        }
-        else if(command == CmdChopperAbundance)
-        {
-                G4double thechopperabundance = CmdChopperAbundance->GetNewDoubleValue(newValue);
-                DetectorA->SetChopperAbundance(thechopperabundance);
-                G4cout << "The Chopper isotope abundance manually set to: " << thechopperabundance << " percent" << G4endl;
         }
         else if(command == CmdAngle)
         {
@@ -355,12 +297,6 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
                         DetectorA->SetDetectorViewOnly(true);
                         G4cout << "Detector Visualization View Only set to True!" << G4endl;
                 }
-        }
-        else if(command == CmdChopMaterial)
-        {
-                G4String theCmdChopMaterial = newValue;
-                DetectorA->SetChopperMaterial(theCmdChopMaterial);
-                G4cout << "The chopper material manually set to: " << theCmdChopMaterial << G4endl;
         }
         else if(command == CmdVerbose)
         {

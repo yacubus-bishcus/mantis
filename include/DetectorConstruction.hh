@@ -26,6 +26,7 @@
 #define DetectorConstruction_h 1
 
 #include "G4VUserDetectorConstruction.hh"
+#include "ChopperSetup.hh"
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4LogicalVolume.hh"
@@ -130,10 +131,7 @@ void SetIntObjAbundance(G4double val)
 {
         intObj_radio_abundance = val;
 }
-void SetChopperAbundance(G4double val)
-{
-  chopper_radio_abundance = val;
-}
+
 void SetIntObj(G4String val)
 {
         if(val == "Uranium")
@@ -174,48 +172,10 @@ void SetIntObj(G4String val)
         else{G4cerr << "ERROR: IntObj not correctly chosen" << G4endl;}
 }
 
-void SetChopperMaterial(G4String val)
-{
-  if(val == "Uranium")
-  {
-    chopperDensity = 19.1*g/cm3;
-  }
-  else if(val == "Plutonium")
-  {
-    chopperDensity = 19.6*g/cm3;
-  }
-  else if(val == "Lead")
-  {
-    chopperDensity = 11.34*g/cm3;
-  }
-  else if(val == "Tungsten")
-  {
-    chopperDensity = 19.3*g/cm3;
-  }
-  else
-  {
-    G4cerr << "DetectorConstruction::SetChopperMaterial --> Chopper Density not Found." << G4endl;
-  }
-}
-
 void setEndIntObj(G4double z_pos_con, G4double con_z_size)
 {
         EndIntObj = z_pos_con + con_z_size/2;
         G4cout << "Z-Cut set to: " << EndIntObj/(cm) << " cm" << G4endl << G4endl;
-}
-
-void setBeginChopper(G4double z_pos){BeginChopper = z_pos;}
-
-G4double getBeginChopper()const
-{
-  return BeginChopper;
-}
-
-void setEndChop(G4double z_pos){EndChop = z_pos;}
-
-G4double getEndChop()const
-{
-  return EndChop;
 }
 
 G4double getEndIntObj()const
@@ -224,19 +184,10 @@ G4double getEndIntObj()const
 }
 void SetPC_material(G4String val){pc_mat = val;}
 void SetnPMT(G4int val){nPMT = val;}
-void SetChopperOn(G4bool val){chopperOn = val;}
-G4bool GetChopperState()const
-{return chopperOn;}
-void SetChopperThick(G4double val)
-{
-        chopper_thick = val;
-        chopper_thick = chopper_thick*mm;
-}
-void SetChopper_z(G4double val)
-{
-        chopper_z = val;
-        chopper_z = chopper_z*cm;
-}
+void setEndChop(G4double z_pos){EndChop = z_pos;}
+G4double getEndChop()const{return EndChop;}
+
+
 void SettheAngle(G4double val){theAngle = val;}
 void SetPlexiThickness(G4double val)
 {
@@ -265,23 +216,17 @@ void DefDetPositionConstraintUpper(double, double, double);
 // Brem Properties
 G4double linac_size = 9*cm;
 
-// Chopper Properties
-G4double chopperDensity, chopper_thick, chopper_z;
-G4bool chopperOn;
-G4double chopper_U235_abundance, chopper_U238_abundance, chopper_Pu239_abundance, chopper_Pu240_abundance;
-G4double BeginChopper;
-G4double EndChop;
-
 // Container Properties
 G4bool RemoveContainer;
 
+G4double EndChop;
 // Interrogation Object Properties
 G4double EndIntObj, IntObj_rad, intObjDensity;
 G4String IntObj_Selection;
 G4VPhysicalVolume* physIntObj;
 G4double intObj_U235_abundance, intObj_U238_abundance, intObj_Pu239_abundance, intObj_Pu240_abundance;
 
-G4double chopper_radio_abundance, intObj_radio_abundance;
+G4double intObj_radio_abundance;
 
 // Material, Logical and Physical Volumes
 G4Material* PC_mat;
@@ -293,7 +238,6 @@ G4LogicalVolume *logicBremTargetBacking;
 G4LogicalVolume* logicPC;
 G4LogicalVolume* logicPMT;
 G4VPhysicalVolume* physPC;
-G4LogicalVolume* logicChopper;
 G4VPhysicalVolume* physWater;
 G4VPhysicalVolume* physTape;
 

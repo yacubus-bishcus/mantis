@@ -2739,6 +2739,9 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
 
   }
 
+  std::cout << "MantisROOT::CheckDet -> Removing Duplicates and Sorting Erroneous DetInfo..." << std::endl;
+  std::sort(errorneous_det_eventsv.begin(),errorneous_det_eventsv.end());
+  errorneous_det_eventsv.erase(unique(errorneous_det_eventsv.begin(),errorneous_det_eventsv.end()),errorneous_det_eventsv.end());
   // Write vectors to new TTree
   string outfile = "Corrected_DetInfo_" + string(filename);
 

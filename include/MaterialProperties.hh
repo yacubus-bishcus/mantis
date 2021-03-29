@@ -22,38 +22,32 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef ChopperMessenger_h
-#define ChopperMessenger_h 1
+#ifndef MaterialProperties_h
+#define MaterialProperties_h 1
 
+#include "G4SystemOfUnits.hh"
+#include "G4MaterialTable.hh"
 #include "globals.hh"
-#include "G4UImessenger.hh"
-#include "G4ApplicationState.hh"
-#include "G4UIcmdWithADouble.hh"
-#include "G4UIcmdWithAString.hh"
-#include "ChopperSetup.hh"
-#include "G4UIdirectory.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4MaterialPropertiesTable.hh"
 
-class ChopperSetup;
-class G4UIcmdWithADouble;
-class G4UIcmdWithAString;
-class G4UIdirectory;
-
-class ChopperMessenger: public G4UImessenger
+class MaterialProperties
 {
 public:
-  ChopperMessenger(ChopperSetup*);
-  ~ChopperMessenger();
+  MaterialProperties();
+  ~MaterialProperties();
+  G4MaterialPropertiesTable* SetWaterProperties();
+  G4MaterialPropertiesTable* SetCasingProperties();
+  G4MaterialPropertiesTable* SetCasingOpticalProperties();
+  G4MaterialPropertiesTable* SetTapeProperties();
+  G4MaterialPropertiesTable* SetTapeOpticalProperties();
+  G4MaterialPropertiesTable* SetPMTProperties();
+  G4MaterialPropertiesTable* SetPMTOpticalProperties();
+  G4MaterialPropertiesTable* SetPCProperties(G4String);
+  G4MaterialPropertiesTable* SetAirProperties();
 
-  void SetNewValue(G4UIcommand*, G4String); // must always be a string input
 private:
-  ChopperSetup* ChopperA;
-  G4UIcmdWithAString* CmdChopMaterial;
-  G4UIcmdWithADouble* CmdChopthick;
-  G4UIcmdWithADouble* CmdChopZ;
-  G4UIcmdWithAString* CmdChopperOn;
-  G4UIcmdWithADouble* CmdChopperAbundance;
-
-  G4UIdirectory *myDir;
+  G4double PHOTON_ENERGY_IOF, PHOTON_ENERGY_ABS, WATER_REF, WATER_ABS, PHOTON_ENERGY_SCINT, WATER_SCINT;
 };
 
 #endif

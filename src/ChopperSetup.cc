@@ -36,7 +36,7 @@ ChopperSetup::~ChopperSetup()
   delete chopperM;
 }
 
-G4VPhysicalVolume* ChopperSetup::Construct(G4LogicalVolume* logicWorld, double bremStartPos, double linac_size, double container_edge_position)
+G4VPhysicalVolume* ChopperSetup::Construct(G4LogicalVolume* logicWorld, double bremStartPos, double linac_size, double container_edge_position, bool checkOverlaps)
 {
   // Setting up Chopper Isotopes
   G4Isotope* Lead204 = new G4Isotope("Lead204", 82, 204, 203.973043*g/mole);
@@ -74,13 +74,13 @@ G4VPhysicalVolume* ChopperSetup::Construct(G4LogicalVolume* logicWorld, double b
 
   // *********************************************************** Set up Chopper Wheel ****************************************************************** //
 
-  G4cout << G4endl << "ChopperSetup::Construct -> Chopper Wheel Information" << G4endl;
+  G4cout << G4endl << "ChopperSetup::Construct -> Information" << G4endl;
   G4cout << "----------------------------------------------------------------------" << G4endl;
   G4double chopper_beginning_edge_position = (bremStartPos+ chopper_z + linac_size) - chopper_thick/2.;
   G4double chopper_end_edge_position = (bremStartPos + chopper_z + linac_size) + chopper_thick/2.;
   setBeginChopper(chopper_beginning_edge_position);
-  G4cout << "ChopperSetup::Construct -> Chopper Beginning Edge Set to: " << chopper_beginning_edge_position/(cm) << " cm" << G4endl;
-  G4cout << "ChopperSetup::Construct -> Chopper End Edge Set to: " << chopper_end_edge_position/(cm) << " cm" << G4endl;
+  G4cout << "ChopperSetup::Construct -> Beginning Edge: " << chopper_beginning_edge_position/(cm) << " cm" << G4endl;
+  G4cout << "ChopperSetup::Construct -> End Edge: " << chopper_end_edge_position/(cm) << " cm" << G4endl;
   setEndChop(chopper_end_edge_position);
 
   if(chopper_end_edge_position > container_edge_position)
@@ -91,7 +91,7 @@ G4VPhysicalVolume* ChopperSetup::Construct(G4LogicalVolume* logicWorld, double b
 
   G4Tubs *solidChopper = new G4Tubs("Chop", 0*cm, 15*cm, chopper_thick/2, 0.*deg, 180.*deg);
   G4Material *chopperMat = new G4Material("chopperMaterial", chopperDensity, 1);
-  G4cout << "ChopperSetup::Construct -> The Chopper State was set to: " << chopperOn << G4endl;
+  G4cout << "ChopperSetup::Construct -> State: " << chopperOn << G4endl;
 
   if(chopperDensity == 19.1*g/cm3)
   {
@@ -115,8 +115,8 @@ G4VPhysicalVolume* ChopperSetup::Construct(G4LogicalVolume* logicWorld, double b
           Uranium_chopper->AddIsotope(Uranium235, chopper_U235_abundance*perCent);
           Uranium_chopper->AddIsotope(Uranium238, chopper_U238_abundance*perCent);
           chopperMat->AddElement(Uranium_chopper,1);
-          G4cout << "The Chopper material selected was: Uranium" << G4endl;
-          G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
+          G4cout << "ChopperSetup::Construct -> Material: Uranium" << G4endl;
+          G4cout << "ChopperSetup::Construct -> Fission isotope abundance: " << chopper_radio_abundance << " %" << G4endl;
   }
   else if(chopperDensity == 19.6*g/cm3)
   {
@@ -140,26 +140,26 @@ G4VPhysicalVolume* ChopperSetup::Construct(G4LogicalVolume* logicWorld, double b
           Plutonium_chopper->AddIsotope(Plutonium239, chopper_Pu239_abundance*perCent);
           Plutonium_chopper->AddIsotope(Plutonium240, chopper_Pu240_abundance*perCent);
           chopperMat->AddElement(Plutonium_chopper, 1);
-          G4cout << "The Chopper material selected was: Plutonium" << G4endl;
-          G4cout << "The Chopper fission isotope abundance was set to: " << chopper_radio_abundance << " %" << G4endl;
+          G4cout << "ChopperSetup::Construct -> Material: Plutonium" << G4endl;
+          G4cout << "ChopperSetup::Construct -> Fission isotope abundance: " << chopper_radio_abundance << " %" << G4endl;
   }
   else if(chopperDensity == 11.34*g/cm3)
   {
           chopperMat->AddElement(Lead_chopper,1);
-          G4cout << "The Chopper material selected was: Lead" << G4endl;
+          G4cout << "ChopperSetup::Construct -> Material: Lead" << G4endl;
   }
   else if(chopperDensity == 19.3*g/cm3)
   {
           chopperMat->AddElement(Tungsten_chopper,1);
-          G4cout << "The Chopper material selected was: Tungsten" << G4endl;
+          G4cout << "ChopperSetup::Construct -> Material: Tungsten" << G4endl;
   }
   else{G4cerr << "ERROR Chopper Density not found!" << G4endl; exit(100);}
 
-  G4cout << "The Chopper material density selected was: " << chopperDensity/(g/cm3) << " g/cm3" << G4endl;
+  G4cout << "ChopperSetup::Construct -> Material density: " << chopperDensity/(g/cm3) << " g/cm3" << G4endl;
 
 
-  G4cout << "The Chopper thickness was: " << chopper_thick/(mm) << " mm" << G4endl;
-  G4cout << "The Chopper center distance from the source was set as: " << (linac_size + chopper_z)/(cm) << " cm" << G4endl;
+  G4cout << "ChopperSetup::Construct -> Thickness: " << chopper_thick/(mm) << " mm" << G4endl;
+  G4cout << "ChopperSetup::Construct -> Center distance from the source: " << (linac_size + chopper_z)/(cm) << " cm" << G4endl;
 
   G4LogicalVolume* logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chop");
 

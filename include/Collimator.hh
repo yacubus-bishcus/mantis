@@ -22,8 +22,8 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef ChopperSetup_h
-#define ChopperSetup_h 1
+#ifndef Collimator_h
+#define Collimator_h 1
 
 #include "G4SystemOfUnits.hh"
 #include "G4LogicalVolume.hh"
@@ -36,78 +36,25 @@
 #include "G4SolidStore.hh"
 #include "G4LogicalVolumeStore.hh"
 #include "G4PhysicalVolumeStore.hh"
-#include "G4Tubs.hh" // for tube/cylinder
+#include "G4Box.hh"
+#include "G4NistManager.hh"
 #include "G4Isotope.hh"
 #include "G4Material.hh"
-#include "ChopperMessenger.hh"
-
 
 class G4VPhysicalVolume;
 class G4LogicalVolume;
-class ChopperMessenger;
 
-class ChopperSetup
+class Collimator
 {
 public:
-ChopperSetup();
-~ChopperSetup();
-
-G4VPhysicalVolume* Construct(G4LogicalVolume*, double, double, double, bool);
-void SetChopperAbundance(G4double val){chopper_radio_abundance = val;}
-
-void SetChopperMaterial(G4String val)
-{
-  if(val == "Uranium")
-  {
-    chopperDensity = 19.1*g/cm3;
-  }
-  else if(val == "Plutonium")
-  {
-    chopperDensity = 19.6*g/cm3;
-  }
-  else if(val == "Lead")
-  {
-    chopperDensity = 11.34*g/cm3;
-  }
-  else if(val == "Tungsten")
-  {
-    chopperDensity = 19.3*g/cm3;
-  }
-  else
-  {
-    G4cerr << "ChopperConstruction::SetChopperMaterial --> Chopper Density not Found." << G4endl;
-  }
-}
-
-void SetChopper_z(G4double val)
-{
-        chopper_z = val;
-        chopper_z = chopper_z*cm;
-}
-
-void SetChopperThick(G4double val)
-{
-        chopper_thick = val;
-        chopper_thick = chopper_thick*mm;
-}
-
-void SetChopperOn(G4bool val){chopperOn = val;}
-G4bool GetChopperState()const{return chopperOn;}
-void setBeginChopper(G4double z_pos){BeginChopper = z_pos;}
-G4double getBeginChopper()const{return BeginChopper;}
-void setEndChop(G4double z_pos){EndChop = z_pos;}
-G4double getEndChop()const{return EndChop;}
+  Collimator();
+  ~Collimator();
+  void Construct(G4LogicalVolume*, double, double, double, double, bool);
+  void setRearCollimatorPosition(G4double val){RearColPos = val;}
+  G4double getRearCollimatorPosition(void){return RearColPos;}
 
 private:
-// Chopper Properties
-G4double chopperDensity, chopper_thick, chopper_z;
-G4bool chopperOn;
-G4double chopper_U235_abundance, chopper_U238_abundance, chopper_Pu239_abundance, chopper_Pu240_abundance;
-G4double chopper_radio_abundance;
-G4double BeginChopper;
-G4double EndChop;
-ChopperMessenger* chopperM;
-
+  G4double RearColPos;
 };
 
 #endif

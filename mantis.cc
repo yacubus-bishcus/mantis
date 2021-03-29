@@ -5,6 +5,9 @@
 #include "PhysicsListNew.hh"
 #include "ActionInitialization.hh"
 #include "ChopperSetup.hh"
+#include "Linac.hh"
+#include "Collimator.hh"
+#include "Cargo.hh"
 // Typcially include
 #include "time.h"
 #include "Randomize.hh"
@@ -255,7 +258,10 @@ int main(int argc,char **argv)
 
         // set mandatory initialization classes
         ChopperSetup* chopper = new ChopperSetup();
-        DetectorConstruction* det = new DetectorConstruction(chopper);
+        Linac* linac = new Linac();
+        Collimator* collimator = new Collimator();
+        Cargo* cargo = new Cargo();
+        DetectorConstruction* det = new DetectorConstruction(chopper, linac, collimator, cargo);
         runManager->SetUserInitialization(det);
 
         // Set up Physics List

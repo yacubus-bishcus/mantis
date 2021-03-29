@@ -28,22 +28,16 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         : DetectorA(DetectorAction)
 {
         myDir = new G4UIdirectory("/mydet/");
-        myDir2 = new G4UIdirectory("/mytar/");
         myDir4 = new G4UIdirectory("/myvisualization/");
         myDir5 = new G4UIdirectory("/material/");
-        myDir6 = new G4UIdirectory("/removebuild/");
-        myDir2->SetGuidance("Target Setup Commands");
         myDir->SetGuidance("Detector Setup Commands");
         myDir4->SetGuidance("Customized Visualization Commands");
         myDir5->SetGuidance("Material Table Verbosity");
-        myDir6->SetGuidance("Remove Geometries from Simulation.");
+
         Cmd = new G4UIcmdWithADouble("/mydet/PCrad",this);
         CmdX = new G4UIcmdWithADouble("/mydet/WaterX",this);
         CmdY = new G4UIcmdWithADouble("/mydet/WaterY",this);
         CmdZ = new G4UIcmdWithADouble("/mydet/WaterZ",this);
-        Cmdtr = new G4UIcmdWithADouble("/mytar/IntObjRad",this);
-        Cmdtrad = new G4UIcmdWithADouble("/mytar/abundance",this);
-        Cmdtsel = new G4UIcmdWithAString("/mytar/target",this);
         Cmdpcmat = new G4UIcmdWithAString("/mydet/PCmat",this);
         CmdnPMT = new G4UIcmdWithAnInteger("/mydet/nPMT",this);
         CmdAngle = new G4UIcmdWithADouble("/mydet/Angle",this);
@@ -58,16 +52,12 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdVis = new G4UIcmdWithAString("/myvisualization/DetectorViewOnly", this);
         CmdVerbose = new G4UIcmdWithAString("/material/verbose",this);
         CmdCheckOverlaps = new G4UIcmdWithAString("/material/CheckOverlaps",this);
-        CmdRemoveObjects = new G4UIcmdWithAString("/removebuild/Geometry",this);
 
 
         Cmd->SetGuidance("Choose Desired PhotoCathode Radius");
         CmdX->SetGuidance("Choose Desired X Size of Water Tank");
         CmdY->SetGuidance("Choose Desired Y Size of Water Tank");
         CmdZ->SetGuidance("Choose Desired Z Size of Water Tank");
-        Cmdtr->SetGuidance("Choose Desired radius Size of Interrogation Target");
-        Cmdtrad->SetGuidance("Choose Desired fission isotope abundance(enrichment) of Interrogation Target");
-        Cmdtsel->SetGuidance("Choose Desired target");
         Cmdpcmat->SetGuidance("Choose desired photocathode material");
         CmdnPMT->SetGuidance("Choose desired number of PMTs");
         CmdAngle->SetGuidance("Choose desired Detector BackScatter Angle in Degrees");
@@ -81,16 +71,11 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdTape->SetGuidance("Choose desired optical tape wrap thickness in cm");
         CmdVis->SetGuidance("Choose if visualization will show Cherenkov Detector Only");
         CmdCheckOverlaps->SetGuidance("Choose to check for geometric overlaps");
-        CmdRemoveObjects->SetGuidance("Choose to remove objects for simulation");
 
         Cmd->SetParameterName("radius",false);
         CmdX->SetParameterName("waterx",false);
         CmdY->SetParameterName("watery",false);
         CmdZ->SetParameterName("waterz",false);
-        Cmdtr->SetParameterName("targetradius",false);
-        Cmdtrad->SetParameterName("targetabundance",false);
-        Cmdtrad->SetRange("targetabundance > 0 && targetabundance < 100");
-        Cmdtsel->SetParameterName("targetsel",false);
         Cmdpcmat->SetParameterName("photocathodeMat", false);
         CmdnPMT->SetParameterName("numberPMT", false);
         CmdAngle->SetParameterName("Angle",false);
@@ -106,9 +91,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdVis->SetParameterName("visualization",false);
         CmdVerbose->SetParameterName("verbosity",false);
         CmdCheckOverlaps->SetParameterName("overlaps",false);
-        CmdRemoveObjects->SetParameterName("Remove",false);
 
-        Cmdtsel->SetCandidates("Uranium NaturalU Plutonium NaturalPu Lead Steel Plastic");
         Cmdpcmat->SetCandidates("GaAsP Bialkali");
         CmdAttenOn->SetCandidates("On on Off off");
         CmdAttenMat->SetCandidates("G4_Pb G4_Cu G4_Zn G4_Ag G4_Cd G4_Th G4_U G4_Au G4_W G4_Fe");
@@ -116,7 +99,6 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* DetectorAction)
         CmdVis->SetCandidates("True true False false");
         CmdVerbose->SetCandidates("True true False false On on Off off");
         CmdCheckOverlaps->SetCandidates("True true False false");
-        CmdRemoveObjects->SetCandidates("Container None");
 
 }
 
@@ -126,9 +108,6 @@ DetectorMessenger::~DetectorMessenger()
         delete CmdX;
         delete CmdY;
         delete CmdZ;
-        delete Cmdtr;
-        delete Cmdtrad;
-        delete Cmdtsel;
         delete Cmdpcmat;
         delete CmdnPMT;
         delete CmdAngle;
@@ -143,7 +122,6 @@ DetectorMessenger::~DetectorMessenger()
         delete CmdVis;
         delete CmdVerbose;
         delete CmdCheckOverlaps;
-        delete CmdRemoveObjects;
 }
 
 
@@ -172,24 +150,6 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
                 G4double theCommandZ = CmdZ->GetNewDoubleValue(newValue);
                 DetectorA->SetWaterZ(theCommandZ);
                 G4cout << "The Water Z-Dimension Size manually set to: " << theCommandZ << " cm" << G4endl;
-        }
-        else if(command == Cmdtr)
-        {
-                G4double theCommandtX = Cmdtr->GetNewDoubleValue(newValue);
-                DetectorA->SetIntObj_radius(theCommandtX);
-                G4cout << "The Interrogation Object Radius manually set to: " << theCommandtX << " cm" << G4endl;
-        }
-        else if(command == Cmdtrad)
-        {
-                G4double theCommandtrad = Cmdtrad->GetNewDoubleValue(newValue);
-                DetectorA->SetIntObjAbundance(theCommandtrad);
-                G4cout << "The Interrogation Object fissile radioisotope abundance manually set to: " << theCommandtrad << " percent" << G4endl;
-        }
-        else if(command == Cmdtsel)
-        {
-                G4String theCommandtsel = newValue;
-                DetectorA->SetIntObj(theCommandtsel);
-                G4cout << "The Interrogation Object manually set to: " << theCommandtsel << " material!" << G4endl << G4endl;
         }
         else if(command == Cmdpcmat)
         {
@@ -319,15 +279,6 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
                         theCheckBool = false;
                 }
                 DetectorA->SetCheckOverlaps(theCheckBool);
-        }
-        else if(command == CmdRemoveObjects)
-        {
-          G4String theObject = newValue;
-          if(!theObject.compare("Container"))
-          {
-            G4cout << "DetectorMessenger::SetNewValue -> WARNING Container Geometry Removed!" << G4endl;
-            DetectorA->SetRemoveContainer(true);
-          }
         }
         else
         {

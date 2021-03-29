@@ -27,6 +27,10 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "ChopperSetup.hh"
+#include "Linac.hh"
+#include "Collimator.hh"
+#include "Cargo.hh"
+#include "MaterialProperties.hh"
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4LogicalVolume.hh"
@@ -46,16 +50,12 @@
 
 #include "G4OpticalSurface.hh"
 #include "G4MaterialTable.hh"
-#include "G4VisAttributes.hh"
 #include "G4OpRayleigh.hh"
 
 #include "G4Box.hh" //for box
 #include "G4Sphere.hh" //for sphere
 #include "G4Tubs.hh" // for tube/cylinder
 
-// for color attributes
-#include "G4Colour.hh"
-#include "G4VisAttributes.hh"
 #include "DetectorMessenger.hh"
 #include "G4RunManager.hh"
 #include "G4NistManager.hh"
@@ -72,7 +72,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 {
 
 public:
-DetectorConstruction(ChopperSetup*);
+DetectorConstruction(ChopperSetup*, Linac*, Collimator*, Cargo*);
 virtual ~DetectorConstruction();
 
 
@@ -122,71 +122,13 @@ void SetPC_radius(G4double val)
         PMT_rmax = val;
         PMT_rmax = PMT_rmax*cm;
 };
-void SetIntObj_radius(G4double val)
-{
-        IntObj_rad = val;
-        IntObj_rad = IntObj_rad*cm;
-}
-void SetIntObjAbundance(G4double val)
-{
-        intObj_radio_abundance = val;
-}
 
-void SetIntObj(G4String val)
-{
-        if(val == "Uranium")
-        {
-                IntObj_Selection = val;
-                intObjDensity = 19.1*g/cm3;
-        }
-        else if(val == "Plutonium")
-        {
-                IntObj_Selection = val;
-                intObjDensity = 19.6*g/cm3;
-        }
-        else if(val == "NaturalU")
-        {
-          IntObj_Selection = "Natural Uranium";
-          intObjDensity = 19.1*g/cm3;
-        }
-        else if(val == "NaturalPu")
-        {
-          IntObj_Selection = "Natural Plutonium";
-          intObjDensity = 19.6*g/cm3;
-        }
-        else if(val == "Lead")
-        {
-          IntObj_Selection = "Lead";
-          intObjDensity = 11.4*g/cm3;
-        }
-        else if(val == "Steel")
-        {
-          IntObj_Selection = "Steel";
-          intObjDensity = 8.05*g/cm3;
-        }
-        else if(val == "Plastic")
-        {
-          IntObj_Selection = "Plastic";
-          intObjDensity = 0.94*g/cm3;
-        }
-        else{G4cerr << "ERROR: IntObj not correctly chosen" << G4endl;}
-}
-
-void setEndIntObj(G4double z_pos_con, G4double con_z_size)
-{
-        EndIntObj = z_pos_con + con_z_size/2;
-        G4cout << "Z-Cut set to: " << EndIntObj/(cm) << " cm" << G4endl << G4endl;
-}
-
-G4double getEndIntObj()const
-{
-  return EndIntObj;
-}
 void SetPC_material(G4String val){pc_mat = val;}
 void SetnPMT(G4int val){nPMT = val;}
 void setEndChop(G4double z_pos){EndChop = z_pos;}
 G4double getEndChop()const{return EndChop;}
-
+void setEndIntObj(G4double val){EndIntObj = val;}
+G4double getEndIntObj()const{return EndIntObj;}
 
 void SettheAngle(G4double val){theAngle = val;}
 void SetPlexiThickness(G4double val)
@@ -202,11 +144,6 @@ void SetTapeThickness(G4double val)
 void SetDetectorViewOnly(G4bool val){DetectorViewOnly = val;}
 void SetMaterialVerbosity(G4bool val){material_verbose = val;}
 void SetCheckOverlaps(G4bool val){checkOverlaps = val;}
-void SetRemoveContainer(G4bool val)
-{
-  RemoveContainer=val;
-  G4cout << "DetectorConstruction:: WARNING Container has been removed!" << G4endl;
-}
 
 private:
 // Private Member Functions
@@ -215,27 +152,16 @@ void DefDetPositionConstraintRight(double, double, double, double);
 void DefDetPositionConstraintUpper(double, double, double);
 // Chopper
 ChopperSetup* chop;
+Linac* linac;
+Collimator* collimator;
+Cargo* cargo;
 // Brem Properties
 G4double linac_size = 9*cm;
 
-// Container Properties
-G4bool RemoveContainer;
-
-G4double EndChop;
-// Interrogation Object Properties
-G4double EndIntObj, IntObj_rad, intObjDensity;
-G4String IntObj_Selection;
-G4VPhysicalVolume* physIntObj;
-G4double intObj_U235_abundance, intObj_U238_abundance, intObj_Pu239_abundance, intObj_Pu240_abundance;
-
-G4double intObj_radio_abundance;
+G4double EndChop, EndIntObj;
 
 // Material, Logical and Physical Volumes
 G4Material* PC_mat;
-G4LogicalVolume *logicalLinac;
-G4LogicalVolume *logicalVacuum;
-G4LogicalVolume *logicBremTarget;
-G4LogicalVolume *logicBremTargetBacking;
 
 G4LogicalVolume* logicPC;
 G4LogicalVolume* logicPMT;

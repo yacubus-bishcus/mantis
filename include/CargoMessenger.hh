@@ -22,38 +22,37 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef ChopperMessenger_h
-#define ChopperMessenger_h 1
+#ifndef CargoMessenger_h
+#define CargoMessenger_h 1
 
 #include "globals.hh"
 #include "G4UImessenger.hh"
 #include "G4ApplicationState.hh"
 #include "G4UIcmdWithADouble.hh"
 #include "G4UIcmdWithAString.hh"
-#include "ChopperSetup.hh"
+#include "Cargo.hh"
 #include "G4UIdirectory.hh"
 
-class ChopperSetup;
+class Cargo;
 class G4UIcmdWithADouble;
 class G4UIcmdWithAString;
 class G4UIdirectory;
 
-class ChopperMessenger: public G4UImessenger
+class CargoMessenger: public G4UImessenger
 {
 public:
-  ChopperMessenger(ChopperSetup*);
-  ~ChopperMessenger();
+  CargoMessenger(Cargo*);
+  ~CargoMessenger();
 
   void SetNewValue(G4UIcommand*, G4String); // must always be a string input
 private:
-  ChopperSetup* ChopperA;
-  G4UIcmdWithAString* CmdChopMaterial;
-  G4UIcmdWithADouble* CmdChopthick;
-  G4UIcmdWithADouble* CmdChopZ;
-  G4UIcmdWithAString* CmdChopperOn;
-  G4UIcmdWithADouble* CmdChopperAbundance;
-
+  Cargo* cargo;
+  G4UIcmdWithADouble* Cmd;
+  G4UIcmdWithADouble* Cmd1;
+  G4UIcmdWithAString* Cmd2;
+  G4UIcmdWithAString* CmdRemoveObjects;
   G4UIdirectory *myDir;
+  G4UIdirectory *myDir2;
 };
 
 #endif

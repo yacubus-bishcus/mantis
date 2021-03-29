@@ -52,9 +52,6 @@ private:
   G4UIcmdWithADouble* CmdX;
   G4UIcmdWithADouble* CmdY;
   G4UIcmdWithADouble* CmdZ;
-  G4UIcmdWithADouble* Cmdtr;
-  G4UIcmdWithADouble* Cmdtrad;
-  G4UIcmdWithAString* Cmdtsel;
   G4UIcmdWithAString* Cmdpcmat;
   G4UIcmdWithAnInteger* CmdnPMT;
   G4UIcmdWithADouble* CmdAngle;
@@ -71,13 +68,10 @@ private:
   G4UIcmdWithAString* CmdVis;
   G4UIcmdWithAString* CmdVerbose;
   G4UIcmdWithAString* CmdCheckOverlaps;
-  G4UIcmdWithAString* CmdRemoveObjects;
 
   G4UIdirectory *myDir;
-  G4UIdirectory *myDir2;
   G4UIdirectory *myDir4;
   G4UIdirectory *myDir5;
-  G4UIdirectory *myDir6;
 };
 
 #endif

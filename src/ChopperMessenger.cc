@@ -34,15 +34,12 @@ ChopperMessenger::ChopperMessenger(ChopperSetup* ChopperAction)
   CmdChopZ = new G4UIcmdWithADouble("/chopper/distance", this);
   CmdChopperOn = new G4UIcmdWithAString("/chopper/state", this);
   CmdChopperAbundance = new G4UIcmdWithADouble("/chopper/abundance",this);
-  CmdCheckOverlaps = new G4UIcmdWithAString("/chopper/CheckOverlaps",this);
 
   CmdChopMaterial->SetGuidance("Choose desired Chopper Material");
   CmdChopthick->SetGuidance("Choose desired chopper thickness");
   CmdChopZ->SetGuidance("Choose desired chopper distance from brem beam");
   CmdChopperOn->SetGuidance("Choose desired chopper wheel state");
   CmdChopperAbundance->SetGuidance("Choose desired chopper wheel material isotope abundance(enrichment)");
-  CmdCheckOverlaps->SetGuidance("Choose to check for geometric overlaps");
-
 
   CmdChopMaterial->SetParameterName("ChopperMaterial",false);
   CmdChopZ->SetParameterName("chopperZ", false);
@@ -51,11 +48,9 @@ ChopperMessenger::ChopperMessenger(ChopperSetup* ChopperAction)
   CmdChopperOn->SetParameterName("chopperOn",false);
   CmdChopperAbundance->SetParameterName("chopperAbundance",false);
   CmdChopperAbundance->SetRange("chopperAbundance > 0 && chopperAbundance < 100");
-  CmdCheckOverlaps->SetParameterName("overlaps",false);
 
   CmdChopperOn->SetCandidates("On on Off off");
   CmdChopMaterial->SetCandidates("Uranium Plutonium Lead Tungsten");
-  CmdCheckOverlaps->SetCandidates("True true False false");
 
 }
 
@@ -66,7 +61,6 @@ ChopperMessenger::~ChopperMessenger()
   delete CmdChopZ;
   delete CmdChopperOn;
   delete CmdChopperAbundance;
-  delete CmdCheckOverlaps;
 }
 
 
@@ -77,13 +71,13 @@ void ChopperMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   {
     G4double thecmdchopz = CmdChopZ->GetNewDoubleValue(newValue);
     ChopperA->SetChopper_z(thecmdchopz);
-    G4cout << "ChopperMessenger::SetNewValue -> The Chopper distance from the source manually set to: " << thecmdchopz << " cm" << G4endl;
+    //G4cout << "ChopperMessenger::SetNewValue -> The Chopper distance from the source manually set to: " << thecmdchopz << " cm" << G4endl;
   }
   else if(command == CmdChopthick)
   {
     G4double thecmdchopthick = CmdChopthick->GetNewDoubleValue(newValue);
     ChopperA->SetChopperThick(thecmdchopthick);
-    G4cout << "ChopperMessenger::SetNewValue -> The Chopper thickness manually set to: " << thecmdchopthick << " mm" <<G4endl;
+    //G4cout << "ChopperMessenger::SetNewValue -> The Chopper thickness manually set to: " << thecmdchopthick << " mm" <<G4endl;
   }
   else if(command == CmdChopperOn)
   {
@@ -91,38 +85,26 @@ void ChopperMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     if(thecmdchopperon == "On" || thecmdchopperon == "on")
     {
       ChopperA->SetChopperOn(true);
-      G4cout << "ChopperMessenger::SetNewValue -> The Chopper state set to On!" << G4endl;
+      //G4cout << "ChopperMessenger::SetNewValue -> The Chopper state set to On!" << G4endl;
     }
     else
     {
       ChopperA->SetChopperOn(false);
-      G4cout << "ChopperMessenger::SetNewValue -> The Chopper state set to Off!" << G4endl;
+      //G4cout << "ChopperMessenger::SetNewValue -> The Chopper state set to Off!" << G4endl;
     }
   }
   else if(command == CmdChopperAbundance)
   {
     G4double thechopperabundance = CmdChopperAbundance->GetNewDoubleValue(newValue);
     ChopperA->SetChopperAbundance(thechopperabundance);
-    G4cout << "ChopperMessenger::SetNewValue -> The Chopper isotope abundance manually set to: " << thechopperabundance << " percent" << G4endl;
+    //G4cout << "ChopperMessenger::SetNewValue -> The Chopper isotope abundance manually set to: " << thechopperabundance << " percent" << G4endl;
   }
 
   else if(command == CmdChopMaterial)
   {
     G4String theCmdChopMaterial = newValue;
     ChopperA->SetChopperMaterial(theCmdChopMaterial);
-    G4cout << "ChopperMessenger::SetNewValue -> The chopper material manually set to: " << theCmdChopMaterial << G4endl;
-  }
-
-  else if(command == CmdCheckOverlaps)
-  {
-    G4String theCheck = newValue;
-    G4bool theCheckBool = true;
-    if(theCheck == "false" || theCheck == "False")
-    {
-            G4cout << "ChopperMessenger::SetNewValue -> CheckOverlaps set to off!" << G4endl;
-            theCheckBool = false;
-    }
-    ChopperA->SetCheckOverlaps(theCheckBool);
+    //G4cout << "ChopperMessenger::SetNewValue -> The chopper material manually set to: " << theCmdChopMaterial << G4endl;
   }
   else
   {

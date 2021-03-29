@@ -36,8 +36,8 @@ public:
     void Show(string cmd="All", bool=false);
     TFile* OpenFile(const char*);
     void CombineFiles(std::vector<string>, std::vector<string>, const char*);
-    void CopyTrees(const char*, std::vector<string>);
-    void Sig2Noise(std::vector<string>, string, bool Weighted=false, bool cut=false,TCut cut1="NA");
+    void CopyTrees(const char*, std::vector<string>, const char*);
+    void Sig2Noise(std::vector<string>, string, bool Weighted=false, bool Corrected=false, bool cut=false,TCut cut1="NA");
     void ZScore(const char*, const char*, std::vector<string>);
     void ZScore(double,double);
     void Integral(TTree*);
@@ -48,7 +48,7 @@ public:
     void RebinHisto(vector<string>, vector<string>, vector<string>, int, double, double);
     void RebinHisto(vector<string>, vector<string>, vector<string>, int, double, double, TCut);
     void VarRebin(vector<string>, vector<string>, vector<string>, int, double, double, TCut, double, double);
-    void CheckEvents(const char*,bool);
+    void CheckEvents(const char*, bool, bool);
     void Sampling(const char*, string sample_element="U", double deltaE=5.0e-6, bool checkZero=false, double non_nrf_energy_cut=1.5);
     void SimpleSampling(const char*, double deltaE=5.0e-6, double cut_energy=1.5, double weight=10000, bool checkZero=false);
     void CheckIntObj(const char*, const char*, double, bool Weighted=false);
@@ -61,11 +61,11 @@ public:
 
   private:
     void CheckFile(const char*);
-    void Compute(const char*, time_t, bool);
-    void CopyATree(const char*, const char*);
-    void CopyATreeNoWeight(const char*, const char*);
+    void Compute(const char*, time_t, bool, bool);
+    void CopyATree(const char*, const char*, const char*);
+    void CopyATreeNoWeight(const char*, const char*, const char*);
     void SNR_IntObj(const char*, bool);
-    void SNR_Det(const char*, bool, bool, TCut cut1="NA");
+    void SNR_Det(const char*, bool, bool, bool, TCut cut1="NA");
     void hIntegral(TH1*);
     double hIntegral(TH1*, int);
     double hIntegral(TTree*, int, TCut, double);
@@ -705,12 +705,12 @@ void MantisROOT::CombineFiles(std::vector<string> filenames, std::vector<string>
 
 }
 
-void MantisROOT::CopyTrees(const char* filename, std::vector<string> noObjv)
+void MantisROOT::CopyTrees(const char* filename, std::vector<string> noObjv, const char* outfilename)
 {
-  std::vector<bool> dataList = {0,0,0,0,0,0,0,0,0,0,0,0};
+  std::vector<bool> dataList = {0,0,0,0,0,0,0,0,0,0,0,0,0};
   std::vector<string> optList = {"Weight","Brem","ChopIn","ChopOut","NRF","AirIn",
                                   "IntObjIn","IntObjOut","Water","Cherenkov",
-                                  "DetInfo","IncDetInfo"};
+                                  "DetInfo","IncDetInfo", "Corrected_DetInfo"};
   // check which trees to copy
   for(int i=0;i<noObjv.size();++i)
   {
@@ -731,7 +731,7 @@ void MantisROOT::CopyTrees(const char* filename, std::vector<string> noObjv)
     }
   }
 
-  std::cout << "Copying Tree Status: " << std::endl;
+  std::cout << "MantisROOT::CopyTrees -> Copying Tree Status: " << std::endl;
   for(int i=0;i<optList.size();++i)
     std::cout << "\t\t " << optList[i] << " = " << dataList[i] << std::endl;
 
@@ -740,20 +740,19 @@ void MantisROOT::CopyTrees(const char* filename, std::vector<string> noObjv)
     if(dataList[0])
     {
       if(dataList[i])
-        CopyATree(filename, optList[i].c_str());
+        CopyATree(filename, optList[i].c_str(), outfilename);
     }
     else
     {
       if(dataList[i])
-        CopyATreeNoWeight(filename, optList[i].c_str());
+        CopyATreeNoWeight(filename, optList[i].c_str(), outfilename);
     }
   }
 
-  string outfilename = "converted_" + string(filename);
-  std::cout << "All Trees Copied to " << outfilename << std::endl;
+  std::cout << "MantisROOT::CopyTrees -> Complete." << std::endl;
 }
 
-void MantisROOT::Sig2Noise(std::vector<string> filenames, string object, bool Weighted=false, bool cut=false, TCut cut1="NA")
+void MantisROOT::Sig2Noise(std::vector<string> filenames, string object, bool Weighted=false, bool Corrected=false, bool cut=false, TCut cut1="NA")
 {
   if(!object.compare("IntObj"))
   {
@@ -768,7 +767,7 @@ void MantisROOT::Sig2Noise(std::vector<string> filenames, string object, bool We
     for(int i=0;i<filenames.size();++i)
     {
       std::cout << std::endl << "Signal to Noise Calculation for " << filenames[i] << std::endl;
-      SNR_Det(filenames[i].c_str(), Weighted,cut,cut1);
+      SNR_Det(filenames[i].c_str(), Weighted, Corrected, cut, cut1);
     }
   }
   else if(!object.compare("Both"))
@@ -778,7 +777,7 @@ void MantisROOT::Sig2Noise(std::vector<string> filenames, string object, bool We
       std::cout << filenames[i] << " Interrogation Object Signal to Noise Calculating..." << std::endl;
       SNR_IntObj(filenames[i].c_str(), Weighted);
       std::cout << filenames[i] << " Detected Signal to Noise Calculating..." << std::endl;
-      SNR_Det(filenames[i].c_str(), Weighted,cut,cut1);
+      SNR_Det(filenames[i].c_str(), Weighted, Corrected, cut, cut1);
     }
   else
   {
@@ -787,7 +786,7 @@ void MantisROOT::Sig2Noise(std::vector<string> filenames, string object, bool We
     return;
   }
 
-  std::cout << "Signal to Noise Ratio Analysis Complete." << std::endl;
+  std::cout << "MantisROOT::Sig2Noise -> Signal to Noise Ratio Analysis Complete." << std::endl;
 }
 
 void MantisROOT::ZScore(const char* file1, const char* file2, std::vector<string> objects)
@@ -1048,15 +1047,15 @@ TFile* MantisROOT::OpenFile(const char* filename)
   return (new TFile(filename));
 } // end of OpenFile function
 
-void MantisROOT::CheckEvents(const char* filename, bool Weighted=false)
+void MantisROOT::CheckEvents(const char* filename, bool Weighted=false, bool Corrected=false)
 {
   CheckFile(filename);
   time_t timer;
   time_t time_start = std::time(&timer);
-  Compute(filename,time_start,Weighted);
+  Compute(filename, time_start, Weighted, Corrected);
 }
 
-void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted)
+void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted, bool Corrected)
 {
   int x =0;
   std::vector<int> nrf_to_cher_to_det_event;
@@ -1067,11 +1066,18 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted)
   TTree *Cherenkov_in, *NRF_in, *DetInfo_in;
   fMaincompute->GetObject("Cherenkov",Cherenkov_in);
   fMaincompute->GetObject("NRF",NRF_in);
-  fMaincompute->GetObject("DetInfo",DetInfo_in);
+
+  if(Corrected)
+    fMaincompute->GetObject("Corrected_DetInfo", DetInfo_in);
+  else
+    fMaincompute->GetObject("DetInfo",DetInfo_in);
+
   Cherenkov_in->SetEstimate(-1);
   NRF_in->SetEstimate(-1);
   DetInfo_in->SetEstimate(-1);
-  std::cout << "CheckEvents::Compute -> Objects Grabbed!" << std::endl;
+
+  if(debug)
+    std::cout << "CheckEvents::Compute -> Objects Grabbed!" << std::endl;
 
   int nrf_entries = NRF_in->Draw("EventID","","goff");
 
@@ -1103,21 +1109,44 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted)
   int det_entries =0;
 
   if(Weighted)
-    det_entries = DetInfo_in->Draw("EventID:Energy:Time:Weight","CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\"","goff");
+  {
+    if(!Corrected)
+      det_entries = DetInfo_in->Draw("EventID:Energy:Time:Weight", "CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\"","goff");
+    else
+      det_entries = DetInfo_in->Draw("EventID:Energy:Weight","","goff");
+  }
   else
-    det_entries = DetInfo_in->Draw("EventID:Energy:Time","CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\"","goff");
+  {
+    if(!Corrected)
+      det_entries = DetInfo_in->Draw("EventID:Energy:Time","CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\"","goff");
+    else
+      det_entries = DetInfo_in->Draw("EventID:Energy","","goff");
+  }
 
   std::cout << "CheckEvents::Compute -> Total Number of Detected Optical Photon entries: "
             << det_entries << std::endl << std::endl;
 
   double *detEvent = DetInfo_in->GetVal(0);
   double *detEnergy = DetInfo_in->GetVal(1);
-  double *detTime = DetInfo_in->GetVal(2);
 
+  double *detTime = new double[(int)det_entries];
   double *detWeight = new double[(int)det_entries];
 
   if(Weighted)
-    detWeight = DetInfo_in->GetVal(3);
+  {
+    if(Corrected)
+      detWeight = DetInfo_in->GetVal(2);
+    else
+    {
+      detTime = DetInfo_in->GetVal(2);
+      detWeight = DetInfo_in->GetVal(3);
+    }
+  }
+  else
+  {
+    if(!Corrected)
+      detTime = DetInfo_in->GetVal(2);
+  }
 
   std::vector<int> detEventv;
   for(int i=0; i<det_entries; ++i)
@@ -1162,7 +1191,8 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted)
         if(Weighted)
           nrf_to_cher_to_det_weight.push_back(detWeight[index]);
 
-        nrf_to_cher_to_det_time.push_back(detTime[index]);
+        if(!Corrected)
+          nrf_to_cher_to_det_time.push_back(detTime[index]);
       }
     }
     std::cout << "CheckEvents::Compute -> NRF to Optical Photons Detected Number of Events: "
@@ -1195,7 +1225,8 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted)
   if(Weighted)
     nrf_to_cher_to_det_tree->Branch("Weight",&weight);
 
-  nrf_to_cher_to_det_tree->Branch("Time",&thetimes);
+  if(!Corrected)
+    nrf_to_cher_to_det_tree->Branch("Time",&thetimes);
 
   // Fill nrf_to_cher_to_det Tree
   if(nrf_to_cher_to_det_event.size() > 0)
@@ -1209,7 +1240,9 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted)
       if(Weighted)
         weight = nrf_to_cher_to_det_weight[i];
 
-      thetimes = nrf_to_cher_to_det_time[i];
+      if(!Corrected)
+        thetimes = nrf_to_cher_to_det_time[i];
+
       nrf_to_cher_to_det_tree->Fill();
     }
   }
@@ -1228,11 +1261,11 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted)
 
   time_t timer2;
   time_t time_end = std::time(&timer2);
-  std::cout << "Event Check took: " << std::difftime(time_end, time_start)
+  std::cout << "CheckEvents::Compute -> Event Check took: " << std::difftime(time_end, time_start)
           << " seconds!" << std::endl << std::endl;
 }
 
-void MantisROOT::CopyATree(const char* filename, const char* tObj)
+void MantisROOT::CopyATree(const char* filename, const char* tObj, const char* outfilename)
 {
   CheckFile(filename);
   TFile *f = new TFile(filename);
@@ -1242,13 +1275,12 @@ void MantisROOT::CopyATree(const char* filename, const char* tObj)
   TTree *oldTree;
   f->GetObject(tObj, oldTree);
   oldTree->SetBranchStatus("*",1);
-  string outfilename = "converted_" + string(filename);
 
   TFile *newfile;
-  if(gSystem->AccessPathName(outfilename.c_str()))
-    newfile = new TFile(outfilename.c_str(), "recreate");
+  if(gSystem->AccessPathName(outfilename))
+    newfile = new TFile(outfilename, "recreate");
   else
-    newfile = new TFile(outfilename.c_str(),"update");
+    newfile = new TFile(outfilename,"update");
 
   auto newtree = oldTree->CloneTree();
 
@@ -1258,7 +1290,7 @@ void MantisROOT::CopyATree(const char* filename, const char* tObj)
   newfile->Close();
 }// end of function CopyATree
 
-void MantisROOT::CopyATreeNoWeight(const char* filename, const char* tObj)
+void MantisROOT::CopyATreeNoWeight(const char* filename, const char* tObj, const char* outfilename)
 {
   CheckFile(filename);
   TFile *f = new TFile(filename);
@@ -1279,7 +1311,7 @@ void MantisROOT::CopyATreeNoWeight(const char* filename, const char* tObj)
   }
   else if(!string(tObj).compare("ChopOut"))
   {
-    for(auto activeBranchName : {"Energy","EventID","isNRF","Angle"})
+    for(auto activeBranchName : {"Energy","EventID","isNRF","Theta","Phi"})
     {
       oldTree->SetBranchStatus(activeBranchName,1);
     }
@@ -1293,7 +1325,7 @@ void MantisROOT::CopyATreeNoWeight(const char* filename, const char* tObj)
   }
   else if(!string(tObj).compare("AirIn") || !string(tObj).compare(0,6,"IntObj"))
   {
-    for(auto activeBranchName : {"Energy", "CreatorProcess", "Angle", "Time", "EventID"})
+    for(auto activeBranchName : {"Energy", "CreatorProcess", "Theta", "Phi", "Time", "EventID"})
     {
       oldTree->SetBranchStatus(activeBranchName,1);
     }
@@ -1314,7 +1346,7 @@ void MantisROOT::CopyATreeNoWeight(const char* filename, const char* tObj)
   }
   else if(!string(tObj).compare("DetInfo"))
   {
-    for(auto activeBranchName : {"EventID", "Energy", "CreatorProcess", "Time"})
+    for(auto activeBranchName : {"EventID", "Energy", "CreatorProcess", "Time", "X", "Y"})
     {
       oldTree->SetBranchStatus(activeBranchName,1);
     }
@@ -1332,13 +1364,11 @@ void MantisROOT::CopyATreeNoWeight(const char* filename, const char* tObj)
     exit(1);
   }
 
-  string outfilename = "converted_" + string(filename);
-
   TFile *newfile;
-  if(gSystem->AccessPathName(outfilename.c_str()))
-    newfile = new TFile(outfilename.c_str(), "recreate");
+  if(gSystem->AccessPathName(outfilename))
+    newfile = new TFile(outfilename, "recreate");
   else
-    newfile = new TFile(outfilename.c_str(),"update");
+    newfile = new TFile(outfilename,"update");
 
   auto newtree = oldTree->CloneTree();
 
@@ -1444,7 +1474,7 @@ void MantisROOT::SNR_IntObj(const char* inFile, bool Weighted)
     std::cerr << "ERROR IntObjIn Not Found in " << inFile << std::endl;
 }// end of SNR function
 
-void MantisROOT::SNR_Det(const char* inFile, bool Weighted, bool cut, TCut cut1="NA")
+void MantisROOT::SNR_Det(const char* inFile, bool Weighted, bool Corrected, bool cut, TCut cut1="NA")
 {
   // Check to make sure file exists
   CheckFile(inFile);
@@ -1452,7 +1482,7 @@ void MantisROOT::SNR_Det(const char* inFile, bool Weighted, bool cut, TCut cut1=
   // check if event file already exists if not make one
   if(gSystem->AccessPathName(event_output_name.c_str()))
   {
-    CheckEvents(inFile,Weighted);
+    CheckEvents(inFile, Weighted, Corrected);
   }
 
   // open events file
@@ -1472,22 +1502,32 @@ void MantisROOT::SNR_Det(const char* inFile, bool Weighted, bool cut, TCut cut1=
   {
     if(debug)
       std::cout << "MantisROOT::SNR_Det-> Weighted hIntegralReturnWeighted" << std::endl;
+
     eventCounts = hIntegralReturnWeightedCounts(eventT);
     eventEnergy = hIntegralReturnWeightedEnergy(eventT);
   }
 
-  std::cout << "Detected Counts from NRF: " << eventCounts << std::endl;
-  std::cout << "Detected Energy from NRF: " << eventEnergy << " MeV" << std::endl;
+  std::cout << "MantisROOT::SNR_Det -> Detected Counts from NRF: " << eventCounts << std::endl;
+  std::cout << "MantisROOT::SNR_Det -> Detected Energy from NRF: " << eventEnergy << " MeV" << std::endl;
+
   if(debug)
     std::cout << "MantisROOT::SNR_Det -> Closing Event File..." << std::endl;
+
   eventf->Close();
+
   if(debug)
     std::cout << "MantisROOT::SNR_Det -> Event File Closed." << std::endl;
+
   // Open the file
   TFile *mainf = new TFile(inFile);
   mainf->cd();
   TTree* detT;
-  mainf->GetObject("DetInfo",detT);
+
+  if(Corrected)
+    mainf->GetObject("Corrected_DetInfo",detT);
+  else
+    mainf->GetObject("DetInfo",detT);
+
   double counts, energy;
   if(!Weighted)
   {
@@ -1500,14 +1540,16 @@ void MantisROOT::SNR_Det(const char* inFile, bool Weighted, bool cut, TCut cut1=
     energy = hIntegralReturnWeightedEnergy(detT);
   }
 
-  std::cout << "Total Detected Counts: " << counts << std::endl;
-  std::cout << "Total Detected Energy: " << energy << " MeV" << std::endl;
+  std::cout << "MantisROOT::SNR_Det -> Total Detected Counts: " << counts << std::endl;
+  std::cout << "MantisROOT::SNR_Det -> Total Detected Energy: " << energy << " MeV" << std::endl;
 
-  std::cout << "Counts SNR: " << eventCounts/sqrt(counts) << std::endl;
-  //std::cout << "Energy SNR: " << eventEnergy/sqrt(energy) << std::endl;
+  std::cout << "MantisROOT::SNR_Det -> Counts SNR: " << eventCounts/sqrt(counts) << std::endl;
+
   if(debug)
     std::cout << "MantisROOT::SNR_Det -> Closing Main File..." << std::endl;
+
   mainf->Close();
+
   if(debug)
     std::cout << "MantisROOT::SNR_Det -> Main File Closed." << std::endl;
 
@@ -2670,6 +2712,7 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
 
   std::vector<int> final_det_eventsv;
   std::vector<double> final_det_energiesv, final_det_weightsv;
+  std::vector<int> errorneous_det_eventsv;
   int x=0;
   // Now Complete check
   for(int i=0;i<det_eventsv.size();++i)
@@ -2688,6 +2731,10 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
       final_det_energiesv.push_back(det_energiesv[i]);
       if(weighted)
         final_det_weightsv.push_back(det_weightsv[i]);
+    }
+    else
+    {
+      erroneous_det_eventsv.push_back(x);
     }
 
   }
@@ -2726,10 +2773,21 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
     Corrected_DetInfo->Fill();
   }
 
+  int d;
+  TTree* Erroneous_DetInfo = new TTree("Erroneous_DetInfo","Erroneous Detector Information");
+  Erroneous_DetInfo->Branch("EventID",&d);
+
+  for(int i=0;i<erroneous_det_eventsv.size();++i)
+  {
+    d = erroneous_det_eventsv[i];
+    Erroneous_DetInfo->Fill();
+  }
+
   if(debug)
     std::cout << "MantisROOT::CheckDet -> Corrected DetInfo Filled." << std::endl;
 
   Corrected_DetInfo->Write();
+  Erroneous_DetInfo->Write();
   std::cout << std::endl << "MantisROOT::CheckDet -> Corrected DetInfo Written to file: " << outfile << std::endl;
 
   fout->Close();
@@ -2792,19 +2850,19 @@ void MantisROOT::Show_CombineFiles_Description()
 
 void MantisROOT::Show_CopyTrees()
 {
-  std::cout << "void CopyTrees(const char* filename, std::vector<string> TTreeNamesToCopy)" << std::endl;
+  std::cout << "void CopyTrees(const char* filename, std::vector<string> TTreeNamesToCopy, const char* outfilename)" << std::endl;
 }
 
 void MantisROOT::Show_CopyTrees_Description()
 {
-  std::cout << "Clones TTrees from input 1 (filename) to a file named converted_(filename)."
+  std::cout << "Clones TTrees from input 1 (filename) to a file named by input 3 outfilename."
   << std::endl << "The TTrees to be cloned are inputed as input two as a string vector."
   << std::endl << "Example: mantis->CopyTrees(\"test.root\",{\"IntObjIn\",\"DetInfo\"})" << std::endl;
 }
 
 void MantisROOT::Show_Sig2Noise()
 {
-  std::cout << "void Sig2Noise(std::vector<string> Filenames, string DataName, bool Weighted=false, bool cut=false, TCut cut1=\"NA\")" << std::endl;
+  std::cout << "void Sig2Noise(std::vector<string> Filenames, string DataName, bool Weighted=false, bool Corrected=false, bool cut=false, TCut cut1=\"NA\")" << std::endl;
 }
 
 void MantisROOT::Show_Sig2Noise_Description()
@@ -2813,9 +2871,10 @@ void MantisROOT::Show_Sig2Noise_Description()
   << std::endl << "The signal to noise ratio can be computed for the Incident Interrogation Object spectrum"
   << std::endl << ", the detected spectrum, or both with the second input options: IncObj, Det, Both."
   << std::endl << "IF the TTrees contain weights be sure to set the third input bool option to true."
-  << std::endl << "IF the TTrees are to have a cut placed the fourth input should be set to true and "
-  << std::endl << " the fifth input should contain the TCut in parenthesis."
-  << std::endl << "Example: mantis->Sig2Noise({\"TestOn.root\",\"TestOff.root\"},\"Both\", true, true, \"Energy<5e-6\")" << std::endl;
+  << std::endl << "IF the TTrees are from a Corrected File be sure to set the fourth input bool option to true."
+  << std::endl << "IF the TTrees are to have a cut placed the fifth input should be set to true and "
+  << std::endl << " the sixth input should contain the TCut in parenthesis."
+  << std::endl << "Example: mantis->Sig2Noise({\"TestOn.root\",\"TestOff.root\"},\"Both\", true, true, true, \"Energy<5e-6\")" << std::endl;
 }
 
 void MantisROOT::Show_ZScore()
@@ -2883,7 +2942,7 @@ void MantisROOT::Show_VarRebin_Description()
 
 void MantisROOT::Show_CheckEvents()
 {
-  std::cout << "void CheckEvents(const char* filename, bool Weighted)" << std::endl;
+  std::cout << "void CheckEvents(const char* filename, bool Weighted, bool Corrected)" << std::endl;
 }
 
 void MantisROOT::Show_CheckEvents_Description()
@@ -2891,7 +2950,7 @@ void MantisROOT::Show_CheckEvents_Description()
   std::cout << "DESCRIPTION: " << std::endl << "Checks TTrees NRF, Cherenkov and DetInfo for EventIDs that match."
   << std::endl << "If the events match the event data in the detector is collected and written to w_events_(filename)."
   << std::endl << "This function is called in Sig2Noise." << std::endl
-  << "Example: mantis->CheckEvents(\"test.root\",true) would Check WEIGHTED events in file test.root." << std::endl;
+  << "Example: mantis->CheckEvents(\"test.root\",true, true) would Check WEIGHTED CORRECTED events in file test.root." << std::endl;
 }
 
 void MantisROOT::Show_CheckDet()

@@ -109,31 +109,31 @@ void EventAction::EndOfEventAction(const G4Event* anEvent)
     if(debug)
         std::cout << "EventAction::EndOfEventAction -> Beginning" << std::endl;
 
-        if(c_secondaries > 0)
-        {
-                // Grab Max Energy
-                G4double maxE = *std::max_element(energyv.begin(),energyv.end());
-                // Find Max Energy's Weight
-                eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
-                G4double weight = info->GetWeight();
-                // Find the Average Time
-                G4double c_time;
-                if(timev.size() > 0)
-                {
-                        c_time = calcAvg();
-                }
-                else
-                        c_time = 0;
-                // Fill the TTree
-                G4AnalysisManager* manager = G4AnalysisManager::Instance();
-                manager->FillNtupleIColumn(7,0,anEvent->GetEventID());
-                manager->FillNtupleDColumn(7,1,maxE);
-                manager->FillNtupleIColumn(7,2,c_secondaries);
-                manager->FillNtupleDColumn(7,3,c_time);
-                if(!inFile.compare(0,24,"brems_distributions.root"))
-                  manager->FillNtupleDColumn(7,4, weight);
-                manager->AddNtupleRow(7);
-        }
+    if(c_secondaries > 0)
+    {
+      // Grab Max Energy
+      G4double maxE = *std::max_element(energyv.begin(),energyv.end());
+      // Find Max Energy's Weight
+      eventInformation* info = (eventInformation*)(G4RunManager::GetRunManager()->GetCurrentEvent()->GetUserInformation());
+      G4double weight = info->GetWeight();
+      // Find the Average Time
+      G4double c_time;
+      if(timev.size() > 0)
+      {
+              c_time = calcAvg();
+      }
+      else
+              c_time = 0;
+      // Fill the TTree
+      G4AnalysisManager* manager = G4AnalysisManager::Instance();
+      manager->FillNtupleIColumn(7,0,anEvent->GetEventID());
+      manager->FillNtupleDColumn(7,1,maxE);
+      manager->FillNtupleIColumn(7,2,c_secondaries);
+      manager->FillNtupleDColumn(7,3,c_time);
+      if(!inFile.compare(0,24,"brems_distributions.root"))
+        manager->FillNtupleDColumn(7,4, weight);
+      manager->AddNtupleRow(7);
+    }
 
     if(debug)
         std::cout << "EventAction::EndOfEventAction() --> Ending!" << std::endl;

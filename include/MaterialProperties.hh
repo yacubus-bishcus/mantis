@@ -30,6 +30,7 @@
 #include "globals.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4MaterialPropertiesTable.hh"
+#include <cassert>
 
 class MaterialProperties
 {

@@ -132,75 +132,75 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     if(debug)
         std::cout << "PrimaryGeneratorAction::GeneratePrimaries -> Beginning." << std::endl;
 
-        G4double w = 1.;
-        if(!resonanceTest && chosen_energy < 0)
-        {
-          // User IS USING importance sampling
-          if(!file_check)
-          {
-            // Grab random from importance sampling distribution
-            energy = hSample->GetRandom()*MeV;
-            // Grab contents of bin closest
-            // TGraph::Eval -> Description: linear interpolation between the
-            // two points close to x is computed. If x is outside the graph
-            // range, a linear extrapolation is computed. Eval here returns the
-            // probability per 5 eV for each respective distribution
-            G4double dNdE = gBrems->Eval(energy);
-            G4double importanceSampling = 0.;
-            // This hopes to quicken simulation by avoiding TGraph::Eval()
-            if(cutE > 0.1)
-              if(energy < cutE)
-                importanceSampling = lowImportance;
-              else
-                importanceSampling = gSample->Eval(energy);
-            else
-              importanceSampling = gSample->Eval(energy);
-
-            // Create importance weighting based on the two distributions probability
-            w = dNdE/importanceSampling;
-          }
-          // User IS NOT USING importance sampling
-          else
-            energy = hBrems->GetRandom()*MeV;
-        }
-        // The user has selected a mono-energetic beam
-        else if(chosen_energy > 0 && !SampleEnergyRangebool)
-          energy = chosen_energy*MeV;
-        // User wishes to sample from Uranium resonance energies. dNdE will not
-        // be used here
-        else if(chosen_energy > 0 && SampleEnergyRangebool)
-          energy = SampleEnergyRange(chosen_energy,uniform_width);
-        else
-          energy = SampleUResonances();
-
-        // Set the energy
-        fParticleGun->SetParticleEnergy(energy);
-
-      if(debug)
+    G4double w = 1.;
+    if(!resonanceTest && chosen_energy < 0)
+    {
+      // User IS USING importance sampling
+      if(!file_check)
       {
-        std::cout << "Particle Energy: " << energy/(MeV) << " MeV" << std::endl;
-        std::cout << "Particle Weight: " << w << std::endl;
+        // Grab random from importance sampling distribution
+        energy = hSample->GetRandom()*MeV;
+        // Grab contents of bin closest
+        // TGraph::Eval -> Description: linear interpolation between the
+        // two points close to x is computed. If x is outside the graph
+        // range, a linear extrapolation is computed. Eval here returns the
+        // probability per 5 eV for each respective distribution
+        G4double dNdE = gBrems->Eval(energy);
+        G4double importanceSampling = 0.;
+        // This hopes to quicken simulation by avoiding TGraph::Eval()
+        if(cutE > 0.1)
+          if(energy < cutE)
+            importanceSampling = lowImportance;
+          else
+            importanceSampling = gSample->Eval(energy);
+        else
+          importanceSampling = gSample->Eval(energy);
+
+        // Create importance weighting based on the two distributions probability
+        w = dNdE/importanceSampling;
       }
+      // User IS NOT USING importance sampling
+      else
+        energy = hBrems->GetRandom()*MeV;
+    }
+    // The user has selected a mono-energetic beam
+    else if(chosen_energy > 0 && !SampleEnergyRangebool)
+      energy = chosen_energy*MeV;
+    // User wishes to sample from Uranium resonance energies. dNdE will not
+    // be used here
+    else if(chosen_energy > 0 && SampleEnergyRangebool)
+      energy = SampleEnergyRange(chosen_energy,uniform_width);
+    else
+      energy = SampleUResonances();
 
-        const float pi=acos(-1);
+    // Set the energy
+    fParticleGun->SetParticleEnergy(energy);
 
-        // Set beam position
-        G4double x_r = beam_size*acos(G4UniformRand())/pi*2.*cos(360.*G4UniformRand()*CLHEP::deg);
-        G4double y_r = beam_size*acos(G4UniformRand())/pi*2.*sin(360.*G4UniformRand()*CLHEP::deg);
-        fParticleGun->SetParticlePosition(G4ThreeVector(x_r,y_r,beamStart*cm)); // set the electron beam far enough back behind brem radiator
+    if(debug)
+    {
+      std::cout << "Particle Energy: " << energy/(MeV) << " MeV" << std::endl;
+      std::cout << "Particle Weight: " << w << std::endl;
+    }
 
-        // Set beam momentum
-        fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,1)); // along z axis
+    const float pi=acos(-1);
 
-        fParticleGun->GeneratePrimaryVertex(anEvent);
+    // Set beam position
+    G4double x_r = beam_size*acos(G4UniformRand())/pi*2.*cos(360.*G4UniformRand()*CLHEP::deg);
+    G4double y_r = beam_size*acos(G4UniformRand())/pi*2.*sin(360.*G4UniformRand()*CLHEP::deg);
+    fParticleGun->SetParticlePosition(G4ThreeVector(x_r,y_r,beamStart*cm)); // set the electron beam far enough back behind brem radiator
+
+    // Set beam momentum
+    fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,1)); // along z axis
+
+    fParticleGun->GeneratePrimaryVertex(anEvent);
 
 // Pass the event information
-        eventInformation *anInfo = new eventInformation(anEvent);
-        anInfo->SetWeight(w);
-        anInfo->SetBeamEnergy(energy);
-        anEvent->SetUserInformation(anInfo);
-      if(debug)
-        std::cout << "PrimaryActionGenerator::GeneratePrimaries() -> End!" << std::endl;
+    eventInformation *anInfo = new eventInformation(anEvent);
+    anInfo->SetWeight(w);
+    anInfo->SetBeamEnergy(energy);
+    anEvent->SetUserInformation(anInfo);
+    if(debug)
+      std::cout << "PrimaryActionGenerator::GeneratePrimaries() -> End!" << std::endl;
 }
 
 G4double PrimaryGeneratorAction::SampleUResonances()

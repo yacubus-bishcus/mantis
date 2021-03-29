@@ -1,8 +1,8 @@
 /chopper/state On
 /chopper/material Uranium
 /chopper/abundance 90
-/mytar/abundance 90
-/mytar/target Uranium
+/IntObj/Abundance 90
+/IntObj/Material Uranium
 /control/verbose 0
 /tracking/verbose 0
 /run/verbose 0
@@ -35,4 +35,4 @@
 
 /vis/viewer/update
 /vis/viewer/set/autoRefresh true
-/run/beamOn 1000
+/run/beamOn 10

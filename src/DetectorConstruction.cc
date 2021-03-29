@@ -26,8 +26,9 @@
 
 extern G4bool bremTest;
 
-DetectorConstruction::DetectorConstruction()
+DetectorConstruction::DetectorConstruction(ChopperSetup* chopper)
         : G4VUserDetectorConstruction(),
+        chop(chopper),
         // Container Properties
         RemoveContainer(false),
         // interrogation object properties
@@ -152,9 +153,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double beamStart = bremStartPos - bremBacking_thickness/2.0 - 0.1*cm;
   G4cout << "DetectorConstruction::Build -> Beam Should Start at " << beamStart/(cm) << " cm" << G4endl;
 
-  ChopperSetup* chopper = new ChopperSetup();
-  G4VPhysicalVolume* chopper_p = chopper->Construct(logicWorld, bremStartPos, linac_size, container_edge_position);
-  G4double chopper_end_edge_position = chopper->getEndChop();
+  G4VPhysicalVolume* chopper_p = chop->Construct(logicWorld, bremStartPos, linac_size, container_edge_position);
+  G4double chopper_end_edge_position = chop->getEndChop();
   setEndChop(chopper_end_edge_position);
   // Set up Linac configuration if Brem Test
 

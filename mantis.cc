@@ -4,6 +4,7 @@
 #include "DetectorConstruction.hh"
 #include "PhysicsListNew.hh"
 #include "ActionInitialization.hh"
+#include "ChopperSetup.hh"
 // Typcially include
 #include "time.h"
 #include "Randomize.hh"
@@ -253,8 +254,8 @@ int main(int argc,char **argv)
         G4RunManager* runManager = new G4RunManager;
 
         // set mandatory initialization classes
-
-        DetectorConstruction* det = new DetectorConstruction();
+        ChopperSetup* chopper = new ChopperSetup();
+        DetectorConstruction* det = new DetectorConstruction(chopper);
         runManager->SetUserInitialization(det);
 
         // Set up Physics List

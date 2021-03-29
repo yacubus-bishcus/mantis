@@ -30,7 +30,6 @@
 #include "StackingAction.hh"
 #include "EventAction.hh"
 #include "HistoManager.hh"
-#include "ChopperSetup.hh"
 #include "G4Types.hh"
 
 extern G4bool debug;
@@ -49,7 +48,6 @@ void ActionInitialization::Build() const
     if(debug)
         std::cout << "ActionInitialization::Build() -> Begin!" << std::endl;
 
-    ChopperSetup* chopper = new ChopperSetup();
     HistoManager* histo = new HistoManager();
     PrimaryGeneratorAction* pga = new PrimaryGeneratorAction();
     SetUserAction(pga);

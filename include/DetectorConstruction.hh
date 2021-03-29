@@ -72,7 +72,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 {
 
 public:
-DetectorConstruction();
+DetectorConstruction(ChopperSetup*);
 virtual ~DetectorConstruction();
 
 
@@ -213,6 +213,8 @@ private:
 void DefDetPositionConstraintLeft(double, double, double, double);
 void DefDetPositionConstraintRight(double, double, double, double);
 void DefDetPositionConstraintUpper(double, double, double);
+// Chopper
+ChopperSetup* chop;
 // Brem Properties
 G4double linac_size = 9*cm;
 

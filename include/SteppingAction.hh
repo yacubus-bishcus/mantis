@@ -67,34 +67,14 @@ virtual void UserSteppingAction(const G4Step*);
 
 public: // for now set to public until I can figure out how to work with protected
 
-void SetChopperIncDataFlag(G4int val)
-{
-  drawChopperIncDataFlag = val;
-}
-void SetChopperOutDataFlag(G4int val)
-{
-  drawChopperOutDataFlag = val;
-}
-void SetNRFDataFlag(G4int val)
-{
-  drawNRFDataFlag = val;
-}
-void SetIntObjDataFlag(G4int val)
-{
-  drawIntObjDataFlag = val;
-}
-void SetWaterIncDataFlag(G4int val)
-{
-  drawWaterIncDataFlag = val;
-}
-void SetCherenkovDataFlag(G4int val)
-{
-  drawCherenkovDataFlag = val;
-}
-void SetDetDataFlag(G4int val)
-{
-  drawDetDataFlag = val;
-}
+void SetChopperIncDataFlag(G4int val){drawChopperIncDataFlag = val;}
+void SetChopperOutDataFlag(G4int val){drawChopperOutDataFlag = val;}
+void SetNRFDataFlag(G4int val){drawNRFDataFlag = val;}
+void SetIntObjInDataFlag(G4int val){drawIntObjInDataFlag = val;}
+void SetIntObjOutDataFlag(G4int val){drawIntObjOutDataFlag = val;}
+void SetWaterIncDataFlag(G4int val){drawWaterIncDataFlag = val;}
+void SetCherenkovDataFlag(G4int val){drawCherenkovDataFlag = val;}
+void SetDetDataFlag(G4int val){drawDetDataFlag = val;}
 
 private:
 G4double weight;
@@ -103,7 +83,7 @@ RunAction* krun;
 EventAction* kevent;
 G4OpBoundaryProcessStatus fExpectedNextStatus;
 G4String procCount;
-G4int drawChopperIncDataFlag, drawChopperOutDataFlag, drawNRFDataFlag, drawIntObjDataFlag, drawWaterIncDataFlag, drawCherenkovDataFlag, drawDetDataFlag;
+G4int drawChopperIncDataFlag, drawChopperOutDataFlag, drawNRFDataFlag, drawIntObjInDataFlag, drawIntObjOutDataFlag, drawWaterIncDataFlag, drawCherenkovDataFlag, drawDetDataFlag;
 StepMessenger* stepM;
 };
 

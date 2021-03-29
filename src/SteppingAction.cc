@@ -31,7 +31,8 @@ extern G4bool addNRF;
 SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, EventAction* event)
         : G4UserSteppingAction(), kdet(det), krun(run), kevent(event),
         drawChopperIncDataFlag(0), drawChopperOutDataFlag(0), drawNRFDataFlag(0),
-        drawIntObjDataFlag(0), drawWaterIncDataFlag(0), drawCherenkovDataFlag(0), drawDetDataFlag(0),
+        drawIntObjInDataFlag(0), drawIntObjOutDataFlag(0), drawWaterIncDataFlag(0),
+        drawCherenkovDataFlag(0), drawDetDataFlag(0),
         stepM(NULL)
 {
         stepM = new StepMessenger(this);
@@ -238,36 +239,25 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 // *********************************************** Track Interrogation Object Interactions **************************************************** //
 
         // Interrogation Object Analysis
-        if(drawIntObjDataFlag && !bremTest)
+        if(!bremTest)
         {
-          // Incident Air Pocket Just Prior to Interrogation Object
-          //if(nextStep_VolumeName.compare(0,9,"AirPocket") == 0
-          //  && previousStep_VolumeName.compare(0,9,"AirPocket") !=0)
-          //{
-          //  manager->FillNtupleDColumn(4,0,energy);
-          //  manager->FillNtupleSColumn(4,1,CPName);
-          //  manager->FillNtupleDColumn(4,2,angle);
-          //  manager->FillNtupleDColumn(4,3,theTrack->GetGlobalTime());
-          //  manager->FillNtupleIColumn(4,4, eventID);
-          //  if(!inFile.compare(0,24,"brems_distributions.root"))
-          //    manager->FillNtupleDColumn(4,5,weight);
-          //  manager->AddNtupleRow(4);
-          //}
-
           // Incident Interrogation Object
-          if(nextStep_VolumeName.compare(0, 6,"IntObj") == 0
-             && previousStep_VolumeName.compare(0, 6, "IntObj") != 0)
+          if(drawIntObjInDataFlag)
           {
-              manager->FillNtupleIColumn(4,0,eventID);
-              manager->FillNtupleIColumn(4,1,trackID);
-              manager->FillNtupleDColumn(4,2, energy);
-              manager->FillNtupleSColumn(4,3, CPName);
-              manager->FillNtupleDColumn(4,4,theta);
-              manager->FillNtupleDColumn(4,5,phi);
-              manager->FillNtupleDColumn(4,6,theTrack->GetGlobalTime());
-              if(!inFile.compare(0,24,"brems_distributions.root"))
-                manager->FillNtupleDColumn(4,7, weight);
-              manager->AddNtupleRow(4);
+            if(nextStep_VolumeName.compare(0, 6,"IntObj") == 0
+               && previousStep_VolumeName.compare(0, 6, "IntObj") != 0)
+            {
+                manager->FillNtupleIColumn(4,0,eventID);
+                manager->FillNtupleIColumn(4,1,trackID);
+                manager->FillNtupleDColumn(4,2, energy);
+                manager->FillNtupleSColumn(4,3, CPName);
+                manager->FillNtupleDColumn(4,4,theta);
+                manager->FillNtupleDColumn(4,5,phi);
+                manager->FillNtupleDColumn(4,6,theTrack->GetGlobalTime());
+                if(!inFile.compare(0,24,"brems_distributions.root"))
+                  manager->FillNtupleDColumn(4,7, weight);
+                manager->AddNtupleRow(4);
+            }
           }
           // Exiting Interrogation Object
           if(nextStep_VolumeName.compare(0, 6,"IntObj") != 0
@@ -281,21 +271,24 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             }
             else
             {
-              manager->FillNtupleIColumn(5,0, eventID);
-              manager->FillNtupleIColumn(5,1, trackID);
-              manager->FillNtupleDColumn(5,2, energy);
-              manager->FillNtupleSColumn(5,3, CPName);
-              manager->FillNtupleDColumn(5,4, theta);
-              manager->FillNtupleDColumn(5,5, phi);
-              manager->FillNtupleDColumn(5,6, theTrack->GetGlobalTime());
+              if(drawIntObjOutDataFlag)
+              {
+                manager->FillNtupleIColumn(5,0, eventID);
+                manager->FillNtupleIColumn(5,1, trackID);
+                manager->FillNtupleDColumn(5,2, energy);
+                manager->FillNtupleSColumn(5,3, CPName);
+                manager->FillNtupleDColumn(5,4, theta);
+                manager->FillNtupleDColumn(5,5, phi);
+                manager->FillNtupleDColumn(5,6, theTrack->GetGlobalTime());
 
-              if(!inFile.compare(0,24,"brems_distributions.root"))
-                manager->FillNtupleDColumn(5,7, weight);
+                if(!inFile.compare(0,24,"brems_distributions.root"))
+                  manager->FillNtupleDColumn(5,7, weight);
 
-              manager->AddNtupleRow(5);
-            }
-          }
-        }
+                manager->AddNtupleRow(5);
+              }// end if drawIntObjOutDataFlag
+            }// end else
+          }// end if exiting Interrogation Object 
+        }// end if !bremTest
 
 // *********************************************** Track Water Tank Interactions **************************************************** //
 

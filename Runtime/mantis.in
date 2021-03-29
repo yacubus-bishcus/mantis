@@ -9,13 +9,13 @@
 /chopper/material Uranium
 # Chopper base material isotope abundance percentage REQUIRED for Uranium and Plutonium
 # U235/238 abundance if chopper On/off Pu239/240 if chopper On/Off
-/chopper/abundance 90
+/chopper/Abundance 90
 
 # Interrogation Object Inputs
 # Percentage of Fission isotope Input necessary for Uranium/Plutonium Only!
-/mytar/abundance 90
+/IntObj/abundance 90
 # Target options Uranium NaturalU Plutonium NaturalPu Lead Steel Plastic
-/mytar/target Uranium
+/IntObj/Material Uranium
 
 /control/verbose 0
 /tracking/verbose 0
@@ -47,11 +47,11 @@
 /chopper/distance 2
 
 # CONTAINER OPTIONS
-#/removebuild/Geometry Container
+#/Container/Remove true
 
 # INTERROGATION TARGET OPTIONS
 # units cm Default set to 4.5cm
-#/mytar/IntObjRad
+#/IntObj/Radius
 
 #################################################################################################
 # DETECTOR OPTIONS

@@ -110,6 +110,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     }
 
     G4int eventID = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
+    G4int trackID = theTrack->GetTrackID();
     G4double energy = theTrack->GetKineticEnergy()/(MeV);
 // ************************************************* Checks and Cuts Complete ************************************************** //
 
@@ -258,13 +259,14 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
              && previousStep_VolumeName.compare(0, 6, "IntObj") != 0)
           {
               manager->FillNtupleIColumn(4,0,eventID);
-              manager->FillNtupleDColumn(4,1, energy);
-              manager->FillNtupleSColumn(4,2, CPName);
-              manager->FillNtupleDColumn(4,3,theta);
-              manager->FillNtupleDColumn(4,4,phi);
-              manager->FillNtupleDColumn(4,5,theTrack->GetGlobalTime());
+              manager->FillNtupleIColumn(4,1,trackID);
+              manager->FillNtupleDColumn(4,2, energy);
+              manager->FillNtupleSColumn(4,3, CPName);
+              manager->FillNtupleDColumn(4,4,theta);
+              manager->FillNtupleDColumn(4,5,phi);
+              manager->FillNtupleDColumn(4,6,theTrack->GetGlobalTime());
               if(!inFile.compare(0,24,"brems_distributions.root"))
-                manager->FillNtupleDColumn(4,6, weight);
+                manager->FillNtupleDColumn(4,7, weight);
               manager->AddNtupleRow(4);
           }
           // Exiting Interrogation Object
@@ -280,14 +282,15 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             else
             {
               manager->FillNtupleIColumn(5,0, eventID);
-              manager->FillNtupleDColumn(5,1, energy);
-              manager->FillNtupleSColumn(5,2, CPName);
-              manager->FillNtupleDColumn(5,3, theta);
-              manager->FillNtupleDColumn(5,4, phi);
-              manager->FillNtupleDColumn(5,5, theTrack->GetGlobalTime());
+              manager->FillNtupleIColumn(5,1, trackID);
+              manager->FillNtupleDColumn(5,2, energy);
+              manager->FillNtupleSColumn(5,3, CPName);
+              manager->FillNtupleDColumn(5,4, theta);
+              manager->FillNtupleDColumn(5,5, phi);
+              manager->FillNtupleDColumn(5,6, theTrack->GetGlobalTime());
 
               if(!inFile.compare(0,24,"brems_distributions.root"))
-                manager->FillNtupleDColumn(5,6, weight);
+                manager->FillNtupleDColumn(5,7, weight);
 
               manager->AddNtupleRow(5);
             }
@@ -305,7 +308,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
              && previousStep_VolumeName.compare(0, 5, "Water") != 0)
           {
             manager->FillNtupleIColumn(6,0, eventID);
-            manager->FillNtupleIColumn(6,1, theTrack->GetTrackID());
+            manager->FillNtupleIColumn(6,1, trackID);
             manager->FillNtupleDColumn(6,2, energy);
             manager->FillNtupleSColumn(6,3, CPName);
             if(!inFile.compare(0,24,"brems_distributions.root"))

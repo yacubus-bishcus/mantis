@@ -104,6 +104,7 @@ void HistoManager::Book()
     // Create ID 4 NTuple for Incident Interrogation Object Information
     manager->CreateNtuple("IntObjIn","Incident Interrogation Object Data");
     manager->CreateNtupleIColumn("EventID");
+    manager->CreateNtupleIColumn("TrackID");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleSColumn("CreatorProcess");
     manager->CreateNtupleDColumn("Theta");
@@ -116,6 +117,7 @@ void HistoManager::Book()
     // Create ID 5 Ntuple for IntObj Emission Data
     manager->CreateNtuple("IntObjOut","Interrogation Object Emission Data");
     manager->CreateNtupleIColumn("EventID");
+    manager->CreateNtupleIColumn("TrackID");
     manager->CreateNtupleDColumn("Energy");
     manager->CreateNtupleSColumn("CreatorProcess");
     manager->CreateNtupleDColumn("Theta");

@@ -2921,8 +2921,8 @@ void MantisROOT::CreateDetEfficiencyCurve(std::vector<double> x, std::vector<dou
   gDete->Draw("AC");
   c1->Update();
   double xmin = energies[0];
-  double xmax = c3->GetFrame()->GetX2();
-  double ypos = c3->GetFrame()->GetY2();
+  double xmax = c1->GetFrame()->GetX2();
+  double ypos = c1->GetFrame()->GetY2();
   TGaxis* axis1 = new TGaxis(xmax, ypos, xmin, ypos, "f2", 510, "+L");
   axis1->SetName("axis1");
   axis1->SetTitle("Wavelength [nm]");

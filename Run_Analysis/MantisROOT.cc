@@ -2907,8 +2907,11 @@ void MantisROOT::CreateDetEfficiencyCurve(std::vector<double> x, std::vector<dou
   }
 
   std::cout << "Energy Range: " << energies[0] << " - " << energies[n-1] << std::endl;
-  TF1* f1 = new TF1("f1","(6.62607004e-34*299792458/(x*1.60218e-19))*1e9",energies[0],energies[n-1]);
-  TF1* f2 = new TF1("f2","x",wavelengths[0],wavelengths[n-1]);
+
+  TF1* f1 = new TF1("f1","(6.62607004e-34*299792458/(x/1e9))/1.60218e-19",wavelengths[0],wavelengths[n-1]);
+  TCanvas* c2 = new TCanvas("c2","Input",900,700);
+  c2->cd();
+  f1->Draw();
   string title = DetType + " Quantum Efficiency";
 
   TGraph* gDete = new TGraph(n, &energies[0], &eff[0]);
@@ -2923,7 +2926,7 @@ void MantisROOT::CreateDetEfficiencyCurve(std::vector<double> x, std::vector<dou
   double xmin = energies[0];
   double xmax = c1->GetFrame()->GetX2();
   double ypos = c1->GetFrame()->GetY2();
-  TGaxis* axis1 = new TGaxis(xmax, ypos, xmin, ypos, "f2", 510, "+L");
+  TGaxis* axis1 = new TGaxis(xmin, ypos, xmax, ypos, "f1", 510, "-L");
   axis1->SetName("axis1");
   axis1->SetTitle("Wavelength [nm]");
   axis1->SetTitleOffset(-1.1);
@@ -2931,7 +2934,7 @@ void MantisROOT::CreateDetEfficiencyCurve(std::vector<double> x, std::vector<dou
   axis1->SetLabelFont(42);
   axis1->SetLabelSize(0.03);
   axis1->SetTitleSize(0.03);
-  axis1->SetLabelOffset(0.03);
+  //axis1->SetLabelOffset(0.03);
   axis1->SetTitleColor(kRed);
   axis1->SetLineColor(kRed);
   axis1->SetLabelColor(kRed);

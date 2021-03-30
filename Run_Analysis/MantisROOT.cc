@@ -2771,6 +2771,9 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
       det_weightsv.push_back(det_weights[i]);
   }
 
+  intObj_eventsv.erase(unique(intObj_eventsv.begin(),intObj_eventsv.end()),intObj_eventsv.end());
+  std::cout << "MantisROOT::CheckDet -> IntObj Event Vector Size: " << intObj_eventsv.size() << std::endl;
+  
   std::vector<int> final_det_eventsv;
   std::vector<double> final_det_energiesv, final_det_weightsv;
   std::vector<int> errorneous_det_eventsv;

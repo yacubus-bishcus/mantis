@@ -57,6 +57,10 @@ public:
     void CheckDet(const char*, bool weighted=false, int estimate=-1);
     void CreateScintillationDistribution(std::vector<double>, std::vector<double>);
     void CreateScintillationDistribution();
+    void CreateDetEfficiencyCurve(std::vector<double>, std::vector<double>, string);
+    void CreateDetEfficiencyCurve(string);
+    double Energy2Wave(double, string unit="eV");
+    double Wave2Energy(double, string unit="m");
 
   public:
     static MantisROOT *instance;
@@ -133,6 +137,15 @@ public:
     void Show_CreateTKDE_Description();
     void Show_CreateScintillationDistribution();
     void Show_CreateScintillationDistribution_Description();
+    void Show_CreateDetEfficiencyCurve();
+    void Show_CreateDetEfficiencyCurve_Description();
+    void Show_Energy2Wave();
+    void Show_Energy2Wave_Description();
+    void Show_Wave2Energy();
+    void Show_Wave2Energy_Description();
+
+    double hc = 6.62607004e-34*299792458;
+
 };
 
 MantisROOT *MantisROOT::instance = 0;
@@ -201,16 +214,24 @@ void MantisROOT::Help()
   Show_CopyTrees_Description();
   std::cout << std::endl;
 
+  Show_CreateDetEfficiencyCurve();
+  Show_CreateDetEfficiencyCurve_Description();
+  std::cout << std::endl;
+
   Show_CreateScintillationDistribution();
   Show_CreateScintillationDistribution_Description();
-  std::cout << std::endl << std::endl;
+  std::cout << std::endl;
 
   Show_CreateTKDE();
   Show_CreateTKDE_Description();
-  std::cout << std::endl << std::endl;
+  std::cout << std::endl;
+
+  Show_Energy2Wave();
+  Show_Energy2Wave_Description();
+  std::cout << std::endl;
 
   Show_GetInstance();
-  std::cout << std::endl << std::endl;
+  std::cout << std::endl;
 
   Show_Help();
   Show_Help_Description();
@@ -246,6 +267,10 @@ void MantisROOT::Help()
 
   Show_VarRebin();
   Show_VarRebin_Description();
+  std::cout << std::endl;
+
+  Show_Wave2Energy();
+  Show_Wave2Energy_Description();
   std::cout << std::endl;
 
   Show_ZScore();
@@ -925,8 +950,10 @@ void MantisROOT::Show(string name="All", bool description=false)
     Show_CheckIntObj();
     Show_CombineFiles();
     Show_CopyTrees();
+    Show_CreateDetEfficiencyCurve();
     Show_CreateScintillationDistribution();
     Show_CreateTKDE();
+    Show_Energy2Wave();
     Show_Help();
     Show_Integral();
     Show_OpenFile();
@@ -937,6 +964,7 @@ void MantisROOT::Show(string name="All", bool description=false)
     Show_Sig2Noise();
     Show_SimpleSampling();
     Show_VarRebin();
+    Show_Wave2Energy();
     Show_ZScore();
   }
   else if(!name.compare("Help"))
@@ -975,6 +1003,12 @@ void MantisROOT::Show(string name="All", bool description=false)
     if(description)
       Show_CombineFiles_Description();
   }
+  else if(!name.compare("CreateDetEfficiencyCurve"))
+  {
+    Show_CreateDetEfficiencyCurve();
+    if(description)
+      Show_CreateDetEfficiencyCurve_Description();
+  }
   else if(!name.compare("CreateTKDE"))
   {
     Show_CreateTKDE();
@@ -986,6 +1020,18 @@ void MantisROOT::Show(string name="All", bool description=false)
     Show_CreateScintillationDistribution();
     if(description)
       Show_CreateScintillationDistribution_Description();
+  }
+  else if(!name.compare("Energy2Wave"))
+  {
+    Show_Energy2Wave();
+    if(description)
+      Show_Energy2Wave_Description();
+  }
+  else if(!name.compare("Wave2Energy"))
+  {
+    Show_Wave2Energy();
+    if(description)
+      Show_Wave2Energy_Description();
   }
   else if(!name.compare("Sig2Noise"))
   {
@@ -2812,21 +2858,27 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
 
   std::cout <<"MantisROOT::CheckDet -> Complete." << std::endl;
 
-  //return Corrected_DetInfo;
-
 } // end of CheckDet Function
 
-void MantisROOT::CreateScintillationDistribution(std::vector<double> energies, std::vector<double> crossX)
+void MantisROOT::CreateScintillationDistribution(std::vector<double> x, std::vector<double> y)
 {
-  TGraph* gScint = new TGraph(&energies[0], &crossX[0]);
+  std::vector<double> energies, crossX;
+  int n = x.size();
+  for(int i=0;i<n;++i)
+  {
+    energies.push_back(x[i]);
+    crossX.push_back(y[i]);
+  }
+
+  TGraph* gScint = new TGraph(n, &energies[0], &crossX[0]);
   gScint->GetXaxis()->SetTitle("Energy [eV]");
   gScint->GetYaxis()->SetTitle("Cross Section");
   gScint->SetTitle("Scintillation in Water Emission Distribution");
 
-  TCanvas *c1 = new TCanvas()
+  TCanvas *c1 = new TCanvas();
   c1->cd();
 
-  gScint->Draw();
+  gScint->Draw("AC");
   std::cout << "MantisROOT::CreateScintillationDistribution -> Scintillation Distribution Drawn." << std::endl;
 }
 
@@ -2841,9 +2893,116 @@ void MantisROOT::CreateScintillationDistribution()
                                 0.5, 0.006, 0.001, 0.0001};
 
   CreateScintillationDistribution(energies, crossX);
+} // end of CreateScintillationDistribution Function
 
+void MantisROOT::CreateDetEfficiencyCurve(std::vector<double> x, std::vector<double> y, string DetType)
+{
+  std::vector<double> energies, wavelengths, eff;
+  int n = x.size();
+  for(int i=0;i<n;++i)
+  {
+    energies.push_back(x[i]);
+    wavelengths.push_back(Energy2Wave(x[i],"eV")*1e9); // units nm
+    eff.push_back(y[i]);
+  }
+
+  std::cout << "Energy Range: " << energies[0] << " - " << energies[n-1] << std::endl;
+  TF1* f1 = new TF1("f1","(6.62607004e-34*299792458/(x*1.60218e-19))*1e9",energies[0],energies[n-1]);
+  TF1* f2 = new TF1("f2","x",wavelengths[0],wavelengths[n-1]);
+  string title = DetType + " Quantum Efficiency";
+
+  TGraph* gDete = new TGraph(n, &energies[0], &eff[0]);
+  gDete->GetXaxis()->SetTitle("Energy [eV]");
+  gDete->GetYaxis()->SetTitle("Efficiency [%]");
+  gDete->SetTitle(title.c_str());
+
+  TCanvas* c1 = new TCanvas("c1","Efficiencies",900,700);
+  c1->cd();
+  gDete->Draw("AC");
+  c1->Update();
+  double xmin = energies[0];
+  double xmax = c3->GetFrame()->GetX2();
+  double ypos = c3->GetFrame()->GetY2();
+  TGaxis* axis1 = new TGaxis(xmax, ypos, xmin, ypos, "f2", 510, "+L");
+  axis1->SetName("axis1");
+  axis1->SetTitle("Wavelength [nm]");
+  axis1->SetTitleOffset(-1.1);
+  axis1->CenterTitle(kTRUE);
+  axis1->SetLabelFont(42);
+  axis1->SetLabelSize(0.03);
+  axis1->SetTitleSize(0.03);
+  axis1->SetLabelOffset(0.03);
+  axis1->SetTitleColor(kRed);
+  axis1->SetLineColor(kRed);
+  axis1->SetLabelColor(kRed);
+  axis1->Draw("same");
+  axis1->Print();
+
+  std::cout << "MantisROOT::CreateDetEfficiencyCurve -> Efficiencies Drawn." << std::endl;
 }
 
+void MantisROOT::CreateDetEfficiencyCurve(string DetType)
+{
+  std::vector<double> energies = {1.7711, 1.9074, 2.0663, 2.2542, 2.4796,
+                                  2.7551, 3.0995, 3.5423, 4.133, 4.428, 4.959, 6.199};
+
+  std::vector<double> GaAsP_eff = {0.25,36.246,39.8,40.0,36.0,30.0,
+                                  24.0, 15.0,4.8, 0.6, 0.25, 0.10};
+
+  std::vector<double> Bi_eff = {0.015, 0.2, 3.0, 7.0, 18.5, 25.0,
+                                28.0, 26.0, 6.0, 0.19, 0.1, 0.01};
+
+  if(!DetType.compare("GaAsP"))
+    CreateDetEfficiencyCurve(energies, GaAsP_eff, DetType);
+  else if(!DetType.compare("Bialkali"))
+    CreateDetEfficiencyCurve(energies, Bi_eff, DetType);
+  else
+  {
+    std::cout << "MantisROOT::CreateDetEfficiencyCurve -> ERROR Det Type must either be GaAsP or Bialkali" << std::endl;
+    return;
+  }
+
+  std::cout << "MantisROOT::CreateDetEfficiencyCurve -> Complete." << std::endl;
+}
+
+double MantisROOT::Energy2Wave(double energy, string unit="eV")
+{
+  if(!unit.compare("MeV"))
+    energy = energy*1e6;
+  else if(!unit.compare("keV"))
+    energy = energy*1e3;
+  else if(!unit.compare("eV"))
+    energy = energy;
+  else if(!unit.compare("J"))
+    energy = energy/1.60218e-19;
+  else
+  {
+    std::cout << "MantisROOT::Energy2Wave -> ERROR Unit not found." << std::endl;
+    return -1;
+  }
+
+  energy = energy*1.60218e-19; // conversion to joule
+  return hc/energy; // units m
+}
+
+double MantisROOT::Wave2Energy(double wavelength, string unit="m")
+{
+  if(!unit.compare("nm"))
+    wavelength = wavelength/1e9;
+  else if(!unit.compare("mm"))
+    wavelength = wavelength/1e3;
+  else if(!unit.compare("m"))
+    wavelength = wavelength;
+  else if(!unit.compare("km"))
+    wavelength = wavelength*1e3;
+  else
+  {
+    std::cout << "MantisROOT::Wave2Energy -> ERROR Unit not found." << std::endl;
+    return -1;
+  }
+  double energy = hc/wavelength;
+  return energy/1.60218e-19; // unit eV
+}
 
 //******************************************************************************//
 //******************************************************************************//
@@ -3079,7 +3238,7 @@ void MantisROOT::Show_CreateTKDE_Description()
 
 void MantisROOT::Show_CreateScintillationDistribution()
 {
-  std::cout << "void CreateScintillationDistribution(vector<double>, vector<double>)"
+  std::cout << "void CreateScintillationDistribution(vector<double> energies, vector<double> crossX)"
   << std::endl << "void CreateScintillationDistribution()" << std::endl;
 }
 
@@ -3087,6 +3246,43 @@ void MantisROOT::Show_CreateScintillationDistribution_Description()
 {
   std::cout << "DESCRIPTION: " << std::endl << "Creates a TGraph of the users scintillation distribution."
   << std::endl << "IF function called void of inputs the default values are plotted." << std::endl;
+}
+
+void MantisROOT::Show_CreateDetEfficiencyCurve()
+{
+  std::cout << "void CreateDetEfficiencyCurve(vector<double>, energies vector<double> efficiencies, string PCName)"
+  << std::endl << "void CreateDetEfficiencyCurve(string PCType)" << std::endl;
+}
+
+void MantisROOT::Show_CreateDetEfficiencyCurve_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Creates TGraph of the users Photocathode Quantum Efficiency."
+  << std::endl << "The PC Type can be set as either GaAsP or Bialkali." << std::endl
+  << "IF the user inputs their own energies/efficiencies the PCName is written to the title of the output canvas."
+  << std::endl;
+}
+
+void MantisROOT::Show_Energy2Wave()
+{
+  std::cout << "double Energy2Wave(double energy, string unit=\"eV\")" << std::endl;
+}
+
+void MantisROOT::Show_Energy2Wave_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Returns wavelength unit meters from energy unit eV."
+  << std::endl << "Unit options eV keV MeV J" << std::endl;
+}
+
+void MantisROOT::Show_Wave2Energy()
+{
+  std::cout << "double Wave2Energy(double wavelength, string unit=\"m\")"
+  << std::endl;
+}
+
+void MantisROOT::Show_Wave2Energy_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Returns energy unit eV from wavelength unit meters."
+  << std::endl << "Unit options nm mm m km" << std::endl;
 }
 
 void MantisROOT::Show_GetInstance()

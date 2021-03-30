@@ -55,6 +55,8 @@ public:
     void CheckAngles(const char*, int estimate=-1);
     TGraph* CreateTKDE(const char*, int nentries=10000);
     void CheckDet(const char*, bool weighted=false, int estimate=-1);
+    void CreateScintillationDistribution(std::vector<double>, std::vector<double>);
+    void CreateScintillationDistribution();
 
   public:
     static MantisROOT *instance;
@@ -129,6 +131,8 @@ public:
     void Show_CheckAngles_Description();
     void Show_CreateTKDE();
     void Show_CreateTKDE_Description();
+    void Show_CreateScintillationDistribution();
+    void Show_CreateScintillationDistribution_Description();
 };
 
 MantisROOT *MantisROOT::instance = 0;
@@ -196,6 +200,10 @@ void MantisROOT::Help()
   Show_CopyTrees();
   Show_CopyTrees_Description();
   std::cout << std::endl;
+
+  Show_CreateScintillationDistribution();
+  Show_CreateScintillationDistribution_Description();
+  std::cout << std::endl << std::endl;
 
   Show_CreateTKDE();
   Show_CreateTKDE_Description();
@@ -917,6 +925,7 @@ void MantisROOT::Show(string name="All", bool description=false)
     Show_CheckIntObj();
     Show_CombineFiles();
     Show_CopyTrees();
+    Show_CreateScintillationDistribution();
     Show_CreateTKDE();
     Show_Help();
     Show_Integral();
@@ -971,6 +980,12 @@ void MantisROOT::Show(string name="All", bool description=false)
     Show_CreateTKDE();
     if(description)
       Show_CreateTKDE_Description();
+  }
+  else if(!name.compare("CreateScintillationDistribution"))
+  {
+    Show_CreateScintillationDistribution();
+    if(description)
+      Show_CreateScintillationDistribution_Description();
   }
   else if(!name.compare("Sig2Noise"))
   {
@@ -2800,6 +2815,36 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
   //return Corrected_DetInfo;
 
 } // end of CheckDet Function
+
+void MantisROOT::CreateScintillationDistribution(std::vector<double> energies, std::vector<double> crossX)
+{
+  TGraph* gScint = new TGraph(&energies[0], &crossX[0]);
+  gScint->GetXaxis()->SetTitle("Energy [eV]");
+  gScint->GetYaxis()->SetTitle("Cross Section");
+  gScint->SetTitle("Scintillation in Water Emission Distribution");
+
+  TCanvas *c1 = new TCanvas()
+  c1->cd();
+
+  gScint->Draw();
+  std::cout << "MantisROOT::CreateScintillationDistribution -> Scintillation Distribution Drawn." << std::endl;
+}
+
+void MantisROOT::CreateScintillationDistribution()
+{
+  std::cout << "MantisROOT::CreateScintillationDistribution -> Using Default values..." << std::endl;
+  std::vector<double> energies = {1.90744, 2.0664, 2.25425, 2.4796, 2.75520,
+                                  3.0996, 3.44400, 3.542405, 3.64659, 4.132806,
+                                  4.95936};
+
+  std::vector<double> crossX = {0.007, 0.016, 0.028, 0.045, 0.25, 0.5, 0.95,
+                                0.5, 0.006, 0.001, 0.0001};
+
+  CreateScintillationDistribution(energies, crossX);
+
+}
+
+
 //******************************************************************************//
 //******************************************************************************//
 //******************************************************************************//
@@ -3030,6 +3075,18 @@ void MantisROOT::Show_CreateTKDE()
 void MantisROOT::Show_CreateTKDE_Description()
 {
   std::cout << "DESCRIPTION: " << std::endl << "Creates TKDE for Bremsstrahlung Input with given number of entries." << std::endl;
+}
+
+void MantisROOT::Show_CreateScintillationDistribution()
+{
+  std::cout << "void CreateScintillationDistribution(vector<double>, vector<double>)"
+  << std::endl << "void CreateScintillationDistribution()" << std::endl;
+}
+
+void MantisROOT::Show_CreateScintillationDistribution_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Creates a TGraph of the users scintillation distribution."
+  << std::endl << "IF function called void of inputs the default values are plotted." << std::endl;
 }
 
 void MantisROOT::Show_GetInstance()

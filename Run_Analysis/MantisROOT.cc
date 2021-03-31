@@ -61,7 +61,9 @@ public:
     void CreateDetEfficiencyCurve(string);
     double Energy2Wave(double, string unit="eV");
     double Wave2Energy(double, string unit="m");
+    void PrepareAnalysis(std::vector<string>, bool weighted=false);
 
+private:
     // Zip tuple
 
     template<typename A, typename B, typename C>
@@ -85,6 +87,7 @@ public:
         c[i] = std::get<2>(zipped[i]);
       }
     }
+
 
     // Zip Pair
 
@@ -190,6 +193,8 @@ public:
     void Show_Energy2Wave_Description();
     void Show_Wave2Energy();
     void Show_Wave2Energy_Description();
+    void Show_PrepareAnalysis();
+    void Show_PrepareAnalysis_Description();
 
     double hc = 6.62607004e-34*299792458;
 
@@ -294,6 +299,10 @@ void MantisROOT::Help()
 
   Show_PredictThickness();
   Show_PredictThickness_Description();
+  std::cout << std::endl;
+
+  Show_PrepareAnalysis();
+  Show_PrepareAnalysis_Description();
   std::cout << std::endl;
 
   Show_RebinHisto();
@@ -1005,6 +1014,7 @@ void MantisROOT::Show(string name="All", bool description=false)
     Show_Integral();
     Show_OpenFile();
     Show_PredictThickness();
+    Show_PrepareAnalysis();
     Show_RebinHisto();
     Show_Sampling();
     Show_Show();
@@ -1103,6 +1113,12 @@ void MantisROOT::Show(string name="All", bool description=false)
     Show_PredictThickness();
     if(description)
       Show_PredictThickness_Description();
+  }
+  else if(!name.compare("PrepareAnalysis"))
+  {
+    Show_PrepareAnalysis();
+    if(description)
+      Show_PrepareAnalysis_Description();
   }
   else if(!name.compare("RebinHisto"))
   {
@@ -3124,6 +3140,61 @@ double MantisROOT::Wave2Energy(double wavelength, string unit="m")
   return energy/1.60218e-19; // unit eV
 }
 
+void MantisROOT::PrepareAnalysis(std::vector<string> filebases, bool weighted=false)
+{
+  for(int i=0;i<filebases.size();++i)
+  {
+    string fileOn = filebases[i] + "On-merged.root";
+    string fileOff = filebases[i] + "Off-merged.root";
+    string fileOnc = "Corrected_DetInfo_" + fileOn;
+    string fileOffc = "Corrected_DetInfo_" + fileOff;
+
+    std::cout << "MantisROOT::PrepareAnalysis -> Checking Detected Events..." << std::endl;
+
+    CheckDet(fileOn.c_str(),weighted);
+    CheckDet(fileOff.c_str(),weighted);
+
+    std::cout << "MantisROOT::PrepareAnalysis -> Copying Corrected DetInfo..." << std::endl;
+
+    if(weighted)
+    {
+      CopyTrees(fileOnc.c_str(), {"Weight","Corrected_DetInfo","Erroneous_DetInfo"}, fileOn.c_str());
+      CopyTrees(fileOffc.c_str(), {"Weight","Corrected_DetInfo","Erroneous_DetInfo"}, fileOff.c_str());
+    }
+    else
+    {
+      CopyTrees(fileOnc.c_str(), {"Corrected_DetInfo","Erroneous_DetInfo"}, fileOn.c_str());
+      CopyTrees(fileOffc.c_str(), {"Corrected_DetInfo","Erroneous_DetInfo"}, fileOff.c_str());
+    }
+
+    std::cout << "MantisROOT::PrepareAnalysis -> Checking NRF Events Detected..." << std::endl;
+
+    CheckEvents(fileOn.c_str(),weighted, true);
+    CheckEvents(fileOff.c_str(),weighted, true);
+
+    string fileOnce = "w_events_" + fileOn;
+    string fileOffce = "w_events_" + fileOff;
+
+    std::cout << "MantisROOT::PrepareAnalysis -> Copying NRF Events Detected..." << std::endl;
+
+    if(weighted)
+    {
+      CopyTrees(fileOnce.c_str(), {"Weight","event_tree"}, fileOn.c_str());
+      CopyTrees(fileOffce.c_str(), {"Weight","event_tree"}, fileOff.c_str());
+    }
+    else
+    {
+      CopyTrees(fileOnce.c_str(), {"event_tree"}, fileOn.c_str());
+      CopyTrees(fileOffce.c_str(), {"event_tree"}, fileOff.c_str());
+    }
+
+    std::cout << "MantisROOT::PrepareAnalysis -> " << filebases[i] << " Complete." << std::endl;
+
+  } // end for loop
+
+  std::cout << "MantisROOT::PrepareAnalysis -> Complete." << std::endl;
+} // end PrepareAnalysis
+
 //******************************************************************************//
 //******************************************************************************//
 //******************************************************************************//
@@ -3403,6 +3474,20 @@ void MantisROOT::Show_Wave2Energy_Description()
 {
   std::cout << "DESCRIPTION: " << std::endl << "Returns energy unit eV from wavelength unit meters."
   << std::endl << "Unit options nm mm m km" << std::endl;
+}
+
+void MantisROOT::Show_PrepareAnalysis()
+{
+  std::cout << "void PrepareAnalysis(vector<string> filebases, bool weighted=false)" << std::endl;
+}
+
+void MantisROOT::Show_PrepareAnalysis_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Prepares files from users filebases vector. If the files have weighted information set the second input to true"
+  << std::endl << "Example: mantis->PrepareAnalysis({\"test9\",\"test10\"},true)" << std::endl
+  << "Would run CheckDet, CheckEvent and CopyTrees on weighted spectra in files "
+  << std::endl << "test9On-merged.root, test9Off-merged.root, test10On-merged.root and test10Off-merged.root"
+  << std::endl;
 }
 
 void MantisROOT::Show_GetInstance()

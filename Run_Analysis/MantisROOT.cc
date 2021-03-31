@@ -62,6 +62,53 @@ public:
     double Energy2Wave(double, string unit="eV");
     double Wave2Energy(double, string unit="m");
 
+    // Zip tuple
+
+    template<typename A, typename B, typename C>
+    void zip(const std::vector<A> &a, const std::vector<B> &b, const std::vector<C> &c,
+              std::vector<std::tuple<A,B,C>> &zipped)
+    {
+      for(size_t i=0;i<a.size();++i)
+      {
+        zipped.push_back(std::make_tuple(a[i],b[i],c[i]));
+      }
+    }
+
+    template<typename A, typename B, typename C>
+    void unzip(const std::vector<std::tuple<A,B,C>> &zipped,
+                std::vector<A> &a, std::vector<B> &b, std::vector<C> &c)
+    {
+      for(size_t i=0;i<a.size();++i)
+      {
+        a[i] = std::get<0>(zipped[i]);
+        b[i] = std::get<1>(zipped[i]);
+        c[i] = std::get<2>(zipped[i]);
+      }
+    }
+
+    // Zip Pair
+
+    template<typename A, typename B>
+    void zip(const std::vector<A> &a, const std::vector<B> &b,
+              std::vector<std::pair<A,B>> &zipped)
+    {
+      for(size_t i=0;i<a.size();++i)
+      {
+        zipped.push_back(std::make_pair(a[i],b[i]));
+      }
+    }
+
+    template<typename A, typename B>
+    void unzip(const std::vector<std::pair<A,B>> &zipped,
+                std::vector<A> &a, std::vector<B> &b)
+    {
+      for(size_t i=0;i<a.size();++i)
+      {
+        a[i] = zipped[i].first;
+        b[i] = zipped[i].second;
+      }
+    }
+
   public:
     static MantisROOT *instance;
 
@@ -2783,18 +2830,41 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
   std::cout << "MantisROOT::CheckDet -> IntObj Event Vector Size: " << intObj_eventsv.size() << std::endl;
   std::cout << "MantisROOT::CheckDet -> DetInfo Event Vector Size: " << det_eventsv.size() << std::endl;
 
+  // Zipping Method sorting
+  std::vector<std::tuple<int,double,double>> zipped3;
+  std::vector<std::pair<int,double>> zipped2;
+  if(weighted)
+  {
+    zip(det_eventsv, det_energiesv, det_weightsv, zipped3);
+    std::sort(zipped3.begin(),zipped3.end());
+    unzip(zipped3, det_eventsv, det_energiesv, det_weightsv);
+  }
+  else
+  {
+    zip(det_eventsv, det_energiesv, zipped2);
+    std::sort(zipped2.begin(),zipped2.end());
+    unzip(zipped2, det_eventsv, det_energiesv);
+  }
+
   std::vector<int> final_det_eventsv;
   std::vector<double> final_det_energiesv, final_det_weightsv;
   std::vector<int> errorneous_det_eventsv;
   std::vector<double> errorneous_det_weightsv;
   int x=0;
+  int index = 0;
+  int tmp_index;
   // Now Complete check
-  for(int i=0;i<det_eventsv.size();++i)
+  while(index < det_eventsv.size())
   {
-    if(i % 100 == 0)
-      std::cout << "\r** Checking Entry: " << i << std::flush;
+    if(!debug)
+      std::cout << "\r** Checking Entry: " << index << std::flush;
+    else
+      std::cout << "Checking Entry: " << index << std::endl;
+
     // Grab Det EventID
-    x = det_eventsv[i];
+    x = det_eventsv[index];
+    if(debug)
+      std::cout << "X: " << x << std::endl;
     // Check if DetInfo EventID matches IntObjOut EventID
     auto exists = std::find(intObj_eventsv.begin(),intObj_eventsv.end(), x);
 
@@ -2802,18 +2872,50 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
     if(exists != intObj_eventsv.end())
     {
       final_det_eventsv.push_back(x);
-      final_det_energiesv.push_back(det_energiesv[i]);
+      final_det_energiesv.push_back(det_energiesv[index]);
+
       if(weighted)
-        final_det_weightsv.push_back(det_weightsv[i]);
-    }
+        final_det_weightsv.push_back(det_weightsv[index]);
+
+      int counter = 0;
+      while(counter >= 0)
+      {
+        counter++;
+        tmp_index = index + counter;
+        if(x == det_eventsv[index+counter])
+        {
+          final_det_eventsv.push_back(x);
+          final_det_energiesv.push_back(det_energiesv[index+counter]);
+
+          if(weighted)
+            final_det_weightsv.push_back(det_weightsv[index+counter]);
+
+        } // end of if(x == det_eventsv[index+counter])
+        else
+        {
+          index = tmp_index;
+          counter = -1;
+          if(debug)
+          {
+            //std::cout << "While Else Counter: " << counter << std::endl;
+            std::cout << "While Else Index: " << index << std::endl;
+          }
+        } // end of else
+      } // end of while counter > 0
+    } // end of if exists !=
     else
     {
       errorneous_det_eventsv.push_back(x);
-      if(weighted)
-        errorneous_det_weightsv.push_back(det_weightsv[i]);
-    }
 
-  }
+      if(weighted)
+        errorneous_det_weightsv.push_back(det_weightsv[index]);
+
+      index++;
+      if(debug)
+        std::cout << "Else Index: " << index << std::endl;
+    } // end of else
+
+  } // end of while index < det_eventsv.size()
 
   // Write vectors to new TTree
   string outfile = "Corrected_DetInfo_" + string(filename);

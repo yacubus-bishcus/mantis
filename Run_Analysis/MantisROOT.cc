@@ -1489,6 +1489,13 @@ void MantisROOT::CopyATreeNoWeight(const char* filename, const char* tObj, const
       oldTree->SetBranchStatus(activeBranchName,1);
     }
   }
+  else if(!string(tObj).compare("Erroneous_DetInfo"))
+  {
+    for(auto activeBranchName :{"EventID"})
+    {
+      oldTree->SetBranchStatus(activeBranchName,1);
+    }
+  }
   else
   {
     std::cerr << "ERROR: Object Name not found." << std::endl;

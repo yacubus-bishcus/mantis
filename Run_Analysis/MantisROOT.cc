@@ -38,7 +38,7 @@ public:
     void CombineFiles(std::vector<string>, std::vector<string>, const char*);
     void CopyTrees(const char*, std::vector<string>, const char*);
     void Sig2Noise(std::vector<string>, string, bool Weighted=false, bool Corrected=false, bool cut=false,TCut cut1="NA");
-    void ZScore(const char*, const char*, std::vector<string>);
+    void ZScore(const char*, const char*, std::vector<string>, bool weighted=false);
     void ZScore(double,double);
     void Integral(TTree*);
     void Integral(std::vector<TTree*>);
@@ -135,7 +135,7 @@ private:
     void hIntegral(const char*, const char*, TCut);
     void hIntegral(const char*);
     double ZTest(double, double);
-    void ZTest(const char*, const char*, const char*);
+    void ZTest(const char*, const char*, const char*, bool weighted=false);
     void Rebin(bool,const char*,const char*,const char*,int,double Emin=0.0,double Emax=2.1,TCut cut1="NA",bool VarArray=false,double nrf_bin_width=-1.,double non_nrf_bin_width=-1.);
     void Rebin(const char*, const char*, const char*);
     void Rescale(const char*, double);
@@ -799,7 +799,8 @@ void MantisROOT::CopyTrees(const char* filename, std::vector<string> noObjv, con
   std::vector<bool> dataList = {0,0,0,0,0,0,0,0,0,0,0,0,0};
   std::vector<string> optList = {"Weight","Brem","ChopIn","ChopOut","NRF","AirIn",
                                   "IntObjIn","IntObjOut","Water","Cherenkov",
-                                  "DetInfo","IncDetInfo", "Corrected_DetInfo", "Erroneous_DetInfo"};
+                                  "DetInfo","IncDetInfo", "Corrected_DetInfo", "Erroneous_DetInfo",
+                                  "event_tree"};
   // check which trees to copy
   for(int i=0;i<noObjv.size();++i)
   {
@@ -878,12 +879,12 @@ void MantisROOT::Sig2Noise(std::vector<string> filenames, string object, bool We
   std::cout << "MantisROOT::Sig2Noise -> Signal to Noise Ratio Analysis Complete." << std::endl;
 }
 
-void MantisROOT::ZScore(const char* file1, const char* file2, std::vector<string> objects)
+void MantisROOT::ZScore(const char* file1, const char* file2, std::vector<string> objects, bool weighted=false)
 {
   for(int i=0;i<objects.size();++i)
   {
     std::cout << std::endl << objects[i] << " ZScore Results: " << std::endl;
-    ZTest(file1, file2, objects[i].c_str());
+    ZTest(file1, file2, objects[i].c_str(), weighted);
   }
 
   std::cout << std::endl << "MantisROOT::ZScore -> Complete." << std::endl;
@@ -1496,6 +1497,13 @@ void MantisROOT::CopyATreeNoWeight(const char* filename, const char* tObj, const
       oldTree->SetBranchStatus(activeBranchName,1);
     }
   }
+  else if(!string(tObj).compare("event_tree"))
+  {
+    for(auto activeBranchName :{"EventID","Energy"})
+    {
+      oldTree->SetBranchStatus(activeBranchName,1);
+    }
+  }
   else
   {
     std::cerr << "ERROR: Object Name not found." << std::endl;
@@ -1540,7 +1548,7 @@ void MantisROOT::SNR_IntObj(const char* inFile, bool Weighted)
 
     TH1D* eT = new TH1D("eT","IntObjIn Histogram",100,0.0,inMax);
 
-    std::cout << "Drawing IntObjIn NRF Histograms..." << std::endl;
+    std::cout << "MantisROOT::SNR_IntObj -> Drawing IntObjIn NRF Histograms..." << std::endl;
     if(Weighted)
     {
       aIntObjIn->Draw("Energy>>e10","Weight","goff");
@@ -1593,41 +1601,36 @@ void MantisROOT::SNR_IntObj(const char* inFile, bool Weighted)
 
     for(int i=0;i<5;++i)
     {
-      std::cout << "IntObjIn " << eStart[i] << " MeV Signals: \t" << inSignal[i] << std::endl;
+      std::cout << "MantisROOT::SNR_IntObj -> IntObjIn " << eStart[i] << " MeV Signals: \t" << inSignal[i] << std::endl;
       tSignalin += inSignal[i];
     }
 
-    std::cout << "Total IntObjIn Signal: \t" << tSignalin << std::endl;
+    std::cout << "MantisROOT::SNR_IntObj -> Total IntObjIn Signal: \t" << tSignalin << std::endl;
 
     double inNoise = eT->Integral();
-    std::cout << "IntObjIn Noise: \t" << inNoise << std::endl;
+    std::cout << "MantisROOT::SNR_IntObj -> IntObjIn Noise: \t" << inNoise << std::endl;
 
-    std::cout << "The NRF photons are removed from the beam in the chopper wheel stage."
+    std::cout << "MantisROOT::SNR_IntObj -> The NRF photons are removed from the beam in the chopper wheel stage."
               << std::endl
               << "A lower SNR is better because you want the signal from NRF to be minimized."
               << std::endl;
-    std::cout << "IntObjIn SNR: \t" << tSignalin/sqrt(inNoise) << std::endl;
+    std::cout << "MantisROOT::SNR_IntObj -> IntObjIn SNR: \t" << tSignalin/sqrt(inNoise) << std::endl;
   }
   else
-    std::cerr << "ERROR IntObjIn Not Found in " << inFile << std::endl;
+    std::cerr << "MantisROOT::SNR_IntObj -> ERROR IntObjIn Not Found in " << inFile << std::endl;
 }// end of SNR function
 
 void MantisROOT::SNR_Det(const char* inFile, bool Weighted, bool Corrected, bool cut, TCut cut1="NA")
 {
   // Check to make sure file exists
   CheckFile(inFile);
-  string event_output_name = "w_events_" + string(inFile);
-  // check if event file already exists if not make one
-  if(gSystem->AccessPathName(event_output_name.c_str()))
-  {
-    CheckEvents(inFile, Weighted, Corrected);
-  }
 
-  // open events file
-  TFile *eventf = new TFile(event_output_name.c_str());
-  eventf->cd();
+  // Open the file
+  TFile *mainf = new TFile(inFile);
+  mainf->cd();
+
   TTree *eventT;
-  eventf->GetObject("event_tree",eventT);
+  mainf->GetObject("event_tree",eventT);
   double eventCounts, eventEnergy;
   if(!Weighted)
   {
@@ -1648,17 +1651,6 @@ void MantisROOT::SNR_Det(const char* inFile, bool Weighted, bool Corrected, bool
   std::cout << "MantisROOT::SNR_Det -> Detected Counts from NRF: " << eventCounts << std::endl;
   std::cout << "MantisROOT::SNR_Det -> Detected Energy from NRF: " << eventEnergy << " MeV" << std::endl;
 
-  if(debug)
-    std::cout << "MantisROOT::SNR_Det -> Closing Event File..." << std::endl;
-
-  eventf->Close();
-
-  if(debug)
-    std::cout << "MantisROOT::SNR_Det -> Event File Closed." << std::endl;
-
-  // Open the file
-  TFile *mainf = new TFile(inFile);
-  mainf->cd();
   TTree* detT;
 
   if(Corrected)
@@ -1700,7 +1692,7 @@ double MantisROOT::ZTest(double c1, double c2)
   return zscore;
 }
 
-void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
+void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj, bool weighted=false)
 {
   CheckFile(file1);
   CheckFile(file2);
@@ -1714,9 +1706,12 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
   TTree *inTree;
   f->GetObject(inObj, inTree);
   double c1,c11,c12,c13;
-  if(!string(inObj).compare("DetInfo"))
+  if(!string(inObj).compare("DetInfo") || !string(inObj).compare("Corrected_DetInfo"))
   {
-    TCut detCut = "Energy<5e-6";
+    if(weighted)
+      TCut detCut = "Weight";
+    else
+      TCut detCut = "Energy < 5e-6";
 
     if(debug)
       std::cout << "MantisROOT::ZTest -> Setting TCut for DetInfo: " << detCut << std::endl;
@@ -1740,10 +1735,20 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj)
   }
   else
   {
-    c1  = hIntegral(inTree,0);
-    c11 = hIntegral(inTree,1);
-    c12 = hIntegral(inTree,2);
-    c13 = hIntegral(inTree,3);
+    if(weighted)
+    {
+      c1  = hIntegral(inTree, 0, "Weight", 2.1);
+      c11 = hIntegral(inTree, 1, "Weight", 2.1);
+      c12 = hIntegral(inTree, 2, "Weight", 2.1);
+      c13 = hIntegral(inTree, 3, "Weight", 2.1);
+    }
+    else
+    {
+      c1  = hIntegral(inTree,0);
+      c11 = hIntegral(inTree,1);
+      c12 = hIntegral(inTree,2);
+      c13 = hIntegral(inTree,3);
+    }
   }
 
   delete inTree;
@@ -3195,6 +3200,13 @@ void MantisROOT::PrepareAnalysis(std::vector<string> filebases, bool weighted=fa
       CopyTrees(fileOffce.c_str(), {"event_tree"}, fileOff.c_str());
     }
 
+    std::cout << "MantisROOT::PrepareAnalysis -> Conducting SNR Analysis..." << std::endl;
+
+    Sig2Noise({fileOn.c_str(),fileOff.c_str()}, "Det", weighted, true, true, "Energy<5e-6");
+
+    std::cout << "MantisROOT::PrepareAnalysis -> Conducting ZScore Analysis..." << std::endl;
+    ZScore(fileOn.c_str(), fileOff.c_str(),{"DetInfo", "Corrected_DetInfo"});
+
     std::cout << "MantisROOT::PrepareAnalysis -> " << filebases[i] << " Complete." << std::endl;
 
   } // end for loop
@@ -3284,14 +3296,14 @@ void MantisROOT::Show_Sig2Noise_Description()
 
 void MantisROOT::Show_ZScore()
 {
-  std::cout << "void ZScore(const char* filename1, const char* filename2, std::vector<string> ObjectNames)" << std::endl;
+  std::cout << "void ZScore(const char* filename1, const char* filename2, std::vector<string> ObjectNames, bool weighted=false)" << std::endl;
   std::cout << "void ZScore(double c1, double c2)" << std::endl;
 }
 
 void MantisROOT::Show_ZScore_Description()
 {
-  std::cout << "Computes ZTest on input 1 filename and input 2 filename for the TTree object names in input 3 string vector."
-  << std::endl << "Example: mantis->ZScore(\"TestOn.root\", \"TestOff.root\", {\"IntObjIn\",\"DetInfo\"})" << std::endl;
+  std::cout << "Computes weighted ZTest on input 1 filename and input 2 filename for the TTree object names in input 3 string vector."
+  << std::endl << "Example: mantis->ZScore(\"TestOn.root\", \"TestOff.root\", {\"IntObjIn\",\"DetInfo\"}, true)" << std::endl;
 }
 void MantisROOT::Show_Integral()
 {

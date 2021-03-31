@@ -3205,7 +3205,7 @@ void MantisROOT::PrepareAnalysis(std::vector<string> filebases, bool weighted=fa
     Sig2Noise({fileOn.c_str(),fileOff.c_str()}, "Det", weighted, true, true, "Energy<5e-6");
 
     std::cout << "MantisROOT::PrepareAnalysis -> Conducting ZScore Analysis..." << std::endl;
-    ZScore(fileOn.c_str(), fileOff.c_str(),{"DetInfo", "Corrected_DetInfo"});
+    ZScore(fileOn.c_str(), fileOff.c_str(),{"DetInfo", "Corrected_DetInfo"}, weighted);
 
     std::cout << "MantisROOT::PrepareAnalysis -> " << filebases[i] << " Complete." << std::endl;
 

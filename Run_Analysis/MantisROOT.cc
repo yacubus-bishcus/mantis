@@ -2785,6 +2785,7 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
   std::vector<int> final_det_eventsv;
   std::vector<double> final_det_energiesv, final_det_weightsv;
   std::vector<int> errorneous_det_eventsv;
+  std::vector<double> errorneous_det_weightsv;
   int x=0;
   // Now Complete check
   for(int i=0;i<det_eventsv.size();++i)
@@ -2807,13 +2808,15 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
     else
     {
       errorneous_det_eventsv.push_back(x);
+      if(weighted)
+        errorneous_det_weightsv.push_back(det_weightsv[i]);
     }
 
   }
 
   std::cout << "MantisROOT::CheckDet -> Removing Duplicates and Sorting Erroneous DetInfo..." << std::endl;
-  std::sort(errorneous_det_eventsv.begin(),errorneous_det_eventsv.end());
-  errorneous_det_eventsv.erase(unique(errorneous_det_eventsv.begin(),errorneous_det_eventsv.end()),errorneous_det_eventsv.end());
+  //std::sort(errorneous_det_eventsv.begin(),errorneous_det_eventsv.end());
+  //errorneous_det_eventsv.erase(unique(errorneous_det_eventsv.begin(),errorneous_det_eventsv.end()),errorneous_det_eventsv.end());
   // Write vectors to new TTree
   string outfile = "Corrected_DetInfo_" + string(filename);
 
@@ -2849,20 +2852,23 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
   }
 
   int d;
-  TTree* Erroneous_DetInfo = new TTree("Erroneous_DetInfo","Erroneous Detector Information");
-  Erroneous_DetInfo->Branch("EventID",&d);
+  double e;
+  TTree* Errorneous_DetInfo = new TTree("Erroneous_DetInfo","Erroneous Detector Information");
+  Errorneous_DetInfo->Branch("EventID",&d);
+  Errorneous_DetInfo->Branch("Weight",&e);
 
   for(int i=0;i<errorneous_det_eventsv.size();++i)
   {
     d = errorneous_det_eventsv[i];
-    Erroneous_DetInfo->Fill();
+    e = errorneous_det_weightsv[i];
+    Errorneous_DetInfo->Fill();
   }
 
   if(debug)
     std::cout << "MantisROOT::CheckDet -> Corrected DetInfo Filled." << std::endl;
 
   Corrected_DetInfo->Write();
-  Erroneous_DetInfo->Write();
+  Errorneous_DetInfo->Write();
   std::cout << std::endl << "MantisROOT::CheckDet -> Corrected DetInfo Written to file: " << outfile << std::endl;
 
   fout->Close();

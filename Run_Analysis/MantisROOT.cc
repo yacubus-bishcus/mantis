@@ -790,7 +790,7 @@ void MantisROOT::CopyTrees(const char* filename, std::vector<string> noObjv, con
   std::vector<bool> dataList = {0,0,0,0,0,0,0,0,0,0,0,0,0};
   std::vector<string> optList = {"Weight","Brem","ChopIn","ChopOut","NRF","AirIn",
                                   "IntObjIn","IntObjOut","Water","Cherenkov",
-                                  "DetInfo","IncDetInfo", "Corrected_DetInfo"};
+                                  "DetInfo","IncDetInfo", "Corrected_DetInfo", "Erroneous_DetInfo"};
   // check which trees to copy
   for(int i=0;i<noObjv.size();++i)
   {

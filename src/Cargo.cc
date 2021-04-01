@@ -220,7 +220,7 @@ void Cargo::PlaceCargoBoxes()
     G4double x = box_size.x();
     G4double y = box_size.y();
     G4double z = box_size.z();
-    G4Box* CargoBox = new G4Sphere("CargoBox", x, y, z);
+    G4Box* CargoBox = new G4Box("CargoBox", x, y, z);
     G4LogicalVolume* CargoBoxLogical = new G4LogicalVolume(CargoBox, boxMAT, "CargoBoxLogical");
     new G4PVPlacement(0,box_position, CargoBoxLogical, box_name.c_str(), logicContainer, false, 0, checkOverlaps);
   }

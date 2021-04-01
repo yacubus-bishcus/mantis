@@ -1185,8 +1185,6 @@ void MantisROOT::CheckEvents(const char* filename, bool Weighted=false, bool Cor
 void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted, bool Corrected)
 {
   int x =0;
-  std::vector<int> nrf_to_cher_to_det_event;
-  std::vector<double> nrf_to_cher_to_det_time, nrf_to_cher_to_det_energy, nrf_to_cher_to_det_weight;
   TFile *fMaincompute = new TFile(fname);
   fMaincompute->cd();
   string filename = fMaincompute->GetName();
@@ -1276,12 +1274,20 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted, bo
   }
 
   std::vector<int> detEventv;
+  std::vector<double> detEnergyv, detWeightv, detTimev;
+
   for(int i=0; i<det_entries; ++i)
   {
     detEventv.push_back((int)detEvent[i]);
+    detEnergyv.push_back(detEnergy[i]);
+    if(Weighted)
+      detWeightv.push_back(detWeight[i]);
+    if(!Corrected)
+      detTimev.push_back(detTime[i]);
+
   }
 
-  std::vector<int> nrf_to_cherEvents;
+  std::vector<int> nrf_to_cherEvents, nrf_to_cher_to_det_event;
 
   if(nrf_entries != 0 && cher_entries != 0 && det_entries != 0)
   {
@@ -1310,29 +1316,80 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted, bo
       {
         // if the eventID is found write to new vector
         nrf_to_cher_to_det_event.push_back(x);
-        // find the index of the detInfo array
-        int index = exists - detEventv.begin();
-        // write the rest of the detected info to new vectors
-        nrf_to_cher_to_det_energy.push_back(detEnergy[index]);
-
-        if(Weighted)
-          nrf_to_cher_to_det_weight.push_back(detWeight[index]);
-
-        if(!Corrected)
-          nrf_to_cher_to_det_time.push_back(detTime[index]);
       }
     }
     std::cout << "CheckEvents::Compute -> NRF to Optical Photons Detected Number of Events: "
             << nrf_to_cher_to_det_event.size() << std::endl;
   } // end if nrf_entries != 0 && cher_entries != 0
 
-  if(debug)
-    std::cout << "CheckEvents::Compute -> Deallocating memory..." << std::endl;
+  std::cout << "CheckEvents::Compute -> Finding Total Number of NRF to Optical Photons Detected..." << std::endl;
 
-  if(debug)
-    std::cout << "CheckEvents::Compute -> Closing File... " << &fMaincompute << std::endl;
-  //f->cd();
+  int index = 0;
+  int tmp_index = 0;
+  std::vector<int> final_det_eventsv;
+  std::vector<double> final_nrf_det_energiesv, final_nrf_det_timesv, final_nrf_det_weightsv;
+
+  if(nrf_to_cher_to_det_event.size() > 0)
+  {
+    while(index < detEventv.size())
+    {
+      if(!debug)
+        std::cout << "\r** Checking Entry: " << index << std::flush;
+      else
+        std::cout << "Checking Entry: " << index << std::endl;
+
+      // Grab Det EventID
+      x = detEventv[index];
+
+      if(debug)
+        std::cout << "X: " << x << std::endl;
+      // Check if DetInfo EventID matches nrf_to_det_EventID
+      auto exists = std::find(nrf_to_cher_to_det_event.begin(),nrf_to_cher_to_det_event.end(), x);
+
+      // if found write event info to new vectors
+      if(exists != nrf_to_cher_to_det_event.end())
+      {
+        final_det_eventsv.push_back(x);
+        final_det_energiesv.push_back(detEnergyv[index]);
+
+        if(Weighted)
+          final_det_weightsv.push_back(detWeightv[index]);
+
+        if(!Corrected)
+          final_det_timesv.push_back(detTimev[index])
+
+        int counter = 0;
+        while(counter >= 0)
+        {
+          counter++;
+          tmp_index = index + counter;
+          if(x == detEventv[index+counter])
+          {
+            final_det_eventsv.push_back(x);
+            final_det_energiesv.push_back(detEnergyv[index+counter]);
+
+            if(weighted)
+              final_det_weightsv.push_back(detWeightv[index+counter]);
+
+            if(!Corrected)
+              final_det_timesv.push_back(detTimev[index+counter]);
+
+          } // end of if(x == det_eventsv[index+counter])
+          else
+          {
+            index = tmp_index;
+            counter = -1;
+            
+            if(debug)
+              std::cout << "While Else Index: " << index << std::endl;
+          } // end of else
+        } // end of while counter > 0
+      } // end of if exists !=
+    } // end of While index < detEvent.size()
+  } // end of if nrf_to_cher_event > 0
+
   fMaincompute->Close();
+
   if(debug)
     std::cout << "CheckEvents::Compute -> File Closed." << std::endl;
 
@@ -1359,16 +1416,16 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted, bo
   if(nrf_to_cher_to_det_event.size() > 0)
   {
     // Fill tree
-    for(unsigned int i=0; i<nrf_to_cher_to_det_event.size(); ++i)
+    for(unsigned int i=0; i<final_det_eventsv.size(); ++i)
     {
-      event = nrf_to_cher_to_det_event[i];
-      energy = nrf_to_cher_to_det_energy[i];
+      event = final_det_eventsv[i];
+      energy = final_det_energiesv[i];
 
       if(Weighted)
-        weight = nrf_to_cher_to_det_weight[i];
+        weight = final_det_weightsv[i];
 
       if(!Corrected)
-        thetimes = nrf_to_cher_to_det_time[i];
+        thetimes = final_det_timesv[i];
 
       nrf_to_cher_to_det_tree->Fill();
     }
@@ -1376,13 +1433,14 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted, bo
 
   nrf_to_cher_to_det_tree->Write();
 
-
   std::cout << "CheckEvents::Compute -> TTrees Written to File: "
               << event_output_name << std::endl;
 
   if(debug)
     std::cout << "CheckEvents::Compute -> Closing Event File..." << std::endl;
+
   fin->Close();
+
   if(debug)
     std::cout << "CheckEvents::Compute -> Event File Closed." << std::endl;
 
@@ -1390,7 +1448,7 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted, bo
   time_t time_end = std::time(&timer2);
   std::cout << "CheckEvents::Compute -> Event Check took: " << std::difftime(time_end, time_start)
           << " seconds!" << std::endl << std::endl;
-}
+} // end of Compute function
 
 void MantisROOT::CopyATree(const char* filename, const char* tObj, const char* outfilename)
 {

@@ -119,7 +119,7 @@ void CargoMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   {
     G4String theCommand = newValue;
     if(theCommand == "True" || theCommand == "true")
-      cargo->AddSphere();
+      cargo->AddCargoSphere();
   }
   else if(command == CmdSphereRadius)
   {
@@ -143,7 +143,7 @@ void CargoMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     G4String theCommand = newValue;
     if(theCommand == "True" || theCommand == "true")
     {
-      cargo->AddBox();
+      cargo->AddCargoBox();
     }
   }
   else if(command == CmdBoxSize)

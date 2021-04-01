@@ -63,7 +63,7 @@ public:
     double Energy2Wave(double, string unit="eV");
     double Wave2Energy(double, string unit="m");
     void PrepareAnalysis(std::vector<string>, bool weighted=false);
-    void CreateBremFit(const char*, double bin_width=5e-6);
+    //void CreateBremFit(const char*, double bin_width=5e-6);
 
 private:
     // Zip tuple
@@ -3117,6 +3117,7 @@ void MantisROOT::CreateScintillationDistribution()
   CreateScintillationDistribution(energies, crossX);
 } // end of CreateScintillationDistribution Function
 
+/*
 void MantisROOT::CreateBremFit(const char* filename, double bin_width=5e-6)
 {
   CheckFile(filename);
@@ -3184,6 +3185,9 @@ void MantisROOT::CreateBremFit(const char* filename, double bin_width=5e-6)
 
 
 }
+
+*/
+
 void MantisROOT::CreateDetEfficiencyCurve(std::vector<double> x, std::vector<double> y, string DetType)
 {
   std::vector<double> energies, wavelengths, eff;

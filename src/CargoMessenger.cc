@@ -50,29 +50,22 @@ CargoMessenger::CargoMessenger(Cargo* Cargo)
   myDir3->SetGuidance("Cargo Object Options");
 
   CmdAddSphere = new G4UIcmdWithAString("/Cargo/AddSphere",this);
-  CmdAddSphere->SetGuidance("Add a Sphere to Cargo Container");
   CmdAddSphere->SetCandidates("True true False false");
 
   CmdSphereRadius = new G4UIcmdWithADouble("/Cargo/SphereRadius",this);
-  CmdSphereRadius->SetGuidance("Sphere Radius");
   CmdSphereRadius->SetParameterName("radius",false);
   CmdSphereRadius->SetRange("radius>0");
 
   CmdSpherePosition = new G4UIcmdWith3Vector("/Cargo/SpherePosition",this);
-  CmdSpherePosition->SetGuidance("Sphere Position (x,y,z)");
 
   CmdSphereMaterial = new G4UIcmdWithAString("/Cargo/SphereMaterial",this);
 
   CmdAddBox = new G4UIcmdWithAString("/Cargo/AddBox",this);
-  CmdAddBox->SetGuidance("Add a box to Cargo Container");
   CmdAddBox->SetCandidates("True true False false");
 
   CmdBoxSize = new G4UIcmdWith3Vector("/Cargo/BoxSize",this);
-  CmdBoxSize->SetParameterName("boxsize",false);
-  CmdBoxSize->SetRange("boxsize>0");
 
   CmdBoxPosition = new G4UIcmdWith3Vector("/Cargo/BoxPosition",this);
-  CmdBoxPosition->SetGuidance("Box Position (x,y,z)");
 
   CmdBoxMaterial = new G4UIcmdWithAString("/Cargo/BoxMaterial",this);
 
@@ -144,7 +137,7 @@ void CargoMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     cargo->SetCargoSphereMaterial(theCommand);
   }
 
-  // Cargo BOX 
+  // Cargo BOX
   else if(command == CmdAddBox)
   {
     G4String theCommand = newValue;

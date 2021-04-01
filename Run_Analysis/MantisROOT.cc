@@ -3007,12 +3007,13 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
 
 void MantisROOT::CreateScintillationDistribution(std::vector<double> x, std::vector<double> y)
 {
-  std::vector<double> energies, crossX;
+  std::vector<double> energies, crossX, wavelengths;
   int n = x.size();
   for(int i=0;i<n;++i)
   {
     energies.push_back(x[i]);
     crossX.push_back(y[i]);
+    wavelengths.push_back(Energy2Wave(x[i],"eV")*1e9); // units nm
   }
 
   TGraph* gScint = new TGraph(n, &energies[0], &crossX[0]);
@@ -3023,7 +3024,28 @@ void MantisROOT::CreateScintillationDistribution(std::vector<double> x, std::vec
   TCanvas *c1 = new TCanvas();
   c1->cd();
 
+  double xmin = energies[0];
+  double xmax = energies[n-1];
+  double ypos = c1->GetFrame()->GetY2();
+
+  TF1* f1 = new TF1("f1","(6.62607004e-34*299792458/(x/1e9))/1.60218e-19",wavelengths[0],wavelengths[n-1]);
+  TGaxis* axis1 = new TGaxis(xmin, ypos + 0.03, xmax, ypos + 0.03, "f1", 510, "-L");
+
+  axis1->SetName("axis1");
+  axis1->SetTitle("Wavelength [nm]");
+  axis1->SetTitleOffset(-1.);
+  //axis1->CenterTitle(kTRUE);
+  axis1->SetLabelFont(42);
+  axis1->SetLabelSize(0.03);
+  axis1->SetTitleSize(0.03);
+  //axis1->SetLabelOffset(0.03);
+  axis1->SetTitleColor(kRed);
+  axis1->SetLineColor(kRed);
+  axis1->SetLabelColor(kRed);
+  axis1->Print();
+
   gScint->Draw("AC");
+  axis1->Draw("same");
   std::cout << "MantisROOT::CreateScintillationDistribution -> Scintillation Distribution Drawn." << std::endl;
 }
 

@@ -217,7 +217,7 @@ void Cargo::PlaceCargoBoxes()
       G4cerr << "Cargo::PlaceCargoBoxes -> ERROR Cannot Place Cargo Outside of Container." << G4endl;
       exit(1);
     }
-    G4Box* CargoBox = new G4Sphere("CargoBox",box_size.GetX(), box_size.GetY(), box_size.GetZ());
+    G4Box* CargoBox = new G4Sphere("CargoBox",box_size.x(), box_size.y(), box_size.z());
     G4LogicalVolume* CargoBoxLogical = new G4LogicalVolume(CargoBox, boxMAT, "CargoBoxLogical");
     new G4PVPlacement(0,box_position, CargoBoxLogical, box_name.c_str(), logicContainer, false, 0, checkOverlaps);
   }
@@ -249,17 +249,17 @@ void Cargo::CheckCargoSphereSize()
 
 bool Cargo::CheckCargoSphere(G4ThreeVector sphere_position, G4double sphere_radius)
 {
-  if(std::abs(sphere_position.GetX()) + std::abs(sphere_radius)*2. > 0.3048)
+  if(std::abs(sphere_position.x()) + std::abs(sphere_radius)*2. > 0.3048)
   {
     G4cerr << "Cargo::CheckCargoSphere -> ERROR Container X Dimension Breech." << G4endl;
     return false;
   }
-  if(std::abs(sphere_position.GetY()) + std::abs(sphere_radius)*2. > 1.2954)
+  if(std::abs(sphere_position.y()) + std::abs(sphere_radius)*2. > 1.2954)
   {
     G4cerr << "Cargo::CheckCargoSphere -> ERROR Container Y Dimension Breech." << G4endl;
     return false;
   }
-  if(std::abs(sphere_position.GetZ()) + std::abs(sphere_radius)*2. > 1.2192)
+  if(std::abs(sphere_position.z()) + std::abs(sphere_radius)*2. > 1.2192)
   {
     G4cerr << "Cargo::CheckCargoSphere -> ERROR Container Z Dimension Breech." << G4endl;
     return false;
@@ -269,17 +269,17 @@ bool Cargo::CheckCargoSphere(G4ThreeVector sphere_position, G4double sphere_radi
 
 bool Cargo::CheckCargoBox(G4ThreeVector box_position, G4ThreeVector box_size)
 {
-  if(std::abs(box_position.GetX())+std::abs(box_size.GetX()) > 0.3048)
+  if(std::abs(box_position.x())+std::abs(box_size.x()) > 0.3048)
   {
     G4cerr << "Cargo::CheckCargoBox -> ERROR Container X Dimension Breeched." << G4endl;
     return false;
   }
-  if(std::abs(box_position.GetY())+std::abs(box_size.GetY()) > 1.2954)
+  if(std::abs(box_position.y())+std::abs(box_size.y()) > 1.2954)
   {
     G4cerr << "Cargo::CheckCargoBox -> ERROR Container Y Dimension Breeched." << G4endl;
     return false;
   }
-  if(std::abs(box_position.GetZ())+std::abs(box_size.GetZ()) > 1.2192)
+  if(std::abs(box_position.z())+std::abs(box_size.z()) > 1.2192)
   {
     G4cerr << "Cargo::CheckCargoBox -> ERROR Container Z Dimension Breeched." << G4endl;
     return false;

@@ -128,7 +128,7 @@ void CargoMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   }
   else if(command == CmdSpherePosition)
   {
-    G4ThreeVector theCommand = CmdSphereRadius->GetNew3VectorValue(newValue);
+    G4ThreeVector theCommand = CmdSpherePosition->GetNew3VectorValue(newValue);
     cargo->SetCargoSpherePosition(theCommand);
   }
   else if(command == CmdSphereMaterial)

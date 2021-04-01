@@ -63,9 +63,9 @@ void CheckCargoSphereSize();
 void AddCargoSphere(){cargo_spheres++;};
 void SetCargoSphereRadius(double r){cargo_sphere_radii.push_back(r);};
 
-void SetCargoSpherePosition(double x, double y, double z)
+void SetCargoSpherePosition(G4ThreeVector pos)
 {
-  G4ThreeVector cargo_sphere3v = {x,y,z};
+  G4ThreeVector cargo_sphere3v = pos;
   cargo_sphere_position.push_back(cargo_sphere3v);
 };
 
@@ -74,15 +74,15 @@ void PlaceCargoSpheres();
 
 void AddCargoBox(){cargo_boxes++;};
 
-void SetCargoBoxSize(double x, double y, double z)
+void SetCargoBoxSize(G4ThreeVector boxsize)
 {
-  G4ThreeVector cargo_box_size3v = {x,y,z};
+  G4ThreeVector cargo_box_size3v = boxsize;
   cargo_box_size.push_back(cargo_box_size3v);
 };
 
-void SetCargoBoxPosition(double x, double y, double z)
+void SetCargoBoxPosition(G4ThreeVector pos)
 {
-  G4ThreeVector cargo_box_position3v = {x,y,z};
+  G4ThreeVector cargo_box_position3v = pos;
   cargo_box_position.push_back(cargo_box_position3v);
 };
 

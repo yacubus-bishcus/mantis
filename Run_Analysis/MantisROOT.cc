@@ -56,6 +56,7 @@ public:
     TGraph* CreateTKDE(const char*, int nentries=10000);
     void CheckDet(const char*, bool weighted=false, int estimate=-1);
     void CreateScintillationDistribution(std::vector<double>, std::vector<double>);
+    void CreateScintillationDistribution(string, string, string, string);
     void CreateScintillationDistribution();
     void CreateDetEfficiencyCurve(std::vector<double>, std::vector<double>, string);
     void CreateDetEfficiencyCurve(string);
@@ -1708,13 +1709,12 @@ void MantisROOT::ZTest(const char* file1, const char* file2, const char* inObj, 
   double c1,c11,c12,c13;
   if(!string(inObj).compare("DetInfo") || !string(inObj).compare("Corrected_DetInfo"))
   {
-    if(weighted)
-      TCut detCut = "Weight";
-    else
-      TCut detCut = "Energy < 5e-6";
+    TCut detCut;
 
-    if(debug)
-      std::cout << "MantisROOT::ZTest -> Setting TCut for DetInfo: " << detCut << std::endl;
+    if(weighted)
+      detCut = "Weight";
+    else
+      detCut = "Energy < 5e-6";
 
     c1  = hIntegral(inTree,0,detCut,5e-6);
     c11 = hIntegral(inTree,1,detCut,5e-6);
@@ -3027,15 +3027,69 @@ void MantisROOT::CreateScintillationDistribution(std::vector<double> x, std::vec
   std::cout << "MantisROOT::CreateScintillationDistribution -> Scintillation Distribution Drawn." << std::endl;
 }
 
+void MantisROOT::CreateScintillationDistribution(string a, string b, string c, string d)
+{
+  std::vector<double> energies = {1.90744, 1.9837, 2.0664, 2.156, 2.25425, 2.3615,
+                                  2.4796, 2.6101, 2.75520, 2.9173, 3.0996, 3.306,
+                                  3.44400, 3.542405, 3.64659, 3.8149, 4.132806, 4.95936};
+
+  string cmd = a + "*exp(" + b + "*x)";
+  string cmd2 = c + "*exp(" + d + "*x)";
+  string cmd3 = "(x<3.44400)*" + cmd + " + " + "(x>3.44400)*" + cmd2;
+
+  const char* cmd_cstr = cmd.c_str();
+  const char* cmd2_cstr = cmd2.c_str();
+  const char* cmd3_cstr = cmd3.c_str();
+
+  TF1* f0 = new TF1("f0","0.0004731*exp(2.215*x)",energies[0], energies[12]);
+  TF1* f01 = new TF1("f01","4.687e8*exp(-5.812*x)",energies[12], energies[energies.size() - 1]);
+  TF1* f02 = new TF1("f02","(x<3.44400)*0.0004731*exp(2.215*x) + (x>3.44400)*4.687e8*exp(-5.812*x)", energies[0], energies[energies.size() - 1]);
+
+  TF1* f1 = new TF1("f1",cmd_cstr,energies[0],energies[12]);
+  TF1* f2 = new TF1("f2",cmd2_cstr, energies[12], energies[energies.size()-1]);
+  TF1* f3 = new TF1("f3",cmd3_cstr, energies[0], energies[energies.size() - 1]);
+
+  TCanvas* c2 = new TCanvas("c2","Exponential Rise",600,400);
+  TCanvas* c3 = new TCanvas("c3","Exponential Decay",600,400);
+  TCanvas* c4 = new TCanvas("c4","Combined Distro",600,400);
+
+  c2->cd();
+  f0->SetLineColor(kBlue);
+  f1->SetLineColor(kRed);
+  f0->Draw();
+  f1->Draw("SAME");
+
+  c3->cd();
+  f01->SetLineColor(kBlue);
+  f2->SetLineColor(kRed);
+  f01->Draw();
+  f2->Draw("SAME");
+  c4->cd();
+  f02->SetLineColor(kBlue);
+  f3->SetLineColor(kRed);
+  f02->Draw();
+  f3->Draw("SAME");
+
+  for(int i=0;i<12;++i)
+    std::cout << "MantisROOT::CreateScintillationDistribution -> Energy: " << energies[i] << " \t Eval: " << f1->Eval(energies[i]) << std::endl;
+
+  for(int i=12;i<energies.size();++i)
+    std::cout << "MantisROOT::CreateScintillationDistribution -> Energy: " << energies[i] << " \t Eval: " << f2->Eval(energies[i]) << std::endl;
+
+  std::cout << std::endl << "MantisROOT::CreateScintillationDistribution -> Complete."
+  << std::endl;
+}
+
 void MantisROOT::CreateScintillationDistribution()
 {
   std::cout << "MantisROOT::CreateScintillationDistribution -> Using Default values..." << std::endl;
-  std::vector<double> energies = {1.90744, 2.0664, 2.25425, 2.4796, 2.75520,
-                                  3.0996, 3.44400, 3.542405, 3.64659, 4.132806,
-                                  4.95936};
+  std::vector<double> energies = {1.90744, 1.9837, 2.0664, 2.156, 2.25425, 2.3615,
+                                  2.4796, 2.6101, 2.75520, 2.9173, 3.0996, 3.306,
+                                  3.44400, 3.542405, 3.64659, 3.8149, 4.132806, 4.95936};
 
-  std::vector<double> crossX = {0.007, 0.016, 0.028, 0.045, 0.25, 0.5, 0.95,
-                                0.5, 0.006, 0.001, 0.0001};
+  std::vector<double> crossX = {0.134451, 0.148294, 0.164921, 0.185046, 0.209947, 0.240969,
+                                0.280459, 0.331664, 0.399644, 0.492194, 0.622117, 0.811069,
+                                0.941421, 0.23927, 0.0561113, 0.00538955, 6.45194e-05, 6.49917e-10};
 
   CreateScintillationDistribution(energies, crossX);
 } // end of CreateScintillationDistribution Function
@@ -3449,13 +3503,16 @@ void MantisROOT::Show_CreateTKDE_Description()
 void MantisROOT::Show_CreateScintillationDistribution()
 {
   std::cout << "void CreateScintillationDistribution(vector<double> energies, vector<double> crossX)"
+  << std::endl << "void CreateScintillationDistribution(string a, string b)"
   << std::endl << "void CreateScintillationDistribution()" << std::endl;
 }
 
 void MantisROOT::Show_CreateScintillationDistribution_Description()
 {
   std::cout << "DESCRIPTION: " << std::endl << "Creates a TGraph of the users scintillation distribution."
-  << std::endl << "IF function called void of inputs the default values are plotted." << std::endl;
+  << std::endl << "IF function called void of inputs the default values are plotted."
+  << std::endl << "IF function called with string a, string b creates scintillation distribution based on exponential distribution."
+  << std::endl;
 }
 
 void MantisROOT::Show_CreateDetEfficiencyCurve()

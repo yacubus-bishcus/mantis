@@ -80,18 +80,22 @@ G4MaterialPropertiesTable* MaterialProperties::SetWaterProperties()
   };
   assert(sizeof(absorption) == sizeof(photonEnergyAbs));
 
-  // wavelenths 650, 600, 550, 500, 450, 400, 360 (approx peak), 350, 340, 300, 250
+  // wavelenths 650, 625, 600, 575, 550, 525,
+  // 500, 475, 450, 425, 400, 375,
+  // 360 (approx peak), 350, 340, 325, 300, 250
   G4double photonEnergyScintillation[] =
   {
-          1.90744*eV, 2.0664*eV, 2.25425*eV, 2.4796*eV, 2.75520*eV,
-          3.0996*eV, 3.44400*eV, 3.542405*eV, 3.64659*eV, 4.132806*eV, 4.95936*eV
+    1.90744*eV, 1.9837*eV, 2.0664*eV, 2.156*eV, 2.25425*eV, 2.3615*eV,
+    2.4796*eV, 2.6101*eV, 2.75520*eV, 2.9173*eV, 3.0996*eV, 3.306*eV,
+    3.44400*eV, 3.542405*eV, 3.64659*eV, 3.8149*eV, 4.132806*eV, 4.95936*eV
   };
   const G4int nEntriesScint = sizeof(photonEnergyScintillation)/sizeof(G4double);
 
   G4double scintilD[] =
   {
-    0.007, 0.016, 0.028, 0.045, 0.25, 0.5, 0.95,
-    0.5, 0.006, 0.001, 0.0001
+    0.134451, 0.148294, 0.164921, 0.185046, 0.209947, 0.240969,
+    0.280459, 0.331664, 0.399644, 0.492194, 0.622117, 0.811069,
+    0.941421, 0.23927, 0.0561113, 0.00538955, 6.45194e-05, 6.49917e-10
   };
 
   assert(sizeof(scintilD) == sizeof(photonEnergyScintillation));

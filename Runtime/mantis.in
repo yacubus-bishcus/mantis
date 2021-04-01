@@ -9,7 +9,7 @@
 /chopper/material Uranium
 # Chopper base material isotope abundance percentage REQUIRED for Uranium and Plutonium
 # U235/238 abundance if chopper On/off Pu239/240 if chopper On/Off
-/chopper/Abundance 90
+/chopper/abundance 90
 
 # Interrogation Object Inputs
 # Percentage of Fission 90

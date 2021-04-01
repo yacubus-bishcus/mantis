@@ -168,6 +168,7 @@ private:
 
   // Cargo SPHERE  and CARGO BOX
   G4LogicalVolume* logicContainer;
+  G4LogicalVolume* logicHollowC;
   G4int cargo_spheres, cargo_boxes;
   std::vector<G4double> cargo_sphere_radii;
   std::vector<G4ThreeVector> cargo_sphere_position, cargo_box_size, cargo_box_position;

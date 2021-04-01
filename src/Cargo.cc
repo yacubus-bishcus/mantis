@@ -76,7 +76,7 @@ void Cargo::Construct(G4LogicalVolume* logicWorld, double container_z_pos, doubl
 
   // make container hollow
   G4Box *hollowContainer = new G4Box("ContainerAir", 0.3048*m -c_thick, 1.2954*m -c_thick, 1.2192*m -c_thick);
-  G4LogicalVolume *logicHollowC = new G4LogicalVolume(hollowContainer, air, "hollowContainer");
+  logicHollowC = new G4LogicalVolume(hollowContainer, air, "hollowContainer");
 
   if(!RemoveContainer)
   {
@@ -195,7 +195,7 @@ void Cargo::PlaceCargoSpheres()
     }
     G4Sphere* CargoSphere = new G4Sphere("CargoSphere",0, sphere_radius, 0, 2*pi, 0, pi);
     G4LogicalVolume* CargoSphereLogical = new G4LogicalVolume(CargoSphere, sphereMAT, "CargoSphereLogical");
-    new G4PVPlacement(0, sphere_position, CargoSphereLogical, sphere_name.c_str(), logicContainer, false, 0, checkOverlaps);
+    new G4PVPlacement(0, sphere_position, CargoSphereLogical, sphere_name.c_str(), logicHollowC, false, 0, checkOverlaps);
 
   }
 }
@@ -225,7 +225,7 @@ void Cargo::PlaceCargoBoxes()
     G4double z = box_size.z();
     G4Box* CargoBox = new G4Box("CargoBox", x, y, z);
     G4LogicalVolume* CargoBoxLogical = new G4LogicalVolume(CargoBox, boxMAT, "CargoBoxLogical");
-    new G4PVPlacement(0,box_position, CargoBoxLogical, box_name.c_str(), logicContainer, false, 0, checkOverlaps);
+    new G4PVPlacement(0,box_position, CargoBoxLogical, box_name.c_str(), logicHollowC, false, 0, checkOverlaps);
   }
 }
 

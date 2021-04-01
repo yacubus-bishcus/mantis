@@ -3012,7 +3012,7 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
   }
 
   std::vector<int> final_det_eventsv;
-  std::vector<double> final_det_energiesv, final_det_weights, final_det_timesv;
+  std::vector<double> final_det_energiesv, final_det_weightsv, final_det_timesv;
   std::vector<string> final_det_creationsv;
 
   std::vector<int> errorneous_det_eventsv;
@@ -3131,15 +3131,15 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
     Corrected_DetInfo->Fill();
   }
 
-  int f;
+  int h;
   double g;
   TTree* Errorneous_DetInfo = new TTree("Erroneous_DetInfo","Erroneous Detector Information");
-  Errorneous_DetInfo->Branch("EventID",&f);
+  Errorneous_DetInfo->Branch("EventID",&h);
   Errorneous_DetInfo->Branch("Weight",&g);
 
   for(int i=0;i<errorneous_det_eventsv.size();++i)
   {
-    f = errorneous_det_eventsv[i];
+    h = errorneous_det_eventsv[i];
     g = errorneous_det_weightsv[i];
     Errorneous_DetInfo->Fill();
   }

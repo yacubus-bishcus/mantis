@@ -66,7 +66,58 @@ public:
     //void CreateBremFit(const char*, double bin_width=5e-6);
 
 private:
-    // Zip tuple
+
+    // Zip Tuple 5
+    template<typename A, typename B, typename C, typename D, typename E>
+    void zip(const std::vector<A> &a, const std::vector<B> &b, const std::vector<C> &c,
+      const std::vector<D> &d, const std::vector<E> &e,
+              std::vector<std::tuple<A,B,C,D,E>> &zipped)
+    {
+      for(size_t i=0;i<a.size();++i)
+      {
+        zipped.push_back(std::make_tuple(a[i],b[i],c[i],d[i],e[i]));
+      }
+    }
+
+    template<typename A, typename B, typename C, typename D, typename E>
+    void unzip(const std::vector<std::tuple<A,B,C,D,E>> &zipped,
+                std::vector<A> &a, std::vector<B> &b, std::vector<C> &c, std::vector<D> &d, std::vector<E> &e)
+    {
+      for(size_t i=0;i<a.size();++i)
+      {
+        a[i] = std::get<0>(zipped[i]);
+        b[i] = std::get<1>(zipped[i]);
+        c[i] = std::get<2>(zipped[i]);
+        d[i] = std::get<3>(zipped[i]);
+        e[i] = std::get<4>(zipped[i]);
+      }
+    }
+
+    // Zip tuple 4
+
+    template<typename A, typename B, typename C, typename D>
+    void zip(const std::vector<A> &a, const std::vector<B> &b, const std::vector<C> &c, const std::vector<D> &d,
+              std::vector<std::tuple<A,B,C,D>> &zipped)
+    {
+      for(size_t i=0;i<a.size();++i)
+      {
+        zipped.push_back(std::make_tuple(a[i],b[i],c[i],d[i]));
+      }
+    }
+
+    template<typename A, typename B, typename C, typename D>
+    void unzip(const std::vector<std::tuple<A,B,C,D>> &zipped,
+                std::vector<A> &a, std::vector<B> &b, std::vector<C> &c, std::vector<D> &d)
+    {
+      for(size_t i=0;i<a.size();++i)
+      {
+        a[i] = std::get<0>(zipped[i]);
+        b[i] = std::get<1>(zipped[i]);
+        c[i] = std::get<2>(zipped[i]);
+        d[i] = std::get<3>(zipped[i]);
+      }
+    }
+    // Zip tuple 3
 
     template<typename A, typename B, typename C>
     void zip(const std::vector<A> &a, const std::vector<B> &b, const std::vector<C> &c,
@@ -1234,57 +1285,39 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted, bo
   int det_entries =0;
 
   if(Weighted)
-  {
-    if(!Corrected)
-      det_entries = DetInfo_in->Draw("EventID:Energy:Time:Weight", "CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\"","goff");
-    else
-      det_entries = DetInfo_in->Draw("EventID:Energy:Weight","","goff");
-  }
+    det_entries = DetInfo_in->Draw("EventID:Energy:CreatorProcess:Time:Weight", "CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\"","goff");
   else
-  {
-    if(!Corrected)
-      det_entries = DetInfo_in->Draw("EventID:Energy:Time","CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\"","goff");
-    else
-      det_entries = DetInfo_in->Draw("EventID:Energy","","goff");
-  }
+    det_entries = DetInfo_in->Draw("EventID:Energy:CreatorProcess:Time","CreatorProcess == \"Scintillation\" || CreatorProcess == \"Cerenkov\"","goff");
 
   std::cout << "CheckEvents::Compute -> Total Number of Detected Optical Photon entries: "
             << det_entries << std::endl << std::endl;
 
   double *detEvent = DetInfo_in->GetVal(0);
   double *detEnergy = DetInfo_in->GetVal(1);
+  Char_t creators[16];
+  DetInfo_in->SetBranchAddress("CreatorProcess",&creators);
 
-  double *detTime = new double[(int)det_entries];
+  double *detTime = DetInfo_in->GetVal(3);
   double *detWeight = new double[(int)det_entries];
 
   if(Weighted)
-  {
-    if(Corrected)
-      detWeight = DetInfo_in->GetVal(2);
-    else
-    {
-      detTime = DetInfo_in->GetVal(2);
-      detWeight = DetInfo_in->GetVal(3);
-    }
-  }
-  else
-  {
-    if(!Corrected)
-      detTime = DetInfo_in->GetVal(2);
-  }
+    detWeight = DetInfo_in->GetVal(4);
 
   std::vector<int> detEventv;
   std::vector<double> detEnergyv, detWeightv, detTimev;
+  std::vector<string> detCreatorv;
 
   for(int i=0; i<det_entries; ++i)
   {
     detEventv.push_back((int)detEvent[i]);
+    DetInfo_in->GetEntry(i);
+    string creator_string = string(creators);
+    detCreatorv.push_back(creator_string);
     detEnergyv.push_back(detEnergy[i]);
+    detTimev.push_back(detTime[i]);
+
     if(Weighted)
       detWeightv.push_back(detWeight[i]);
-    if(!Corrected)
-      detTimev.push_back(detTime[i]);
-
   }
 
   std::vector<int> nrf_to_cherEvents, nrf_to_cher_to_det_event;
@@ -1324,10 +1357,37 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted, bo
 
   std::cout << "CheckEvents::Compute -> Finding Total Number of NRF to Optical Photons Detected..." << std::endl;
 
+  if(debug)
+    std::cout << "CheckEvents::Compute -> Sorting DetInfo..." << std::endl;
+
+  // Zipping Process for sorting
+  std::vector<std::tuple<int, double, string, double>> zipped4; // No Weights
+  std::vector<std::tuple<int, double, string, double, double>> zipped5; // weighted
+
+  if(Weighted)
+  {
+    zip(detEventv, detEnergyv, detCreatorv, detTimev, detWeightv, zipped5);
+    std::sort(zipped5.begin(),zipped5.end());
+    unzip(zipped5, detEventv, detEnergyv, detCreatorv, detTimev, detWeightv);
+  }
+  else
+  {
+    zip(detEventv, detEnergyv, detCreatorv, detTimev, zipped4);
+    std::sort(zipped4.begin(),zipped4.end());
+    unzip(zipped4, detEventv, detEnergyv, detCreatorv, detTimev);
+  }
+
+  if(debug)
+    std::cout << "MantisROOT::Compute -> DetInfo Sorted." << std::endl;
+
   int index = 0;
   int tmp_index = 0;
-  std::vector<int> final_det_eventsv;
+  std::vector<int> final_nrf_det_eventsv;
   std::vector<double> final_nrf_det_energiesv, final_nrf_det_timesv, final_nrf_det_weightsv;
+  std::vector<string> final_nrf_det_creatorsv;
+
+  std::cout << "MantisROOT::Compute-> NRF to Det EventID Vector Size: " << nrf_to_cher_to_det_event.size() << std::endl;
+  std::cout << "MantisROOT::Compute -> DetInfo EventID Vector Size: " << detEventv.size() << std::endl;
 
   if(nrf_to_cher_to_det_event.size() > 0)
   {
@@ -1349,14 +1409,13 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted, bo
       // if found write event info to new vectors
       if(exists != nrf_to_cher_to_det_event.end())
       {
-        final_det_eventsv.push_back(x);
-        final_det_energiesv.push_back(detEnergyv[index]);
+        final_nrf_det_eventsv.push_back(x);
+        final_nrf_det_energiesv.push_back(detEnergyv[index]);
+        final_nrf_det_creatorsv.push_back(detCreatorv[index]);
+        final_nrf_det_timesv.push_back(detTimev[index]);
 
         if(Weighted)
-          final_det_weightsv.push_back(detWeightv[index]);
-
-        if(!Corrected)
-          final_det_timesv.push_back(detTimev[index])
+          final_nrf_det_weightsv.push_back(detWeightv[index]);
 
         int counter = 0;
         while(counter >= 0)
@@ -1365,28 +1424,32 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted, bo
           tmp_index = index + counter;
           if(x == detEventv[index+counter])
           {
-            final_det_eventsv.push_back(x);
-            final_det_energiesv.push_back(detEnergyv[index+counter]);
+            final_nrf_det_eventsv.push_back(x);
+            final_nrf_det_energiesv.push_back(detEnergyv[index+counter]);
+            final_nrf_det_creatorsv.push_back(detCreatorv[index+counter]);
+            final_nrf_det_timesv.push_back(detTimev[index+counter]);
 
-            if(weighted)
-              final_det_weightsv.push_back(detWeightv[index+counter]);
-
-            if(!Corrected)
-              final_det_timesv.push_back(detTimev[index+counter]);
+            if(Weighted)
+              final_nrf_det_weightsv.push_back(detWeightv[index+counter]);
 
           } // end of if(x == det_eventsv[index+counter])
           else
           {
             index = tmp_index;
             counter = -1;
-            
+
             if(debug)
               std::cout << "While Else Index: " << index << std::endl;
           } // end of else
         } // end of while counter > 0
       } // end of if exists !=
+      else
+        index++;
     } // end of While index < detEvent.size()
   } // end of if nrf_to_cher_event > 0
+
+  std::cout << std::endl << "MantisROOT::Compute -> Total Number of NRF Optical Photons Found: "
+            << final_nrf_det_eventsv.size() << std::endl;
 
   fMaincompute->Close();
 
@@ -1401,31 +1464,30 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted, bo
   // Set up NRF to Cher to Det Tree
   int event;
   double energy, weight, thetimes;
+  string theCreator;
 
   TTree *nrf_to_cher_to_det_tree = new TTree("event_tree","NRF Events that Lead to Cherenkov that were Detected");
   nrf_to_cher_to_det_tree->Branch("EventID",&event);
   nrf_to_cher_to_det_tree->Branch("Energy",&energy);
+  nrf_to_cher_to_det_tree->Branch("CreatorProcess",&theCreator);
+  nrf_to_cher_to_det_tree->Branch("Time",&thetimes);
 
   if(Weighted)
     nrf_to_cher_to_det_tree->Branch("Weight",&weight);
-
-  if(!Corrected)
-    nrf_to_cher_to_det_tree->Branch("Time",&thetimes);
 
   // Fill nrf_to_cher_to_det Tree
   if(nrf_to_cher_to_det_event.size() > 0)
   {
     // Fill tree
-    for(unsigned int i=0; i<final_det_eventsv.size(); ++i)
+    for(unsigned int i=0; i<final_nrf_det_eventsv.size(); ++i)
     {
-      event = final_det_eventsv[i];
-      energy = final_det_energiesv[i];
+      event = final_nrf_det_eventsv[i];
+      energy = final_nrf_det_energiesv[i];
+      theCreator = final_nrf_det_creatorsv[i];
+      thetimes = final_nrf_det_timesv[i];
 
       if(Weighted)
-        weight = final_det_weightsv[i];
-
-      if(!Corrected)
-        thetimes = final_det_timesv[i];
+        weight = final_nrf_det_weightsv[i];
 
       nrf_to_cher_to_det_tree->Fill();
     }
@@ -2873,9 +2935,16 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
   int intObj_entries = tIntObjOut->Draw("EventID","","goff");
   Double_t* intObj_ids = tIntObjOut->GetVal(0);
 
-  int det_entries = tDet->Draw("EventID:Energy:Weight","","goff");
+  int det_entries = 0;
+
+  if(weighted)
+    det_entries = tDet->Draw("EventID:Energy:Time:Weight","","goff");
+  else
+    det_entries = tDet->Draw("EventID:Energy:Time","","goff");
+
   Double_t* det_ids = tDet->GetVal(0);
   Double_t* det_energies = tDet->GetVal(1);
+  Double_t* det_times = tDet->GetVal(2);
 
   int n_intObj = 0;
   int n_det = 0;
@@ -2893,21 +2962,29 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
   Double_t *det_weights = new Double_t[n_det];
 
   if(weighted)
-    det_weights = tDet->GetVal(2);
+    det_weights = tDet->GetVal(3);
 
   if(debug)
     std::cout << "MantisROOT::CheckDet -> All Objects Grabbed!" << std::endl;
 
   std::vector<int> intObj_eventsv, det_eventsv;
-  std::vector<Double_t> det_energiesv, det_weightsv;
+  std::vector<Double_t> det_energiesv, det_weightsv, det_timesv;
+  std::vector<string> det_creationsv;
 
   for(int i=0;i<n_intObj;++i)
     intObj_eventsv.push_back((int)intObj_ids[i]);
+
+  Char_t creations[16];
+  tDet->SetBranchAddress("CreatorProcess", &creations);
 
   for(int i=0;i<n_det;++i)
   {
     det_eventsv.push_back((int)det_ids[i]);
     det_energiesv.push_back(det_energies[i]);
+    tDet->GetEntry(i);
+    string creator_string = string(creations);
+    det_creationsv.push_back(creator_string);
+    det_timesv.push_back(det_times[i]);
     if(weighted)
       det_weightsv.push_back(det_weights[i]);
   }
@@ -2918,23 +2995,26 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
   std::cout << "MantisROOT::CheckDet -> DetInfo Event Vector Size: " << det_eventsv.size() << std::endl;
 
   // Zipping Method sorting
-  std::vector<std::tuple<int,double,double>> zipped3;
-  std::vector<std::pair<int,double>> zipped2;
+  std::vector<std::tuple<int, double, string, double>> zipped4; // no weights
+  std::vector<std::tuple<int, double, string, double, double>> zipped5; // weights
+
   if(weighted)
   {
-    zip(det_eventsv, det_energiesv, det_weightsv, zipped3);
-    std::sort(zipped3.begin(),zipped3.end());
-    unzip(zipped3, det_eventsv, det_energiesv, det_weightsv);
+    zip(det_eventsv, det_energiesv, det_creationsv, det_timesv, det_weightsv, zipped5);
+    std::sort(zipped5.begin(),zipped5.end());
+    unzip(zipped5, det_eventsv, det_energiesv, det_creationsv, det_timesv, det_weightsv);
   }
   else
   {
-    zip(det_eventsv, det_energiesv, zipped2);
-    std::sort(zipped2.begin(),zipped2.end());
-    unzip(zipped2, det_eventsv, det_energiesv);
+    zip(det_eventsv, det_energiesv, det_creationsv, det_timesv, zipped4);
+    std::sort(zipped4.begin(),zipped4.end());
+    unzip(zipped4, det_eventsv, det_energiesv, det_creationsv, det_timesv);
   }
 
   std::vector<int> final_det_eventsv;
-  std::vector<double> final_det_energiesv, final_det_weightsv;
+  std::vector<double> final_det_energiesv, final_det_weights, final_det_timesv;
+  std::vector<string> final_det_creationsv;
+
   std::vector<int> errorneous_det_eventsv;
   std::vector<double> errorneous_det_weightsv;
   int x=0;
@@ -2950,8 +3030,10 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
 
     // Grab Det EventID
     x = det_eventsv[index];
+
     if(debug)
       std::cout << "X: " << x << std::endl;
+
     // Check if DetInfo EventID matches IntObjOut EventID
     auto exists = std::find(intObj_eventsv.begin(),intObj_eventsv.end(), x);
 
@@ -2960,6 +3042,8 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
     {
       final_det_eventsv.push_back(x);
       final_det_energiesv.push_back(det_energiesv[index]);
+      final_det_creationsv.push_back(det_creationsv[index]);
+      final_det_timesv.push_back(det_timesv[index]);
 
       if(weighted)
         final_det_weightsv.push_back(det_weightsv[index]);
@@ -2973,6 +3057,8 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
         {
           final_det_eventsv.push_back(x);
           final_det_energiesv.push_back(det_energiesv[index+counter]);
+          final_det_creationsv.push_back(det_creationsv[index+counter]);
+          final_det_timesv.push_back(det_timesv[index+counter]);
 
           if(weighted)
             final_det_weightsv.push_back(det_weightsv[index+counter]);
@@ -2998,6 +3084,7 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
         errorneous_det_weightsv.push_back(det_weightsv[index]);
 
       index++;
+
       if(debug)
         std::cout << "Else Index: " << index << std::endl;
     } // end of else
@@ -3017,13 +3104,16 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
   fout->cd();
 
   int a;
-  double b,c;
+  double b,d,e;
+  string c;
   TTree* Corrected_DetInfo = new TTree("Corrected_DetInfo","Corrected Detector Information");
   Corrected_DetInfo->Branch("EventID",&a);
   Corrected_DetInfo->Branch("Energy",&b);
+  Corrected_DetInfo->Branch("CreatorProcess",&c);
+  Corrected_DetInfo->Branch("Times",&d);
 
   if(weighted)
-    Corrected_DetInfo->Branch("Weight",&c);
+    Corrected_DetInfo->Branch("Weight",&e);
 
   if(debug)
     std::cout << "MantisROOT::CheckDet -> Corrected DetInfo Filling..." << std::endl;
@@ -3032,22 +3122,25 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
   {
     a = final_det_eventsv[i];
     b = final_det_energiesv[i];
+    c = final_det_creationsv[i];
+    d = final_det_timesv[i];
+
     if(weighted)
-      c = final_det_weightsv[i];
+      e = final_det_weightsv[i];
 
     Corrected_DetInfo->Fill();
   }
 
-  int d;
-  double e;
+  int f;
+  double g;
   TTree* Errorneous_DetInfo = new TTree("Erroneous_DetInfo","Erroneous Detector Information");
-  Errorneous_DetInfo->Branch("EventID",&d);
-  Errorneous_DetInfo->Branch("Weight",&e);
+  Errorneous_DetInfo->Branch("EventID",&f);
+  Errorneous_DetInfo->Branch("Weight",&g);
 
   for(int i=0;i<errorneous_det_eventsv.size();++i)
   {
-    d = errorneous_det_eventsv[i];
-    e = errorneous_det_weightsv[i];
+    f = errorneous_det_eventsv[i];
+    g = errorneous_det_weightsv[i];
     Errorneous_DetInfo->Fill();
   }
 

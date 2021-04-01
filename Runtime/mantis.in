@@ -12,8 +12,7 @@
 /chopper/Abundance 90
 
 # Interrogation Object Inputs
-# Percentage of Fission isotope Input necessary for Uranium/Plutonium Only!
-/IntObj/abundance 90
+# Percentage of Fission 90
 # Target options Uranium NaturalU Plutonium NaturalPu Lead Steel Plastic
 /IntObj/Material Uranium
 
@@ -53,6 +52,25 @@
 # units cm Default set to 4.5cm
 #/IntObj/Radius
 
+#################################################################################################
+# CARGO OPTIONS
+# Be Sure to Check .log files Output for Overlaps with Interrogation Object.
+# Overlap with Interrogation Object Only Returns Warning
+# Overlap with Container Returns Error and Exits Program
+
+#/Cargo/AddSphere true
+#units all units cm
+#/Cargo/SphereRadius 2
+# Places Sphere 20 cm to right of center and 50 cm towards beam origin (in between interrogation object and beam)
+#/Cargo/SpherePosition {20,0,-50}
+#/Cargo/SphereMaterial G4_Pb
+#/Cargo/AddBox true
+#/Cargo/BoxSize {3,3,3}
+#/Cargo/BoxPosition {-30,-10,50}
+#/Cargo/BoxMaterial G4_W
+
+# The User can add as many boxes/spheres as he/she wants
+ 
 #################################################################################################
 # DETECTOR OPTIONS
 

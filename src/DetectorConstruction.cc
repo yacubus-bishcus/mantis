@@ -131,6 +131,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   cargo->Construct(logicWorld, container_z_pos, container_edge_position, getEndChop(), checkOverlaps);
   G4double end_int_obj = cargo->getEndIntObj();
   setEndIntObj(end_int_obj);
+  cargo->CheckCargoSphereSize();
+  cargo->CheckCargoBoxSize();
+  cargo->PlaceCargoBoxes();
+  cargo->PlaceCargoSpheres();
 
 // ******************************************************** Begin Detector Construction *************************************************************** //
 

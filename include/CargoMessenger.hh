@@ -30,12 +30,14 @@
 #include "G4ApplicationState.hh"
 #include "G4UIcmdWithADouble.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWith3Vector.hh"
 #include "Cargo.hh"
 #include "G4UIdirectory.hh"
 
 class Cargo;
 class G4UIcmdWithADouble;
 class G4UIcmdWithAString;
+class G4UIcmdWith3Vector;
 class G4UIdirectory;
 
 class CargoMessenger: public G4UImessenger
@@ -51,8 +53,20 @@ private:
   G4UIcmdWithADouble* Cmd1;
   G4UIcmdWithAString* Cmd2;
   G4UIcmdWithAString* CmdRemoveObjects;
+  // Cargo SPHERE
+  G4UIcmdWithAString* CmdAddSphere;
+  G4UIcmdWithADouble* CmdSphereRadius;
+  G4UIcmdWith3Vector* CmdSpherePosition;
+  G4UIcmdWithAString* CmdSphereMaterial;
+  // Cargo BOX
+  G4UIcmdWithAString* CmdAddBox;
+  G4UIcmdWith3Vector* CmdBoxSize;
+  G4UIcmdWith3Vector* CmdBoxPosition;
+  G4UIcmdWithAString* CmdBoxMaterial;
+
   G4UIdirectory *myDir;
   G4UIdirectory *myDir2;
+  G4UIdirectory *myDir3;
 };
 
 #endif

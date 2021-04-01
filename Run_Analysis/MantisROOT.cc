@@ -63,6 +63,7 @@ public:
     double Energy2Wave(double, string unit="eV");
     double Wave2Energy(double, string unit="m");
     void PrepareAnalysis(std::vector<string>, bool weighted=false);
+    void CreateBremFit(const char*, double bin_width=5e-6);
 
 private:
     // Zip tuple
@@ -3116,6 +3117,73 @@ void MantisROOT::CreateScintillationDistribution()
   CreateScintillationDistribution(energies, crossX);
 } // end of CreateScintillationDistribution Function
 
+void MantisROOT::CreateBremFit(const char* filename, double bin_width=5e-6)
+{
+  CheckFile(filename);
+  TFile* f = new TFile(filename);
+  f->cd();
+
+  TTree* tBrems;
+  f->GetObject("Brem",tBrems);
+
+  if(debug)
+    std::cout << "MantisROOT::CreateBremFit -> Brem Object Grabbed." << std::endl;
+
+  double maxE = tBrems->GetMaximum("Energy");
+  double maxWave = Energy2Wave(maxE,"MeV")*1e9; // units nm
+  Int_t nbins = maxE/bin_width;
+  TH1D* hBrems = new TH1D("hBrems","Brem Histo", nbins, 0., maxE);
+  int n = tBrems->Draw("Energy>>hBrems","","goff");
+
+  if(debug)
+    std::cout << "MantisROOT::CreateBremFit -> hBrems Created. Smoothing..." << std::endl;
+
+  hBrems->Smooth(2024);
+  hBrems->Scale(1./hBrems->Integral());
+
+  std::vector<double> energies, counts;
+
+  if(debug)
+    std::cout << "MantisROOT::CreateBremFit -> Writing to hBrems..." << std::endl;
+
+  for(int i=0;i<nbins;++i)
+  {
+    energies.push_back(hBrems->GetXaxis()->GetBinCenter(i));
+    counts.push_back(hBrems->GetBinContent(i));
+  }
+
+  TGraph* gBrems = new TGraph(nbins, &energies[0], &counts[0]);
+
+  string cmd = "([0]/pow(x,2))*((x/" + std::to_string(maxE) + ") - 1)";
+
+  if(debug)
+    std::cout << "MantisROOT::CreateBremFit -> Fitting Equation: " << cmd << std::endl;
+
+  const char* cmd_c_str = cmd.c_str();
+  TF1* f1 = new TF1("f1",cmd_c_str, 0.001, maxE);
+
+  gBrems->SetTitle("Bremsstrahlung Distribution with Fitting");
+  gBrems->GetXaxis()->SetTitle("Energy [MeV]");
+  string bin_width_string = std::to_string((int)bin_width*1e6);
+  string yaxis_title = "Probability per " + bin_width_string + "eV";
+  gBrems->GetYaxis()->SetTitle(yaxis_title.c_str());
+  TCanvas* c1 = new TCanvas("c1","Brem TGraph",900,600);
+  c1->cd();
+
+  if(debug)
+    std::cout << "MantisROOT::CreateBremFit -> Drawing Brem TGraph..." << std::endl;
+
+  gBrems->Draw("AC");
+
+  if(debug)
+    std::cout << "MantisROOT::CreateBremFit -> Creating Best Fit..." << std::endl;
+
+  gBrems->Fit("f1","R");
+
+  std::cout << "MantisROOT::CreateBremFit -> Complete." << std::endl;
+
+
+}
 void MantisROOT::CreateDetEfficiencyCurve(std::vector<double> x, std::vector<double> y, string DetType)
 {
   std::vector<double> energies, wavelengths, eff;

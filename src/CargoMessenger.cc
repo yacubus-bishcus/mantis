@@ -45,6 +45,37 @@ CargoMessenger::CargoMessenger(Cargo* Cargo)
   CmdRemoveObjects = new G4UIcmdWithAString("Container/Remove",this);
   CmdRemoveObjects->SetGuidance("Choose to remove objects for simulation");
   CmdRemoveObjects->SetCandidates("True true False false");
+
+  myDir3 = new G4UIdirectory("/Cargo/");
+  myDir3->SetGuidance("Cargo Object Options");
+
+  CmdAddSphere = new G4UIcmdWithAString("/Cargo/AddSphere",this);
+  CmdAddSphere->SetGuidance("Add a Sphere to Cargo Container");
+  CmdAddSphere->SetCandidates("True true False false");
+
+  CmdSphereRadius = new G4UIcmdWithADouble("/Cargo/SphereRadius",this);
+  CmdSphereRadius->SetGuidance("Sphere Radius");
+  CmdSphereRadius->SetParameterName("radius",false);
+  CmdSphereRadius->SetRange("radius>0");
+
+  CmdSpherePosition = new G4UIcmdWith3Vector("/Cargo/SpherePosition",this);
+  CmdSpherePosition->SetGuidance("Sphere Position (x,y,z)");
+
+  CmdSphereMaterial = new G4UIcmdWithAString("/Cargo/SphereMaterial",this);
+
+  CmdAddBox = new G4UIcmdWithAString("/Cargo/AddBox",this);
+  CmdAddBox->SetGuidance("Add a box to Cargo Container");
+  CmdAddBox->SetCandidates("True true False false");
+
+  CmdBoxSize = new G4UIcmdWith3Vector("/Cargo/BoxSize",this);
+  CmdBoxSize->SetParameterName("boxsize",false);
+  CmdBoxSize->SetRange("boxsize>0");
+
+  CmdBoxPosition = new G4UIcmdWith3Vector("/Cargo/BoxPosition",this);
+  CmdBoxPosition->SetGuidance("Box Position (x,y,z)");
+
+  CmdBoxMaterial = new G4UIcmdWithAString("/Cargo/BoxMaterial",this);
+
 }
 
 CargoMessenger::~CargoMessenger()
@@ -52,7 +83,18 @@ CargoMessenger::~CargoMessenger()
   delete Cmd;
   delete Cmd1;
   delete Cmd2;
+
   delete CmdRemoveObjects;
+
+  delete CmdAddSphere;
+  delete CmdSphereRadius;
+  delete CmdSpherePosition;
+  delete CmdSphereMaterial;
+
+  delete CmdAddBox;
+  delete CmdBoxSize;
+  delete CmdBoxPosition;
+  delete CmdBoxMaterial;
 }
 
 void CargoMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
@@ -77,5 +119,53 @@ void CargoMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     G4String theCommand = newValue;
     if(theCommand == "True" || theCommand == "true")
       cargo->SetRemoveContainer(true);
+  }
+
+  // Cargo SPHERE
+  else if(command == CmdAddSphere)
+  {
+    G4String theCommand = newValue;
+    if(theCommand == "True" || theCommand == "true")
+      cargo->AddSphere();
+  }
+  else if(command == CmdSphereRadius)
+  {
+    G4double theCommand = CmdSphereRadius->GetNewDoubleValue(newValue);
+    cargo->SetCargoSphereRadius(theCommand);
+  }
+  else if(command == CmdSpherePosition)
+  {
+    G4ThreeVector theCommand = CmdSphereRadius->GetNew3VectorValue(newValue);
+    cargo->SetCargoSpherePosition(theCommand);
+  }
+  else if(command == CmdSphereMaterial)
+  {
+    G4String theCommand = newValue;
+    cargo->SetCargoSphereMaterial(theCommand);
+  }
+
+  // Cargo BOX 
+  else if(command == CmdAddBox)
+  {
+    G4String theCommand = newValue;
+    if(theCommand == "True" || theCommand == "true")
+    {
+      cargo->AddBox();
+    }
+  }
+  else if(command == CmdBoxSize)
+  {
+    G4ThreeVector theCommand = CmdBoxSize->GetNew3VectorValue(newValue);
+    cargo->SetCargoBoxSize(theCommand);
+  }
+  else if(command == CmdBoxPosition)
+  {
+    G4ThreeVector theCommand = CmdBoxPosition->GetNew3VectorValue(newValue);
+    cargo->SetCargoBoxPosition(theCommand);
+  }
+  else if(command == CmdBoxMaterial)
+  {
+    G4String theCommand = newValue;
+    cargo->SetCargoBoxMaterial(theCommand);
   }
 }

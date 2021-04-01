@@ -28,7 +28,7 @@ Cargo::Cargo()
 :
 RemoveContainer(false),
 IntObj_rad(4.5*cm), intObjDensity(19.1*g/cm3), IntObj_Selection("Uranium"),
-intObj_radio_abundance(0),
+intObj_radio_abundance(0), cargo_spheres(0), cargo_boxes(0),
 cargoM(NULL)
 {
   cargoM = new CargoMessenger(this);
@@ -62,7 +62,7 @@ void Cargo::Construct(G4LogicalVolume* logicWorld, double container_z_pos, doubl
   G4double c_thick = 0.1905*cm; // approx 0.075 inch thick
   G4Box *solidContainer = new G4Box("Container", 0.3048*m, 1.2954*m, 1.2192*m);
   G4cout << "Cargo::Construct -> Edge of Container Placement: " << container_edge_position/(cm) << " cm" << G4endl << G4endl;
-  G4LogicalVolume *logicContainer = new G4LogicalVolume(solidContainer, steel, "Container");
+  logicContainer = new G4LogicalVolume(solidContainer, steel, "Container");
 
   if(!RemoveContainer)
   {
@@ -168,7 +168,120 @@ void Cargo::Construct(G4LogicalVolume* logicWorld, double container_z_pos, doubl
     }
 }
 
-void Cargo::AddCargo()
+void Cargo::PlaceCargoSpheres()
 {
-  G4cout << "Cargo::AddCargo -> Adding Cargo." << G4endl;
+  if(cargo_spheres == 0)
+    return;
+
+  G4cout << "Cargo::PlaceCargoSpheres -> Adding " << cargo_spheres << " spheres to cargo container." << G4endl;
+
+  for(int i=0;i<cargo_spheres;++i)
+  {
+    G4double sphere_radius = cargo_sphere_radii[i];
+    G4ThreeVector sphere_position = cargo_sphere_position[i];
+    G4String sphere_material = cargo_sphere_material[i];
+    G4String sphere_name = sphere_material + "_" + std::to_string(i);
+    G4NistManager* nist = G4NistManager::Instance();
+    G4Material *sphereMAT = nist->FindOrBuildMaterial(sphere_material);
+    bool check = CheckCargoSphere(sphere_position, sphere_radius);
+    if(!check)
+    {
+      G4cerr << "Cargo::PlaceCargoSpheres -> ERROR Cannot Place Cargo Outside of Container." << G4endl;
+      exit(1);
+    }
+    G4Sphere* CargoSphere = new G4Sphere("CargoSphere",0, sphere_radius, 0, 2*pi, 0, pi);
+    G4LogicalVolume* CargoSphereLogical = new G4LogicalVolume(CargoSphere, sphereMAT, "CargoSphereLogical");
+    new G4PVPlacement(0, sphere_position, CargoSphereLogical, sphere_name.c_str(), logicContainer, false, 0, checkOverlaps);
+
+  }
+}
+
+void Cargo::PlaceCargoBoxes()
+{
+  if(cargo_boxes == 0)
+    return;
+
+  G4cout << "Cargo::PlaceCargoBoxes -> Adding " << cargo_boxes << " boxes to cargo container." << G4endl;
+  for(int i=0;i<cargo_boxes;++i)
+  {
+    G4ThreeVector box_size = cargo_box_size[i];
+    G4ThreeVector box_position = cargo_box_position[i];
+    G4String box_material = cargo_box_material[i];
+    G4String box_name = box_material + "_" + std::to_string(i);
+    G4NistManager* nist = G4NistManager::Instance();
+    G4Material* boxMAT = nist->FindOrBuildMaterial(box_material);
+    bool check = CheckCargoBox(box_position, box_size);
+    if(!check)
+    {
+      G4cerr << "Cargo::PlaceCargoBoxes -> ERROR Cannot Place Cargo Outside of Container." << G4endl;
+      exit(1);
+    }
+    G4Box* CargoBox = new G4Sphere("CargoBox",box_size.GetX(), box_size.GetY(), box_size.GetZ());
+    G4LogicalVolume* CargoBoxLogical = new G4LogicalVolume(CargoBox, boxMAT, "CargoBoxLogical");
+    new G4PVPlacement(0,box_position, CargoBoxLogical, box_name.c_str(), logicContainer, false, 0, checkOverlaps);
+  }
+}
+
+void Cargo::CheckCargoBoxSize()
+{
+  if(cargo_box_size.size() != cargo_box_position.size() || cargo_box_size.size() != cargo_box_material.size())
+  {
+    G4cerr << "Cargo::CheckCargoBoxSize -> ERROR Missing Box Information!" << G4endl;
+    G4cerr << "Cargo::CheckCargoBoxSize -> Box Sizes Size: " << cargo_box_size.size() << G4endl;
+    G4cerr << "Cargo::CheckCargoBoxSize -> Box Positions Size: " << cargo_box_position.size() << G4endl;
+    G4cerr << "Cargo::CheckCargoBoxSize -> Box Materials Size: " << cargo_box_material.size() << G4endl;
+    exit(1);
+  }
+}
+
+void Cargo::CheckCargoSphereSize()
+{
+  if(cargo_sphere_radii.size() != cargo_sphere_position.size() || cargo_sphere_radii.size() != cargo_sphere_material.size())
+  {
+    G4cerr << "Cargo::CheckCargoSphereSize -> ERROR Missing Sphere Information!" << G4endl;
+    G4cerr << "Cargo::CheckCargoSphereSize -> Sphere Radii Size: " << cargo_sphere_radii.size() << G4endl;
+    G4cerr << "Cargo::CheckCargoSphereSize -> Sphere Positions Size: " << cargo_sphere_position.size() << G4endl;
+    G4cerr << "Cargo::CheckCargoSphereSize -> Sphere Materials Size: " << cargo_sphere_material.size() << G4endl;
+    exit(1);
+  }
+}
+
+bool Cargo::CheckCargoSphere(G4ThreeVector sphere_position, G4double sphere_radius)
+{
+  if(std::abs(sphere_position.GetX()) + std::abs(sphere_radius)*2. > 0.3048)
+  {
+    G4cerr << "Cargo::CheckCargoSphere -> ERROR Container X Dimension Breech." << G4endl;
+    return false;
+  }
+  if(std::abs(sphere_position.GetY()) + std::abs(sphere_radius)*2. > 1.2954)
+  {
+    G4cerr << "Cargo::CheckCargoSphere -> ERROR Container Y Dimension Breech." << G4endl;
+    return false;
+  }
+  if(std::abs(sphere_position.GetZ()) + std::abs(sphere_radius)*2. > 1.2192)
+  {
+    G4cerr << "Cargo::CheckCargoSphere -> ERROR Container Z Dimension Breech." << G4endl;
+    return false;
+  }
+  return true;
+}
+
+bool Cargo::CheckCargoBox(G4ThreeVector box_position, G4ThreeVector box_size)
+{
+  if(std::abs(box_position.GetX())+std::abs(box_size.GetX()) > 0.3048)
+  {
+    G4cerr << "Cargo::CheckCargoBox -> ERROR Container X Dimension Breeched." << G4endl;
+    return false;
+  }
+  if(std::abs(box_position.GetY())+std::abs(box_size.GetY()) > 1.2954)
+  {
+    G4cerr << "Cargo::CheckCargoBox -> ERROR Container Y Dimension Breeched." << G4endl;
+    return false;
+  }
+  if(std::abs(box_position.GetZ())+std::abs(box_size.GetZ()) > 1.2192)
+  {
+    G4cerr << "Cargo::CheckCargoBox -> ERROR Container Z Dimension Breeched." << G4endl;
+    return false;
+  }
+  return true;
 }

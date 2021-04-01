@@ -63,11 +63,11 @@
 #units all units cm
 #/Cargo/SphereRadius 2
 # Places Sphere 20 cm to right of center and 50 cm towards beam origin (in between interrogation object and beam)
-#/Cargo/SpherePosition {20,0,-50}
+#/Cargo/SpherePosition 20 0 -50
 #/Cargo/SphereMaterial G4_Pb
 #/Cargo/AddBox true
-#/Cargo/BoxSize {3,3,3}
-#/Cargo/BoxPosition {-30,-10,50}
+#/Cargo/BoxSize 3 3 3
+#/Cargo/BoxPosition -30 -10 50
 #/Cargo/BoxMaterial G4_W
 
 # The User can add as many boxes/spheres as he/she wants

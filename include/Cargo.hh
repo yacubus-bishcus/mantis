@@ -56,8 +56,6 @@ Cargo();
 ~Cargo();
 
 void Construct(G4LogicalVolume*, double, double, double, bool);
-
-void CheckCargoBoxSize();
 void CheckCargoSphereSize();
 
 void AddCargoSphere(){cargo_spheres++;};
@@ -70,7 +68,6 @@ void SetCargoSpherePosition(G4ThreeVector pos)
 };
 
 void SetCargoSphereMaterial(G4String m){cargo_sphere_material.push_back(m);};
-void PlaceCargoSpheres();
 
 void AddCargoBox(){cargo_boxes++;};
 
@@ -87,8 +84,6 @@ void SetCargoBoxPosition(G4ThreeVector pos)
 };
 
 void SetCargoBoxMaterial(G4String m){cargo_box_material.push_back(m);};
-
-void PlaceCargoBoxes();
 
 void SetIntObj_radius(G4double val)
 {
@@ -160,6 +155,10 @@ void SetRemoveContainer(G4bool val)
 private:
   bool CheckCargoSphere(G4ThreeVector, double);
   bool CheckCargoBox(G4ThreeVector, G4ThreeVector);
+  void CheckCargoBoxSize();
+  void PlaceCargoBoxes();
+  void PlaceCargoSpheres();
+
 
   G4bool RemoveContainer;
   G4double IntObj_rad, intObjDensity;

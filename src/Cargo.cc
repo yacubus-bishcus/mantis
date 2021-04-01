@@ -167,6 +167,9 @@ void Cargo::Construct(G4LogicalVolume* logicWorld, double container_z_pos, doubl
                         G4ThreeVector(0,0,chopper_end_edge_position+1.0*m),
                         logicIntObj, "IntObj",logicWorld, false, 0, checkOverlaps);
     }
+    CheckCargoBoxSize();
+    PlaceCargoSpheres();
+    PlaceCargoBoxes();
 }
 
 void Cargo::PlaceCargoSpheres()

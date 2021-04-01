@@ -178,13 +178,13 @@ void Cargo::PlaceCargoSpheres()
 
   for(int i=0;i<cargo_spheres;++i)
   {
-    G4double sphere_radius = cargo_sphere_radii[i];
-    G4ThreeVector sphere_position = cargo_sphere_position[i];
+    G4double sphere_radius = cargo_sphere_radii[i]*cm;
+    G4ThreeVector sphere_position = cargo_sphere_position[i]*cm;
     G4String sphere_material = cargo_sphere_material[i];
     G4String sphere_name = sphere_material + "_" + std::to_string(i);
     G4NistManager* nist = G4NistManager::Instance();
     G4Material *sphereMAT = nist->FindOrBuildMaterial(sphere_material);
-    bool check = CheckCargoSphere(sphere_position, sphere_radius);
+    bool check = CheckCargoSphere(sphere_position/(m), sphere_radius/(m));
     if(!check)
     {
       G4cerr << "Cargo::PlaceCargoSpheres -> ERROR Cannot Place Cargo Outside of Container." << G4endl;
@@ -205,13 +205,13 @@ void Cargo::PlaceCargoBoxes()
   G4cout << "Cargo::PlaceCargoBoxes -> Adding " << cargo_boxes << " boxes to cargo container." << G4endl;
   for(int i=0;i<cargo_boxes;++i)
   {
-    G4ThreeVector box_size = cargo_box_size[i];
-    G4ThreeVector box_position = cargo_box_position[i];
+    G4ThreeVector box_size = cargo_box_size[i]*cm;
+    G4ThreeVector box_position = cargo_box_position[i]*cm;
     G4String box_material = cargo_box_material[i];
     G4String box_name = box_material + "_" + std::to_string(i);
     G4NistManager* nist = G4NistManager::Instance();
     G4Material* boxMAT = nist->FindOrBuildMaterial(box_material);
-    bool check = CheckCargoBox(box_position, box_size);
+    bool check = CheckCargoBox(box_position/(m), box_size/(m));
     if(!check)
     {
       G4cerr << "Cargo::PlaceCargoBoxes -> ERROR Cannot Place Cargo Outside of Container." << G4endl;

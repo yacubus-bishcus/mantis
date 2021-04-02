@@ -29,6 +29,7 @@
 #include "G4ThreeVector.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4Event.hh"
+#include "G4Allocator.hh"
 #include "G4VUserEventInformation.hh"
 
 class eventInformation : public G4VUserEventInformation {
@@ -38,13 +39,15 @@ eventInformation(const G4Event*);
 eventInformation(const eventInformation*);
 virtual ~eventInformation();
 
-inline G4double GetWeight() const {
-        return weight;
+inline G4double GetWeight() const
+{
+  return weight;
 }
 void SetWeight(G4double);
 
-inline G4double GetBeamEnergy() const {
-        return beamEnergy;
+inline G4double GetBeamEnergy() const
+{
+  return beamEnergy;
 }
 void SetBeamEnergy(G4double);
 void Print() const;

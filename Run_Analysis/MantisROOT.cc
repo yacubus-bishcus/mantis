@@ -1625,7 +1625,7 @@ void MantisROOT::CopyATreeNoWeight(const char* filename, const char* tObj, const
   }
   else if(!string(tObj).compare("Corrected_DetInfo"))
   {
-    for(auto activeBranchName :{"EventID","Energy"})
+    for(auto activeBranchName :{"EventID", "Energy", "CreatorProcess", "Time"})
     {
       oldTree->SetBranchStatus(activeBranchName,1);
     }
@@ -1639,7 +1639,7 @@ void MantisROOT::CopyATreeNoWeight(const char* filename, const char* tObj, const
   }
   else if(!string(tObj).compare("event_tree"))
   {
-    for(auto activeBranchName :{"EventID","Energy"})
+    for(auto activeBranchName :{"EventID","Energy","CreatorProcess","Time"})
     {
       oldTree->SetBranchStatus(activeBranchName,1);
     }
@@ -3191,7 +3191,7 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
 
     if(weighted)
       g = errorneous_det_weightsv[i];
-      
+
     Errorneous_DetInfo->Fill();
   }
 

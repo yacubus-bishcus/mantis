@@ -177,6 +177,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
           break;
         } // end of for
       } // end of else not using importance sampling !filecheck
+      energy = energy*MeV;
     } // end of !resonance
     // The user has selected a mono-energetic beam
     else if(chosen_energy > 0 && !SampleEnergyRangebool)
@@ -246,7 +247,7 @@ void PrimaryGeneratorAction::CreateInputSpectrum(TH1D* hBrems_in)
     std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> Creating Input Spectrum..." << std::endl;
 
   std::vector<double> dNdEv;
-  
+
   if(debug)
   {
     std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> Bin Center 0: " << hBrems_in->GetXaxis()->GetBinCenter(0)

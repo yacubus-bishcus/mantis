@@ -37,93 +37,90 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
         : G4VUserPrimaryGeneratorAction(), pgaM(NULL),
         fParticleGun(0),fFileOpen(false), cutE(-1.), lowImportance(-1.)
 {
-        fParticleGun = new G4ParticleGun(1);
-        if(!bremTest)
-          beam_size = 44.0*mm; // optimized beam size for a 4.5cm radius interrogation object
-        else
-          beam_size = 1.3*mm;
+  fParticleGun = new G4ParticleGun(1);
+  if(!bremTest)
+    beam_size = 44.0*mm; // optimized beam size for a 4.5cm radius interrogation object
+  else
+    beam_size = 1.3*mm;
 
-        // Call messenger after default beams are set that way user can change default
-        pgaM = new PGAMessenger(this);
+  // Call messenger after default beams are set that way user can change default
+  pgaM = new PGAMessenger(this);
 
-        G4cout << "PrimaryGeneratorAction::Beam Position Set to: (0,0," << beamStart << ")cm" << G4endl;
+  G4cout << "PrimaryGeneratorAction::Beam Position Set to: (0,0," << beamStart << ")cm" << G4endl;
 
-        if(bremTest)
+  if(bremTest)
+  {
+    fParticleGun->SetParticleDefinition(G4Electron::Definition());
+    G4cout << "Particle Type set to Electron!" << G4endl;
+    file_check = false;
+  }
+  else
+  {
+    fParticleGun->SetParticleDefinition(G4Gamma::Definition());
+    G4cout << "Particle Type set to Gamma!" << G4endl;
+  }
+
+  // Default Kinematics
+  fParticleGun->SetParticleTime(0.0*ns);
+
+  if(chosen_energy < 0)
+  {
+    gRandom->SetSeed(seed);
+
+    CheckFile(inFile.c_str());
+    fin = TFile::Open(inFile.c_str());
+    fFileOpen = true;
+    fin->cd();
+    hBrems  = (TH1D*) fin->Get("hBrems");
+
+    if(debug)
+      hBrems->Print();
+
+    if(!hBrems)
+    {
+      G4cerr << "PrimaryGeneratorAction::PrimaryActionGenerator FATAL ERROR -> hBrems Fail." << G4endl;
+      exit(1);
+    }
+
+    if(!inFile.compare("brems_distributions.root"))
+    {
+        file_check = false;
+        gBrems = (TGraph*) fin->Get("Graph_from_hBrems");
+        hSample = (TH1D*) fin->Get("hSample");
+        gSample = (TGraph*) fin->Get("Graph_from_hSample");
+
+        if(debug)
+          hSample->Print();
+
+        if(!hSample || !gSample || !gBrems)
         {
-                fParticleGun->SetParticleDefinition(G4Electron::Definition());
-                G4cout << "Particle Type set to Electron!" << G4endl;
-                file_check = false;
+          G4cerr << "PrimaryGeneratorAction::PrimaryGeneratorAction() -> FATAL ERROR Failure to grab TGraphs from File: " << inFile << G4endl;
+          exit(1);
         }
-        else
-        {
-                fParticleGun->SetParticleDefinition(G4Gamma::Definition());
-                G4cout << "Particle Type set to Gamma!" << G4endl;
-        }
+        G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction -> Reading SAMPLED Distribution from: " << inFile << G4endl;
+    }
+    else
+    {
+      file_check = true;
+      CreateInputSpectrum(hBrems);
+      G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction -> Reading NON-SAMPLED Distribution from: " << inFile << G4endl;
+    }
 
-        // Default Kinematics
-        fParticleGun->SetParticleTime(0.0*ns);
+  } // end of chosen_energy < 0
+  else
+  {
+    file_check = false;
+    G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction Chosen Energy set to: " << chosen_energy << " MeV" << G4endl;
+  }
 
-        if(chosen_energy < 0)
-        {
-                gRandom->SetSeed(seed);
-
-                if(gSystem->AccessPathName(inFile.c_str()))
-                {
-                  G4cerr << "PrimaryGeneratorAction::PrimaryGeneratorAction FATAL ERROR -> " << inFile << " NOT FOUND!" << G4endl;
-                  exit(1);
-                }
-                fin = TFile::Open(inFile.c_str());
-                fFileOpen = true;
-                fin->cd();
-                hBrems  = (TH1D*) fin->Get("hBrems");
-
-                if(debug)
-                  hBrems->Print();
-
-                if(!hBrems)
-                {
-                  G4cerr << "PrimaryGeneratorAction::PrimaryActionGenerator FATAL ERROR -> hBrems Fail." << G4endl;
-                  exit(1);
-                }
-
-                if(!inFile.compare(0,24,"brems_distributions.root"))
-                {
-                    file_check = false;
-                    gBrems = (TGraph*) fin->Get("Graph_from_hBrems");
-                    hSample = (TH1D*) fin->Get("hSample");
-                    gSample = (TGraph*) fin->Get("Graph_from_hSample");
-
-                    if(debug)
-                      hSample->Print();
-
-                    if(!hSample || !gSample || !gBrems)
-                    {
-                      G4cerr << "PrimaryGeneratorAction::PrimaryGeneratorAction() -> FATAL ERROR Failure to grab TGraphs from File: " << inFile << G4endl;
-                      exit(1);
-                    }
-                    G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction -> Reading SAMPLED Distribution from: " << inFile << G4endl;
-                }
-                else
-                {
-                  file_check = true;
-                  G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction -> Reading NON-SAMPLED Distribution from: " << inFile << G4endl;
-                }
-
-        }
-        else
-        {
-                file_check = false;
-                G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction Chosen Energy set to: " << chosen_energy << " MeV" << G4endl;
-        }
-
-        G4cout << G4endl << "User Macro Inputs" << G4endl;
-        G4cout << "----------------------------------------------------------------------" << G4endl;
+  G4cout << G4endl << "User Macro Inputs" << G4endl;
+  G4cout << "----------------------------------------------------------------------" << G4endl;
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
-        delete pgaM;
-        delete fParticleGun;
+  delete pgaM;
+  delete fParticleGun;
 }
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
@@ -161,8 +158,19 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       }
       // User IS NOT USING importance sampling
       else
-        energy = hBrems->GetRandom()*MeV;
-    }
+      {
+        double random = G4UniformRand()*N[N.size() - 1];
+        for(int i=0;i<N.size();++i)
+        {
+          if(N[i] > random)
+          {
+            double f = (random - N[i - 1]) / (N[i] - N[i - 1]);
+            energy = f*energies[i] + (1 - f)*energies[i - 1];
+          }
+          break;
+        } // end of for
+      } // end of else not using importance sampling !filecheck
+    } // end of !resonance
     // The user has selected a mono-energetic beam
     else if(chosen_energy > 0 && !SampleEnergyRangebool)
       energy = chosen_energy*MeV;
@@ -172,6 +180,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       energy = SampleEnergyRange(chosen_energy,uniform_width);
     else
       energy = SampleUResonances();
+
+// ************************************************************************************ //
+// Input Handling Complete
+// ************************************************************************************ //
 
     // Set the energy
     fParticleGun->SetParticleEnergy(energy);
@@ -205,18 +217,47 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
 G4double PrimaryGeneratorAction::SampleUResonances()
  {
-        std::vector<double> er;
-        er.push_back(1.65624253132*MeV);
-        er.push_back(1.7335537285*MeV);
-        er.push_back(1.86232584382*MeV);
+    std::vector<double> er;
+    er.push_back(1.65624253132*MeV);
+    er.push_back(1.7335537285*MeV);
+    er.push_back(1.86232584382*MeV);
 
-        G4int idx = Random.Integer(er.size());
-        G4double de = 25.0*eV;
+    G4int idx = Random.Integer(er.size());
+    G4double de = 25.0*eV;
 
-        return Random.Uniform(er[idx]-de, er[idx]+de);
+    return Random.Uniform(er[idx]-de, er[idx]+de);
 }
 
 G4double PrimaryGeneratorAction::SampleEnergyRange(double center_energy, double width=0.005)
 {
   return Random.Uniform(center_energy-width, center_energy+width);
+}
+
+void PrimaryGeneratorAction::CreateInputSpectrum(TH1D* hBrems_in)
+{
+  std::vector<double> dNdEv;
+  for(int i=1;i<hBrems_in->GetNbinsX();++i)
+  {
+    // set energies
+    energies.push_back(hBrems_in->GetXaxis()->GetBinCenter(i));
+    // set dNdE
+    dNdEv.push_back(hBrems_in->GetBinContent(i));
+  }
+
+  double dx = energies[1] - energies[0];
+  N.push_back(0);
+  for(int i=1;i<hBrems_in->GetNbinsX();++i)
+  {
+    double yAvg = 0.5*(dNdEv.at(i) + dNdEv.at(i - 1));
+    N.push_back(N.at(i - 1) + dx*yAvg);
+  }
+}
+
+void PrimaryGeneratorAction::CheckFile(const char* filename)
+{
+  if(gSystem->AccessPathName(filename))
+  {
+    std::cout << "PrimaryGeneratorAction::CheckFile -> File " << filename << " Not Found." << std::endl;
+    exit(1);
+  }
 }

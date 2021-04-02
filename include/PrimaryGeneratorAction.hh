@@ -79,9 +79,12 @@ void SetEnergyCut(G4double x)
 }
 
 void CloseInputFile(){if(fFileOpen) fin->Close();}
+
 private:
-G4double SampleUResonances();
-G4double SampleEnergyRange(double,double);
+  void CreateInputSpectrum(TH1D*);
+  void CheckFile(const char*);
+  G4double SampleUResonances();
+  G4double SampleEnergyRange(double,double);
 
 private:
   PGAMessenger* pgaM;
@@ -90,7 +93,7 @@ private:
   G4double beam_size, energy;
   G4bool file_check, fFileOpen;
   G4double cutE, lowImportance;
-
+  std::vector<double> energies, N;
   // ROOT
   TRandom2 Random;
   TGraph *gBrems;

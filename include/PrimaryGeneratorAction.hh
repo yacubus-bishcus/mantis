@@ -89,7 +89,7 @@ private:
 private:
   PGAMessenger* pgaM;
   G4ParticleGun* fParticleGun;
-  G4double beamStart = 129.9;
+  G4double beamStart;
   G4double beam_size, energy;
   G4bool file_check, fFileOpen;
   G4double cutE, lowImportance;

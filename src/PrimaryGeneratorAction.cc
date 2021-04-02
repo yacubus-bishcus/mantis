@@ -46,20 +46,21 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   // Call messenger after default beams are set that way user can change default
   pgaM = new PGAMessenger(this);
 
-  G4cout << "PrimaryGeneratorAction::Beam Position Set to: (0,0," << beamStart << ")cm" << G4endl;
-
   if(bremTest)
   {
     fParticleGun->SetParticleDefinition(G4Electron::Definition());
+    beamStart = 129.9;
     G4cout << "Particle Type set to Electron!" << G4endl;
     file_check = false;
   }
   else
   {
     fParticleGun->SetParticleDefinition(G4Gamma::Definition());
+    beamStart = 139.9;
     G4cout << "Particle Type set to Gamma!" << G4endl;
   }
-
+  
+  G4cout << "PrimaryGeneratorAction::Beam Position Set to: (0,0," << beamStart << ")cm" << G4endl;
   // Default Kinematics
   fParticleGun->SetParticleTime(0.0*ns);
 

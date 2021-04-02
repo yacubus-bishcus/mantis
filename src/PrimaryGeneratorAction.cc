@@ -260,7 +260,7 @@ void PrimaryGeneratorAction::CreateInputSpectrum(TH1D* hBrems_in)
   if(debug)
     std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> Interpolating..." << std::endl;
 
-  for(int i=1;i<dNdEv.size();++i)
+  for(unsigned int i=1;i<dNdEv.size();++i)
   {
     if(debug)
     {

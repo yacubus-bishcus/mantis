@@ -79,15 +79,19 @@ G4VPhysicalVolume* ChopperSetup::Construct(G4LogicalVolume* logicWorld, double b
   G4double chopper_beginning_edge_position = (bremStartPos+ chopper_z + linac_size) - chopper_thick/2.;
   G4double chopper_end_edge_position = (bremStartPos + chopper_z + linac_size) + chopper_thick/2.;
   setBeginChopper(chopper_beginning_edge_position);
-  G4cout << "ChopperSetup::Construct -> Beginning Edge: " << chopper_beginning_edge_position/(cm) << " cm" << G4endl;
-  G4cout << "ChopperSetup::Construct -> End Edge: " << chopper_end_edge_position/(cm) << " cm" << G4endl;
+  G4cout << "ChopperSetup::Construct -> Beginning Edge: "
+          << chopper_beginning_edge_position/(cm) << " cm" << G4endl;
+  G4cout << "ChopperSetup::Construct -> End Edge: "
+          << chopper_end_edge_position/(cm) << " cm" << G4endl;
   setEndChop(chopper_end_edge_position);
 
   if(chopper_end_edge_position > container_edge_position)
   {
     G4cerr << "ChopperSetup::Construct -> ERROR: Chopper wheel location should be behind cargo container, exiting." << G4endl;
-    G4cerr << "ChopperSetup::Construct -> Chopper End Edge Position -> " << chopper_end_edge_position/(cm) << " cm" << G4endl;
-    G4cerr << "ChopperSetup::Construct -> Container Edge Position -> " << container_edge_position/(cm) << " cm" << G4endl;
+    G4cerr << "ChopperSetup::Construct -> Chopper End Edge Position -> "
+            << chopper_end_edge_position/(cm) << " cm" << G4endl;
+    G4cerr << "ChopperSetup::Construct -> Container Edge Position -> "
+            << container_edge_position/(cm) << " cm" << G4endl;
     exit(100);
   }
 
@@ -97,53 +101,55 @@ G4VPhysicalVolume* ChopperSetup::Construct(G4LogicalVolume* logicWorld, double b
 
   if(chopperDensity == 19.1*g/cm3)
   {
-          if(chopper_radio_abundance <= 0.0)
-          {
-                  G4cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << G4endl;
-                  exit(100);
-          }
+    if(chopper_radio_abundance <= 0.0)
+    {
+      G4cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << G4endl;
+      exit(100);
+    }
 
-          if(chopperOn)
-          {
-                  chopper_U235_abundance = chopper_radio_abundance;
-                  chopper_U238_abundance = 100. - chopper_radio_abundance;
-          }
-          else
-          {
-                  chopper_U235_abundance = 100. - chopper_radio_abundance;
-                  chopper_U238_abundance = chopper_radio_abundance;
-          }
+    if(chopperOn)
+    {
+            chopper_U235_abundance = chopper_radio_abundance;
+            chopper_U238_abundance = 100. - chopper_radio_abundance;
+    }
+    else
+    {
+            chopper_U235_abundance = 100. - chopper_radio_abundance;
+            chopper_U238_abundance = chopper_radio_abundance;
+    }
 
-          Uranium_chopper->AddIsotope(Uranium235, chopper_U235_abundance*perCent);
-          Uranium_chopper->AddIsotope(Uranium238, chopper_U238_abundance*perCent);
-          chopperMat->AddElement(Uranium_chopper,1);
-          G4cout << "ChopperSetup::Construct -> Material: Uranium" << G4endl;
-          G4cout << "ChopperSetup::Construct -> Fission isotope abundance: " << chopper_radio_abundance << " %" << G4endl;
+    Uranium_chopper->AddIsotope(Uranium235, chopper_U235_abundance*perCent);
+    Uranium_chopper->AddIsotope(Uranium238, chopper_U238_abundance*perCent);
+    chopperMat->AddElement(Uranium_chopper,1);
+    G4cout << "ChopperSetup::Construct -> Material: Uranium" << G4endl;
+    G4cout << "ChopperSetup::Construct -> Fission isotope abundance: "
+            << chopper_radio_abundance << " %" << G4endl;
   }
   else if(chopperDensity == 19.6*g/cm3)
   {
-          if(chopper_radio_abundance <= 0.0)
-          {
-                  G4cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << G4endl;
-                  exit(100);
-          }
+    if(chopper_radio_abundance <= 0.0)
+    {
+            G4cerr << "Fatal Error: User Must input chopper isotope abundance as percentage > 0" << G4endl;
+            exit(100);
+    }
 
-          if(chopperOn)
-          {
-                  chopper_Pu239_abundance = chopper_radio_abundance;
-                  chopper_Pu240_abundance = 100. - chopper_radio_abundance;
-          }
-          else
-          {
-                  chopper_Pu239_abundance = 100. - chopper_radio_abundance;
-                  chopper_Pu240_abundance = chopper_radio_abundance;
-          }
+    if(chopperOn)
+    {
+            chopper_Pu239_abundance = chopper_radio_abundance;
+            chopper_Pu240_abundance = 100. - chopper_radio_abundance;
+    }
+    else
+    {
+            chopper_Pu239_abundance = 100. - chopper_radio_abundance;
+            chopper_Pu240_abundance = chopper_radio_abundance;
+    }
 
-          Plutonium_chopper->AddIsotope(Plutonium239, chopper_Pu239_abundance*perCent);
-          Plutonium_chopper->AddIsotope(Plutonium240, chopper_Pu240_abundance*perCent);
-          chopperMat->AddElement(Plutonium_chopper, 1);
-          G4cout << "ChopperSetup::Construct -> Material: Plutonium" << G4endl;
-          G4cout << "ChopperSetup::Construct -> Fission isotope abundance: " << chopper_radio_abundance << " %" << G4endl;
+    Plutonium_chopper->AddIsotope(Plutonium239, chopper_Pu239_abundance*perCent);
+    Plutonium_chopper->AddIsotope(Plutonium240, chopper_Pu240_abundance*perCent);
+    chopperMat->AddElement(Plutonium_chopper, 1);
+    G4cout << "ChopperSetup::Construct -> Material: Plutonium" << G4endl;
+    G4cout << "ChopperSetup::Construct -> Fission isotope abundance: "
+            << chopper_radio_abundance << " %" << G4endl;
   }
   else if(chopperDensity == 11.34*g/cm3)
   {

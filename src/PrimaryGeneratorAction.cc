@@ -275,6 +275,18 @@ void PrimaryGeneratorAction::CreateInputSpectrum(TH1D* hBrems_in)
     double yAvg = 0.5*(dNdEv.at(i) + dNdEv.at(i - 1));
     N.push_back(N.at(i - 1) + dx*yAvg);
   }
+  if(debug)
+  {
+    for(int i=0;i<10;++i)
+    {
+      std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> Energies: "
+      << energies[i] << std::endl;
+      std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> dNdE: "
+      << dNdEv[i] << std::endl;
+      std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> N: "
+      << N[i] << std::endl;
+    }
+  }
 }
 
 void PrimaryGeneratorAction::CheckFile(const char* filename)

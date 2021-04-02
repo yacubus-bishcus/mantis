@@ -2518,9 +2518,11 @@ void MantisROOT::PrepInputSpectrum(const char* bremInputFilename, double deltaE=
   TTree* tBrem;
   f->GetObject("Brem", tBrem);
   double maxE = tBrem->GetMaximum("Energy");
-  int nbins = maxE/deltaE;
+  double minE = tBrem->GetMinimum("Energy");
 
-  TH1D* hBrems = new TH1D("hBrems","Bremsstrahlung Input Spectrum",nbins,0.,maxE);
+  int nbins = (maxE - minE)/deltaE;
+
+  TH1D* hBrems = new TH1D("hBrems","Bremsstrahlung Input Spectrum", nbins, minE, maxE);
   tBrem->Draw("Energy>>hBrems","","goff");
   hBrems->Scale(1./hBrems->Integral());
   hBrems->GetXaxis()->SetTitle("Energy [MeV]");

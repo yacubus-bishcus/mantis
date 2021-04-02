@@ -2524,7 +2524,8 @@ void MantisROOT::PrepInputSpectrum(const char* bremInputFilename, double deltaE=
   tBrem->Draw("Energy>>hBrems","","goff");
   hBrems->Scale(1./hBrems->Integral());
   hBrems->GetXaxis()->SetTitle("Energy [MeV]");
-  string yTitle = "Probability per " + std::to_string((int)deltaE*1e6) + " eV";
+  int titleEValue = deltaE*1e6;
+  string yTitle = "Probability per " + std::to_string(titleEValue) + " eV";
   hBrems->GetYaxis()->SetTitle(yTitle.c_str());
   TFile *fout = new TFile(outfile.c_str(),"RECREATE");
   fout->cd();

@@ -62,7 +62,7 @@ public:
     void CreateDetEfficiencyCurve(string);
     double Energy2Wave(double, string unit="eV");
     double Wave2Energy(double, string unit="m");
-    void PrepareAnalysis(std::vector<string>, bool weighted=false);
+    void PrepareAnalysis(std::vector<string>, bool weighted=false, int estimate=-1);
     //void CreateBremFit(const char*, double bin_width=5e-6);
 
 private:
@@ -707,9 +707,10 @@ double MantisROOT::hIntegralReturnWeightedCounts(TTree* inObj, double cut_energy
     std::cout << "Cut " << cut_energy << " MeV placed!" << std::endl;
   inObj->Draw("Energy>>h","Weight","goff");
   double intSum = h->Integral();
-  if(debug)
-    std::cout << "MantisROOT::hIntegralReturnWeightedCounts -> Deallocating Memory..." << std::endl;
-  //delete h;
+
+  std::cout << "MantisROOT::hIntegralReturnWeightedCounts -> Deallocating Memory..." << std::endl;
+
+  delete h;
   return intSum;
 
 }
@@ -730,8 +731,6 @@ double MantisROOT::hIntegralReturnWeightedEnergy(TTree* inObj, double cut_energy
   }
   if(debug)
     std::cout << "MantisROOT::hIntegralReturnWeightedEnergy -> Deallocating Memory..." << std::endl;
-  //delete Energies;
-  //delete Weights;
 
   return intSum;
 }
@@ -1294,7 +1293,10 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted, bo
 
   double *detEvent = DetInfo_in->GetVal(0);
   double *detEnergy = DetInfo_in->GetVal(1);
-  Char_t creators[16];
+
+  std::cout << "MantisROOT::Compute -> Setting CreatorProcess Branch Address..." << std::endl;
+
+  string *creators;
   DetInfo_in->SetBranchAddress("CreatorProcess",&creators);
 
   double *detTime = DetInfo_in->GetVal(3);
@@ -1311,8 +1313,7 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted, bo
   {
     detEventv.push_back((int)detEvent[i]);
     DetInfo_in->GetEntry(i);
-    string creator_string = string(creators);
-    detCreatorv.push_back(creator_string);
+    detCreatorv.push_back(*creators);
     detEnergyv.push_back(detEnergy[i]);
     detTimev.push_back(detTime[i]);
 
@@ -1510,6 +1511,9 @@ void MantisROOT::Compute(const char* fname, time_t time_start, bool Weighted, bo
   time_t time_end = std::time(&timer2);
   std::cout << "CheckEvents::Compute -> Event Check took: " << std::difftime(time_end, time_start)
           << " seconds!" << std::endl << std::endl;
+
+  std::cout << "CheckEvents::Compute -> Deallocating memory..." << std::endl;
+
 } // end of Compute function
 
 void MantisROOT::CopyATree(const char* filename, const char* tObj, const char* outfilename)
@@ -3110,7 +3114,7 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
   Corrected_DetInfo->Branch("EventID",&a);
   Corrected_DetInfo->Branch("Energy",&b);
   Corrected_DetInfo->Branch("CreatorProcess",&c);
-  Corrected_DetInfo->Branch("Times",&d);
+  Corrected_DetInfo->Branch("Time",&d);
 
   if(weighted)
     Corrected_DetInfo->Branch("Weight",&e);
@@ -3451,7 +3455,7 @@ double MantisROOT::Wave2Energy(double wavelength, string unit="m")
   return energy/1.60218e-19; // unit eV
 }
 
-void MantisROOT::PrepareAnalysis(std::vector<string> filebases, bool weighted=false)
+void MantisROOT::PrepareAnalysis(std::vector<string> filebases, bool weighted=false, int estimate=-1)
 {
   for(int i=0;i<filebases.size();++i)
   {
@@ -3462,8 +3466,8 @@ void MantisROOT::PrepareAnalysis(std::vector<string> filebases, bool weighted=fa
 
     std::cout << "MantisROOT::PrepareAnalysis -> Checking Detected Events..." << std::endl;
 
-    CheckDet(fileOn.c_str(),weighted);
-    CheckDet(fileOff.c_str(),weighted);
+    CheckDet(fileOn.c_str(),weighted, estimate);
+    CheckDet(fileOff.c_str(),weighted, estimate);
 
     std::cout << "MantisROOT::PrepareAnalysis -> Copying Corrected DetInfo..." << std::endl;
 

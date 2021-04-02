@@ -160,7 +160,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       else
       {
         double random = G4UniformRand()*N[N.size() - 1];
-        for(int i=0;i<N.size();++i)
+        for(unsigned int i=0;i<N.size();++i)
         {
           if(N[i] > random)
           {

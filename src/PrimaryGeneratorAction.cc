@@ -173,6 +173,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
           {
             double f = (random - N[i - 1]) / (N[i] - N[i - 1]);
             energy = f*energies[i] + (1 - f)*energies[i - 1];
+            
+            if(debug)
+              std::cout << "PrimaryGeneratorAction::GeneratePrimaries -> Random Energy: " << energy << std::endl;
+
           }
           break;
         } // end of for

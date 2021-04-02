@@ -2666,10 +2666,12 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er,
   }
   TTree* inTree;
   f->GetObject("IntObjIn", inTree);
+  double teMax = inTree->GetMaximum("Energy");
   std::cout << "MantisROOT::CheckIntObj -> " << onFile << " IntObjIn grabbed." << std::endl;
   double emin = Er - 100e-6;
   double emax = Er + 100e-6;
-  TH1D *e1 = new TH1D("e1","Incident Interrogation Object 2eV Binning",100, emin, emax);
+  TH1D *e1 = new TH1D("e1","Incident Interrogation Object 2eV Binning", 100, emin, emax);
+  TH1D *e3 = new TH1D("e3","Incident Interrogation Object Full Spectrum", 500, 0., teMax);
   if(Weighted)
     inTree->Draw("Energy>>e1","Weight","goff");
   else
@@ -2678,6 +2680,15 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er,
   e1->SetStats(0);
   e1->Sumw2();
   e1->Print();
+
+  if(Weighted)
+    inTree->Draw("Energy>>e3","Weight","goff");
+  else
+    inTree->Draw("Energy>>e3","","goff");
+
+  e3->SetStats(0);
+  e3->Sumw2();
+  e3->Print();
 
   // Off Analysis
   TFile *f2 = new TFile(offFile);
@@ -2697,7 +2708,8 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er,
   f2->GetObject("IntObjIn", inTree2);
   std::cout << "MantisROOT::CheckIntObj -> " << offFile << " IntObjIn grabbed." << std::endl;
 
-  TH1D *e2 = new TH1D("e2","Incident Interrogation Object 2eV Binning",100, emin, emax);
+  TH1D *e2 = new TH1D("e2","Incident Interrogation Object 2eV Binning", 100, emin, emax);
+  TH1D *e4 = new TH1D("e4", "Incident Interrogation Object Full Spectrum", 500, 0., teMax);
 
   if(Weighted)
     inTree2->Draw("Energy>>e2","Weight","goff");
@@ -2709,9 +2721,18 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er,
   e2->SetLineColor(kRed);
   e2->Print();
 
-  TCanvas *c1 = new TCanvas();
+  if(Weighted)
+    inTree2->Draw("Energy>>e4","Weight","goff");
+  else
+    inTree2->Draw("Energy>>e4","","goff");
+
+  e4->SetStats(0);
+  e4->Sumw2();
+  e4->SetLineColor(kRed);
+  e4->Print();
+
+  TCanvas *c1 = new TCanvas("c1","Incident Interrogation Object 2eV Binning",600,400);
   c1->cd();
-  gPad->SetTicks(1,1);
   e2->Draw();
   f->cd();
 
@@ -2726,6 +2747,23 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er,
   legend->AddEntry(e2, "Chopper Off");
   legend->Draw();
 
+  TCanvas *c2 = new TCanvas("c2","Incident Interrogation Object Full Spetrum",600,400);
+  c2->cd();
+  e3->Draw();
+  f2->cd();
+
+  e4->Draw("SAME");
+
+  e3->GetXaxis()->SetTitle("Incident Energy [MeV]");
+  e3->GetYaxis()->SetTitle("Counts");
+
+  auto legend2 = new TLegend();
+  legend2->SetHeader("Chopper State","C");
+  legend2->AddEntry(e3, "Chopper On");
+  legend2->AddEntry(e4, "Chopper Off");
+  legend2->Draw();
+
+  ZScore(e3->Integral(), e4->Integral());
   std::cout << "MantisROOT::CheckIntObj -> Complete." << std::endl;
 
 } // end of CheckIntObj

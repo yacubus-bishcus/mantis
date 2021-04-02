@@ -42,7 +42,7 @@ void Collimator::Construct(G4LogicalVolume* logicWorld, double bremStartPos, dou
   G4Box *solidCollimator =
                         new G4Box("Collimator", 1*cm, water_size_y, colimator_size);
   G4Box *solidCollimatorRear =
-                        new G4Box("Collimator",0.3048*m - 2*cm, 1.2954*m, 1*cm);
+                        new G4Box("Collimator",0.3048*m - 2*cm, water_size_y, 5*cm);
   G4LogicalVolume *logicCollimator =
                         new G4LogicalVolume(solidCollimator, lead, "Collimator");
   G4LogicalVolume *logicCollimatorRear =

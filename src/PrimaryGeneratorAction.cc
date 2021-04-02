@@ -169,11 +169,17 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         double random = G4UniformRand()*N[N.size() - 1];
         for(unsigned int i=0;i<N.size();++i)
         {
+          if(debug)
+          {
+            std::cout << "PrimaryGeneratorAction::GeneratePrimaries -> N[" << i << "]: " << N[i] << std::endl;
+            std::cout << "PrimaryGeneratorAction::GeneratePrimaries -> Random: " << random << std::endl;
+          }
+
           if(N[i] > random)
           {
             double f = (random - N[i - 1]) / (N[i] - N[i - 1]);
             energy = f*energies[i] + (1 - f)*energies[i - 1];
-            
+
             if(debug)
               std::cout << "PrimaryGeneratorAction::GeneratePrimaries -> Random Energy: " << energy << std::endl;
 

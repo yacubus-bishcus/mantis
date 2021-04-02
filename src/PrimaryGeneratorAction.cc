@@ -183,8 +183,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
             if(debug)
               std::cout << "PrimaryGeneratorAction::GeneratePrimaries -> Random Energy: " << energy << std::endl;
 
-          }
-          break;
+            break;
+          } // end of if(N[i] > random )
         } // end of for
       } // end of else not using importance sampling !filecheck
       energy = energy*MeV;

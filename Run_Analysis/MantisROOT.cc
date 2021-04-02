@@ -51,7 +51,7 @@ public:
     void CheckEvents(const char*, bool, bool);
     void Sampling(const char*, string sample_element="U", double deltaE=5.0e-6, bool checkZero=false, double non_nrf_energy_cut=1.5);
     void SimpleSampling(const char*, double deltaE=5.0e-6, double cut_energy=1.5, double weight=10000, bool checkZero=false);
-    void CheckIntObj(const char*, const char*, double, bool Weighted=false);
+    void CheckIntObj(const char*, const char*, double Er=1.73354, bool Weighted=false);
     void CheckAngles(const char*, int estimate=-1);
     TGraph* CreateTKDE(const char*, int nentries=10000);
     void CheckDet(const char*, bool weighted=false, int estimate=-1);
@@ -2646,7 +2646,7 @@ void MantisROOT::Sampling(const char *bremInputFilename, string sample_element="
 
 }// End of sampling
 
-void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er, bool Weighted=false)
+void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er=1.73354, bool Weighted=false)
 {
   CheckFile(onFile);
   CheckFile(offFile);
@@ -3803,7 +3803,7 @@ void MantisROOT::Show_SimpleSampling_Description()
 
 void MantisROOT::Show_CheckIntObj()
 {
-  std::cout << "void CheckIntObj(const char* onFile, const char* offFile, double Er, bool Weighted=false)" << std::endl;
+  std::cout << "void CheckIntObj(const char* onFile, const char* offFile, double Er=1.73354, bool Weighted=false)" << std::endl;
 }
 
 void MantisROOT::Show_CheckIntObj_Description()

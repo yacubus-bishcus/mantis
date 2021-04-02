@@ -3181,12 +3181,17 @@ void MantisROOT::CheckDet(const char* filename, bool weighted=false, int estimat
   double g;
   TTree* Errorneous_DetInfo = new TTree("Erroneous_DetInfo","Erroneous Detector Information");
   Errorneous_DetInfo->Branch("EventID",&h);
-  Errorneous_DetInfo->Branch("Weight",&g);
+
+  if(weighted)
+    Errorneous_DetInfo->Branch("Weight",&g);
 
   for(int i=0;i<errorneous_det_eventsv.size();++i)
   {
     h = errorneous_det_eventsv[i];
-    g = errorneous_det_weightsv[i];
+
+    if(weighted)
+      g = errorneous_det_weightsv[i];
+      
     Errorneous_DetInfo->Fill();
   }
 

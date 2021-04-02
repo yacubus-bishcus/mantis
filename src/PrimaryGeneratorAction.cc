@@ -246,6 +246,15 @@ void PrimaryGeneratorAction::CreateInputSpectrum(TH1D* hBrems_in)
     std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> Creating Input Spectrum..." << std::endl;
 
   std::vector<double> dNdEv;
+  
+  if(debug)
+  {
+    std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> Bin Center 0: " << hBrems_in->GetXaxis()->GetBinCenter(0)
+     << std::endl << "Bin Center 1: " << hBrems_in->GetXaxis()->GetBinCenter(1)
+     << std::endl << "Bin Content 0: " << hBrems_in->GetBinContent(0)
+     << std::endl << "Bin Content 1: " << hBrems_in->GetBinContent(1) << std::endl;
+  }
+
   for(int i=1;i<hBrems_in->GetNbinsX();++i)
   {
     // set energies

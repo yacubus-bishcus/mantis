@@ -63,6 +63,7 @@ public:
     double Energy2Wave(double, string unit="eV");
     double Wave2Energy(double, string unit="m");
     void PrepareAnalysis(std::vector<string>, bool weighted=false, int estimate=-1);
+    void PrepInputSpectrum(const char*, double deltaE=5.0e-6, string outfile="brem.root");
     //void CreateBremFit(const char*, double bin_width=5e-6);
 
 private:
@@ -248,6 +249,8 @@ private:
     void Show_Wave2Energy_Description();
     void Show_PrepareAnalysis();
     void Show_PrepareAnalysis_Description();
+    void Show_PrepInputSpectrum();
+    void Show_PrepInputSpectrum_Description();
 
     double hc = 6.62607004e-34*299792458;
 
@@ -356,6 +359,10 @@ void MantisROOT::Help()
 
   Show_PrepareAnalysis();
   Show_PrepareAnalysis_Description();
+  std::cout << std::endl;
+
+  Show_PrepInputSpectrum();
+  Show_PrepInputSpectrum_Description();
   std::cout << std::endl;
 
   Show_RebinHisto();
@@ -1068,6 +1075,7 @@ void MantisROOT::Show(string name="All", bool description=false)
     Show_OpenFile();
     Show_PredictThickness();
     Show_PrepareAnalysis();
+    Show_PrepInputSpectrum();
     Show_RebinHisto();
     Show_Sampling();
     Show_Show();
@@ -1172,6 +1180,12 @@ void MantisROOT::Show(string name="All", bool description=false)
     Show_PrepareAnalysis();
     if(description)
       Show_PrepareAnalysis_Description();
+  }
+  else if(!name.compare("PrepInputSpectrum"))
+  {
+    Show_PrepInputSpectrum();
+    if(description)
+      Show_PrepInputSpectrum_Description();
   }
   else if(!name.compare("RebinHisto"))
   {
@@ -2496,6 +2510,31 @@ void MantisROOT::WriteSampling(TH1D* hBrems, TH1D* hSample, TGraph* gBrems, TGra
   fout->Close();
 }
 
+void MantisROOT::PrepInputSpectrum(const char* bremInputFilename, double deltaE=5.0e-6, string outfile="brem.root")
+{
+  CheckFile(bremInputFilename);
+  TFile *f = new TFile(bremInputFilename);
+  f->cd();
+  TTree* tBrem;
+  f->GetObject("Brem", tBrem);
+  double maxE = tBrem->GetMaximum("Energy");
+  int nbins = maxE/deltaE;
+
+  TH1D* hBrems = new TH1D("hBrems","Bremsstrahlung Input Spectrum",nbins,0.,maxE);
+  tBrem->Draw("Energy>>hBrems","","goff");
+  hBrems->Scale(1./hBrems->Integral());
+  hBrems->GetXaxis()->SetTitle("Energy [MeV]");
+  string yTitle = "Probability per " + std::to_string((int)deltaE) + " eV";
+  hBrems->GetYaxis()->SetTitle(yTitle.c_str());
+  TFile *fout = new TFile(outfile.c_str(),"RECREATE");
+  fout->cd();
+  hBrems->Write();
+  std::cout << "MantisROOT::PrepInputSpectrum -> hBrems written to " << outfile << std::endl;
+  fout->Close();
+  f->cd();
+  f->Close();
+}
+
 void MantisROOT::SimpleSampling(const char* bremInputFilename, double deltaE=5.0e-6, double cut_energy=1.5, double weight=10000, bool checkZero=false)
 {
   CheckFile(bremInputFilename);
@@ -3812,6 +3851,18 @@ void MantisROOT::Show_PrepareAnalysis_Description()
   << std::endl << "Example: mantis->PrepareAnalysis({\"test9\",\"test10\"},true)" << std::endl
   << "Would run CheckDet, CheckEvent and CopyTrees on weighted spectra in files "
   << std::endl << "test9On-merged.root, test9Off-merged.root, test10On-merged.root and test10Off-merged.root"
+  << std::endl;
+}
+
+void MantisROOT::Show_PrepInputSpectrum()
+{
+  std::cout << "void PrepInputSpectrum(const char* bremInputFilename, double deltaE=5.0e-6, string outfilename=\"brem.root\")" << std::endl;
+}
+
+void MantisROOT::Show_PrepInputSpectrum_Description()
+{
+  std::cout << "DESCRIPTION: " << std::endl << "Prepares input spectrum file for Mantis Simulation without importance sampling."
+  << std::endl << "deltaE is the bin width of the Histogram and if the user wishes a nondefault outfilename enter the third input."
   << std::endl;
 }
 

@@ -46,8 +46,6 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
-    if(debug)
-        std::cout << "SteppingAction::UserSteppingAction --> Beginning" << std::endl;
 
     G4StepPoint* endPoint   = aStep->GetPostStepPoint();
     G4StepPoint* startPoint = aStep->GetPreStepPoint();
@@ -287,7 +285,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 manager->AddNtupleRow(5);
               }// end if drawIntObjOutDataFlag
             }// end else
-          }// end if exiting Interrogation Object 
+          }// end if exiting Interrogation Object
         }// end if !bremTest
 
 // *********************************************** Track Water Tank Interactions **************************************************** //
@@ -473,6 +471,4 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             } // for for loop
           } // for if statement if first time in photocathode
         } // for if at boundary
-      if(debug)
-        std::cout << "SteppingAction::UserSteppingAction()-> Ending!" <<std::endl;
 } // end of user stepping action function

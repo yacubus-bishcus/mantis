@@ -262,20 +262,7 @@ void PrimaryGeneratorAction::CreateInputSpectrum(TH1D* hBrems_in)
 
   for(unsigned int i=1;i<dNdEv.size();++i)
   {
-    if(debug)
-    {
-      std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> dNdEv.at(" << i << "): " << dNdEv.at(i) << std::endl;
-      std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> dNdEv.at(" << i - 1 << "): " << dNdEv.at(i-1) << std::endl;
-    }
-
     double yAvg = 0.5*(dNdEv.at(i) + dNdEv.at(i - 1));
-
-    if(debug)
-    {
-      std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> yAvg: " << yAvg << std::endl;
-      std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> N.at(" << i-1 << "): " << N.at(i-1) << std::endl;
-    }
-
     N.push_back(N.at(i - 1) + dx*yAvg);
   }
 }

@@ -102,6 +102,10 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
     else
     {
       file_check = true;
+      
+      if(debug)
+        std::cout << "PrimaryGeneratorAction::PrimaryGeneratorAction -> Calling CreateInputSpectrum..." << std::endl;
+
       CreateInputSpectrum(hBrems);
       G4cout << "PrimaryGeneratorAction::PrimaryGeneratorAction -> Reading NON-SAMPLED Distribution from: " << inFile << G4endl;
     }
@@ -159,6 +163,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       // User IS NOT USING importance sampling
       else
       {
+        if(debug)
+          std::cout << "PrimaryGeneratorAction::GeneratePrimaries -> Grabbing Random Energy..." << std::endl;
+
         double random = G4UniformRand()*N[N.size() - 1];
         for(unsigned int i=0;i<N.size();++i)
         {
@@ -235,6 +242,9 @@ G4double PrimaryGeneratorAction::SampleEnergyRange(double center_energy, double 
 
 void PrimaryGeneratorAction::CreateInputSpectrum(TH1D* hBrems_in)
 {
+  if(debug)
+    std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> Creating Input Spectrum..." << std::endl;
+
   std::vector<double> dNdEv;
   for(int i=1;i<hBrems_in->GetNbinsX();++i)
   {
@@ -246,6 +256,10 @@ void PrimaryGeneratorAction::CreateInputSpectrum(TH1D* hBrems_in)
 
   double dx = energies[1] - energies[0];
   N.push_back(0);
+
+  if(debug)
+    std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> Interpolating..." << std::endl;
+
   for(int i=1;i<hBrems_in->GetNbinsX();++i)
   {
     double yAvg = 0.5*(dNdEv.at(i) + dNdEv.at(i - 1));

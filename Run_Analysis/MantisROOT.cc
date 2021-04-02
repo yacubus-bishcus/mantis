@@ -2733,10 +2733,10 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er=
 
   TCanvas *c1 = new TCanvas("c1","Incident Interrogation Object 2eV Binning",600,400);
   c1->cd();
-  e2->Draw();
+  e2->Draw("h");
   f->cd();
 
-  e1->Draw("SAME");
+  e1->Draw("h,SAME");
 
   e2->GetXaxis()->SetTitle("Incident Energy [MeV]");
   e2->GetYaxis()->SetTitle("Counts/2eV");
@@ -2749,10 +2749,10 @@ void MantisROOT::CheckIntObj(const char* onFile, const char* offFile, double Er=
 
   TCanvas *c2 = new TCanvas("c2","Incident Interrogation Object Full Spetrum",600,400);
   c2->cd();
-  e3->Draw();
+  e3->Draw("h");
   f2->cd();
 
-  e4->Draw("SAME");
+  e4->Draw("h,SAME");
 
   e3->GetXaxis()->SetTitle("Incident Energy [MeV]");
   e3->GetYaxis()->SetTitle("Counts");

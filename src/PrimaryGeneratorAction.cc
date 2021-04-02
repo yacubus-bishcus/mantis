@@ -263,10 +263,13 @@ void PrimaryGeneratorAction::CreateInputSpectrum(TH1D* hBrems_in)
   for(int i=1;i<hBrems_in->GetNbinsX();++i)
   {
     if(debug)
+    {
       std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> dNdEv.at(" << i << "): " << dNdEv.at(i) << std::endl;
-
-    double yAvg = 0.5*(dNdEv.at(i) + dNdEv.at(i - 1));
+      std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> dNdEv.at(" << i - 1 << "): " << dNdEv.at(i-1) << std::endl;
+    }
     
+    double yAvg = 0.5*(dNdEv.at(i) + dNdEv.at(i - 1));
+
     if(debug)
       std::cout << "PrimaryGeneratorAction::CreateInputSpectrum -> N.at(" << i << "): " << N.at(i) << std::endl;
 

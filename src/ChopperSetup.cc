@@ -86,6 +86,8 @@ G4VPhysicalVolume* ChopperSetup::Construct(G4LogicalVolume* logicWorld, double b
   if(chopper_end_edge_position > container_edge_position)
   {
     G4cerr << "ChopperSetup::Construct -> ERROR: Chopper wheel location should be behind cargo container, exiting." << G4endl;
+    G4cerr << "ChopperSetup::Construct -> Chopper End Edge Position -> " << chopper_end_edge_position/(cm) << " cm" << G4endl;
+    G4cerr << "ChopperSetup::Construct -> Container Edge Position -> " << container_edge_position/(cm) << " cm" << G4endl;
     exit(100);
   }
 

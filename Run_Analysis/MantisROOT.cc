@@ -2519,7 +2519,6 @@ void MantisROOT::PrepInputSpectrum(const char* bremInputFilename, double deltaE=
   f->GetObject("Brem", tBrem);
   double maxE = tBrem->GetMaximum("Energy");
   double minE = tBrem->GetMinimum("Energy");
-  minE = 0.1;
 
   int nbins = (maxE - minE)/deltaE;
 

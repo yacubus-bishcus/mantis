@@ -60,7 +60,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
     G4cout << "Particle Type set to Gamma!" << G4endl;
   }
 
-  G4double source_z_pos = beamStart;
+  SourceInformation* sInfo = SourceInformation::Instance();
+  sInfo->SetSourceZPosition(beamStart);
   // Default Kinematics
   fParticleGun->SetParticleTime(0.0*ns);
 

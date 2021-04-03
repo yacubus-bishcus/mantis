@@ -37,6 +37,7 @@
 #include "G4Gamma.hh"
 #include "G4Electron.hh"
 #include "eventInformation.hh"
+#include "SourceInformation.hh"
 
 #include "TFile.h"
 #include "TROOT.h"
@@ -48,7 +49,6 @@
 class G4Event;
 class HistoManager;
 class PGAMessenger;
-extern G4double source_z_pos;
 
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {

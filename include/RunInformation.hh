@@ -25,6 +25,11 @@
 #ifndef RunInformation_h
 #define RunInformation_h 1
 
+#include "globals.hh"
+#include "G4Types.hh"
+#include "G4ios.hh"
+#include "G4SystemOfUnits.hh"
+
 class RunInformation
 {
   static RunInformation *instance;
@@ -62,7 +67,7 @@ public:
   void AddStatusKilledPhiAngle(void){fStatusKilledPhiAngle++;}
   G4int GetTotalKilledPhi()const {return fStatusKilledPhiAngle;}
 
-  G4double fCerenkovEnergy, fScintEnergy
+  G4double fCerenkovEnergy, fScintEnergy;
   G4int fCerenkovCount, fScintCount, fTotalSurface, fNRF, fStatusKilledPosition, fStatusKilledTime, fStatusKilledThetaAngle, fStatusKilledPhiAngle;
   ~RunInformation();
 };

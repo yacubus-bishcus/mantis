@@ -92,7 +92,6 @@
 #################################################################################################
 # OUTPUT OPTIONS
 
-#/material/verbose false
 #/material/CheckOverlaps true
 
 /run/initialize
@@ -100,7 +99,8 @@
 #/output/myoutput ChopIncData
 #/output/myoutput ChopOutData
 #/output/myoutput NRFData
-#/output/myoutput IntObjData
+#/output/myoutput IntObjInData
+#/output/myoutput IntObjOutData
 #/output/myoutput WaterIncData
 #/output/myoutput CherenkovData
 #/output/myoutput DetData

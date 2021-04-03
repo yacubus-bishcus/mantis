@@ -41,12 +41,20 @@ public:
   }
 
   // Set Data Functions here
+  void setBeginChopper(G4double pos){BeginChop = pos;}
+  G4double getBeginChopper()const{return BeginChop;}
   void setEndChop(G4double z_pos){EndChop = z_pos;}
   G4double getEndChop()const{return EndChop;}
-  void setEndIntObj(G4double val){EndIntObj = val;}
+  void setEndIntObj(G4double z_pos_con, G4double con_z_size)
+  {
+    EndIntObj = z_pos_con + con_z_size/2;
+    G4cout << "DetectorInformation::Z-Cut set to: " << EndIntObj/(cm) << " cm" << G4endl << G4endl;
+  }
   G4double getEndIntObj()const{return EndIntObj;}
+  void setRearCollimatorPosition(G4double val){RearColPos = val;}
+  G4double getRearCollimatorPosition(void){return RearColPos;}
 
-  G4double EndChop, EndIntObj;
+  G4double BeginChop, EndChop, EndIntObj, RearColPos;
   ~DetectorInformation();
 };
 

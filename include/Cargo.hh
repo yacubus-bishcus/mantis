@@ -43,6 +43,7 @@
 #include "G4Isotope.hh"
 #include "G4Material.hh"
 #include "CargoMessenger.hh"
+#include "DetectorInformation.hh"
 
 
 class G4VPhysicalVolume;
@@ -135,17 +136,6 @@ void SetIntObj(G4String val)
   else{G4cerr << "ERROR: Cargo -> IntObj not correctly chosen" << G4endl;}
 }
 
-void setEndIntObj(G4double z_pos_con, G4double con_z_size)
-{
-  EndIntObj = z_pos_con + con_z_size/2;
-  G4cout << "Z-Cut set to: " << EndIntObj/(cm) << " cm" << G4endl << G4endl;
-}
-
-G4double getEndIntObj()const
-{
-  return EndIntObj;
-}
-
 void SetRemoveContainer(G4bool val)
 {
   RemoveContainer=val;
@@ -175,7 +165,6 @@ private:
   std::vector<G4String> cargo_sphere_material, cargo_box_material;
   G4bool checkOverlaps;
   CargoMessenger* cargoM;
-  G4double EndIntObj;
 
 };
 

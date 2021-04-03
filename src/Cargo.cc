@@ -152,7 +152,8 @@ void Cargo::Construct(G4LogicalVolume* logicWorld, double container_z_pos, doubl
 
     G4LogicalVolume* logicIntObj = new G4LogicalVolume(solidIntObj, intObjMat,"IntObj");
     G4cout << "Cargo::Construct -> Begin of Interrogation Object: " << container_z_pos/(cm) + 0/(cm) -  IntObj_rad/(cm) << " cm" << G4endl;
-    setEndIntObj(container_z_pos, 1.2192*m);
+    DetectorInformation* detInfo = DetectorInformation::Instance();
+    detInfo->setEndIntObj(container_z_pos, 1.2192*m);
 
     if(!RemoveContainer)
     {

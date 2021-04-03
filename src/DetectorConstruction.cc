@@ -87,8 +87,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   bialkali->AddElement(elK,2);
   bialkali->AddElement(elSb,1);
 
-  G4double world_size_x = 3.*m;
-  G4double world_size_z = 5.*m;
+  G4double world_size_x = 2.5*m;
+  G4double world_size_z = 4.5*m;
 
   G4Box* solidWorld = new G4Box("World", world_size_x, world_size_x, world_size_z);
 

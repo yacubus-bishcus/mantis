@@ -37,6 +37,7 @@
 #include "G4Gamma.hh"
 #include "G4Electron.hh"
 #include "eventInformation.hh"
+#include "SourceInformation.hh"
 
 #include "TFile.h"
 #include "TROOT.h"

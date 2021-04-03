@@ -166,8 +166,14 @@ G4VPhysicalVolume* ChopperSetup::Construct(G4LogicalVolume* logicWorld, double b
   G4cout << "ChopperSetup::Construct -> Material density: " << chopperDensity/(g/cm3) << " g/cm3" << G4endl;
 
 
-  G4cout << "ChopperSetup::Construct -> Thickness: " << chopper_thick/(mm) << " mm" << G4endl;
-  G4cout << "ChopperSetup::Construct -> Center distance from the source: " << (linac_size + chopper_z)/(cm) << " cm" << G4endl;
+  G4cout << "ChopperSetup::Construct -> Thickness: " << chopper_thick/(mm)
+          << " mm" << G4endl;
+
+  SourceInformation* sInfo = new SourceInformation();
+  G4double source_pos = sInfo->GetSourceZPosition();
+  G4cout << "ChopperSetup::Construct -> Center distance from the source: "
+          << ((chopper_beginning_edge_position + chopper_end_edge_position)/2.) - source_pos
+              << " cm" << G4endl;
 
   G4LogicalVolume* logicChopper = new G4LogicalVolume(solidChopper, chopperMat, "Chop");
 

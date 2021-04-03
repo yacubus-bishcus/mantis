@@ -22,7 +22,7 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "DetectorInformation"
+#include "DetectorInformation.hh"
 
 DetectorInformation *DetectorInformation::instance = 0;
 
@@ -31,4 +31,3 @@ DetectorInformation::DetectorInformation()
 
 DetectorInformation::~DetectorInformation()
 {}
-  

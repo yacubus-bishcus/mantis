@@ -25,6 +25,10 @@
 #ifndef DetectorInformation_h
 #define DetectorInformation_h 1
 
+#include "globals.hh"
+#include "G4Types.hh"
+#include "G4ios.hh"
+
 class DetectorInformation
 {
   static DetectorInformation *instance;

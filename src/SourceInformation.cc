@@ -24,6 +24,8 @@
 
 #include "SourceInformation.hh"
 #include "G4ios.hh"
+#include "globals.hh"
+#include "G4Types.hh"
 
 SourceInformation::SourceInformation()
 {

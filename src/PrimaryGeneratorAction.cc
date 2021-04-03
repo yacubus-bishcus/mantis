@@ -62,7 +62,6 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 
   SourceInformation* sourceInfo = new SourceInformation();
   sourceInfo->SetSourceZPosition(beamStart);
-  G4cout << "PrimaryGeneratorAction::Beam Position Set to: (0,0," << beamStart << ")cm" << G4endl;
   // Default Kinematics
   fParticleGun->SetParticleTime(0.0*ns);
 

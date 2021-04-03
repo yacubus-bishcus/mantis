@@ -41,4 +41,5 @@ SourceInformation::~SourceInformation()
 void SourceInformation::SetSourceZPosition(G4double z)
 {
   z_pos = z;
+  G4Cout << "SourceInformation::SetSourceZPosition -> " << z_pos << G4endl;
 }

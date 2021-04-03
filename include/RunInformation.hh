@@ -68,7 +68,7 @@ public:
   G4int GetTotalKilledPhi()const {return fStatusKilledPhiAngle;}
 
   G4double fCerenkovEnergy, fScintEnergy;
-  G4int fCerenkovCount, fScintCount, fTotalSurface, fNRF, fStatusKilledPosition, fStatusKilledTime, fStatusKilledThetaAngle, fStatusKilledPhiAngle;
+  G4int fTotalSurface, fCerenkovCount, fScintCount, fNRF, fStatusKilledPosition, fStatusKilledTime, fStatusKilledThetaAngle, fStatusKilledPhiAngle;
   ~RunInformation();
 };
 

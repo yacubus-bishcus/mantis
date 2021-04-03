@@ -33,6 +33,7 @@
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
+#include "RunInformation.hh"
 #include "PrimaryGeneratorAction.hh"
 
 class RunAction : public G4UserRunAction

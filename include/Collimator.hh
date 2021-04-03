@@ -40,6 +40,7 @@
 #include "G4NistManager.hh"
 #include "G4Isotope.hh"
 #include "G4Material.hh"
+#include "DetectorInformation.hh"
 
 class G4VPhysicalVolume;
 class G4LogicalVolume;
@@ -50,11 +51,6 @@ public:
   Collimator();
   ~Collimator();
   void Construct(G4LogicalVolume*, double, double, double, double, bool);
-  void setRearCollimatorPosition(G4double val){RearColPos = val;}
-  G4double getRearCollimatorPosition(void){return RearColPos;}
-
-private:
-  G4double RearColPos;
 };
 
 #endif

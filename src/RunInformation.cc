@@ -22,33 +22,18 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "StackingAction.hh"
+#include "RunInformation.hh"
 
+RunInformation *RunInformation::instance = 0;
 
-StackingAction::StackingAction()
+RunInformation::RunInformation()
+: fTotalSurface(0), fCerenkovCount(0), fScintCount(0), fCerenkovEnergy(0.), fScintEnergy(0.),
+  fNRF(0), fStatusKilledPosition(0), fStatusKilledTime(0), fStatusKilledThetaAngle(0),
+  fStatusKilledPhiAngle(0)
+
 {
 }
 
-StackingAction::~StackingAction()
-{
-}
-
-G4ClassificationOfNewTrack StackingAction::ClassifyNewTrack(const G4Track* currentTrack)
-{
-  DetectorInformation* detInfo = DetectorInformation::Instance();
-  RunInformation* runInfo = RunInformation::Instance();
-  // if a new track is created beyond interogation material kill it
-  G4double EndIntObj = detInfo->getEndIntObj();
-  G4double trackZ = currentTrack->GetPosition().z();
-
-  if(trackZ/(cm) > EndIntObj/(cm))
-  {
-    runInfo->AddStatusKilledPosition();
-    return fKill;
-  }
+RunInformation::~RunInformation()
+{}
   
-  G4ParticleDefinition *pdef = currentTrack->GetDefinition();
-  // kill neutrons (probably not important)
-  if(pdef == G4Neutron::Definition()) return fKill;
-  return fUrgent;
-}

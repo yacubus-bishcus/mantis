@@ -37,7 +37,8 @@ void Collimator::Construct(G4LogicalVolume* logicWorld, double bremStartPos, dou
   G4double col_position = 1.0*cm + container_z_pos - 1.2192*m - colimator_size; // should go 1cm past the container
   G4double col_edge_position = col_position + colimator_size;
   G4double rearCol_Z_pos = bremStartPos - linac_size - 50.0*cm;
-  setRearCollimatorPosition(rearCol_Z_pos);
+  DetectorInformation* detInfo = DetectorInformation::Instance();
+  detInfo->setRearCollimatorPosition(rearCol_Z_pos);
 
   G4Box *solidCollimator =
                         new G4Box("Collimator", 1*cm, water_size_y, colimator_size);

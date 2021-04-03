@@ -113,10 +113,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double bremStartPos = 135*cm;
   G4double container_z_pos = 1.2192*m + 1.5*m;
   G4double container_edge_position = container_z_pos - 1.2192*m;
-
+  DetectorInformation* detInfo = DetectorInformation::Instance();
   chop->Construct(logicWorld, bremStartPos, linac_size, container_edge_position, checkOverlaps);
-  G4double chopper_end_edge_position = chop->getEndChop();
-  setEndChop(chopper_end_edge_position);
   // Set up Linac configuration if Brem Test
 
   if(bremTest)
@@ -127,10 +125,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // ***************************************** End of Brem Test Materials ***************************************** //
 
   collimator->Construct(logicWorld, bremStartPos, linac_size, container_z_pos, water_size_y, checkOverlaps);
-  G4double rearCol_Z_pos = collimator->getRearCollimatorPosition();
-  cargo->Construct(logicWorld, container_z_pos, container_edge_position, getEndChop(), checkOverlaps);
-  G4double end_int_obj = cargo->getEndIntObj();
-  setEndIntObj(end_int_obj);
+  cargo->Construct(logicWorld, container_z_pos, container_edge_position, detInfo->getEndChop(), checkOverlaps);
   cargo->CheckCargoSphereSize();
 
 // ******************************************************** Begin Detector Construction *************************************************************** //
@@ -155,7 +150,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   }
 
   //G4double water_z_pos = container_z_pos - 1.2192*m;
-  G4double water_z_pos = rearCol_Z_pos;
+  G4double water_z_pos = detInfo->getRearCollimatorPosition();
   G4double myangle = (180. - theAngle)*pi/180.;
   G4double water_x_pos = tan(myangle)*(container_z_pos - water_z_pos);
   G4double detDistance = water_x_pos/sin(myangle) + water_size_z;

@@ -33,7 +33,6 @@
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
-#include "EventCheck.hh"
 #include "PrimaryGeneratorAction.hh"
 
 class RunAction : public G4UserRunAction
@@ -47,22 +46,9 @@ class RunAction : public G4UserRunAction
     virtual void BeginOfRunAction(const G4Run*);
     virtual void EndOfRunAction(const G4Run*);
 
-    void AddCerenkovEnergy(G4double en) {fCerenkovEnergy += en;}
-    void AddScintillationEnergy(G4double en) {fScintEnergy += en;}
-    void AddCerenkov(void) {fCerenkovCount++;} // changed from +=
-    void AddScintillation(void) {fScintCount++;}
-    void AddTotalSurface(void) {fTotalSurface += 1;}
-    void AddNRF(void){fNRF++;}
-    void AddStatusKilledPosition(void){fStatusKilledPosition++;}
-    void AddStatusKilledTime(void){fStatusKilledTime++;}
-    void AddStatusKilledThetaAngle(void){fStatusKilledThetaAngle++;}
-    void AddStatusKilledPhiAngle(void){fStatusKilledPhiAngle++;}
-
   private:
     HistoManager* fHistoManager;
     PrimaryGeneratorAction* fpga;
-    G4double fCerenkovEnergy, fScintEnergy, fCerenkovCount;
-    G4int fScintCount, fTotalSurface, fNRF, fStatusKilledPosition, fStatusKilledTime, fStatusKilledThetaAngle, fStatusKilledPhiAngle;
 };
 
 

@@ -34,21 +34,19 @@
 #include "G4VProcess.hh"
 #include "G4Event.hh"
 #include "G4EventManager.hh"
-#include "DetectorConstruction.hh"
+#include "RunInformation.hh"
+#include "DetectorInformation.hh"
 #include "G4Neutron.hh"
 #include "RunAction.hh"
 
 class StackingAction : public G4UserStackingAction
 {
 public:
-StackingAction(const DetectorConstruction*, RunAction*);
+StackingAction();
 virtual ~StackingAction();
 
 public:
 virtual G4ClassificationOfNewTrack ClassifyNewTrack(const G4Track* aTrack);
-private:
-  const DetectorConstruction* local_det;
-  RunAction* local_run;
 };
 
 #endif

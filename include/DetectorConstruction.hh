@@ -60,6 +60,7 @@
 #include "G4RunManager.hh"
 #include "G4NistManager.hh"
 #include "G4RotationMatrix.hh"
+#include "DetectorInformation.hh"
 
 
 class G4VPhysicalVolume;
@@ -125,10 +126,6 @@ void SetPC_radius(G4double val)
 
 void SetPC_material(G4String val){pc_mat = val;}
 void SetnPMT(G4int val){nPMT = val;}
-void setEndChop(G4double z_pos){EndChop = z_pos;}
-G4double getEndChop()const{return EndChop;}
-void setEndIntObj(G4double val){EndIntObj = val;}
-G4double getEndIntObj()const{return EndIntObj;}
 
 void SettheAngle(G4double val){theAngle = val;}
 void SetPlexiThickness(G4double val)
@@ -157,8 +154,6 @@ Collimator* collimator;
 Cargo* cargo;
 // Brem Properties
 G4double linac_size = 9*cm;
-
-G4double EndChop, EndIntObj;
 
 // Material, Logical and Physical Volumes
 G4Material* PC_mat;

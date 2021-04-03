@@ -261,14 +261,9 @@ int main(int argc,char **argv)
         Linac* linac = new Linac();
         Collimator* collimator = new Collimator();
         Cargo* cargo = new Cargo();
-        DetectorConstruction* det = new DetectorConstruction(chopper, linac, collimator, cargo);
-        runManager->SetUserInitialization(det);
-
-        // Set up Physics List
-        PhysicsListNew *thePLNew = new PhysicsListNew(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose);
-        runManager->SetUserInitialization(thePLNew);
-
-        runManager->SetUserInitialization(new ActionInitialization(det));
+        runManager->SetUserInitialization(new DetectorConstruction(chopper, linac, collimator, cargo));
+        runManager->SetUserInitialization(new PhysicsListNew(addNRF, use_xsec_tables, use_xsec_integration, force_isotropic, standalone, NRF_Verbose));
+        runManager->SetUserInitialization(new ActionInitialization());
 
 #ifdef G4VIS_USE
         if(ui || macro == "vis_save.mac")

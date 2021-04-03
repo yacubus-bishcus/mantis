@@ -22,33 +22,32 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "StackingAction.hh"
+#ifndef DetectorInformation_h
+#define DetectorInformation_h 1
 
-
-StackingAction::StackingAction()
+class DetectorInformation
 {
-}
+  static DetectorInformation *instance;
 
-StackingAction::~StackingAction()
-{
-}
-
-G4ClassificationOfNewTrack StackingAction::ClassifyNewTrack(const G4Track* currentTrack)
-{
-  DetectorInformation* detInfo = DetectorInformation::Instance();
-  RunInformation* runInfo = RunInformation::Instance();
-  // if a new track is created beyond interogation material kill it
-  G4double EndIntObj = detInfo->getEndIntObj();
-  G4double trackZ = currentTrack->GetPosition().z();
-
-  if(trackZ/(cm) > EndIntObj/(cm))
+  DetectorInformation();
+public:
+  static DetectorInformation *Instance()
   {
-    runInfo->AddStatusKilledPosition();
-    return fKill;
+    if(!instance)
+    {
+      instance = new DetectorInformation;
+    }
+    return instance;
   }
-  
-  G4ParticleDefinition *pdef = currentTrack->GetDefinition();
-  // kill neutrons (probably not important)
-  if(pdef == G4Neutron::Definition()) return fKill;
-  return fUrgent;
-}
+
+  // Set Data Functions here
+  void setEndChop(G4double z_pos){EndChop = z_pos;}
+  G4double getEndChop()const{return EndChop;}
+  void setEndIntObj(G4double val){EndIntObj = val;}
+  G4double getEndIntObj()const{return EndIntObj;}
+
+  G4double EndChop, EndIntObj;
+  ~DetectorInformation();
+};
+
+#endif

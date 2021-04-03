@@ -23,7 +23,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "ActionInitialization.hh"
-#include "DetectorConstruction.hh"
 #include "PrimaryGeneratorAction.hh"
 #include "RunAction.hh"
 #include "SteppingAction.hh"
@@ -34,8 +33,8 @@
 
 extern G4bool debug;
 
-ActionInitialization::ActionInitialization(const DetectorConstruction* det)
-        : G4VUserActionInitialization(), fDetector(det)
+ActionInitialization::ActionInitialization()
+        : G4VUserActionInitialization()
 {
 }
 
@@ -51,12 +50,11 @@ void ActionInitialization::Build() const
     HistoManager* histo = new HistoManager();
     PrimaryGeneratorAction* pga = new PrimaryGeneratorAction();
     SetUserAction(pga);
-    RunAction* run = new RunAction(histo,pga);
-    SetUserAction(run);
+    SetUserAction(new RunAction(histo,pga));
     EventAction* event = new EventAction();
     SetUserAction(event);
-    SetUserAction(new SteppingAction(fDetector, run, event));
-    SetUserAction(new StackingAction(fDetector, run));
+    SetUserAction(new SteppingAction(event));
+    SetUserAction(new StackingAction());
 
     if(debug)
         std::cout << "ActionInitialization::Build() -> End!" << std::endl;

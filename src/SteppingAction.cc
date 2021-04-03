@@ -28,20 +28,20 @@ extern G4bool debug;
 extern G4String inFile;
 extern G4bool addNRF;
 
-SteppingAction::SteppingAction(const DetectorConstruction* det, RunAction* run, EventAction* event)
-        : G4UserSteppingAction(), kdet(det), krun(run), kevent(event),
+SteppingAction::SteppingAction(EventAction* event)
+        : G4UserSteppingAction(), kevent(event),
         drawChopperIncDataFlag(0), drawChopperOutDataFlag(0), drawNRFDataFlag(0),
         drawIntObjInDataFlag(0), drawIntObjOutDataFlag(0), drawWaterIncDataFlag(0),
         drawCherenkovDataFlag(0), drawDetDataFlag(0),
         stepM(NULL)
 {
-        stepM = new StepMessenger(this);
-        fExpectedNextStatus = Undefined;
+  stepM = new StepMessenger(this);
+  fExpectedNextStatus = Undefined;
 }
 
 SteppingAction::~SteppingAction()
 {
-        delete stepM;
+  delete stepM;
 }
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
@@ -68,6 +68,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       weight = info->GetWeight();
     }
 
+    RunInformation* krun = RunInformation::Instance();
+    DetectorInformation* kdet = DetectorInformation::Instance();
+    
     G4String nextStep_VolumeName = endPoint->GetPhysicalVolume()->GetName();
     G4String previousStep_VolumeName = startPoint->GetPhysicalVolume()->GetName();
     // kill photons past IntObj

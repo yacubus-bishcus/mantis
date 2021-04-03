@@ -79,14 +79,15 @@ G4VPhysicalVolume* ChopperSetup::Construct(G4LogicalVolume* logicWorld, double b
   G4double chopper_beginning_edge_position = (bremStartPos+ chopper_z + linac_size) - chopper_thick/2.;
   G4double chopper_end_edge_position = (bremStartPos + chopper_z + linac_size) + chopper_thick/2.;
   G4double chopper_center_position = (chopper_beginning_edge_position + chopper_end_edge_position)/2.;
-  setBeginChopper(chopper_beginning_edge_position);
+  DetectorInformation* detInfo = DetectorInformation::Instance();
+  detInfo->setBeginChopper(chopper_beginning_edge_position);
   G4cout << "ChopperSetup::Construct -> Beginning Edge: "
           << chopper_beginning_edge_position/(cm) << " cm" << G4endl;
   G4cout << "ChopperSetup::Construct -> Chopper Center: "
           << chopper_center_position/(cm) << " cm" << G4endl;
   G4cout << "ChopperSetup::Construct -> End Edge: "
           << chopper_end_edge_position/(cm) << " cm" << G4endl;
-  setEndChop(chopper_end_edge_position);
+  detInfo->setEndChop(chopper_end_edge_position);
 
   if(chopper_end_edge_position > container_edge_position)
   {
@@ -174,7 +175,6 @@ G4VPhysicalVolume* ChopperSetup::Construct(G4LogicalVolume* logicWorld, double b
 
   SourceInformation* sInfo = SourceInformation::Instance();
   G4double source_z_pos = sInfo->GetSourceZPosition();
-  G4cout << "ChopperSetup::Construct -> Source Z Position: " << source_z_pos << " cm" << G4endl;
 
   G4double center_from_source = chopper_center_position/(cm) - source_z_pos;
   G4cout << "ChopperSetup::Construct -> Center distance from the source: "

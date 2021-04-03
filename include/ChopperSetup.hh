@@ -41,6 +41,7 @@
 #include "G4Material.hh"
 #include "ChopperMessenger.hh"
 #include "SourceInformation.hh"
+#include "DetectorInformation.hh"
 
 
 class G4VPhysicalVolume;
@@ -93,11 +94,6 @@ void SetChopperThick(G4double val)
 }
 
 void SetChopperOn(G4bool val){chopperOn = val;}
-G4bool GetChopperState()const{return chopperOn;}
-void setBeginChopper(G4double z_pos){BeginChopper = z_pos;}
-G4double getBeginChopper()const{return BeginChopper;}
-void setEndChop(G4double z_pos){EndChop = z_pos;}
-G4double getEndChop()const{return EndChop;}
 
 private:
 // Chopper Properties
@@ -105,8 +101,6 @@ G4double chopperDensity, chopper_thick, chopper_z;
 G4bool chopperOn;
 G4double chopper_U235_abundance, chopper_U238_abundance, chopper_Pu239_abundance, chopper_Pu240_abundance;
 G4double chopper_radio_abundance;
-G4double BeginChopper;
-G4double EndChop;
 ChopperMessenger* chopperM;
 
 };

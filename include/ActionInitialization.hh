@@ -28,19 +28,14 @@
 #include "G4VUserActionInitialization.hh"
 #include "G4Types.hh"
 
-class DetectorConstruction;
-
 
 class ActionInitialization : public G4VUserActionInitialization
 {
   public:
-    ActionInitialization(const DetectorConstruction*);
+    ActionInitialization();
     virtual ~ActionInitialization();
 
     virtual void Build() const;
-
-private:
-    const DetectorConstruction* fDetector;
 };
 
 #endif

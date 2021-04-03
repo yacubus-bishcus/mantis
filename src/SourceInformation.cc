@@ -30,7 +30,7 @@ SourceInformation::SourceInformation()
   z_pos = 0.;
 }
 
-SourceInformation::SourceInformation(SourceInformation* sourceInfo)
+SourceInformation::SourceInformation(const SourceInformation* sourceInfo)
 {
   z_pos = sourceInfo->GetSourceZPosition();
 }

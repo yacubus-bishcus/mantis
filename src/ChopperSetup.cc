@@ -174,6 +174,7 @@ G4VPhysicalVolume* ChopperSetup::Construct(G4LogicalVolume* logicWorld, double b
 
   SourceInformation* sInfo = new SourceInformation();
   G4double source_pos = sInfo->GetSourceZPosition();
+  G4cout << "Source Pos: " << source_pos << G4endl;
   G4double center_from_source = chopper_center_position/(cm) - source_pos;
   G4cout << "ChopperSetup::Construct -> Center distance from the source: "
           << center_from_source << " cm" << G4endl;

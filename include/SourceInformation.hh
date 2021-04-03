@@ -41,8 +41,8 @@ public:
     if(!instance)
     {
       instance = new SourceInformation;
-      return instance;
     }
+    return instance;
   }
 
   void SetSourceZPosition(G4double);

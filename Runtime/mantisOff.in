@@ -59,9 +59,11 @@
 # Detector Location
 
 # Units cm WaterX, WaterY, WaterZ sets the cherenkov detector size
-#/mydet/WaterX
+/mydet/WaterX 28
+/mydet/WaterY 225
+/mydet/WaterZ 30
 # Units degrees Backscatter angle Default 120
-#/mydet/Angle 120
+/mydet/Angle 150
 
 # Attenuator Settings Surrounding Cherenkov Detector (optional)
 
@@ -85,7 +87,7 @@
 # Photocathode material options (GaAsP, Bialkali) Default is GaAsP
 #/mydet/PCmat
 # Number of PMTs in each Cherenkov Detector so total = input*2 Default is 4
-#/mydet/nPMT 4
+/mydet/nPMT 8
 
 #################################################################################################
 # OUTPUT OPTIONS

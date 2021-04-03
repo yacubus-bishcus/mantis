@@ -26,7 +26,6 @@
 
 SourceInformation::SourceInformation()
 {
-  z_pos = 0.;
 }
 
 SourceInformation::SourceInformation(const SourceInformation* sourceInfo)

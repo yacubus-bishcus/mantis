@@ -23,6 +23,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "ChopperSetup.hh"
+extern G4double source_z_pos;
 
 ChopperSetup::ChopperSetup()
 :chopperDensity(19.1*g/cm3), chopper_thick(30*mm), chopper_z(2*cm),
@@ -172,10 +173,7 @@ G4VPhysicalVolume* ChopperSetup::Construct(G4LogicalVolume* logicWorld, double b
   G4cout << "ChopperSetup::Construct -> Thickness: " << chopper_thick/(mm)
           << " mm" << G4endl;
 
-  SourceInformation* sInfo = new SourceInformation();
-  G4double source_pos = sInfo->GetSourceZPosition();
-  G4cout << "Source Pos: " << source_pos << G4endl;
-  G4double center_from_source = chopper_center_position/(cm) - source_pos;
+  G4double center_from_source = chopper_center_position/(cm) - source_z_pos;
   G4cout << "ChopperSetup::Construct -> Center distance from the source: "
           << center_from_source << " cm" << G4endl;
 

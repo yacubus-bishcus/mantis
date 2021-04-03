@@ -32,6 +32,7 @@ extern G4bool bremTest;
 extern G4bool SampleEnergyRangebool;
 extern G4double uniform_width;
 extern G4bool debug;
+extern G4double source_z_pos;
 
 PrimaryGeneratorAction::PrimaryGeneratorAction()
         : G4VUserPrimaryGeneratorAction(), pgaM(NULL),
@@ -60,8 +61,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
     G4cout << "Particle Type set to Gamma!" << G4endl;
   }
 
-  SourceInformation* sourceInfo = new SourceInformation();
-  sourceInfo->SetSourceZPosition(beamStart);
+  source_z_pos = beamStart;
   // Default Kinematics
   fParticleGun->SetParticleTime(0.0*ns);
 

@@ -28,6 +28,7 @@
 #include "globals.hh"
 #include "G4Types.hh"
 #include "G4ios.hh"
+#include "G4SystemOfUnits.hh"
 
 class DetectorInformation
 {

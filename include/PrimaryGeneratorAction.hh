@@ -48,6 +48,7 @@
 class G4Event;
 class HistoManager;
 class PGAMessenger;
+extern G4double source_z_pos;
 
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {

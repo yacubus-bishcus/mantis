@@ -40,6 +40,7 @@
 #include "G4Isotope.hh"
 #include "G4Material.hh"
 #include "ChopperMessenger.hh"
+#include "PrimaryGeneratorAction.hh"
 
 
 class G4VPhysicalVolume;

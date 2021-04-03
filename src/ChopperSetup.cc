@@ -23,7 +23,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "ChopperSetup.hh"
-extern G4double source_z_pos;
 
 ChopperSetup::ChopperSetup()
 :chopperDensity(19.1*g/cm3), chopper_thick(30*mm), chopper_z(2*cm),

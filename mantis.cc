@@ -35,7 +35,7 @@ G4bool output;
 // String global variables
 G4String macro, root_output_name, gOutName, inFile;
 // boolean global variables
-G4bool bremTest, resonanceTest, checkEvents, debug, addNRF, printEvents, SampleEnergyRangebool;
+G4bool bremTest, resonanceTest, debug, addNRF, printEvents, SampleEnergyRangebool;
 // double global variables
 G4double uniform_width, chosen_energy;
 
@@ -62,7 +62,7 @@ void PrintUsage()
   G4cerr << "Usage: " << G4endl;
   G4cerr << "mantis [-h help] [-m macro=mantis.in] [-a chosen_energy=-1.] [-s seed=1] [-o output_name] [-t bremTest=false] " <<
           "[-r resonance_test=false] [-p standalone=false] [-v NRF_Verbose=false] [-n addNRF=true] " <<
-          "[-e checkEvents_in=false] [-i inFile] [-d debug] [-f printEvents] [-u SampleEnergyRange] [-w uniform_width]"
+          "[-i inFile] [-d debug] [-f printEvents] [-u SampleEnergyRange] [-w uniform_width]"
          << G4endl;
   exit(1);
 }
@@ -112,8 +112,6 @@ int main(int argc,char **argv)
 
   // Output Defaults
   output = false;
-  G4String checkEvents_in = "false";
-  checkEvents = false;
 
   // Detect interactive mode (if no arguments) and define UI session
   //
@@ -136,7 +134,6 @@ int main(int argc,char **argv)
       else if (G4String(argv[i]) == "-p") standalone_in = argv[i+1];
       else if (G4String(argv[i]) == "-v") verbose_in = argv[i+1];
       else if (G4String(argv[i]) == "-n") addNRF_in = argv[i+1];
-      else if (G4String(argv[i]) == "-e") checkEvents_in = argv[i+1];
       else if (G4String(argv[i]) == "-i") inFile = argv[i+1];
       else if (G4String(argv[i]) == "-d") debug_in = argv[i+1];
       else if (G4String(argv[i]) == "-f") printEvents_in = argv[i+1];
@@ -201,12 +198,6 @@ int main(int argc,char **argv)
         {
                 G4cout << "Conducting Brem Test!" << G4endl;
                 bremTest = true;
-        }
-
-        if(checkEvents_in == "True" || checkEvents_in == "true")
-        {
-                G4cout << "Checking Events!" << G4endl;
-                checkEvents = true;
         }
 
         if(resonance_in == "True" || resonance_in == "true")

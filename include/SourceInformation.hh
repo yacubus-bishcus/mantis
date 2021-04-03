@@ -25,6 +25,10 @@
 #ifndef SourceInformation_h
 #define SourceInformation_h 1
 
+#include "G4ios.hh"
+#include "G4Types.hh"
+#include "globals.hh"
+
 class SourceInformation
 {
   static SourceInformation *instance;

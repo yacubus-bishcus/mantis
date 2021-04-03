@@ -28,6 +28,7 @@
 #include "globals.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4Allocator.hh"
+#include "G4ios.hh"
 
 class SourceInformation {
 public:

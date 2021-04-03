@@ -23,9 +23,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "SourceInformation.hh"
-#include "G4ios.hh"
-#include "globals.hh"
-#include "G4Types.hh"
 
 SourceInformation::SourceInformation()
 {
@@ -43,5 +40,5 @@ SourceInformation::~SourceInformation()
 void SourceInformation::SetSourceZPosition(G4double z)
 {
   z_pos = z;
-  G4Cout << "SourceInformation::SetSourceZPosition -> " << z_pos << G4endl;
+  G4cout << "SourceInformation::SetSourceZPosition -> " << z_pos << G4endl;
 }

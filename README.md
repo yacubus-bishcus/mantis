@@ -129,7 +129,7 @@ EASY SETUP WITH CONFIGURE FILE
 ==
 
 For Easy Set up run the following lines of code:
-`> git clone https://github.com/jacobbickus/mantis.git && cd mantis`
+`> git clone git@github.com:yacubus-bishcus/mantis.git && cd mantis`
 `> ./configure.sh `
 
 

@@ -119,9 +119,10 @@ To Install
 ==
 
 Dependencies
-  * Installed Geant4 Libraries 
+  * Installed Geant4 Libraries
+  * When installing Geant4 include the following flags '-DGEANT4_INSTALL_DATA=ON -DGEANT4_USE_GDML=ON -DGEANT4_USE_OPENGL_X11=ON -DCMAKE_PREFIX_PATH=/custom/xerces-c'
   * CERN ROOT Installed 
-  * Cmake 
+  * Cmake
   
 __Version__:  Mantis and been built against and tested with Geant4 10.5 and 10.7, and ROOT 6.22. ROOT Version must be greater than 6.18. 
 

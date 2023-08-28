@@ -3,6 +3,7 @@
 cmake_minimum_required(VERSION 3.0...3.5 FATAL_ERROR)
 project(mantis)
 option(WITH_GEANT4_UIVIS "Build with Geant4 UI and Vis drivers" ON) # Can switch to OFF if not building with vis drivers --> NOT recommended 
+option(WITH_DATA "Build with Database" OFF) # Required for first build
 
 # Determine the Geant4 Version 
 execute_process(COMMAND bash -c "geant4-config --version"
@@ -64,9 +65,17 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 and ROOT libraries
-#
 add_executable(mantis mantis.cc ${sources} ${headers})
 target_link_libraries(mantis ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+
+# Unzip and Move Database 
+if(WITH_DATA)
+  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_SOURCE_DIR}/NRF_Database.tar.gz
+                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+  message(STATUS "NRF Database Unpacked in ${PROJECT_SOURCE_DIR}!")
+else()
+  message(STATUS "NRF Database will remain Zipped")
+endif()
 
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
@@ -77,3 +86,7 @@ install(FILES Input_Files/mantisOff.in DESTINATION Input_Files)
 install(FILES Input_Files/vis_save.mac DESTINATION Input_Files)
 install(FILES Run_Analysis/PrintResults.cc DESTINATION Run_Analysis)
 install(FILES Run_Analysis/stitch.sh DESTINATION Run_Analysis)
+if(WITH_DATA)
+  install(DIRECTORY Database1.1 DESTINATION DATA)
+  message(STATUS "NRF Database moved to ${CMAKE_INSTALL_PREFIX}")
+endif()

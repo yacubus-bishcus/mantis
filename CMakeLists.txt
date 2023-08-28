@@ -69,49 +69,11 @@ add_executable(mantis mantis.cc ${sources} ${headers})
 target_link_libraries(mantis ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 
 #----------------------------------------------------------------------------
-# Copy all scripts to the build directory, i.e. the directory in which we
-# build mantis. This is so that we can run the executable directly because it
-# relies on these scripts being in the current working directory.
-#
-set(Input_SCRIPTS
-  mantis.in
-  mantisOff.in
-  vis_save.mac
-  )
-
-set(Run_Analysis_SCRIPTS
-PrintResults.cc
-stitch.sh
-)
-
-set(Slurm_Run_Files_SCRIPTS
-runBatch.sh
-submit_geant4.slurm
-)
-
-foreach(_script ${Input_SCRIPTS})
-  configure_file(
-    ${PROJECT_SOURCE_DIR}/Input_Files/${_script}
-    ${PROJECT_BINARY_DIR}/${_script}
-    COPYONLY
-    )
-endforeach()
-foreach(_script ${Run_Analysis_SCRIPTS})
-  configure_file(
-    ${PROJECT_SOURCE_DIR}/Run_Analysis/${_script}
-    ${PROJECT_BINARY_DIR}/${_script}
-    COPYONLY
-    )
-endforeach()
-foreach(_script ${Slurm_Run_Files_SCRIPTS})
-  configure_file(
-    ${PROJECT_SOURCE_DIR}/Slurm_Run_Files/${_script}
-    ${PROJECT_BINARY_DIR}/${_script}
-    COPYONLY
-    )
-endforeach()
-
-#----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
-#
+# Install Input and Run Files into Appropriate Directories
 install(TARGETS mantis DESTINATION bin)
+install(FILES Input_Files/mantis.in DESTINATION Input_Files)
+install(FILES Input_Files/mantisOff.in DESTINATION Input_Files)
+install(FILES Input_Files/vis_save.mac DESTINATION Input_Files)
+install(FILES Run_Analysis/PrintResults.cc DESTINATION Run_Analysis)
+install(FILES Run_Analysis/stitch.sh DESTINATION Run_Analysis)

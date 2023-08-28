@@ -120,7 +120,7 @@ To Install
 
 Dependencies
   * Installed Geant4 Libraries
-  * When installing Geant4 include the following flags '-DGEANT4_INSTALL_DATA=ON -DGEANT4_USE_GDML=ON -DGEANT4_USE_OPENGL_X11=ON -DCMAKE_PREFIX_PATH=/custom/xerces-c'
+  * When installing Geant4 include the following flags '> -DGEANT4_INSTALL_DATA=ON -DGEANT4_USE_GDML=ON -DGEANT4_USE_OPENGL_X11=ON -DCMAKE_PREFIX_PATH=/custom/xerces-c -DCMAKE_PREFIX_PATH=/custom/expat'
   * CERN ROOT Installed 
   * Cmake
   

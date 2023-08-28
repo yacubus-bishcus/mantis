@@ -1,6 +1,6 @@
 #----------------------------------------------------------------------------
 # Setup the project
-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.0...3.5 FATAL_ERROR)
 project(mantis)
 option(WITH_GEANT4_UIVIS "Build with Geant4 UI and Vis drivers" ON) # Can switch to OFF if not building with vis drivers --> NOT recommended 
 
@@ -30,11 +30,11 @@ else()
 endif()
 
 if(WITH_GEANT4_UIVIS)
-  find_package(Geant4 10.5 REQUIRED ui_all vis_all)
+  find_package(Geant4 10.5...<11.2 REQUIRED ui_all vis_all)
   message(STATUS "Geant4 Version: ${MY_GEANT4_VERSION}")
   message(STATUS "Built Geant4 with UI and Vis Drivers")
 else()
-  find_package(Geant4 10.5 REQUIRED)
+  find_package(Geant4 10.5...<11.2 REQUIRED)
 endif()
 
 #----------------------------------------------------------------------------

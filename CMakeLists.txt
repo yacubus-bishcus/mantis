@@ -16,7 +16,7 @@ execute_process(COMMAND bash -c "root --version"
 string(SUBSTRING "${MY_GEANT4_VERSION}" 0 4 THE_VERSION)	
 string(COMPARE EQUAL "${THE_VERSION}" "10.7" VERSION_BOOL)	
 
-# If the version if > 10.7 then add the compile definition to avoid depreceated code!
+# If the version is 10.7 then add the compile definition to avoid depreceated code!
 if(${VERSION_BOOL})	
   add_compile_definitions(G4_OPTPARAM)
   message(STATUS "Version is at least 10.7")
@@ -30,11 +30,11 @@ else()
 endif()
 
 if(WITH_GEANT4_UIVIS)
-  find_package(Geant4 10.5...<11.2 REQUIRED ui_all vis_all)
+  find_package(Geant4 10.5...<10.8 REQUIRED ui_all vis_all)
   message(STATUS "Geant4 Version: ${MY_GEANT4_VERSION}")
   message(STATUS "Built Geant4 with UI and Vis Drivers")
 else()
-  find_package(Geant4 10.5...<11.2 REQUIRED)
+  find_package(Geant4 10.5...<10.8 REQUIRED)
 endif()
 
 #----------------------------------------------------------------------------
@@ -45,7 +45,7 @@ include(${Geant4_USE_FILE})
 #----------------------------------------------------------------------------
 # Find ROOT (required package)
 
-find_package(ROOT CONFIG REQUIRED)
+find_package(ROOT 6.18...<6.24 CONFIG REQUIRED)
 if(ROOT_FOUND)	
     message(STATUS "${MY_ROOT_VERSION}")	
 else()	

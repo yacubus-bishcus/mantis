@@ -81,11 +81,8 @@ endif()
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 # Install Input and Run Files into Appropriate Directories
 install(TARGETS mantis DESTINATION bin)
-install(FILES Input_Files/mantis.in DESTINATION Input_Files)
-install(FILES Input_Files/mantisOff.in DESTINATION Input_Files)
-install(FILES Input_Files/vis_save.mac DESTINATION Input_Files)
-install(FILES Run_Analysis/PrintResults.cc DESTINATION Run_Analysis)
-install(FILES Run_Analysis/stitch.sh DESTINATION Run_Analysis)
+install(DIRECTORY Input_Files DESTINATION Default_Input)
+install(DIRECTORY Run_Analysis DESTINATION Default_Run_Analysis)
 if(WITH_DATA)
   install(DIRECTORY Database1.1 DESTINATION DATA)
   message(STATUS "NRF Database moved to ${CMAKE_INSTALL_PREFIX}")

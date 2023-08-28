@@ -61,8 +61,8 @@ Mantis Input
 ==
 
 The User can manipulate the simulation in various ways through the mantis.in macro input file. For example the following line of code:
-`> ./mantis -m mantis.in -o test.root -s 1`
-would run mantis with the inputs found in mantis.in located in the mantis executable directory. The ouput would be found in test.root and would have a seed of 1.
+`> ./mantis -m mantis.in -o test.root -s 1 -a 2.0`
+would run mantis with the inputs found in mantis.in located in the mantis executable directory. The ouput would be found in test.root and would have a seed of 1 and a Photon Energy of 2.0 MeV.
 
 The command line input options and flags include:
 
@@ -86,6 +86,8 @@ The command line input options and flags include:
 
 `-r Test Resonance` -> Tests Resonance energies for development of Sampling.cc 
 
+`-a Input Energy` -> Monoenergetic Photon created at given energy in MeV. brems_distributions.root file not required.
+
 __Mandatory Inputs for mantis.in__
 
 mantis.in has the following MANDATORY inputs that the user must not comment:
@@ -98,49 +100,39 @@ mantis.in has the following MANDATORY inputs that the user must not comment:
 
 The user also has several optional commands available in mantis.in:
 
-1. Input Energy/Spectrum
-2. Chopper Thickness
-3. Chopper Distance from Source
-4. Interrogation Object Location 
-5. Interrogation Object Size (radius)
-6. Detector Location
-7. Attenuating Layers (state, material, thickness)
-8. Photocathode (Size, number, material)
-9. Output Desired 
-10. Number of MC Particles to Simulate 
+1. Chopper Thickness
+2. Chopper Distance from Source
+3. Interrogation Object Location 
+4. Interrogation Object Size (radius)
+5. Detector Location
+6. Attenuating Layers (state, material, thickness)
+7. Photocathode (Size, number, material)
+8. Output Desired 
+9. Number of MC Particles to Simulate 
 
 Author: Jacob E Bickus
 
 Creation time: 8/2020 
 
-Last Update: continous
+Last Update: 8/28/2023
 
 To Install
 ==
 
 Dependencies
   * Installed Geant4 Libraries
-  * When installing Geant4 include the following flags '> -DGEANT4_INSTALL_DATA=ON -DGEANT4_USE_GDML=ON -DGEANT4_USE_OPENGL_X11=ON -DCMAKE_PREFIX_PATH=/custom/xerces-c -DCMAKE_PREFIX_PATH=/custom/expat'
+  * When installing Geant4 include the following flags `> -DGEANT4_INSTALL_DATA=ON -DGEANT4_USE_GDML=ON -DGEANT4_USE_OPENGL_X11=ON`
   * CERN ROOT Installed 
   * Cmake
   
 __Version__:  Mantis and been built against and tested with Geant4 10.5 and 10.7, and ROOT 6.22. ROOT Version must be greater than 6.18. 
 
-EASY SETUP WITH CONFIGURE FILE 
+INSTALLATION
 ==
 
 For Easy Set up run the following lines of code:
-`> git clone git@github.com:yacubus-bishcus/mantis.git && cd mantis`
-`> ./configure.sh `
-
-
-INSTALLATION WITHOUT CONFIGURE FILE (ONLY NECESSARY IF YOU DID NOT RUN ./configure.sh)
-==
-
-The Following Instructions should work once the Geant4 and CERN ROOT are installed:
-
-Be sure to untar the NRF Database using 
-`> tar xfz NRF_Database.tar.gz`
+`> git clone git@github.com:yacubus-bishcus/mantis.git && mkdir mantis-build && cd mantis-build`
+`> cmake ../mantis -DCMAKE_INSTALL_PREFIX=~/GEANT4/mantis-install -DWITH_DATA=ON && make -jN && make install`
 
 Export the path to the untarred NRF Database for example in the user's bash:
 
@@ -153,15 +145,6 @@ Lastly some path issues may occur without the following lines in the user's bash
 `source /path/to/geant4-install/bin/geant4.sh`
 
 `source /path/to/geant4-install/share/Geant4-10.5.1/geant4make/geant4make.sh`
-
-
-To Build
-==
-
-Now go to geant4 application
-`> mkdir <application_build> && cd <application_build>`
-
-`> cmake /path/to/application/source && make -j[N]`
 
 To Run in Batch Mode
 ==
@@ -180,7 +163,7 @@ Required Inputs
 
 Mantis Requires one input:
 
-* brems_distributions.root - This is the input spectrum file that is read if the user does not uncomment the /input/energy line in mantis.in. The bremstrahlung input and sampling distribution can be easily manipulated with Sampling.cc  
+* brems_distributions.root - This is the input spectrum file that is read if the user does not use the Set Energy Flag (-a). The bremstrahlung input and sampling distribution can be easily manipulated with Sampling.cc  
 
 Manipulating the Input Spectrum "brems_distributions.root" with Sampling.cc
 ==
